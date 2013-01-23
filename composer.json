@@ -1,6 +1,6 @@
 {
     "name": "vlucas/phpdotenv",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "type": "library",
     "description": "Loads environment variables from `.env` to `getenv()`, `$_ENV` and `$_SERVER` automagically.",
     "keywords": ["env", "dotenv", "environment"],
