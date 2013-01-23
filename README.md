@@ -7,20 +7,26 @@ Loads environment variables from `.env` to `getenv()`, `$_ENV` and
 This is a PHP version of the original [Ruby
 dotenv](https://github.com/bkeepers/dotenv).
 
+[![Build
+Status](https://secure.travis-ci.org/vlucas/phpdotenv.png)](http://travis-ci.org/vlucas/phpdotenv)
+
 Why .env?
 ---------
+
+* NO editing virtual hosts in Apache or Nginx
+* NO adding `php_value` flags to .htaccess files
+* EASY portability and sharing of required ENV values
+* COMPATABILITY with PHP's built-in web server and CLI runner
+
+
 Basically, a `.env` file is an easy way to load custom environment
 variables that your application needs without having to modify .htaccess
-files or Apache/nginx virtual hosts. The `.env` file is generally kept
-out of version control since it can contain sensitive API keys and
-passwords. A separate `.env.example` file is created with all
-the required environment variables defined except for the sensitive
-ones, which are either user-supplied for their own development
-environments or are communicated elsewhere to project collaborators. The
-project collaborators then independently copy the `.env.example` file to
-a local `.env` and ensure all the settings are correct for their local
-environment, filling in the secret keys or providing their own values when
-necessary.
+files or Apache/nginx virtual hosts. This means you won't have to edit
+any files outside the project, and all the environment variables are
+always set no matter how you run your project - Apache, Nginx, CLI, and
+even PHP 5.4's built-in webserver. It's WAY easier than all the other
+ways you know of to set environment variables, and you're going to love
+it.
 
 Installation with Composer
 --------------------------
@@ -72,6 +78,25 @@ $s3_bucket = $request->env('S3_BUCKET');
 $s3_bucket = $request->getEnv('S3_BUCKET');
 $s3_bucket = $request->server->get('S3_BUCKET');
 ```
+
+Advanced Usage
+--------------
+
+In more advanced setups, the `.env` file is generally kept
+out of version control since it can contain sensitive API keys and
+passwords. A separate `.env.example` file is created with all
+the required environment variables defined except for the sensitive
+ones, which are either user-supplied for their own development
+environments or are communicated elsewhere to project collaborators. The
+project collaborators then independently copy the `.env.example` file to
+a local `.env` and ensure all the settings are correct for their local
+environment, filling in the secret keys or providing their own values when
+necessary. In this usage, the `.env` file should be added to the project's
+`.gitignore` file so that it will never be committed by collaborators.
+This usage ensures that no sensitive passwords or API keys will ever be
+in the version control history so there is less risk of a security
+breach, and production values will never have to be shared with all
+project collaborators.
 
 Contributing
 ------------

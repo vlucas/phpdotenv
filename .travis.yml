@@ -1,0 +1,13 @@
+# see http://about.travis-ci.org/docs/user/languages/php/ for more hints
+language: php
+
+# list any PHP version you want to test against
+php:
+  - 5.3
+  - 5.4
+
+before_script:
+  - composer install
+
+# Script to run tests
+script: phpunit
