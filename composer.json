@@ -2,8 +2,8 @@
     "name": "vlucas/phpdotenv",
     "version": "1.0.0",
     "type": "library",
-    "description": "Loads environment variables from a .env file",
-    "keywords": ["env", "environment"],
+    "description": "Loads environment variables from `.env` to `getenv()`, `$_ENV` and `$_SERVER` automagically.",
+    "keywords": ["env", "dotenv", "environment"],
     "homepage": "http://github.com/vlucas/phpdotenv",
     "license" : "BSD",
     "authors" : [

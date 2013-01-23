@@ -16,7 +16,11 @@ out of version control since it can contain sensitive API keys and
 passwords. A separate `.env.example` file is created with all
 the required environment variables defined except for the sensitive
 ones, which are either user-supplied for their own development
-environments or are communicated elsewhere to project collaborators.
+environments or are communicated elsewhere to project collaborators. The
+project collaborators then independently copy the `.env.example` file to
+a local `.env` and ensure all the settings are correct for their local
+environment, filling in the secret keys or providing their own values when
+necessary.
 
 Installation with Composer
 --------------------------
@@ -79,3 +83,4 @@ Contributing
 5. Commit your changes (`git commit -am 'Added some feature'`)
 6. Push to the branch (`git push origin my-new-feature`)
 7. Create new Pull Request
+
