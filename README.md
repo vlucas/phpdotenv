@@ -27,7 +27,7 @@ Installation with Composer
 
 ```shell
 curl -s http://getcomposer.org/installer | php
-php composer.phar require vlucas/phpdotenv *
+php composer.phar require vlucas/phpdotenv
 ```
 
 Usage
