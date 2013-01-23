@@ -1,0 +1,24 @@
+{
+    "name": "vlucas/phpdotenv",
+    "version": "1.0.0",
+    "type": "library",
+    "description": "Loads environment variables from a .env file",
+    "keywords": ["env", "environment"],
+    "homepage": "http://github.com/vlucas/phpdotenv",
+    "license" : "BSD",
+    "authors" : [
+        {
+            "name": "Vance Lucas",
+            "email": "vance@vancelucas.com",
+            "homepage": "http://www.vancelucas.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.2"
+    },
+    "autoload": {
+        "psr-0": {
+            "Dotenv": "src/"
+        }
+    }
+}
