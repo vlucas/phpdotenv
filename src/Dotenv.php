@@ -23,8 +23,8 @@ class Dotenv
         foreach($lines as $line) {
             // Only use non-empty lines that look like setters
             if(!empty($line) && strpos($line, '=') !== false) {
-                // Strip quotes because putenv can't handle them
-                $line = trim(str_replace(array('\'', '"'), '', $line));
+                // Strip quotes because putenv can't handle them. Also remove 'export' if present
+                $line = trim(str_replace(array('export ', '\'', '"'), '', $line));
 
                 putenv($line);
 
@@ -34,6 +34,29 @@ class Dotenv
                 $_SERVER[$key] = $val;
             }
         }
+    }
+
+    /**
+     * Require specified ENV vars to be present, or throw Exception
+     *
+     * @throws \RuntimeException
+     */
+    public static function required($env)
+    {
+        $envs = (array) $env;
+        $missingEnvs = array();
+
+        foreach($envs as $env) {
+            if(getenv($env) === false) {
+                $missingEnvs[] = $env;
+            }
+        }
+
+        if(!empty($missingEnvs)) {
+            throw new \RuntimeException("Required ENV vars missing: '" . implode("', '", $missingEnvs) . "'");
+        }
+
+        return true;
     }
 }
 
