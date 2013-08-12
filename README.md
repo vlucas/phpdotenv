@@ -79,6 +79,28 @@ $s3_bucket = $request->getEnv('S3_BUCKET');
 $s3_bucket = $request->server->get('S3_BUCKET');
 ```
 
+Requiring Variables to be Set
+-----------------------------
+
+Using Dotenv, you can require specific ENV vars to be defined, and throw
+an Exception if they are not. This is particularly useful to let people know
+any explicit required variables that your app will not work without.
+
+You can use a single string:
+```php
+Dotenv::required('DATABASE_DSN');
+```
+
+Or an array of strings:
+```php
+Dotenv::required(array('DB_HOST', 'DB_NAME', 'DB_USER', 'DB_PASS'));
+```
+
+If any ENV vars are missing, Dotenv will throw a `RuntimeException` like this:
+```
+Required ENV vars missing: 'DB_USER', 'DB_PASS'
+```
+
 Advanced Usage
 --------------
 
