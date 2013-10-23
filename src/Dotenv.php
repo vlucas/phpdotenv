@@ -29,7 +29,7 @@ class Dotenv
                 putenv($line);
 
                 // Set PHP superglobals
-                list($key, $val) = explode('=', $line);
+                list($key, $val) = explode('=', $line, 2);
                 $_ENV[$key] = $val;
                 $_SERVER[$key] = $val;
             }

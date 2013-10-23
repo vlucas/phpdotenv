@@ -17,6 +17,7 @@ class DotenvTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('baz', getenv('QBAR'));
         $this->assertEquals('with spaces', getenv('QSPACED'));
         $this->assertEquals('', getenv('QNULL'));
+        $this->assertEquals('pgsql:host=localhost;dbname=test', getenv('QEQUALS'));
     }
 
     public function testExportedDotenvLoadsEnvironmentVars()
