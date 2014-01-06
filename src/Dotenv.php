@@ -47,7 +47,8 @@ class Dotenv
         $missingEnvs = array();
 
         foreach($envs as $env) {
-            if(getenv($env) === false) {
+            // Check $_SERVER in addition to ENV
+            if(!isset($_SERVER[$env]) || getenv($env) === false) {
                 $missingEnvs[] = $env;
             }
         }
