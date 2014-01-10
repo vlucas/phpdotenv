@@ -18,7 +18,7 @@ class Dotenv
 
         // Read file and get all lines
         $fc = file_get_contents($filePath);
-        $lines = explode(PHP_EOL, $fc);
+        $lines = preg_split('/\r\n|\r|\n/', $fc);
 
         foreach($lines as $line) {
             // Only use non-empty lines that look like setters
