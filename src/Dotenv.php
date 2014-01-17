@@ -11,6 +11,10 @@ class Dotenv
      */
     public static function load($path, $file = '.env')
     {
+        if(!is_string($file)) {
+            $file = '.env';
+        }
+
         $filePath = rtrim($path, '/') . '/' . $file;
         if(!file_exists($filePath)) {
             throw new \InvalidArgumentException("Dotenv: Environment file .env not found. Create file with your environment settings at " . $filePath);

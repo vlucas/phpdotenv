@@ -70,5 +70,12 @@ class DotenvTest extends \PHPUnit_Framework_TestCase
         Dotenv::load(dirname(__DIR__) . '/fixtures');
         $res = Dotenv::required(array('FOOX', 'NOPE'));
     }
+
+    public function testDotenvNullFileArgumentUsesDefault()
+    {
+        Dotenv::load(dirname(__DIR__) . '/fixtures', null);
+
+        $this->assertEquals('bar', getenv('FOO'));
+    }
 }
 
