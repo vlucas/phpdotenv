@@ -70,5 +70,21 @@ class DotenvTest extends \PHPUnit_Framework_TestCase
         Dotenv::load(dirname(__DIR__) . '/fixtures');
         $res = Dotenv::required(array('FOOX', 'NOPE'));
     }
+
+    /**
+     * @expectedException InvalidArgumentException
+     * @expectedExceptionMessage Environment file .env not found.
+     */
+    public function testDotenvNotFoundThrowsInvalidArgumentException()
+    {
+        Dotenv::load(dirname(__DIR__) . '/badpath');
+    }
+
+    public function testDotenvNotFoundFailsGracefullyWithOptionFlag()
+    {
+        Dotenv::load(dirname(__DIR__) . '/badpath', '.env', true);
+
+        $this->assertFalse(is_file(dirname(__DIR__) . '/badpath/.env'));
+    }
 }
 
