@@ -16,7 +16,7 @@ class Dotenv
         }
 
         $filePath = rtrim($path, '/') . '/' . $file;
-        if(!file_exists($filePath)) {
+        if(!file_exists($filePath) || !is_file($filePath)) {
             throw new \InvalidArgumentException("Dotenv: Environment file .env not found. Create file with your environment settings at " . $filePath);
         }
 
