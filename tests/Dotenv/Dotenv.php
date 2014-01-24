@@ -77,5 +77,15 @@ class DotenvTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals('bar', getenv('FOO'));
     }
+
+    /**
+     * The fixture data has whitespace between the key and in the value string
+     *     Test that these keys are trimmed down
+     */
+    public function testDotenvTrimmedKeys()
+    {
+        Dotenv::load(dirname(__DIR__) . '/fixtures', 'quoted.env');
+        $this->assertTrue(isset($_ENV['QWHITESPACE']));
+    }
 }
 
