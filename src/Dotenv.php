@@ -20,9 +20,13 @@ class Dotenv
             throw new \InvalidArgumentException("Dotenv: Environment file .env not found. Create file with your environment settings at " . $filePath);
         }
 
-        // Read file and get all lines
-        $fc = file_get_contents($filePath);
-        $lines = preg_split('/\r\n|\r|\n/', $fc);
+        // backup setting
+        $autodetect = ini_get('auto_detect_line_endings');
+        ini_set( 'auto_detect_line_endings', '1' );
+        // Read file into an array of lines
+        $lines = file($filePath, FILE_SKIP_EMPTY_LINES);
+        // restore
+        ini_set( 'auto_detect_line_endings', $autodetect );
 
         foreach($lines as $line) {
             // Only use non-empty lines that look like setters
