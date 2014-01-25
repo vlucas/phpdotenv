@@ -30,18 +30,17 @@ class Dotenv
 
         foreach($lines as $line) {
             // Only use non-empty lines that look like setters
-            if(!empty($line) && strpos($line, '=') !== false) {
-                // Standardize to remove spaces around equals if they're there
-                $line = preg_replace('/( )?=( )?/', '=', $line);
+            if(strpos($line, '=') !== false) {
 
                 // Strip quotes because putenv can't handle them. Also remove 'export' if present
-                $line = trim(str_replace(array('export ', '\'', '"'), '', $line));
+                $line = str_replace(array('export ', '\'', '"'), '', $line);
 
-                putenv($line);
+                // Remove whitespaces around key & value
+                list( $key, $val ) = array_map( 'trim', explode('=', $line, 2) );
+
+                putenv("$key=$val");
 
                 // Set PHP superglobals
-                list($key, $val) = explode('=', $line, 2);
-                $key = trim($key);
                 $_ENV[$key] = $val;
                 $_SERVER[$key] = $val;
             }
