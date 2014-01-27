@@ -20,24 +20,22 @@ class Dotenv
             throw new \InvalidArgumentException("Dotenv: Environment file .env not found. Create file with your environment settings at " . $filePath);
         }
 
-        // Read file and get all lines
-        $fc = file_get_contents($filePath);
-        $lines = preg_split('/\r\n|\r|\n/', $fc);
+        // Read file into an array of lines with auto-detected line endings
+        $autodetect = ini_get('auto_detect_line_endings');
+        ini_set( 'auto_detect_line_endings', '1' );
+        $lines = file($filePath, FILE_SKIP_EMPTY_LINES);
+        ini_set( 'auto_detect_line_endings', $autodetect );
 
         foreach($lines as $line) {
             // Only use non-empty lines that look like setters
-            if(!empty($line) && strpos($line, '=') !== false) {
-                // Standardize to remove spaces around equals if they're there
-                $line = preg_replace('/( )?=( )?/', '=', $line);
-
+            if(strpos($line, '=') !== false) {
                 // Strip quotes because putenv can't handle them. Also remove 'export' if present
-                $line = trim(str_replace(array('export ', '\'', '"'), '', $line));
+                $line = str_replace(array('export ', '\'', '"'), '', $line);
+                // Remove whitespaces around key & value
+                list( $key, $val ) = array_map( 'trim', explode('=', $line, 2) );
 
-                putenv($line);
-
+                putenv("$key=$val");
                 // Set PHP superglobals
-                list($key, $val) = explode('=', $line, 2);
-                $key = trim($key);
                 $_ENV[$key] = $val;
                 $_SERVER[$key] = $val;
             }
