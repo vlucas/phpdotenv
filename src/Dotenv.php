@@ -20,26 +20,21 @@ class Dotenv
             throw new \InvalidArgumentException("Dotenv: Environment file .env not found. Create file with your environment settings at " . $filePath);
         }
 
-        // backup setting
+        // Read file into an array of lines with auto-detected line endings
         $autodetect = ini_get('auto_detect_line_endings');
         ini_set( 'auto_detect_line_endings', '1' );
-        // Read file into an array of lines
         $lines = file($filePath, FILE_SKIP_EMPTY_LINES);
-        // restore
         ini_set( 'auto_detect_line_endings', $autodetect );
 
         foreach($lines as $line) {
             // Only use non-empty lines that look like setters
             if(strpos($line, '=') !== false) {
-
                 // Strip quotes because putenv can't handle them. Also remove 'export' if present
                 $line = str_replace(array('export ', '\'', '"'), '', $line);
-
                 // Remove whitespaces around key & value
                 list( $key, $val ) = array_map( 'trim', explode('=', $line, 2) );
 
                 putenv("$key=$val");
-
                 // Set PHP superglobals
                 $_ENV[$key] = $val;
                 $_SERVER[$key] = $val;
