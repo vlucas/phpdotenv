@@ -1,4 +1,6 @@
 <?php
+namespace Vlucas;
+
 class DotenvTest extends \PHPUnit_Framework_TestCase
 {
     public function testDotenvLoadsEnvironmentVars()
@@ -86,6 +88,22 @@ class DotenvTest extends \PHPUnit_Framework_TestCase
     {
         Dotenv::load(dirname(__DIR__) . '/fixtures', 'quoted.env');
         $this->assertTrue(isset($_ENV['QWHITESPACE']));
+    }
+
+    public function testDotenvMultiplePaths()
+    {
+        Dotenv::load(array(
+            dirname(__DIR__) . '/fixtures',
+            dirname(__DIR__) . '/fixtures/secondary'
+        ));
+
+        $this->assertEquals('bar', $_ENV['FOO']);
+
+        $this->assertEquals('bar', $_ENV['BAR']);
+        
+        $this->assertNotEquals('baz', $_ENV['BAR']);
+
+        $this->assertEquals('world', $_ENV['HELLO']);
     }
 }
 

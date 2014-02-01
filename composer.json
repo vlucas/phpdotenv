@@ -20,8 +20,8 @@
         "phpunit/phpunit": "*"
     },
     "autoload": {
-        "psr-0": {
-            "Dotenv": "src/"
+        "psr-4": {
+            "Vlucas\\": "src/"
         }
     }
 }
