@@ -87,5 +87,50 @@ class DotenvTest extends \PHPUnit_Framework_TestCase
         Dotenv::load(dirname(__DIR__) . '/fixtures', 'quoted.env');
         $this->assertTrue(isset($_ENV['QWHITESPACE']));
     }
+
+    public function testRequiredArrayWithOne()
+    {
+        Dotenv::load(dirname(__DIR__) . '/fixtures');
+
+        $this->setExpectedException('RuntimeException');
+
+        Dotenv::required(array('BLURP'));
+    }
+
+    public function testRequiredWithOne()
+    {
+        Dotenv::load(dirname(__DIR__) . '/fixtures');
+
+        $this->setExpectedException('RuntimeException');
+
+        Dotenv::required('BLURP');
+    }
+
+    public function testRequiredArrayWithMany()
+    {
+        Dotenv::load(dirname(__DIR__) . '/fixtures');
+
+        $this->setExpectedException('RuntimeException');
+
+        Dotenv::required(array('BLURP', 'BLOOP'));
+    }
+
+    public function testRequiredArrayWithOneReal()
+    {
+        Dotenv::load(dirname(__DIR__) . '/fixtures');
+
+        $this->setExpectedException('RuntimeException');
+
+        Dotenv::required(array('FOO', 'BLOOP'));
+    }
+
+    public function testRequiredArrayPretty()
+    {
+        Dotenv::load(dirname(__DIR__) . '/fixtures');
+
+        $this->setExpectedException('RuntimeException');
+
+        Dotenv::required('FOO', 'BLOOP');
+    }
 }
 

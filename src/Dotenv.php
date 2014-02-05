@@ -47,9 +47,9 @@ class Dotenv
      *
      * @throws \RuntimeException
      */
-    public static function required($env)
+    public static function required()
     {
-        $envs = (array) $env;
+        $envs = func_num_args() == 1 ? (array) func_get_arg(0) : func_get_args();
         $missingEnvs = array();
 
         foreach($envs as $env) {
