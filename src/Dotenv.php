@@ -9,35 +9,40 @@ class Dotenv
     /**
      * Load `.env` file in given directory
      */
-    public static function load($path, $file = '.env')
+    public static function load($paths, $file = '.env')
     {
+        $paths = (array) $paths;
+
+
         if(!is_string($file)) {
             $file = '.env';
         }
 
-        $filePath = rtrim($path, '/') . '/' . $file;
-        if(!file_exists($filePath) || !is_file($filePath)) {
-            throw new \InvalidArgumentException("Dotenv: Environment file .env not found. Create file with your environment settings at " . $filePath);
-        }
+        foreach ($paths as $path) {
+            $filePath = rtrim($path, '/') . '/' . $file;
+            if(!file_exists($filePath) || !is_file($filePath)) {
+                throw new \InvalidArgumentException("Dotenv: Environment file .env not found. Create file with your environment settings at " . $filePath);
+            }
 
-        // Read file into an array of lines with auto-detected line endings
-        $autodetect = ini_get('auto_detect_line_endings');
-        ini_set( 'auto_detect_line_endings', '1' );
-        $lines = file($filePath, FILE_SKIP_EMPTY_LINES);
-        ini_set( 'auto_detect_line_endings', $autodetect );
+            // Read file into an array of lines with auto-detected line endings
+            $autodetect = ini_get('auto_detect_line_endings');
+            ini_set( 'auto_detect_line_endings', '1' );
+            $lines = file($filePath, FILE_SKIP_EMPTY_LINES);
+            ini_set( 'auto_detect_line_endings', $autodetect );
 
-        foreach($lines as $line) {
-            // Only use non-empty lines that look like setters
-            if(strpos($line, '=') !== false) {
-                // Strip quotes because putenv can't handle them. Also remove 'export' if present
-                $line = str_replace(array('export ', '\'', '"'), '', $line);
-                // Remove whitespaces around key & value
-                list( $key, $val ) = array_map( 'trim', explode('=', $line, 2) );
+            foreach($lines as $line) {
+                // Only use non-empty lines that look like setters
+                if(strpos($line, '=') !== false) {
+                    // Strip quotes because putenv can't handle them. Also remove 'export' if present
+                    $line = str_replace(array('export ', '\'', '"'), '', $line);
+                    // Remove whitespaces around key & value
+                    list( $key, $val ) = array_map( 'trim', explode('=', $line, 2) );
 
-                putenv("$key=$val");
-                // Set PHP superglobals
-                $_ENV[$key] = $val;
-                $_SERVER[$key] = $val;
+                    putenv("$key=$val");
+                    // Set PHP superglobals
+                    $_ENV[$key] = $val;
+                    $_SERVER[$key] = $val;
+                }
             }
         }
     }
