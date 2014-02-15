@@ -87,5 +87,12 @@ class DotenvTest extends \PHPUnit_Framework_TestCase
         Dotenv::load(dirname(__DIR__) . '/fixtures', 'quoted.env');
         $this->assertTrue(isset($_ENV['QWHITESPACE']));
     }
+
+    public function testDotenvDoesNotOverwriteEnv()
+    {
+        putenv('QFOO=external');
+        Dotenv::load(dirname(__DIR__) . '/fixtures', 'quoted.env');
+        $this->assertEquals('external', getenv('QFOO'));
+    }
 }
 
