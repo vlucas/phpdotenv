@@ -115,10 +115,20 @@ class DotenvTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue(isset($_ENV['QWHITESPACE']));
     }
 
-    public function testDotenvDoesNotOverwriteEnv()
+    public function testDotenvDoesNotOverwriteEnvWhenImmutable()
     {
-        putenv('QFOO=external');
+        Dotenv::makeMutable(); // only need this because we've previously set the variable
+        Dotenv::setEnvironmentVariable('QFOO=external');
+        Dotenv::makeImmutable();
         Dotenv::load(dirname(__DIR__) . '/fixtures', 'quoted.env');
         $this->assertEquals('external', getenv('QFOO'));
+    }
+
+    public function testDotenvDoesNotOverwriteEnvWhenMutable()
+    {
+        Dotenv::makeMutable();
+        Dotenv::setEnvironmentVariable('QFOO=external');
+        Dotenv::load(dirname(__DIR__) . '/fixtures', 'quoted.env');
+        $this->assertEquals('bar', getenv('QFOO'));
     }
 }

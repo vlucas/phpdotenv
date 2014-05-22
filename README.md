@@ -108,7 +108,21 @@ CACHE_DIR=$BASE_DIR/cache
 LOG_DIR=$BASE_DIR/logs
 ```
 
-…etc.
+### Immutability
+
+By default, Dotenv treats environment variables as immutable, that is… once set they cannot be changed.
+
+You can make Dotenv mutable using
+
+```php
+Dotenv::makeMutable();
+```
+
+… and you can make Dotenv immutable again using
+
+```php
+Dotenv::makeImmutable();
+```
 
 Requiring Variables to be Set
 -----------------------------
@@ -141,7 +155,7 @@ environment variable should adhere to.
 Dotenv::required('SESSION_STORE', array('Filesystem', 'Memcached'));
 ```
 
-Again, if the environment variable wasn't in this list, you'd get a similar Exceptipon:
+Again, if the environment variable wasn't in this list, you'd get a similar Exception:
 ```
 Required environment variable missing or value not allowed: 'SESSION_STORE'
 ```

@@ -7,6 +7,12 @@
 class Dotenv
 {
     /**
+     * If true, then environment variables will not be overwritten
+     * @var bool
+     */
+    private static $immutable = true;
+
+    /**
      * Load `.env` file in given directory
      */
     public static function load($path, $file = '.env')
@@ -55,13 +61,15 @@ class Dotenv
     {
         list($name, $value) = self::normaliseEnvironmentVariable($name, $value);
 
-        // Don't overwrite existing environment variables.
+        // Don't overwrite existing environment variables if we're immutable
         // Ruby's dotenv does this with `ENV[key] ||= value`.
-        if (is_null(self::findEnvironmentVariable($name))) {
-            putenv("$name=$value");
-            $_ENV[$name] = $value;
-            $_SERVER[$name] = $value;
+        if (self::$immutable === true && !is_null(self::findEnvironmentVariable($name))) {
+            return;
         }
+
+        putenv("$name=$value");
+        $_ENV[$name] = $value;
+        $_SERVER[$name] = $value;
     }
 
     /**
@@ -73,7 +81,7 @@ class Dotenv
      * @param string[] $allowedValues
      * @return true (or throws exception on error)
      */
-    public static function required($environmentVariables, array $allowedValues = array())
+    public static function required ($environmentVariables, array $allowedValues = array())
     {
         $environmentVariables = (array) $environmentVariables;
         $missingEnvironmentVariables = array();
@@ -106,6 +114,7 @@ class Dotenv
      * Takes value as passed in by developer and:
      * - ensures we're dealing with a separate name and value, breaking apart the name string if needed
      * - cleaning the value of quotes
+     * - cleaning the name of quotes
      * - resolving nested variables
      *
      * @param $name
@@ -121,6 +130,13 @@ class Dotenv
         return array($name, $value);
     }
 
+    /**
+     * If the $name contains an = sign, then we split it into 2 parts, a name & value
+     *
+     * @param $name
+     * @param $value
+     * @return array
+     */
     private static function splitCompoundStringIntoParts ($name, $value)
     {
         if (strpos($name, '=') !== false) {
@@ -129,16 +145,35 @@ class Dotenv
         return array($name, $value);
     }
 
+    /**
+     * Strips quotes from the environment variable value.
+     *
+     * @param $value
+     * @return string
+     */
     private static function sanitiseVariableValue ($value)
     {
         return trim(str_replace(array('\'', '"'), '', $value));
     }
 
+    /**
+     * Strips quotes and the optional leading "export " from the environment variable name.
+     *
+     * @param $name
+     * @return string
+     */
     private static function sanitiseVariableName ($name)
     {
         return trim(str_replace(array('export ', '\'', '"'), '', $name));
     }
 
+    /**
+     * Look for $varname patterns in the variable value and replace with an existing
+     * environment variable.
+     *
+     * @param $value
+     * @return mixed
+     */
     private static function resolveNestedVariables ($value)
     {
         if (strpos($value, '$') !== false) {
@@ -170,5 +205,21 @@ class Dotenv
                 $value = getenv($name);
                 return $value === false ? null : $value; // switch getenv default to null
         }
+    }
+
+    /**
+     * Make Dotenv immutable. This means that once set, an environment variable cannot be overridden.
+     */
+    public static function makeImmutable ()
+    {
+        self::$immutable = true;
+    }
+
+    /**
+     * Make Dotenv mutable. Environment variables will act as, well, variables.
+     */
+    public static function makeMutable ()
+    {
+        self::$immutable = false;
     }
 }
