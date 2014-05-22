@@ -98,6 +98,18 @@ $s3_bucket = $request->getEnv('S3_BUCKET');
 $s3_bucket = $request->server->get('S3_BUCKET');
 ```
 
+### Nesting Variables
+
+It's possible to nest an environment variable within another, useful to cut down on repetition:
+
+```shell
+BASE_DIR=/var/webroot/project-root
+CACHE_DIR=$BASE_DIR/cache
+LOG_DIR=$BASE_DIR/logs
+```
+
+…etc.
+
 Requiring Variables to be Set
 -----------------------------
 
@@ -117,7 +129,21 @@ Dotenv::required(array('DB_HOST', 'DB_NAME', 'DB_USER', 'DB_PASS'));
 
 If any ENV vars are missing, Dotenv will throw a `RuntimeException` like this:
 ```
-Required ENV vars missing: 'DB_USER', 'DB_PASS'
+Required environment variable missing or value not allowed: 'DB_USER', 'DB_PASS'
+```
+
+### Allowed values
+
+As you may have noticed from the Exception message above, it's also possible to define a set of values that your
+environment variable should adhere to.
+
+```php
+Dotenv::required('SESSION_STORE', array('Filesystem', 'Memcached'));
+```
+
+Again, if the environment variable wasn't in this list, you'd get a similar Exceptipon:
+```
+Required environment variable missing or value not allowed: 'SESSION_STORE'
 ```
 
 Usage Notes
