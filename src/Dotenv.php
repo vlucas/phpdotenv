@@ -180,7 +180,7 @@ class Dotenv
             $value = preg_replace_callback(
                 '/\${?([a-zA-Z0-9_]+)}?/',
                 function ($matchedPatterns) {
-                    return  self::findEnvironmentVariable($matchedPatterns[1]);
+                    return  Dotenv::findEnvironmentVariable($matchedPatterns[1]);
                 },
                 $value
             );
