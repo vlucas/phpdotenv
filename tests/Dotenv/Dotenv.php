@@ -61,9 +61,36 @@ class DotenvTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($res);
     }
 
+    public function testDotenvNestedEnvironmentVars()
+    {
+        Dotenv::load(dirname(__DIR__) . '/fixtures', 'nested.env');
+        $this->assertEquals('foo', $_ENV['NFOO']);
+        $this->assertEquals('bar', $_ENV['NBAR']);
+        $this->assertEquals('foobar', $_ENV['NFOOBAR']);
+        $this->assertEquals('foo', $_ENV['NFOOBAZ']);
+    }
+
+    public function testDotenvAllowedValues ()
+    {
+        Dotenv::load(dirname(__DIR__) . '/fixtures');
+        $res = Dotenv::required('FOO', array('bar', 'baz'));
+        $this->assertTrue($res);
+    }
+
     /**
      * @expectedException RuntimeException
-     * @expectedExceptionMessage Required ENV vars missing: 'FOOX', 'NOPE'
+     * @expectedExceptionMessage Required environment variable missing or value not allowed: 'FOO'
+     */
+    public function testDotenvProhibitedValues ()
+    {
+        Dotenv::load(dirname(__DIR__) . '/fixtures');
+        $res = Dotenv::required('FOO', array('buzz'));
+        $this->assertTrue($res);
+    }
+
+    /**
+     * @expectedException RuntimeException
+     * @expectedExceptionMessage Required environment variable missing or value not allowed: 'FOOX', 'NOPE'
      */
     public function testDotenvRequiredThrowsRuntimeException()
     {
@@ -88,11 +115,20 @@ class DotenvTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue(isset($_ENV['QWHITESPACE']));
     }
 
-    public function testDotenvDoesNotOverwriteEnv()
+    public function testDotenvDoesNotOverwriteEnvWhenImmutable()
     {
-        putenv('QFOO=external');
+        Dotenv::makeMutable(); // only need this because we've previously set the variable
+        Dotenv::setEnvironmentVariable('QFOO=external');
+        Dotenv::makeImmutable();
         Dotenv::load(dirname(__DIR__) . '/fixtures', 'quoted.env');
         $this->assertEquals('external', getenv('QFOO'));
     }
-}
 
+    public function testDotenvDoesNotOverwriteEnvWhenMutable()
+    {
+        Dotenv::makeMutable();
+        Dotenv::setEnvironmentVariable('QFOO=external');
+        Dotenv::load(dirname(__DIR__) . '/fixtures', 'quoted.env');
+        $this->assertEquals('bar', getenv('QFOO'));
+    }
+}
