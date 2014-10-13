@@ -15,7 +15,7 @@ class Dotenv
     /**
      * Load `.env` file in given directory
      */
-    public static function load($path, $file = '.env')
+    public static function load ($path, $file = '.env')
     {
         if (!is_string($file)) {
             $file = '.env';
