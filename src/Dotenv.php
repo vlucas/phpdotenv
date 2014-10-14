@@ -15,7 +15,7 @@ class Dotenv
     /**
      * Load `.env` file in given directory
      */
-    public static function load ($path, $file = '.env')
+    public static function load($path, $file = '.env')
     {
         if (!is_string($file)) {
             $file = '.env';
@@ -61,7 +61,7 @@ class Dotenv
      * @param $name
      * @param null $value
      */
-    public static function setEnvironmentVariable ($name, $value = null)
+    public static function setEnvironmentVariable($name, $value = null)
     {
         list($name, $value) = self::normaliseEnvironmentVariable($name, $value);
 
@@ -85,18 +85,19 @@ class Dotenv
      * @param string[] $allowedValues
      * @return true (or throws exception on error)
      */
-    public static function required ($environmentVariables, array $allowedValues = array())
+    public static function required($environmentVariables, array $allowedValues = array())
     {
         $environmentVariables = (array) $environmentVariables;
         $missingEnvironmentVariables = array();
 
         foreach ($environmentVariables as $environmentVariable) {
             $value = self::findEnvironmentVariable($environmentVariable);
-            if (is_null($value)) {
+            if (empty($value)) {
                 $missingEnvironmentVariables[] = $environmentVariable;
             } elseif ($allowedValues) {
                 if (!in_array($value, $allowedValues)) {
-                    $missingEnvironmentVariables[] = $environmentVariable; // may differentiate in the future, but for now this does the job
+                    // may differentiate in the future, but for now this does the job
+                    $missingEnvironmentVariables[] = $environmentVariable;
                 }
             }
         }
@@ -104,7 +105,7 @@ class Dotenv
         if ($missingEnvironmentVariables) {
             throw new \RuntimeException(
                 sprintf(
-                    "Required environment variable missing or value not allowed: '%s'",
+                    "Required environment variable missing, empty, or value not allowed: '%s'",
                     implode("', '", $missingEnvironmentVariables)
                 )
             );
@@ -125,7 +126,7 @@ class Dotenv
      * @param $value
      * @return array
      */
-    private static function normaliseEnvironmentVariable ($name, $value)
+    private static function normaliseEnvironmentVariable($name, $value)
     {
         list($name, $value) = self::splitCompoundStringIntoParts($name, $value);
         $name  = self::sanitiseVariableName($name);
@@ -141,7 +142,7 @@ class Dotenv
      * @param $value
      * @return array
      */
-    private static function splitCompoundStringIntoParts ($name, $value)
+    private static function splitCompoundStringIntoParts($name, $value)
     {
         if (strpos($name, '=') !== false) {
             list($name, $value) = array_map('trim', explode('=', $name, 2));
@@ -155,7 +156,7 @@ class Dotenv
      * @param $value
      * @return string
      */
-    private static function sanitiseVariableValue ($value)
+    private static function sanitiseVariableValue($value)
     {
         return trim(str_replace(array('\'', '"'), '', $value));
     }
@@ -166,7 +167,7 @@ class Dotenv
      * @param $name
      * @return string
      */
-    private static function sanitiseVariableName ($name)
+    private static function sanitiseVariableName($name)
     {
         return trim(str_replace(array('export ', '\'', '"'), '', $name));
     }
@@ -178,7 +179,7 @@ class Dotenv
      * @param $value
      * @return mixed
      */
-    private static function resolveNestedVariables ($value)
+    private static function resolveNestedVariables($value)
     {
         if (strpos($value, '$') !== false) {
             $value = preg_replace_callback(
@@ -197,12 +198,11 @@ class Dotenv
      * @param $name
      * @return string
      */
-    public static function findEnvironmentVariable ($name)
+    public static function findEnvironmentVariable($name)
     {
         switch (true) {
             case array_key_exists($name, $_ENV):
                 return $_ENV[$name];
-
             case array_key_exists($name, $_SERVER):
                 return $_SERVER[$name];
             default:
@@ -214,7 +214,7 @@ class Dotenv
     /**
      * Make Dotenv immutable. This means that once set, an environment variable cannot be overridden.
      */
-    public static function makeImmutable ()
+    public static function makeImmutable()
     {
         self::$immutable = true;
     }
@@ -222,7 +222,7 @@ class Dotenv
     /**
      * Make Dotenv mutable. Environment variables will act as, well, variables.
      */
-    public static function makeMutable ()
+    public static function makeMutable()
     {
         self::$immutable = false;
     }

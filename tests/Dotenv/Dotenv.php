@@ -60,8 +60,18 @@ class DotenvTest extends \PHPUnit_Framework_TestCase
     public function testDotenvRequiredStringEnvironmentVars()
     {
         Dotenv::load(dirname(__DIR__) . '/fixtures');
-        $res = Dotenv::required('NULL');
+        $res = Dotenv::required('FOO');
         $this->assertTrue($res);
+    }
+
+    /**
+     * @expectedException RuntimeException
+     * @expectedExceptionMessage Required environment variable missing, empty, or value not allowed: 'NULL'
+     */
+    public function testDotenvRequiredStringEmptyEnvironmentVarsThrowException()
+    {
+        Dotenv::load(dirname(__DIR__) . '/fixtures');
+        $res = Dotenv::required('NULL');
     }
 
     public function testDotenvRequiredArrayEnvironmentVars()
@@ -80,7 +90,7 @@ class DotenvTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('foo', $_ENV['NFOOBAZ']);
     }
 
-    public function testDotenvAllowedValues ()
+    public function testDotenvAllowedValues()
     {
         Dotenv::load(dirname(__DIR__) . '/fixtures');
         $res = Dotenv::required('FOO', array('bar', 'baz'));
@@ -89,9 +99,9 @@ class DotenvTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @expectedException RuntimeException
-     * @expectedExceptionMessage Required environment variable missing or value not allowed: 'FOO'
+     * @expectedExceptionMessage Required environment variable missing, empty, or value not allowed: 'FOO'
      */
-    public function testDotenvProhibitedValues ()
+    public function testDotenvProhibitedValues()
     {
         Dotenv::load(dirname(__DIR__) . '/fixtures');
         $res = Dotenv::required('FOO', array('buzz'));
@@ -100,7 +110,7 @@ class DotenvTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @expectedException RuntimeException
-     * @expectedExceptionMessage Required environment variable missing or value not allowed: 'FOOX', 'NOPE'
+     * @expectedExceptionMessage Required environment variable missing, empty, or value not allowed: 'FOOX', 'NOPE'
      */
     public function testDotenvRequiredThrowsRuntimeException()
     {
