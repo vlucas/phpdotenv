@@ -81,9 +81,9 @@ class Dotenv
      * You can also pass through an set of allowed values for the environment variable.
      *
      * @throws \RuntimeException
-     * @param mixed $environmentVariables the name of the environment variable or an array of names
-     * @param string[] $allowedValues
-     * @return true (or throws exception on error)
+     * @param  mixed             $environmentVariables the name of the environment variable or an array of names
+     * @param  string[]          $allowedValues
+     * @return true              (or throws exception on error)
      */
     public static function required($environmentVariables, array $allowedValues = array())
     {
@@ -114,7 +114,6 @@ class Dotenv
         return true;
     }
 
-
     /**
      * Takes value as passed in by developer and:
      * - ensures we're dealing with a separate name and value, breaking apart the name string if needed
@@ -132,6 +131,7 @@ class Dotenv
         $name  = self::sanitiseVariableName($name);
         $value = self::sanitiseVariableValue($value);
         $value = self::resolveNestedVariables($value);
+
         return array($name, $value);
     }
 
@@ -147,6 +147,7 @@ class Dotenv
         if (strpos($name, '=') !== false) {
             list($name, $value) = array_map('trim', explode('=', $name, 2));
         }
+
         return array($name, $value);
     }
 
@@ -190,6 +191,7 @@ class Dotenv
                 $value
             );
         }
+
         return $value;
     }
 
@@ -207,6 +209,7 @@ class Dotenv
                 return $_SERVER[$name];
             default:
                 $value = getenv($name);
+
                 return $value === false ? null : $value; // switch getenv default to null
         }
     }
