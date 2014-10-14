@@ -10,6 +10,16 @@ class DotenvTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('', getenv('NULL'));
     }
 
+    public function testCommentedDotenvLoadsEnvironmentVars()
+    {
+        Dotenv::load(dirname(__DIR__) . '/fixtures', 'commented.env');
+        $this->assertEquals('bar', getenv('CFOO'));
+        $this->assertEquals(false, getenv('CBAR'));
+        $this->assertEquals(false, getenv('CZOO'));
+        $this->assertEquals('with spaces', getenv('CSPACED'));
+        $this->assertEquals('', getenv('CNULL'));
+    }
+
     public function testQuotedDotenvLoadsEnvironmentVars()
     {
         Dotenv::load(dirname(__DIR__) . '/fixtures', 'quoted.env');

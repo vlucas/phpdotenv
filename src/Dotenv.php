@@ -39,6 +39,10 @@ class Dotenv
         ini_set('auto_detect_line_endings', $autodetect);
 
         foreach ($lines as $line) {
+            // Disregard comments
+            if (strpos($line, '#') !== false) {
+                $line = substr($line, 0, strpos($line, '#'));
+            }
             // Only use non-empty lines that look like setters
             if (strpos($line, '=') !== false) {
                 self::setEnvironmentVariable($line);
