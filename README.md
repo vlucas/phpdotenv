@@ -100,12 +100,14 @@ $s3_bucket = $request->server->get('S3_BUCKET');
 
 ### Nesting Variables
 
-It's possible to nest an environment variable within another, useful to cut down on repetition:
+It's possible to nest an environment variable within another, useful to cut down on repetition.
+
+This is done by wrapping an existing environment variable in `{$…}` e.g.
 
 ```shell
 BASE_DIR=/var/webroot/project-root
-CACHE_DIR=$BASE_DIR/cache
-LOG_DIR=$BASE_DIR/logs
+CACHE_DIR={$BASE_DIR}/cache
+TMP_DIR={$BASE_DIR}/tmp
 ```
 
 ### Immutability
@@ -158,6 +160,16 @@ Dotenv::required('SESSION_STORE', array('Filesystem', 'Memcached'));
 Again, if the environment variable wasn't in this list, you'd get a similar Exception:
 ```
 Required environment variable missing or value not allowed: 'SESSION_STORE'
+```
+
+### Comments
+
+You can comment your `.env` file using the `#` character. E.g.
+
+```shell
+# this is a comment
+VAR="value" # comment
+VAR=value # comment
 ```
 
 Usage Notes
