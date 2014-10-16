@@ -92,13 +92,14 @@ class Dotenv
 
         foreach ($environmentVariables as $environmentVariable) {
             $value = self::findEnvironmentVariable($environmentVariable);
-            if (empty($value)) {
-                $missingEnvironmentVariables[] = $environmentVariable;
-            } elseif ($allowedValues) {
+            // check allowed values first, we may allow eg. "0"
+            if ($allowedValues) {
                 if (!in_array($value, $allowedValues)) {
                     // may differentiate in the future, but for now this does the job
                     $missingEnvironmentVariables[] = $environmentVariable;
                 }
+            } elseif (empty($value)) {
+                $missingEnvironmentVariables[] = $environmentVariable;
             }
         }
 
