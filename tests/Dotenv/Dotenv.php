@@ -17,6 +17,8 @@ class DotenvTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(false, getenv('CBAR'));
         $this->assertEquals(false, getenv('CZOO'));
         $this->assertEquals('with spaces', getenv('CSPACED'));
+        $this->assertEquals('a value with a # character', getenv('CQUOTES'));
+        $this->assertEquals('a value with a # character & a quote " character inside quotes', getenv('CQUOTESWITHQUOTE'));
         $this->assertEquals('', getenv('CNULL'));
     }
 
@@ -28,6 +30,7 @@ class DotenvTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('with spaces', getenv('QSPACED'));
         $this->assertEquals('', getenv('QNULL'));
         $this->assertEquals('pgsql:host=localhost;dbname=test', getenv('QEQUALS'));
+        $this->assertEquals("test some escaped characters like a quote (') or maybe a backslash (\\)", getenv('QESCAPED'));
     }
 
     public function testExportedDotenvLoadsEnvironmentVars()
@@ -84,10 +87,9 @@ class DotenvTest extends \PHPUnit_Framework_TestCase
     public function testDotenvNestedEnvironmentVars()
     {
         Dotenv::load(dirname(__DIR__) . '/fixtures', 'nested.env');
-        $this->assertEquals('foo', $_ENV['NFOO']);
-        $this->assertEquals('bar', $_ENV['NBAR']);
-        $this->assertEquals('foobar', $_ENV['NFOOBAR']);
-        $this->assertEquals('foo', $_ENV['NFOOBAZ']);
+        $this->assertEquals('Hello World!', $_ENV['NVAR3']);
+        $this->assertEquals('${NVAR1} ${NVAR2}', $_ENV['NVAR4']); // not resolved
+        $this->assertEquals('$NVAR1 {NVAR2}', $_ENV['NVAR5']); // not resolved
     }
 
     public function testDotenvAllowedValues()
@@ -150,5 +152,15 @@ class DotenvTest extends \PHPUnit_Framework_TestCase
         Dotenv::setEnvironmentVariable('QFOO=external');
         Dotenv::load(dirname(__DIR__) . '/fixtures', 'quoted.env');
         $this->assertEquals('bar', getenv('QFOO'));
+    }
+
+    public function testDotenvAllowsSpecialCharacters()
+    {
+        Dotenv::load(dirname(__DIR__) . '/fixtures', 'specialchars.env');
+        $this->assertEquals('$a6^C7k%zs+e^.jvjXk', getenv('SPVAR1'));
+        $this->assertEquals('?BUty3koaV3%GA*hMAwH}B', getenv('SPVAR2'));
+        $this->assertEquals('jdgEB4{QgEC]HL))&GcXxokB+wqoN+j>xkV7K?m$r', getenv('SPVAR3'));
+        $this->assertEquals('22222:22#2^{', getenv('SPVAR4'));
+        $this->assertEquals("test some escaped characters like a quote \\' or maybe a backslash \\\\", getenv('SPVAR5'));
     }
 }
