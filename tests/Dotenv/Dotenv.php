@@ -67,16 +67,6 @@ class DotenvTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($res);
     }
 
-    /**
-     * @expectedException RuntimeException
-     * @expectedExceptionMessage Required environment variable missing, empty, or value not allowed: 'NULL'
-     */
-    public function testDotenvRequiredStringEmptyEnvironmentVarsThrowException()
-    {
-        Dotenv::load(dirname(__DIR__) . '/fixtures');
-        $res = Dotenv::required('NULL');
-    }
-
     public function testDotenvRequiredArrayEnvironmentVars()
     {
         Dotenv::load(dirname(__DIR__) . '/fixtures');
@@ -101,7 +91,7 @@ class DotenvTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @expectedException RuntimeException
-     * @expectedExceptionMessage Required environment variable missing, empty, or value not allowed: 'FOO'
+     * @expectedExceptionMessage Required environment variable missing, or value not allowed: 'FOO'
      */
     public function testDotenvProhibitedValues()
     {
@@ -112,7 +102,7 @@ class DotenvTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @expectedException RuntimeException
-     * @expectedExceptionMessage Required environment variable missing, empty, or value not allowed: 'FOOX', 'NOPE'
+     * @expectedExceptionMessage Required environment variable missing, or value not allowed: 'FOOX', 'NOPE'
      */
     public function testDotenvRequiredThrowsRuntimeException()
     {

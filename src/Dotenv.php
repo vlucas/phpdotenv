@@ -92,7 +92,7 @@ class Dotenv
 
         foreach ($environmentVariables as $environmentVariable) {
             $value = self::findEnvironmentVariable($environmentVariable);
-            if (empty($value)) {
+            if (is_null($value)) {
                 $missingEnvironmentVariables[] = $environmentVariable;
             } elseif ($allowedValues) {
                 if (!in_array($value, $allowedValues)) {
@@ -105,7 +105,7 @@ class Dotenv
         if ($missingEnvironmentVariables) {
             throw new \RuntimeException(
                 sprintf(
-                    "Required environment variable missing, empty, or value not allowed: '%s'",
+                    "Required environment variable missing, or value not allowed: '%s'",
                     implode("', '", $missingEnvironmentVariables)
                 )
             );
