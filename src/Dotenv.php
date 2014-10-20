@@ -10,7 +10,7 @@ class Dotenv
      * If true, then environment variables will not be overwritten
      * @var bool
      */
-    private static $immutable = true;
+    protected static $immutable = true;
 
     /**
      * Load `.env` file in given directory
@@ -45,7 +45,7 @@ class Dotenv
             }
             // Only use non-empty lines that look like setters
             if (strpos($line, '=') !== false) {
-                self::setEnvironmentVariable($line);
+                static::setEnvironmentVariable($line);
             }
         }
     }
@@ -63,11 +63,11 @@ class Dotenv
      */
     public static function setEnvironmentVariable($name, $value = null)
     {
-        list($name, $value) = self::normaliseEnvironmentVariable($name, $value);
+        list($name, $value) = static::normaliseEnvironmentVariable($name, $value);
 
         // Don't overwrite existing environment variables if we're immutable
         // Ruby's dotenv does this with `ENV[key] ||= value`.
-        if (self::$immutable === true && !is_null(self::findEnvironmentVariable($name))) {
+        if (static::$immutable === true && !is_null(static::findEnvironmentVariable($name))) {
             return;
         }
 
@@ -91,7 +91,7 @@ class Dotenv
         $missingEnvironmentVariables = array();
 
         foreach ($environmentVariables as $environmentVariable) {
-            $value = self::findEnvironmentVariable($environmentVariable);
+            $value = static::findEnvironmentVariable($environmentVariable);
             if (is_null($value)) {
                 $missingEnvironmentVariables[] = $environmentVariable;
             } elseif ($allowedValues) {
@@ -125,12 +125,12 @@ class Dotenv
      * @param $value
      * @return array
      */
-    private static function normaliseEnvironmentVariable($name, $value)
+    protected static function normaliseEnvironmentVariable($name, $value)
     {
-        list($name, $value) = self::splitCompoundStringIntoParts($name, $value);
-        $name  = self::sanitiseVariableName($name);
-        $value = self::sanitiseVariableValue($value);
-        $value = self::resolveNestedVariables($value);
+        list($name, $value) = static::splitCompoundStringIntoParts($name, $value);
+        $name  = static::sanitiseVariableName($name);
+        $value = static::sanitiseVariableValue($value);
+        $value = static::resolveNestedVariables($value);
 
         return array($name, $value);
     }
@@ -142,7 +142,7 @@ class Dotenv
      * @param $value
      * @return array
      */
-    private static function splitCompoundStringIntoParts($name, $value)
+    protected static function splitCompoundStringIntoParts($name, $value)
     {
         if (strpos($name, '=') !== false) {
             list($name, $value) = array_map('trim', explode('=', $name, 2));
@@ -157,7 +157,7 @@ class Dotenv
      * @param $value
      * @return string
      */
-    private static function sanitiseVariableValue($value)
+    protected static function sanitiseVariableValue($value)
     {
         $value = trim($value);
         if (!$value) return '';
@@ -191,7 +191,7 @@ class Dotenv
      * @param $name
      * @return string
      */
-    private static function sanitiseVariableName($name)
+    protected static function sanitiseVariableName($name)
     {
         return trim(str_replace(array('export ', '\'', '"'), '', $name));
     }
@@ -203,7 +203,7 @@ class Dotenv
      * @param $value
      * @return mixed
      */
-    private static function resolveNestedVariables($value)
+    protected static function resolveNestedVariables($value)
     {
         if (strpos($value, '$') !== false) {
             $value = preg_replace_callback(
@@ -247,7 +247,7 @@ class Dotenv
      */
     public static function makeImmutable()
     {
-        self::$immutable = true;
+        static::$immutable = true;
     }
 
     /**
@@ -255,6 +255,6 @@ class Dotenv
      */
     public static function makeMutable()
     {
-        self::$immutable = false;
+        static::$immutable = false;
     }
 }
