@@ -19,13 +19,14 @@
         "phpunit/phpunit": "~4.0"
     },
     "autoload": {
-        "psr-0": {
-            "Dotenv": "src/"
-        }
+        "psr-4": {
+            "Dotenv\\": "src/"
+        },
+        "files": ["src/helpers.php"]
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "1.0-dev"
+            "dev-master": "2.0-dev"
         }
     }
 }
