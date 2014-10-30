@@ -1,4 +1,5 @@
 <?php
+
 namespace Dotenv;
 
 use Dotenv\Variable\Loader\EnvLoader;

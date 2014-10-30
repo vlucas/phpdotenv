@@ -1,4 +1,5 @@
 <?php
+
 if (!function_exists('dotenv')) {
     /**
      * @return \Dotenv\Dotenv

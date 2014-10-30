@@ -1,4 +1,5 @@
 <?php
+
 use Dotenv\Dotenv;
 
 class DotenvTest extends \PHPUnit_Framework_TestCase
