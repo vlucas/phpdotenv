@@ -2,6 +2,8 @@
 
 if (!function_exists('dotenv')) {
     /**
+     * Singleton that returns a dotenv instance.
+     *
      * @return \Dotenv\Dotenv
      */
     function dotenv()

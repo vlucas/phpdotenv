@@ -1,11 +1,16 @@
 <?php
 
-namespace Dotenv\Variable\Loader;
+namespace Dotenv\Variable;
 
 use Dotenv\Variable\LoadsVariables;
 use Dotenv\Variable\Variable;
 
-abstract class AbstractLoader implements LoadsVariables
+/**
+ * Used to create a variable from a name and value.
+ *
+ * Filters can be applied to the name and value before creation.
+ */
+class VariableFactory
 {
     /** @var Callable[] filters to run over variable values */
     protected $filters = array();
@@ -16,6 +21,8 @@ abstract class AbstractLoader implements LoadsVariables
     }
 
     /**
+     * Add a filter to be called before the variable is created.
+     *
      * @param callable $filter
      * @return $this
      */
@@ -29,25 +36,37 @@ abstract class AbstractLoader implements LoadsVariables
     }
 
     /**
-     * Takes a variable name and value, applies all the registered filters, and returns a ner Variable.
+     * Takes a variable name & value and applies all the registered filters.
      *
-     * @param string $name name of name=value pair
-     * @param string $value
+     * @param string   $name
+     * @param string   $value
+     * @param callable $runtimeFilter to be applied before existing filters.
      * @return Variable
      */
-    protected function parse($name, $value = null)
+    public function create($name, $value, $runtimeFilter = null)
     {
-        foreach ($this->filters as $filter) {
+        $filters = $this->filters;
+
+        if (is_callable($runtimeFilter)) {
+            array_unshift($filters, $runtimeFilter);
+        }
+
+        foreach ($filters as $filter) {
             list($name, $value) = call_user_func($filter, $name, $value);
         }
+
         $variable = new Variable($name);
         $variable->prepareValue($value);
         return $variable;
     }
 
-    /*
+    /**
      * Look for {$varname} patterns in the variable value and replace with an existing
      * environment variable.
+     *
+     * @param string $name
+     * @param string $value
+     * @return array
      */
     protected function resolveNestedVariables($name, $value)
     {
@@ -67,35 +86,5 @@ abstract class AbstractLoader implements LoadsVariables
         }
 
         return array($name, $value);
-    }
-
-    /**
-     * @param string $path
-     * @param string $file
-     * @return string path to the file
-     */
-    protected function getFilePath($path, $file)
-    {
-        if (!is_string($file)) {
-            $file = $this->extension();
-        }
-
-        $filePath = rtrim($path, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $file;
-        $this->ensureFileIsReadable($filePath);
-        return $filePath;
-    }
-
-    /**
-     * @param $filePath
-     */
-    private function ensureFileIsReadable($filePath)
-    {
-        if (!is_readable($filePath) || !is_file($filePath)) {
-            throw new \InvalidArgumentException(sprintf(
-                "Dotenv: Environment file .env not found or not readable. " .
-                "Create file with your environment settings at %s",
-                $filePath
-            ));
-        }
     }
 }

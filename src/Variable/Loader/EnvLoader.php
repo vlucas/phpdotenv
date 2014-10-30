@@ -3,22 +3,15 @@
 namespace Dotenv\Variable\Loader;
 
 use Dotenv\Variable\LoadsVariables;
+use Dotenv\Variable\VariableFactory;
 
 /**
  * Loads Variables by reading a file from disk and:
  * - stripping comments beginning with a `#`
  * - parsing lines that look shell variable setters, e.g `export key = value`, `key="value"` …etc.
  */
-class EnvLoader extends AbstractLoader implements LoadsVariables
+class EnvLoader implements LoadsVariables
 {
-    public function __construct()
-    {
-        $this->addFilter(array($this, 'splitCompoundStringIntoParts'));
-        $this->addFilter(array($this, 'sanitiseVariableName'));
-        $this->addFilter(array($this, 'sanitiseVariableValue'));
-        parent::__construct();
-    }
-
     /**
      * {@inheritDoc}
      */
@@ -30,19 +23,26 @@ class EnvLoader extends AbstractLoader implements LoadsVariables
     /**
      * {@inheritDoc}
      */
-    public function loadFromFile($directory, $file, $immutable = false)
+    public function loadFromFile(VariableFactory $variableFactory, $filePath, $immutable = false)
     {
-        $filePath = $this->getFilePath($directory, $file);
         $lines = $this->readLinesFromFile($filePath);
         foreach ($lines as $line) {
             if ($this->isComment($line)) {
                 continue;
             }
             if ($this->looksLikeSetter($line)) {
-                $variable = $this->parse($line, null); // first filter will split line
+                $variable = $variableFactory->create($line, null, array($this, 'processFilters'));
                 $variable->commit($immutable);
             }
         }
+    }
+
+    public function processFilters($name, $value)
+    {
+        list($name, $value) = $this->splitCompoundStringIntoParts($name, $value);
+        list($name, $value) = $this->sanitiseVariableName($name, $value);
+        list($name, $value) = $this->sanitiseVariableValue($name, $value);
+        return array($name, $value);
     }
 
     /**

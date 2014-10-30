@@ -3,11 +3,12 @@
 namespace Dotenv\Variable\Loader;
 
 use Dotenv\Variable\LoadsVariables;
+use Dotenv\Variable\VariableFactory;
 
 /**
  * Loads Variables by including a file and using it's returned array as the variable hash.
  */
-class PhpLoader extends AbstractLoader implements LoadsVariables
+class PhpLoader implements LoadsVariables
 {
     /**
      * {@inheritDoc}
@@ -20,16 +21,15 @@ class PhpLoader extends AbstractLoader implements LoadsVariables
     /**
      * {@inheritDoc}
      */
-    public function loadFromFile($directory, $file, $immutable = false)
+    public function loadFromFile(VariableFactory $variableFactory, $filePath, $immutable = false)
     {
-        $filePath = $this->getFilePath($directory, $file);
         $variables = require $filePath;
         if (!is_array($variables)) {
             return; // nothing to process
         }
 
         foreach ($variables as $name => $value) {
-            $variable = $this->parse($name, $value);
+            $variable = $variableFactory->create($name, $value);
             $variable->commit($immutable);
         }
     }

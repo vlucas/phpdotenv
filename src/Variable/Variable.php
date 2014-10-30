@@ -2,9 +2,24 @@
 
 namespace Dotenv\Variable;
 
+/**
+ * Used to get or set an environment variable.
+ * Supports setting a pending value, followed by a commit to simplify handling of mutability.
+ */
 class Variable
 {
+    /**
+     * The variable name.
+     *
+     * @var string
+     */
     protected $name;
+
+    /**
+     * Create a variable instance.
+     *
+     * @param string $name
+     */
     protected $pendingValue;
 
     public function __construct($name)
@@ -13,7 +28,10 @@ class Variable
     }
 
     /**
+     * Prepare a value that can then be committed depending on immutability requirements.
+     *
      * @param string $value
+     * @return void
      */
     public function prepareValue($value)
     {
@@ -21,12 +39,14 @@ class Variable
     }
 
     /**
+     * Commit the pending variable value.
+     *
      * @param bool $immutable
      * @return bool
      */
     public function commit($immutable = false)
     {
-        if (!$this->passesMutabilityCheck($immutable)) {
+        if (!$this->okToWriteVariable($immutable)) {
             $this->pendingValue = null;
             return false;
         }
@@ -42,6 +62,8 @@ class Variable
     }
 
     /**
+     * Get the variable.
+     *
      * @return null|string
      */
     public function get()
@@ -57,9 +79,13 @@ class Variable
     }
 
     /**
+     * Ensure this environment variable is set.
+     *
+     * If `$allowedValues` are given, then the value must match one of them.
+     *
      * @param array $allowedValues
-     * @return bool
      * @throws \InvalidArgumentException
+     * @return bool
      */
     public function required(array $allowedValues = array())
     {
@@ -75,10 +101,12 @@ class Variable
     }
 
     /**
+     * A guard that returns true if it's ok to continue to write this variable.
+     *
      * @param bool $immutable
      * @return bool true means it's ok to continue to write this variable
      */
-    protected function passesMutabilityCheck($immutable)
+    protected function okToWriteVariable($immutable)
     {
         return ($immutable === false || $this->get() === null);
     }
