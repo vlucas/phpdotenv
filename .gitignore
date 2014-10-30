@@ -1,3 +1,4 @@
-composer.phar
+/.idea
+/vendor
 composer.lock
-vendor
+phpunit.xml
