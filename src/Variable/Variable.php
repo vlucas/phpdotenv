@@ -1,4 +1,6 @@
-<?php namespace Dotenv\Variable;
+<?php
+
+namespace Dotenv\Variable;
 
 class Variable
 {

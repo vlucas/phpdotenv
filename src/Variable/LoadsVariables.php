@@ -1,4 +1,6 @@
-<?php namespace Dotenv\Variable;
+<?php
+
+namespace Dotenv\Variable;
 
 /**
  * Classes implementing this interface are capable of reading environment variables into an

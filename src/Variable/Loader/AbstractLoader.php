@@ -1,4 +1,6 @@
-<?php namespace Dotenv\Variable\Loader;
+<?php
+
+namespace Dotenv\Variable\Loader;
 
 use Dotenv\Variable\LoadsVariables;
 use Dotenv\Variable\Variable;
