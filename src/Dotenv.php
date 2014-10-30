@@ -5,7 +5,6 @@ namespace Dotenv;
 use Dotenv\Variable\Loader\EnvLoader;
 use Dotenv\Variable\Loader\PhpLoader;
 use Dotenv\Variable\LoadsVariables;
-use Dotenv\Variable\Parser;
 use Dotenv\Variable\Variable;
 
 /**

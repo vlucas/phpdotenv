@@ -2,7 +2,6 @@
 
 namespace Dotenv\Variable\Loader;
 
-use Dotenv\Variable\Loader\AbstractLoader;
 use Dotenv\Variable\LoadsVariables;
 
 /**
