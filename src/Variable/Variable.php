@@ -30,7 +30,7 @@ class Variable
     /**
      * Prepare a value that can then be committed depending on immutability requirements.
      *
-     * @param string $value
+     * @param  string $value
      * @return void
      */
     public function prepareValue($value)
@@ -41,7 +41,7 @@ class Variable
     /**
      * Commit the pending variable value.
      *
-     * @param bool $immutable
+     * @param  bool $immutable
      * @return bool
      */
     public function commit($immutable = false)
@@ -83,9 +83,9 @@ class Variable
      *
      * If `$allowedValues` are given, then the value must match one of them.
      *
-     * @param array $allowedValues
-     * @throws \InvalidArgumentException
+     * @param  array $allowedValues
      * @return bool
+     * @throws \InvalidArgumentException
      */
     public function required(array $allowedValues = array())
     {
@@ -103,7 +103,7 @@ class Variable
     /**
      * A guard that returns true if it's ok to continue to write this variable.
      *
-     * @param bool $immutable
+     * @param  bool $immutable
      * @return bool true means it's ok to continue to write this variable
      */
     protected function okToWriteVariable($immutable)
