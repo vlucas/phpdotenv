@@ -2,9 +2,6 @@
 
 namespace Dotenv\Variable;
 
-use Dotenv\Variable\LoadsVariables;
-use Dotenv\Variable\Variable;
-
 /**
  * Used to create a variable from a name and value.
  *
@@ -12,7 +9,11 @@ use Dotenv\Variable\Variable;
  */
 class VariableFactory
 {
-    /** @var Callable[] filters to run over variable values */
+    /**
+     * The filters to run over variable values.
+     *
+     * @var Callable[]
+     */
     protected $filters = array();
 
     public function __construct()
@@ -23,7 +24,8 @@ class VariableFactory
     /**
      * Add a filter to be called before the variable is created.
      *
-     * @param  callable $filter
+     * @param callable $filter
+     *
      * @return $this
      */
     public function addFilter($filter)
@@ -38,10 +40,11 @@ class VariableFactory
     /**
      * Takes a variable name & value and applies all the registered filters.
      *
-     * @param  string   $name
-     * @param  string   $value
-     * @param  callable $runtimeFilter to be applied before existing filters.
-     * @return Variable
+     * @param string   $name
+     * @param string   $value
+     * @param callable $runtimeFilter to be applied before existing filters.
+     *
+     * @return \Dotenv\Variable\Variable
      */
     public function create($name, $value, $runtimeFilter = null)
     {
@@ -64,8 +67,9 @@ class VariableFactory
      * Look for `{$varname}` patterns in the variable value and replace with an existing
      * environment variable.
      *
-     * @param  string $name
-     * @param  string $value
+     * @param string $name
+     * @param string $value
+     *
      * @return array
      */
     protected function resolveNestedVariables($name, $value)

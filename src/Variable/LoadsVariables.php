@@ -9,15 +9,20 @@ namespace Dotenv\Variable;
 interface LoadsVariables
 {
     /**
-     * @return string the extension this loader uses.
+     * The extension this loader uses.
+     *
+     * @return string
      */
     public function extension();
 
     /**
-     * @param  VariableFactory $variableFactory factory to use to make variables
-     * @param  string $filePath the path to configuration file
-     * @param  bool $immutable whether the existing variables should be treated as immutable
-     * @return array[string]string `['key' => 'value']`
+     * Load the variables from a file.
+     *
+     * @param \Dotenv\Variable\VariableFactory $variableFactory factory to use to make variables
+     * @param string                           $filePath        the path to configuration file
+     * @param bool                             $immutable       should existing variables be treated as immutable
+     *
+     * @return string[string]
      */
     public function loadFromFile(VariableFactory $variableFactory, $filePath, $immutable = false);
 }

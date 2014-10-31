@@ -18,14 +18,14 @@ class Dotenv
     /**
      * The factory used to create variables.
      *
-     * @var VariableFactory
+     * @var \Dotenv\Variable\VariableFactory
      */
     protected $variableFactory;
 
     /**
      * The collection of objects that can load variables.
      *
-     * @var array[string]LoadsVariables of the form `['.supported.extension' => $loaderObject]`
+     * @var \Dotenv\Variable\LoadsVariables[string]
      */
     protected $variableLoaders = array();
 
@@ -42,7 +42,8 @@ class Dotenv
     /**
      * Register an object that can load variables.
      *
-     * @param  LoadsVariables $loader
+     * @param \Dotenv\Variable\LoadsVariables $loader
+     *
      * @return $this
      */
     public function registerLoader(LoadsVariables $loader)
@@ -55,8 +56,9 @@ class Dotenv
     /**
      * Load `.env` file in given directory, leaving any existing environment variables alone.
      *
-     * @param  string      $path path to directory holding environment config file
-     * @param  string|null $file
+     * @param string      $path path to directory holding environment config file
+     * @param string|null $file
+     *
      * @return $this
      */
     public function load($path, $file = null)
@@ -70,8 +72,9 @@ class Dotenv
     /**
      * Load `.env` file in given directory, overwriting any existing environment variables.
      *
-     * @param  string $path path to directory holding environment config file
-     * @param  string $file
+     * @param string $path path to directory holding environment config file
+     * @param string $file
+     *
      * @return $this
      */
     public function overload($path, $file = null)
@@ -85,8 +88,9 @@ class Dotenv
     /**
      * Set an environment variable.
      *
-     * @param  string $name
-     * @param  string $value
+     * @param string $name
+     * @param string $value
+     *
      * @return $this
      */
     public function put($name, $value)
@@ -102,10 +106,12 @@ class Dotenv
      *
      * You can also pass through an set of allowed values for the environment variable.
      *
-     * @param  mixed     $variables the name of the environment variable or an array of names
-     * @param  string[]  $allowedValues
-     * @return $this     (or throws exception on error)
+     * @param mixed    $variables     the name of the environment variable or an array of names
+     * @param string[] $allowedValues
+     *
      * @throws \RuntimeException
+     *
+     * @return $this
      */
     public function required($variables, array $allowedValues = array())
     {
@@ -134,7 +140,8 @@ class Dotenv
     /**
      * Search the different places for environment variables and return first value found.
      *
-     * @param  string $name
+     * @param string $name
+     *
      * @return string
      */
     public function get($name)
@@ -146,9 +153,10 @@ class Dotenv
     /**
      * Returns the full path to the file ensuring that it's readable.
      *
-     * @param  string $path
-     * @param  string $file
-     * @return string path to the file
+     * @param string $path
+     * @param string $file
+     *
+     * @return string
      */
     private function getFilePath($path, $file)
     {
@@ -161,8 +169,11 @@ class Dotenv
     /**
      * Ensures the given filePath is readable.
      *
-     * @param  $filePath
+     * @param $filePath
+     *
      * @throws \InvalidArgumentException
+     *
+     * @return void
      */
     private function ensureFileIsReadable($filePath)
     {
@@ -178,10 +189,12 @@ class Dotenv
     /**
      * If no filename is given, look for a default file to use.
      *
-     * @param  string $path
-     * @param  string $file
-     * @return string
+     * @param string $path
+     * @param string $file
+     *
      * @throws \InvalidArgumentException
+     *
+     * @return string
      */
     private function findDefaultFileIfNeeded($path, $file)
     {
@@ -203,9 +216,11 @@ class Dotenv
      * Given the basename of a file, return a variable loader that matches the extension.
      * If no loader is found, an `InvalidArgumentException` exception is thrown.
      *
-     * @param  string $file base name
-     * @return \Dotenv\Variable\LoadsVariables
+     * @param string $file base name
+     *
      * @throws \InvalidArgumentException
+     *
+     * @return \Dotenv\Variable\LoadsVariables
      */
     protected function resolveLoader($file)
     {
