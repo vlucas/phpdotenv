@@ -42,8 +42,9 @@ class EnvLoader implements LoadsVariables
      *
      * Called from the `VariableFactory`, passed as a callback in `$this->loadFromFile()`.
      *
-     * @param  string $name
-     * @param  string $value
+     * @param string $name
+     * @param string $value
+     *
      * @return array
      */
     public function processFilters($name, $value)
@@ -57,7 +58,8 @@ class EnvLoader implements LoadsVariables
     /**
      * Read lines from the file, auto detecting line endings.
      *
-     * @param  string $filePath
+     * @param string $filePath
+     *
      * @return array
      */
     protected function readLinesFromFile($filePath)
@@ -73,7 +75,8 @@ class EnvLoader implements LoadsVariables
     /**
      * Determine if the line in the file is a comment, e.g. begins with a #
      *
-     * @param  string $line
+     * @param string $line
+     *
      * @return bool
      */
     protected function isComment($line)
@@ -84,7 +87,8 @@ class EnvLoader implements LoadsVariables
     /**
      * Determine if the given line looks like it's setting a variable.
      *
-     * @param  string $line
+     * @param string $line
+     *
      * @return bool
      */
     protected function looksLikeSetter($line)
@@ -96,8 +100,9 @@ class EnvLoader implements LoadsVariables
      * If the `$name` contains an `=` sign, then we split it into 2 parts, a `name` & `value`
      * disregarding the `$value` passed in.
      *
-     * @param  string $name
-     * @param  string $value
+     * @param string $name
+     * @param string $value
+     *
      * @return array
      */
     protected function splitCompoundStringIntoParts($name, $value)
@@ -111,8 +116,9 @@ class EnvLoader implements LoadsVariables
     /**
      * Strips quotes from the environment variable value.
      *
-     * @param  string $name
-     * @param  string $value
+     * @param string $name
+     * @param string $value
+     *
      * @return array
      */
     protected function sanitiseVariableValue($name, $value)
@@ -152,8 +158,9 @@ class EnvLoader implements LoadsVariables
     /**
      * Strips quotes and the optional leading "export " from the environment variable name.
      *
-     * @param  string $name
-     * @param  string $value
+     * @param string $name
+     * @param string $value
+     *
      * @return array
      */
     protected function sanitiseVariableName($name, $value)
@@ -165,7 +172,8 @@ class EnvLoader implements LoadsVariables
     /**
      * Determine if the given string begins with a quote
      *
-     * @param  string $value
+     * @param string $value
+     *
      * @return bool
      */
     protected function beginsWithAQuote($value)

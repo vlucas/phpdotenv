@@ -1,4 +1,5 @@
 <?php
+
 return array(
-    'PIMMUTABLE' => 'false'
+    'PIMMUTABLE' => 'false',
 );

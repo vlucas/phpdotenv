@@ -4,6 +4,7 @@ namespace Dotenv\Variable;
 
 /**
  * Used to get or set an environment variable.
+ *
  * Supports setting a pending value, followed by a commit to simplify handling of mutability.
  */
 class Variable
@@ -30,7 +31,8 @@ class Variable
     /**
      * Prepare a value that can then be committed depending on immutability requirements.
      *
-     * @param  string $value
+     * @param string $value
+     *
      * @return void
      */
     public function prepareValue($value)
@@ -41,7 +43,8 @@ class Variable
     /**
      * Commit the pending variable value.
      *
-     * @param  bool $immutable
+     * @param bool $immutable
+     *
      * @return bool
      */
     public function commit($immutable = false)
@@ -64,7 +67,7 @@ class Variable
     /**
      * Get the variable.
      *
-     * @return null|string
+     * @return string|null
      */
     public function get()
     {
@@ -83,9 +86,11 @@ class Variable
      *
      * If `$allowedValues` are given, then the value must match one of them.
      *
-     * @param  array $allowedValues
-     * @return bool
+     * @param array $allowedValues
+     *
      * @throws \InvalidArgumentException
+     *
+     * @return bool
      */
     public function required(array $allowedValues = array())
     {
@@ -103,8 +108,9 @@ class Variable
     /**
      * A guard that returns true if it's ok to continue to write this variable.
      *
-     * @param  bool $immutable
-     * @return bool true means it's ok to continue to write this variable
+     * @param bool $immutable
+     *
+     * @return bool
      */
     protected function okToWriteVariable($immutable)
     {
