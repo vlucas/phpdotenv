@@ -15,7 +15,7 @@
 >
     <testsuites>
         <testsuite name="PHP Dotenv Test Suite">
-            <directory suffix=".php">./tests</directory>
+            <directory suffix="Test.php">./tests</directory>
         </testsuite>
     </testsuites>
     <filter>
