@@ -1,4 +1,7 @@
 <?php
+
+namespace Dotenv;
+
 /**
  * Dotenv
  *
@@ -14,6 +17,8 @@ class Dotenv
 
     /**
      * Load `.env` file in given directory
+     * @param string $path Path with the file to load
+     * @param string $file File name to load.
      */
     public static function load($path, $file = '.env')
     {
@@ -160,10 +165,13 @@ class Dotenv
     protected static function sanitiseVariableValue($value)
     {
         $value = trim($value);
-        if (!$value) return '';
+        if (!$value) {
+            return '';
+        }
         if (strpbrk($value[0], '"\'') !== false) { // value starts with a quote
             $quote = $value[0];
-            $regexPattern = sprintf('/^
+            $regexPattern = sprintf(
+                '/^
                 %1$s          # match a quote at the start of the value
                 (             # capturing sub-pattern used
                  (?:          # we do not need to capture this
@@ -174,7 +182,9 @@ class Dotenv
                 )             # end of the capturing sub-pattern
                 %1$s          # and the closing quote
                 .*$           # and discard any string after the closing quote
-                /mx', $quote);
+                /mx',
+                $quote
+            );
             $value = preg_replace($regexPattern, '$1', $value);
             $value = str_replace("\\$quote", $quote, $value);
             $value = str_replace('\\\\', '\\', $value);
@@ -182,6 +192,7 @@ class Dotenv
             $parts = explode(' #', $value, 2);
             $value = $parts[0];
         }
+
         return trim($value);
     }
 
