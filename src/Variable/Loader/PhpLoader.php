@@ -29,8 +29,27 @@ class PhpLoader implements LoadsVariables
         }
 
         foreach ($variables as $name => $value) {
+            $value = $this->castValueToString($value);
             $variable = $variableFactory->create($name, $value);
             $variable->commit($immutable);
+        }
+    }
+
+    /**
+     * Casts scalars to a string representation. All other types return empty string.
+     * 
+     * @param mixed $value
+     *
+     * @return string
+     */
+    private function castValueToString($value)
+    {
+        if (is_bool($value)) {
+            return $value === true ? 'true' : 'false';
+        } elseif (is_scalar($value)) {
+            return (string) $value;
+        } else {
+            return '';
         }
     }
 }

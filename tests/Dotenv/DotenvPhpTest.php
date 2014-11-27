@@ -52,4 +52,22 @@ class DotenvPhpTest extends \PHPUnit_Framework_TestCase
         $this->dotenv->load(dirname(__DIR__) . '/fixtures/php', 'nonarray.env.php');
         $this->assertTrue(true);
     }
+
+    public function testDotenvCastsAllValuesToString()
+    {
+        $this->dotenv->load(dirname(__DIR__) . '/fixtures/php', 'stringvalues.env.php');
+        $assertions = array(
+            'PS_INT'    => '1',
+            'PS_FLOAT'  => '20.5',
+            'PS_STRING' => 'string',
+            'PS_FALSE'  => 'false',
+            'PS_TRUE'  =>  'true',
+            'PS_ARRAY'  => '',
+            'PS_HASH'   => "",
+            'PS_OBJECT' => ''
+        );
+        foreach ($assertions as $k => $v) {
+            $this->assertEquals($v, $_ENV[$k]);
+        }
+    }
 }
