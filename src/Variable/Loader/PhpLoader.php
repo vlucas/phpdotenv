@@ -37,19 +37,19 @@ class PhpLoader implements LoadsVariables
 
     /**
      * Casts scalars to a string representation. All other types return empty string.
-     * 
+     *
      * @param mixed $value
      *
      * @return string
      */
-    private function castValueToString($value)
+    protected function castValueToString($value)
     {
         if (is_bool($value)) {
             return $value === true ? 'true' : 'false';
         } elseif (is_scalar($value)) {
             return (string) $value;
-        } else {
-            return '';
         }
+
+        return '';
     }
 }
