@@ -51,6 +51,7 @@ class Variable
     {
         if (!$this->okToWriteVariable($immutable)) {
             $this->pendingValue = null;
+
             return false;
         }
 
@@ -82,27 +83,11 @@ class Variable
     }
 
     /**
-     * Ensure this environment variable is set.
-     *
-     * If `$allowedValues` are given, then the value must match one of them.
-     *
-     * @param array $allowedValues
-     *
-     * @throws \InvalidArgumentException
-     *
-     * @return bool
+     * @return string
      */
-    public function required(array $allowedValues = array())
+    public function name()
     {
-        $value = $this->get();
-        if (is_null($value)) {
-            throw new \InvalidArgumentException(sprintf('%s missing', $this->name));
-        }
-        if (!empty($allowedValues) && !in_array($value, $allowedValues)) {
-            throw new \InvalidArgumentException(sprintf('%s value not allowed (%s)', $this->name, $value));
-        }
-
-        return true;
+        return $this->name;
     }
 
     /**

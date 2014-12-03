@@ -6,6 +6,7 @@ use Dotenv\Variable\Loader\EnvLoader;
 use Dotenv\Variable\Loader\PhpLoader;
 use Dotenv\Variable\LoadsVariables;
 use Dotenv\Variable\Variable;
+use Dotenv\Variable\VariableAssertion;
 use Dotenv\Variable\VariableFactory;
 
 /**
@@ -50,6 +51,7 @@ class Dotenv
     {
         $extension = $loader->extension();
         $this->variableLoaders[$extension] = $loader;
+
         return $this;
     }
 
@@ -66,6 +68,7 @@ class Dotenv
         $file = $this->getFilePath($path, $file);
         $loader = $this->resolveLoader($file);
         $loader->loadFromFile($this->variableFactory, $file, $immutable = true);
+
         return $this;
     }
 
@@ -82,6 +85,7 @@ class Dotenv
         $file = $this->getFilePath($path, $file);
         $loader = $this->resolveLoader($file);
         $loader->loadFromFile($this->variableFactory, $file, $immutable = false);
+
         return $this;
     }
 
@@ -98,43 +102,24 @@ class Dotenv
         $variable = new Variable($name);
         $variable->prepareValue($value);
         $variable->commit($immutable = false);
+
         return $this;
     }
 
     /**
-     * Require specified ENV vars to be present, or throw a `RuntimeException`.
+     * Run assertions against one or more variables.
      *
-     * You can also pass through an set of allowed values for the environment variable.
-     *
-     * @param mixed    $variables     the name of the environment variable or an array of names
-     * @param string[] $allowedValues
-     *
-     * @throws \RuntimeException
-     *
-     * @return $this
+     * @param  string|string[]   $variables
+     * @return VariableAssertion
      */
-    public function required($variables, array $allowedValues = array())
+    public function exists($variables)
     {
         $variables = (array) $variables;
+        array_walk($variables, function (&$value) {
+            $value = new Variable($value);
+        });
 
-        $missingVariables = array();
-        foreach ($variables as $variableName) {
-            try {
-                $variable = new Variable($variableName);
-                $variable->required($allowedValues);
-            } catch (\InvalidArgumentException $e) {
-                $missingVariables[] = $e->getMessage();
-            }
-        }
-
-        if ($missingVariables) {
-            throw new \RuntimeException(sprintf(
-                "Required environment variable missing, or value not allowed: '%s'",
-                implode("', '", $missingVariables)
-            ));
-        }
-
-        return $this;
+        return new VariableAssertion($variables);
     }
 
     /**
@@ -147,6 +132,7 @@ class Dotenv
     public function get($name)
     {
         $variable = new Variable($name);
+
         return $variable->get();
     }
 
@@ -163,6 +149,7 @@ class Dotenv
         $file = $this->findDefaultFileIfNeeded($path, $file);
         $filePath = rtrim($path, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $file;
         $this->ensureFileIsReadable($filePath);
+
         return $filePath;
     }
 

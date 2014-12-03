@@ -74,14 +74,14 @@ class DotenvTest extends \PHPUnit_Framework_TestCase
     public function testDotenvRequiredStringEnvironmentVars()
     {
         $this->dotenv->load(dirname(__DIR__) . '/fixtures');
-        $this->dotenv->required('FOO');
+        $this->dotenv->exists('FOO');
         $this->assertTrue(true); // anything wrong an an exception will be thrown
     }
 
     public function testDotenvRequiredArrayEnvironmentVars()
     {
         $this->dotenv->load(dirname(__DIR__) . '/fixtures');
-        $this->dotenv->required(array('FOO', 'BAR'));
+        $this->dotenv->exists(array('FOO', 'BAR'));
         $this->assertTrue(true); // anything wrong an an exception will be thrown
     }
 
@@ -96,29 +96,29 @@ class DotenvTest extends \PHPUnit_Framework_TestCase
     public function testDotenvAllowedValues()
     {
         $this->dotenv->load(dirname(__DIR__) . '/fixtures');
-        $this->dotenv->required('FOO', array('bar', 'baz'));
+        $this->dotenv->exists('FOO')->inArray(array('bar', 'baz'));
         $this->assertTrue(true); // anything wrong an an exception will be thrown
     }
 
     /**
      * @expectedException RuntimeException
-     * @expectedExceptionMessage Required environment variable missing, or value not allowed: 'FOO value not allowed (bar)'
+     * @expectedExceptionMessage One or more environment variables failed assertions: FOO is not an allowed value
      */
     public function testDotenvProhibitedValues()
     {
         $this->dotenv->load(dirname(__DIR__) . '/fixtures');
-        $this->dotenv->required('FOO', array('buzz'));
+        $this->dotenv->exists('FOO')->inArray(array('buzz'));
         $this->assertTrue(true); // anything wrong an an exception will be thrown
     }
 
     /**
      * @expectedException RuntimeException
-     * @expectedExceptionMessage Required environment variable missing, or value not allowed: 'FOOX missing', 'NOPE missing'
+     * @expectedExceptionMessage One or more environment variables failed assertions: FOOX is missing, NOPE is missing
      */
     public function testDotenvRequiredThrowsRuntimeException()
     {
         $this->dotenv->load(dirname(__DIR__) . '/fixtures');
-        $this->dotenv->required(array('FOOX', 'NOPE'));
+        $this->dotenv->exists(array('FOOX', 'NOPE'));
     }
 
     public function testDotenvNullFileArgumentUsesDefault()
@@ -159,5 +159,58 @@ class DotenvTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('jdgEB4{QgEC]HL))&GcXxokB+wqoN+j>xkV7K?m$r', getenv('SPVAR3'));
         $this->assertEquals('22222:22#2^{', getenv('SPVAR4'));
         $this->assertEquals("test some escaped characters like a quote \\' or maybe a backslash \\\\", getenv('SPVAR5'));
+    }
+
+    public function testDotenvAssertions()
+    {
+        $this->dotenv->load(dirname(__DIR__) . '/fixtures', 'assertions.env');
+        $this->dotenv->exists(array(
+            'ASSERTVAR1',
+            'ASSERTVAR2',
+            'ASSERTVAR3',
+            'ASSERTVAR4',
+        ));
+
+        $this->dotenv->exists(array(
+            'ASSERTVAR1',
+            'ASSERTVAR4',
+        ))->notEmpty();
+
+        $this->dotenv->exists(array(
+            'ASSERTVAR1',
+            'ASSERTVAR4',
+        ))->notEmpty()->inArray(array('0', 'val1'));
+
+        $this->assertTrue(true); // anything wrong an an exception will be thrown
+    }
+
+    /**
+     * @expectedException RuntimeException
+     * @expectedExceptionMessage One or more environment variables failed assertions: ASSERTVAR2 is empty
+     */
+    public function testDotenvEmptyThrowsRuntimeException()
+    {
+        $this->dotenv->load(dirname(__DIR__) . '/fixtures', 'assertions.env');
+        $this->dotenv->exists('ASSERTVAR2')->notEmpty();
+    }
+
+    /**
+     * @expectedException RuntimeException
+     * @expectedExceptionMessage One or more environment variables failed assertions: ASSERTVAR3 is empty
+     */
+    public function testDotenvStringOfSpacesConsideredEmpty()
+    {
+        $this->dotenv->load(dirname(__DIR__) . '/fixtures', 'assertions.env');
+        $this->dotenv->exists('ASSERTVAR3')->notEmpty();
+    }
+
+    /**
+     * @expectedException RuntimeException
+     * @expectedExceptionMessage One or more environment variables failed assertions: ASSERTVAR3 is empty
+     */
+    public function testDotenvHitsLastChain()
+    {
+        $this->dotenv->load(dirname(__DIR__) . '/fixtures', 'assertions.env');
+        $this->dotenv->exists('ASSERTVAR3')->notEmpty();
     }
 }

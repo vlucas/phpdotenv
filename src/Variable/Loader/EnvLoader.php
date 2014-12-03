@@ -52,6 +52,7 @@ class EnvLoader implements LoadsVariables
         list($name, $value) = $this->splitCompoundStringIntoParts($name, $value);
         list($name, $value) = $this->sanitiseVariableName($name, $value);
         list($name, $value) = $this->sanitiseVariableValue($name, $value);
+
         return array($name, $value);
     }
 
@@ -69,6 +70,7 @@ class EnvLoader implements LoadsVariables
         ini_set('auto_detect_line_endings', '1');
         $lines = file($filePath, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
         ini_set('auto_detect_line_endings', $autodetect);
+
         return $lines;
     }
 
@@ -110,6 +112,7 @@ class EnvLoader implements LoadsVariables
         if (strpos($name, '=') !== false) {
             list($name, $value) = array_map('trim', explode('=', $name, 2));
         }
+
         return array($name, $value);
     }
 
@@ -152,6 +155,7 @@ class EnvLoader implements LoadsVariables
             $parts = explode(' #', $value, 2);
             $value = $parts[0];
         }
+
         return array($name, trim($value));
     }
 
@@ -166,6 +170,7 @@ class EnvLoader implements LoadsVariables
     protected function sanitiseVariableName($name, $value)
     {
         $name = trim(str_replace(array('export ', '\'', '"'), '', $name));
+
         return array($name, $value);
     }
 

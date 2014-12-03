@@ -34,6 +34,7 @@ class VariableFactory
             throw new \InvalidArgumentException('Filter no callable');
         }
         $this->filters[] = $filter;
+
         return $this;
     }
 
@@ -60,6 +61,7 @@ class VariableFactory
 
         $variable = new Variable($name);
         $variable->prepareValue($value);
+
         return $variable;
     }
 

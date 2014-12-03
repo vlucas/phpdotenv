@@ -14,6 +14,7 @@ if (!function_exists('dotenv')) {
         if ($dotenv === null) {
             $dotenv = new \Dotenv\Dotenv();
         }
+
         return $dotenv;
     }
 }
