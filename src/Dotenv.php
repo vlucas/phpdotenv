@@ -25,8 +25,9 @@ class Dotenv
         if (!is_readable($filePath) || !is_file($filePath)) {
             throw new \InvalidArgumentException(
                 sprintf(
-                    "Dotenv: Environment file .env not found or not readable. " .
+                    "Dotenv: Environment file %s not found or not readable. " .
                     "Create file with your environment settings at %s",
+                    $file,
                     $filePath
                 )
             );
