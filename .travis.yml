@@ -8,8 +8,8 @@ php:
   - 5.6
   - hhvm
 
-install:
-  - travis_retry composer install --no-interaction --prefer-source
+sudo: false
 
-script:
-  - vendor/bin/phpunit
+install: travis_retry composer install --no-interaction --prefer-source
+
+script: vendor/bin/phpunit

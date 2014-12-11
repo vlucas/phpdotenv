@@ -8,5 +8,5 @@ return array(
     'PS_TRUE'  =>  true,
     'PS_ARRAY'  => array(1, 2, 3),
     'PS_HASH'   => array('key' => 'value'),
-    'PS_OBJECT' => new StdClass()
+    'PS_OBJECT' => new StdClass(),
 );
