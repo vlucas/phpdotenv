@@ -109,7 +109,8 @@ class Dotenv
     /**
      * Run assertions against one or more variables.
      *
-     * @param  string|string[]   $variables
+     * @param string|string[] $variables
+     *
      * @return VariableAssertion
      */
     public function exists($variables)
@@ -147,7 +148,7 @@ class Dotenv
     private function getFilePath($path, $file)
     {
         $file = $this->findDefaultFileIfNeeded($path, $file);
-        $filePath = rtrim($path, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $file;
+        $filePath = rtrim($path, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR.$file;
         $this->ensureFileIsReadable($filePath);
 
         return $filePath;
@@ -166,7 +167,7 @@ class Dotenv
     {
         if (!is_readable($filePath) || !is_file($filePath)) {
             throw new \InvalidArgumentException(sprintf(
-                "Dotenv: Environment file .env not found or not readable. " .
+                "Dotenv: Environment file .env not found or not readable. ".
                 "Create file with your environment settings at %s",
                 $filePath
             ));
@@ -191,7 +192,7 @@ class Dotenv
 
         $defaults = array_keys($this->variableLoaders);
         foreach ($defaults as $default) {
-            if (file_exists($path . DIRECTORY_SEPARATOR . $default)) {
+            if (file_exists($path.DIRECTORY_SEPARATOR.$default)) {
                 return $default;
             }
         }

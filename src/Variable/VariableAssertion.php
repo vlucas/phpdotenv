@@ -41,7 +41,8 @@ class VariableAssertion
     /**
      * Assert that each variable is amongst the given choices.
      *
-     * @param  string[]          $choices
+     * @param string[] $choices
+     *
      * @return VariableAssertion
      */
     public function inArray(array $choices)
