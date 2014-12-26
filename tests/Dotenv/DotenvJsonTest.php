@@ -47,7 +47,7 @@ class DotenvJsonTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue(true);
     }
 
-    public function testDotenvIgnoresNonArray()
+    public function testDotenvIgnoresNonJson()
     {
         $this->dotenv->load(dirname(__DIR__).'/fixtures/json', 'nonjson.env.json');
         $this->assertTrue(true);
