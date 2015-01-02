@@ -10,6 +10,10 @@ php:
 
 sudo: false
 
-install: travis_retry composer install --no-interaction --prefer-source
+install:
+  - travis_retry composer install --no-interaction --prefer-source
 
-script: vendor/bin/phpunit
+script:
+  - vendor/bin/phpunit
+  - vendor/bin/php-cs-fixer fix --verbose
+
