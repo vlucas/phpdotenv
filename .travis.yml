@@ -16,5 +16,5 @@ install:
 
 script:
   - vendor/bin/phpunit
-  - php php-cs-fixer.phar fix --dry-run --verbose
+  - vendor/bin/php-cs-fixer fix --dry-run --verbose
 
