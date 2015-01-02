@@ -3,6 +3,7 @@
 namespace Dotenv;
 
 use Dotenv\Variable\Loader\EnvLoader;
+use Dotenv\Variable\Loader\JsonLoader;
 use Dotenv\Variable\Loader\PhpLoader;
 use Dotenv\Variable\LoadsVariables;
 use Dotenv\Variable\Variable;
@@ -38,6 +39,7 @@ class Dotenv
         $this->variableFactory = new VariableFactory();
         $this->registerLoader(new EnvLoader());
         $this->registerLoader(new PhpLoader());
+        $this->registerLoader(new JsonLoader());
     }
 
     /**
