@@ -11,10 +11,9 @@ php:
 sudo: false
 
 install:
-  - wget http://get.sensiolabs.org/php-cs-fixer.phar
   - travis_retry composer install --no-interaction --prefer-source
 
 script:
   - vendor/bin/phpunit
-  - vendor/bin/php-cs-fixer fix --dry-run --verbose
+  - vendor/bin/php-cs-fixer fix --verbose
 
