@@ -112,7 +112,7 @@ class Dotenv
      * @param  string|string[]   $variables
      * @return VariableAssertion
      */
-    public function exists($variables)
+    public function required($variables)
     {
         $variables = (array) $variables;
         array_walk($variables, function (&$value) {

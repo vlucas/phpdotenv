@@ -77,13 +77,16 @@ S3_BUCKET=devbucket
 SECRET_KEY=abc123
 ```
 
-You can then load `.env` in your application with a single line:
+You can then load `.env` in your application with:
+
 ```php
-Dotenv::load(__DIR__);
+$dotenv = new Dotenv\Dotenv();
+$dotenv->load(__DIR__);
 ```
 
 All of the defined variables are now accessible with the `getenv`
 method, and are available in the `$_ENV` and `$_SERVER` super-globals.
+
 ```php
 $s3_bucket = getenv('S3_BUCKET');
 $s3_bucket = $_ENV['S3_BUCKET'];
@@ -92,6 +95,7 @@ $s3_bucket = $_SERVER['S3_BUCKET'];
 
 You should also be able to access them using your framework's Request
 class (if you are using a framework).
+
 ```php
 $s3_bucket = $request->env('S3_BUCKET');
 $s3_bucket = $request->getEnv('S3_BUCKET');
@@ -100,7 +104,8 @@ $s3_bucket = $request->server->get('S3_BUCKET');
 
 ### Nesting Variables
 
-It's possible to nest an environment variable within another, useful to cut down on repetition.
+It's possible to nest an environment variable within another, useful to cut
+down on repetition.
 
 This is done by wrapping an existing environment variable in `{$…}` e.g.
 
@@ -112,18 +117,15 @@ TMP_DIR={$BASE_DIR}/tmp
 
 ### Immutability
 
-By default, Dotenv treats environment variables as immutable, that is… once set they cannot be changed.
+By default, Dotenv will NOT overwrite existing environment variables that are
+already set in the environment.
 
-You can make Dotenv mutable using
-
-```php
-Dotenv::makeMutable();
-```
-
-… and you can make Dotenv immutable again using
+If you want Dotenv to overwrite existing environment variables, use `overload`
+instead of `load`:
 
 ```php
-Dotenv::makeImmutable();
+$dotenv = new Dotenv\Dotenv();
+$dotenv->overload(__DIR__);
 ```
 
 Requiring Variables to be Set
@@ -134,32 +136,54 @@ an Exception if they are not. This is particularly useful to let people know
 any explicit required variables that your app will not work without.
 
 You can use a single string:
+
 ```php
-Dotenv::required('DATABASE_DSN');
+$dotenv->required('DATABASE_DSN');
 ```
 
 Or an array of strings:
+
 ```php
-Dotenv::required(array('DB_HOST', 'DB_NAME', 'DB_USER', 'DB_PASS'));
+$dotenv->required(['DB_HOST', 'DB_NAME', 'DB_USER', 'DB_PASS']);
 ```
 
 If any ENV vars are missing, Dotenv will throw a `RuntimeException` like this:
+
 ```
-Required environment variable missing or value not allowed: 'DB_USER', 'DB_PASS'
+One or more environment variables failed assertions: DATABASE_DSN is missing
 ```
 
-### Allowed values
+### Empty Variables
 
-As you may have noticed from the Exception message above, it's also possible to define a set of values that your
-environment variable should adhere to.
+Beyond simply requiring a variable to be set, you might also need to ensure the
+variable is not empty:
 
 ```php
-Dotenv::required('SESSION_STORE', array('Filesystem', 'Memcached'));
+$dotenv->required('DATABASE_DSN')->notEmpty();
 ```
 
-Again, if the environment variable wasn't in this list, you'd get a similar Exception:
+If the environment variable is empty, you'd get an Exception:
+
 ```
-Required environment variable missing or value not allowed: 'SESSION_STORE'
+One or more environment variables failed assertions: DATABASE_DSN is empty
+```
+
+### Allowed Values
+
+It is also possible to define a set of values that your environment variable
+should be. This is especially useful in situations where only a handful of
+options or drivers are actually supported by your code:
+
+```php
+$dotenv->required('SESSION_STORE')->allowedValues(['Filesystem', 'Memcached']);
+```
+
+If the environment variable wasn't in this list of allowed values, you'd get a
+similar Exception:
+
+```
+One or more environment variables failed assertions: SESSION_STORE is not an
+allowed value
 ```
 
 ### Comments
@@ -171,6 +195,10 @@ You can comment your `.env` file using the `#` character. E.g.
 VAR="value" # comment
 VAR=value # comment
 ```
+
+Note that this is NOT compatible with bash evaluation, so if you `source .env`
+to get your environment variables into your local shell session, the comments
+will cause errors.
 
 Usage Notes
 -----------
@@ -185,6 +213,18 @@ set so that there is no overhead of loading the `.env` file on each request.
 This can be achieved via an automated deployment process with tools like
 Vagrant, chef, or Puppet, or can be set manually with cloud hosts like
 Pagodabox and Heroku.
+
+### Command Line Scripts
+
+If you need to use environment variables that you have set in your `.env` file
+in a command line script that doesn't use the Dotenv library, you can `source`
+it into your local shell session:
+
+```
+source .env
+```
+
+Note that comments in your `.env` file will cause errors with this usage
 
 Contributing
 ------------

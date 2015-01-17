@@ -44,7 +44,7 @@ class VariableAssertion
      * @param  string[]          $choices
      * @return VariableAssertion
      */
-    public function inArray(array $choices)
+    public function allowedValues(array $choices)
     {
         return $this->assertCallback(
             function ($value) use ($choices) {

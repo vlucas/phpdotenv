@@ -74,14 +74,14 @@ class DotenvTest extends \PHPUnit_Framework_TestCase
     public function testDotenvRequiredStringEnvironmentVars()
     {
         $this->dotenv->load(dirname(__DIR__) . '/fixtures');
-        $this->dotenv->exists('FOO');
+        $this->dotenv->required('FOO');
         $this->assertTrue(true); // anything wrong an an exception will be thrown
     }
 
     public function testDotenvRequiredArrayEnvironmentVars()
     {
         $this->dotenv->load(dirname(__DIR__) . '/fixtures');
-        $this->dotenv->exists(array('FOO', 'BAR'));
+        $this->dotenv->required(array('FOO', 'BAR'));
         $this->assertTrue(true); // anything wrong an an exception will be thrown
     }
 
@@ -96,7 +96,7 @@ class DotenvTest extends \PHPUnit_Framework_TestCase
     public function testDotenvAllowedValues()
     {
         $this->dotenv->load(dirname(__DIR__) . '/fixtures');
-        $this->dotenv->exists('FOO')->inArray(array('bar', 'baz'));
+        $this->dotenv->required('FOO')->allowedValues(array('bar', 'baz'));
         $this->assertTrue(true); // anything wrong an an exception will be thrown
     }
 
@@ -107,7 +107,7 @@ class DotenvTest extends \PHPUnit_Framework_TestCase
     public function testDotenvProhibitedValues()
     {
         $this->dotenv->load(dirname(__DIR__) . '/fixtures');
-        $this->dotenv->exists('FOO')->inArray(array('buzz'));
+        $this->dotenv->required('FOO')->allowedValues(array('buzz'));
         $this->assertTrue(true); // anything wrong an an exception will be thrown
     }
 
@@ -118,7 +118,7 @@ class DotenvTest extends \PHPUnit_Framework_TestCase
     public function testDotenvRequiredThrowsRuntimeException()
     {
         $this->dotenv->load(dirname(__DIR__) . '/fixtures');
-        $this->dotenv->exists(array('FOOX', 'NOPE'));
+        $this->dotenv->required(array('FOOX', 'NOPE'));
     }
 
     public function testDotenvNullFileArgumentUsesDefault()
@@ -164,22 +164,22 @@ class DotenvTest extends \PHPUnit_Framework_TestCase
     public function testDotenvAssertions()
     {
         $this->dotenv->load(dirname(__DIR__) . '/fixtures', 'assertions.env');
-        $this->dotenv->exists(array(
+        $this->dotenv->required(array(
             'ASSERTVAR1',
             'ASSERTVAR2',
             'ASSERTVAR3',
             'ASSERTVAR4',
         ));
 
-        $this->dotenv->exists(array(
+        $this->dotenv->required(array(
             'ASSERTVAR1',
             'ASSERTVAR4',
         ))->notEmpty();
 
-        $this->dotenv->exists(array(
+        $this->dotenv->required(array(
             'ASSERTVAR1',
             'ASSERTVAR4',
-        ))->notEmpty()->inArray(array('0', 'val1'));
+        ))->notEmpty()->allowedValues(array('0', 'val1'));
 
         $this->assertTrue(true); // anything wrong an an exception will be thrown
     }
@@ -191,7 +191,7 @@ class DotenvTest extends \PHPUnit_Framework_TestCase
     public function testDotenvEmptyThrowsRuntimeException()
     {
         $this->dotenv->load(dirname(__DIR__) . '/fixtures', 'assertions.env');
-        $this->dotenv->exists('ASSERTVAR2')->notEmpty();
+        $this->dotenv->required('ASSERTVAR2')->notEmpty();
     }
 
     /**
@@ -201,7 +201,7 @@ class DotenvTest extends \PHPUnit_Framework_TestCase
     public function testDotenvStringOfSpacesConsideredEmpty()
     {
         $this->dotenv->load(dirname(__DIR__) . '/fixtures', 'assertions.env');
-        $this->dotenv->exists('ASSERTVAR3')->notEmpty();
+        $this->dotenv->required('ASSERTVAR3')->notEmpty();
     }
 
     /**
@@ -211,6 +211,6 @@ class DotenvTest extends \PHPUnit_Framework_TestCase
     public function testDotenvHitsLastChain()
     {
         $this->dotenv->load(dirname(__DIR__) . '/fixtures', 'assertions.env');
-        $this->dotenv->exists('ASSERTVAR3')->notEmpty();
+        $this->dotenv->required('ASSERTVAR3')->notEmpty();
     }
 }

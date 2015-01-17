@@ -22,14 +22,14 @@ class DotenvPhpTest extends \PHPUnit_Framework_TestCase
     public function testDotenvRequiredStringEnvironmentVars()
     {
         $this->dotenv->load(dirname(__DIR__) . '/fixtures/php', '.env.php');
-        $this->dotenv->exists('PE_FOO');
+        $this->dotenv->required('PE_FOO');
         $this->assertTrue(true); // anything wrong an an exception will be thrown
     }
 
     public function testDotenvRequiredArrayEnvironmentVars()
     {
         $this->dotenv->load(dirname(__DIR__) . '/fixtures/php', '.env.php');
-        $this->dotenv->exists(array('PE_FOO', 'PE_BAR'));
+        $this->dotenv->required(array('PE_FOO', 'PE_BAR'));
         $this->assertTrue(true); // anything wrong an an exception will be thrown
     }
 
