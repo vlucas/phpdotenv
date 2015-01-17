@@ -2,7 +2,7 @@
 
 use Dotenv\Dotenv;
 
-class DotenvPhpTest extends \PHPUnit_Framework_TestCase
+class DotenvJsonTest extends \PHPUnit_Framework_TestCase
 {
     /** @var Dotenv */
     private $dotenv;
@@ -13,7 +13,7 @@ class DotenvPhpTest extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         $this->dotenv = new Dotenv();
-        $this->fixturesFolder = dirname(__DIR__) . '/fixtures/php';
+        $this->fixturesFolder = dirname(__DIR__) . '/fixtures/json';
     }
 
     public function testDotenvLoadsEnvironmentVars()
@@ -25,21 +25,21 @@ class DotenvPhpTest extends \PHPUnit_Framework_TestCase
 
     public function testDotenvRequiredStringEnvironmentVars()
     {
-        $this->dotenv->load($this->fixturesFolder, '.env.php');
+        $this->dotenv->load($this->fixturesFolder, '.env.json');
         $this->dotenv->required('PE_FOO');
         $this->assertTrue(true); // anything wrong an an exception will be thrown
     }
 
     public function testDotenvRequiredArrayEnvironmentVars()
     {
-        $this->dotenv->load($this->fixturesFolder, '.env.php');
+        $this->dotenv->load($this->fixturesFolder, '.env.json');
         $this->dotenv->required(array('PE_FOO', 'PE_BAR'));
         $this->assertTrue(true); // anything wrong an an exception will be thrown
     }
 
     public function testDotenvNestedEnvironmentVars()
     {
-        $this->dotenv->load($this->fixturesFolder, 'nested.env.php');
+        $this->dotenv->load($this->fixturesFolder, 'nested.env.json');
         $this->assertEquals('Hello World!', $_ENV['PNVAR3']);
         $this->assertEquals('${PNVAR1} ${PNVAR2}', $_ENV['PNVAR4']); // not resolved
         $this->assertEquals('$PNVAR1 {PNVAR2}', $_ENV['PNVAR5']); // not resolved
@@ -47,19 +47,19 @@ class DotenvPhpTest extends \PHPUnit_Framework_TestCase
 
     public function testDotenvIgnoresEmptyFile()
     {
-        $this->dotenv->load($this->fixturesFolder, 'empty.env.php');
+        $this->dotenv->load($this->fixturesFolder, 'empty.env.json');
         $this->assertTrue(true);
     }
 
-    public function testDotenvIgnoresNonArray()
+    public function testDotenvIgnoresNonJson()
     {
-        $this->dotenv->load($this->fixturesFolder, 'nonarray.env.php');
+        $this->dotenv->load($this->fixturesFolder, 'nonjson.env.json');
         $this->assertTrue(true);
     }
 
     public function testDotenvCastsAllValuesToString()
     {
-        $this->dotenv->load($this->fixturesFolder, 'stringvalues.env.php');
+        $this->dotenv->load($this->fixturesFolder, 'stringvalues.env.json');
         $assertions = array(
             'PS_INT'    => '1',
             'PS_FLOAT'  => '20.5',
@@ -68,7 +68,7 @@ class DotenvPhpTest extends \PHPUnit_Framework_TestCase
             'PS_TRUE'  =>  'true',
             'PS_ARRAY'  => '',
             'PS_HASH'   => "",
-            'PS_OBJECT' => ''
+            'PS_OBJECT' => '',
         );
         foreach ($assertions as $k => $v) {
             $this->assertEquals($v, $_ENV[$k]);
