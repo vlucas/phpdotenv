@@ -63,8 +63,8 @@ project. **Make sure the `.env` file is added to your `.gitignore` so it is not
 checked-in the code**
 
 ```shell
-S3_BUCKET=dotenv
-SECRET_KEY=souper_seekret_key
+S3_BUCKET="dotenv"
+SECRET_KEY="souper_seekret_key"
 ```
 
 Now create a file named `.env.example` and check this into the project. This
@@ -73,8 +73,8 @@ either be blank or filled with dummy data. The idea is to let people know what
 variables are required, but not give them the sensitive production values.
 
 ```shell
-S3_BUCKET=devbucket
-SECRET_KEY=abc123
+S3_BUCKET="devbucket"
+SECRET_KEY="abc123"
 ```
 
 You can then load `.env` in your application with:
@@ -100,6 +100,7 @@ class (if you are using a framework).
 $s3_bucket = $request->env('S3_BUCKET');
 $s3_bucket = $request->getEnv('S3_BUCKET');
 $s3_bucket = $request->server->get('S3_BUCKET');
+$s3_bucket = env('S3_BUCKET');
 ```
 
 ### Nesting Variables
@@ -107,12 +108,12 @@ $s3_bucket = $request->server->get('S3_BUCKET');
 It's possible to nest an environment variable within another, useful to cut
 down on repetition.
 
-This is done by wrapping an existing environment variable in `{$…}` e.g.
+This is done by wrapping an existing environment variable in `${…}` e.g.
 
 ```shell
-BASE_DIR=/var/webroot/project-root
-CACHE_DIR={$BASE_DIR}/cache
-TMP_DIR={$BASE_DIR}/tmp
+BASE_DIR="/var/webroot/project-root"
+CACHE_DIR="${BASE_DIR}/cache"
+TMP_DIR="${BASE_DIR}/tmp"
 ```
 
 ### Immutability
@@ -196,10 +197,6 @@ VAR="value" # comment
 VAR=value # comment
 ```
 
-Note that this is NOT compatible with bash evaluation, so if you `source .env`
-to get your environment variables into your local shell session, the comments
-will cause errors.
-
 Usage Notes
 -----------
 
@@ -223,8 +220,6 @@ it into your local shell session:
 ```
 source .env
 ```
-
-Note that comments in your `.env` file will cause errors with this usage
 
 Contributing
 ------------
