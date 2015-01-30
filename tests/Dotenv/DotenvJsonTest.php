@@ -40,8 +40,8 @@ class DotenvJsonTest extends \PHPUnit_Framework_TestCase
     public function testDotenvNestedEnvironmentVars()
     {
         $this->dotenv->load($this->fixturesFolder, 'nested.env.json');
-        $this->assertEquals('Hello World!', $_ENV['PNVAR3']);
-        $this->assertEquals('${PNVAR1} ${PNVAR2}', $_ENV['PNVAR4']); // not resolved
+        $this->assertEquals('{$PNVAR1} {$PNVAR2}', $_ENV['PNVAR3']); // not resolved
+        $this->assertEquals('Hello World!', $_ENV['PNVAR4']);
         $this->assertEquals('$PNVAR1 {PNVAR2}', $_ENV['PNVAR5']); // not resolved
     }
 
