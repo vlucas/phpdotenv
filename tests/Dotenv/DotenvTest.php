@@ -14,6 +14,7 @@ class DotenvTest extends \PHPUnit_Framework_TestCase
     {
         $this->dotenv = new Dotenv();
         $this->fixturesFolder = dirname(__DIR__) . '/fixtures/env';
+        $this->fixturesFolderWrong = dirname(__DIR__) . '/fixtures/env-wrong';
     }
 
     public function testDotenvLoadsEnvironmentVars()
@@ -45,7 +46,25 @@ class DotenvTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('with spaces', getenv('QSPACED'));
         $this->assertEquals('', getenv('QNULL'));
         $this->assertEquals('pgsql:host=localhost;dbname=test', getenv('QEQUALS'));
-        $this->assertEquals("test some escaped characters like a quote (') or maybe a backslash (\\)", getenv('QESCAPED'));
+        $this->assertEquals('test some escaped characters like a quote (") or maybe a backslash (\\)', getenv('QESCAPED'));
+    }
+
+    /**
+     * @expectedException InvalidArgumentException
+     * @expectedExceptionMessage Dotenv values must be surrounded by double quotes. Single quotes are not allowed because they do not support bash variable interpolation.
+     */
+    public function testQuotedWrongThrowsException()
+    {
+        $this->dotenv->load($this->fixturesFolderWrong, 'quoted-wrong.env');
+    }
+
+    /**
+     * @expectedException InvalidArgumentException
+     * @expectedExceptionMessage Dotenv values containing spaces must be surrounded by double quotes.
+     */
+    public function testSpacedValuesWithoutQuotesThrowsException()
+    {
+        $this->dotenv->load($this->fixturesFolderWrong, 'spaced-wrong.env');
     }
 
     public function testExportedDotenvLoadsEnvironmentVars()
@@ -162,7 +181,7 @@ class DotenvTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('?BUty3koaV3%GA*hMAwH}B', getenv('SPVAR2'));
         $this->assertEquals('jdgEB4{QgEC]HL))&GcXxokB+wqoN+j>xkV7K?m$r', getenv('SPVAR3'));
         $this->assertEquals('22222:22#2^{', getenv('SPVAR4'));
-        $this->assertEquals("test some escaped characters like a quote \\' or maybe a backslash \\\\", getenv('SPVAR5'));
+        $this->assertEquals("test some escaped characters like a quote \" or maybe a backslash \\", getenv('SPVAR5'));
     }
 
     public function testDotenvAssertions()
