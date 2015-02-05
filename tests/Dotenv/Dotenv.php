@@ -153,4 +153,26 @@ class DotenvTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('22222:22#2^{', getenv('SPVAR4'));
         $this->assertEquals("test some escaped characters like a quote \\' or maybe a backslash \\\\", getenv('SPVAR5'));
     }
+
+    public function testDotenvParsesLineBreaks()
+    {
+        Dotenv::load(dirname(__DIR__) . '/fixtures', 'linebreaks.env');
+
+        $expected = <<<EOF
+awesome
+multiline
+value
+EOF;
+        $this->assertEquals($expected, getenv('LINEB1'));
+        $this->assertEquals($expected, getenv('LINEB2'));
+        $this->assertEquals($expected, getenv('LINEB3'));
+
+        $lineB2 = <<<EOF
+awesome
+crazy
+multiline
+value
+EOF;
+        $this->assertEquals($lineB2, getenv('LINEB4'));
+    }
 }

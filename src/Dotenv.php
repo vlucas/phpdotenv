@@ -130,6 +130,7 @@ class Dotenv
     {
         list($name, $value) = static::splitCompoundStringIntoParts($name, $value);
         $name  = static::sanitiseVariableName($name);
+        $value = static::parseLineBreaks($value);
         $value = static::sanitiseVariableValue($value);
         $value = static::resolveNestedVariables($value);
 
@@ -221,6 +222,20 @@ class Dotenv
             );
         }
 
+        return $value;
+    }
+
+    /**
+     * Look for escaped line breaks \n and make them literal line breaks
+     *
+     * @param $value
+     * @return mixed
+     */
+    protected static function parseLineBreaks($value)
+    {
+        if (strpos($value, '\n') !== false || strpos($value, '\r') !== false) {
+            $value = str_replace(array('\n', '\r'), array("\n", "\r"), $value);
+        }
         return $value;
     }
 
