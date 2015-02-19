@@ -244,7 +244,7 @@ class Dotenv
     }
 
     /**
-     * Check Dotenv immutable status.
+     * Check Dotenv immutable status. Returns true if immutable, false if mutable.
      * @return bool
      */
     public static function isImmutable()
