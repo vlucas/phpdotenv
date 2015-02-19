@@ -153,4 +153,12 @@ class DotenvTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('22222:22#2^{', getenv('SPVAR4'));
         $this->assertEquals("test some escaped characters like a quote \\' or maybe a backslash \\\\", getenv('SPVAR5'));
     }
+
+    public function testDotenvImmutableStatus()
+    {
+        Dotenv::makeImmutable();
+        $this->assertTrue( Dotenv::isImmutable() );
+        Dotenv::makeMutable();
+        $this->assertFalse( Dotenv::isImmutable() );
+    }
 }

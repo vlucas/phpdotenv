@@ -244,6 +244,15 @@ class Dotenv
     }
 
     /**
+     * Check Dotenv immutable status. Returns true if immutable, false if mutable.
+     * @return bool
+     */
+    public static function isImmutable()
+    {
+        return static::$immutable;
+    }
+
+    /**
      * Make Dotenv immutable. This means that once set, an environment variable cannot be overridden.
      */
     public static function makeImmutable()
