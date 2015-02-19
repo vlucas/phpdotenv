@@ -156,6 +156,7 @@ class DotenvTest extends \PHPUnit_Framework_TestCase
 
     public function testDotenvImmutableStatus()
     {
+        Dotenv::makeImmutable();
         $this->assertTrue( Dotenv::isImmutable() );
         Dotenv::makeMutable();
         $this->assertFalse( Dotenv::isImmutable() );
