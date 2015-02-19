@@ -73,8 +73,9 @@ class Dotenv
         }
 
         putenv("$name=$value");
-        $_ENV[$name] = $value;
-        $_SERVER[$name] = $value;
+        putenv("SYMFONY__$name=$value");
+        $_ENV[$name] = $_ENV["SYMFONY__$name"] = $value;
+        $_SERVER[$name] = $_SERVER["SYMFONY__$name"] = $value;
     }
 
     /**
