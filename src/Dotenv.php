@@ -161,7 +161,7 @@ class Dotenv
     protected static function sanitiseVariableValue($value)
     {
         $value = trim($value);
-        if (!$value) return '';
+        if (strlen($value) == 0) return '';
         if (strpbrk($value[0], '"\'') !== false) { // value starts with a quote
             $quote = $value[0];
             $regexPattern = sprintf('/^
