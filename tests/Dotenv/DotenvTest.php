@@ -51,16 +51,7 @@ class DotenvTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @expectedException InvalidArgumentException
-     * @expectedExceptionMessage Dotenv values must be surrounded by double quotes. Single quotes are not allowed because they do not support bash variable interpolation.
-     */
-    public function testQuotedWrongThrowsException()
-    {
-        $this->dotenv->load($this->fixturesFolderWrong, 'quoted-wrong.env');
-    }
-
-    /**
-     * @expectedException InvalidArgumentException
-     * @expectedExceptionMessage Dotenv values containing spaces must be surrounded by double quotes.
+     * @expectedExceptionMessage Dotenv values containing spaces must be surrounded by quotes.
      */
     public function testSpacedValuesWithoutQuotesThrowsException()
     {

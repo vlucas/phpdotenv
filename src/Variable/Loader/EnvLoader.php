@@ -131,11 +131,6 @@ class EnvLoader implements LoadsVariables
             return array($name, $value);
         }
 
-        // Values must have double quotes, not single quotes
-        if ($this->beginsWithASingleQuote($value)) {
-            throw new \InvalidArgumentException("Dotenv values must be surrounded by double quotes. Single quotes are not allowed because they do not support bash variable interpolation.");
-        }
-
         if ($this->beginsWithAQuote($value)) { // value starts with a quote
             $quote = $value[0];
             $regexPattern = sprintf(
@@ -162,7 +157,7 @@ class EnvLoader implements LoadsVariables
 
             // Unquoted values cannot contain whitespace
             if (preg_match('/\s+/', $value) > 0) {
-                throw new \InvalidArgumentException("Dotenv values containing spaces must be surrounded by double quotes.");
+                throw new \InvalidArgumentException("Dotenv values containing spaces must be surrounded by quotes.");
             }
         }
 
@@ -179,7 +174,7 @@ class EnvLoader implements LoadsVariables
      */
     protected function sanitiseVariableName($name, $value)
     {
-        $name = trim(str_replace(array('export ', '"'), '', $name));
+        $name = trim(str_replace(array('export ', '\'', '"'), '', $name));
 
         return array($name, $value);
     }
@@ -193,18 +188,6 @@ class EnvLoader implements LoadsVariables
      */
     protected function beginsWithAQuote($value)
     {
-        return strpbrk($value[0], '"') !== false;
-    }
-
-    /**
-     * Determine if the given string begins with a single quote
-     *
-     * @param string $value
-     *
-     * @return bool
-     */
-    protected function beginsWithASingleQuote($value)
-    {
-        return strpbrk($value[0], "'") !== false;
+        return strpbrk($value[0], '"\'') !== false;
     }
 }
