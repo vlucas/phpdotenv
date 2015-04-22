@@ -19,30 +19,30 @@ class DotenvJsonTest extends \PHPUnit_Framework_TestCase
     public function testDotenvLoadsEnvironmentVars()
     {
         $this->dotenv->load($this->fixturesFolder);
-        $this->assertEquals('bar', getenv('PE_FOO'));
-        $this->assertEquals('baz', getenv('PE_BAR'));
+        $this->assertEquals('bar', getenv('JE_FOO'));
+        $this->assertEquals('baz', getenv('JE_BAR'));
     }
 
     public function testDotenvRequiredStringEnvironmentVars()
     {
         $this->dotenv->load($this->fixturesFolder, '.env.json');
-        $this->dotenv->required('PE_FOO');
+        $this->dotenv->required('JE_FOO');
         $this->assertTrue(true); // anything wrong an an exception will be thrown
     }
 
     public function testDotenvRequiredArrayEnvironmentVars()
     {
         $this->dotenv->load($this->fixturesFolder, '.env.json');
-        $this->dotenv->required(array('PE_FOO', 'PE_BAR'));
+        $this->dotenv->required(array('JE_FOO', 'JE_BAR'));
         $this->assertTrue(true); // anything wrong an an exception will be thrown
     }
 
     public function testDotenvNestedEnvironmentVars()
     {
         $this->dotenv->load($this->fixturesFolder, 'nested.env.json');
-        $this->assertEquals('{$PNVAR1} {$PNVAR2}', $_ENV['PNVAR3']); // not resolved
-        $this->assertEquals('Hello World!', $_ENV['PNVAR4']);
-        $this->assertEquals('$PNVAR1 {PNVAR2}', $_ENV['PNVAR5']); // not resolved
+        $this->assertEquals('{$JNVAR1} {$JNVAR2}', $_ENV['JNVAR3']); // not resolved
+        $this->assertEquals('Hello World!', $_ENV['JNVAR4']);
+        $this->assertEquals('$JNVAR1 {JNVAR2}', $_ENV['JNVAR5']); // not resolved
     }
 
     public function testDotenvIgnoresEmptyFile()
@@ -61,14 +61,14 @@ class DotenvJsonTest extends \PHPUnit_Framework_TestCase
     {
         $this->dotenv->load($this->fixturesFolder, 'stringvalues.env.json');
         $assertions = array(
-            'PS_INT'    => '1',
-            'PS_FLOAT'  => '20.5',
-            'PS_STRING' => 'string',
-            'PS_FALSE'  => 'false',
-            'PS_TRUE'  =>  'true',
-            'PS_ARRAY'  => '',
-            'PS_HASH'   => "",
-            'PS_OBJECT' => '',
+            'JS_INT'    => '1',
+            'JS_FLOAT'  => '20.5',
+            'JS_STRING' => 'string',
+            'JS_FALSE'  => 'false',
+            'JS_TRUE'  =>  'true',
+            'JS_ARRAY'  => '',
+            'JS_HASH'   => "",
+            'JS_OBJECT' => '',
         );
         foreach ($assertions as $k => $v) {
             $this->assertEquals($v, $_ENV[$k]);
