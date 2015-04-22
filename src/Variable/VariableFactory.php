@@ -66,7 +66,7 @@ class VariableFactory
     }
 
     /**
-     * Look for `{$varname}` patterns in the variable value and replace with an existing
+     * Look for `${varname}` patterns in the variable value and replace with an existing
      * environment variable.
      *
      * @param string $name
