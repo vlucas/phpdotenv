@@ -110,6 +110,8 @@ down on repetition.
 
 This is done by wrapping an existing environment variable in `${…}` e.g.
 
+If you need to escape `${…}`, just prefix `$` with a backslash like `\${…}`.
+
 ```shell
 BASE_DIR="/var/webroot/project-root"
 CACHE_DIR="${BASE_DIR}/cache"

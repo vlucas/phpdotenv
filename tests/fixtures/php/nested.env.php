@@ -6,4 +6,6 @@ return array(
     'PNVAR3' => '{$PNVAR1} {$PNVAR2}',
     'PNVAR4' => '${PNVAR1} ${PNVAR2}',
     'PNVAR5' => '$PNVAR1 {PNVAR2}',
+    'PNVAR6' => '${NONEXIST}variable',
+    'PNVAR7' => '\${PNVAR1} \${PNVAR2}',
 );

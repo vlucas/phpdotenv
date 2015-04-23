@@ -45,6 +45,18 @@ class DotenvJsonTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('$JNVAR1 {JNVAR2}', $_ENV['JNVAR5']); // not resolved
     }
 
+    public function testDotenvNestedNonExistentEnvironmentVars()
+    {
+        $this->dotenv->load($this->fixturesFolder, 'nested.env.json');
+        $this->assertEquals('variable', $_ENV['JNVAR6']); // resolved as empty
+    }
+
+    public function testDotenvEscapedNestedEnvironmentVars()
+    {
+        $this->dotenv->load($this->fixturesFolder, 'nested.env.json');
+        $this->assertEquals('${JNVAR1} ${JNVAR2}', $_ENV['JNVAR7']); // not resolved
+    }
+
     public function testDotenvIgnoresEmptyFile()
     {
         $this->dotenv->load($this->fixturesFolder, 'empty.env.json');
