@@ -78,13 +78,17 @@ class VariableFactory
     {
         if (strpos($value, '$') !== false) {
             $value = preg_replace_callback(
-                '/\${([a-zA-Z0-9_]+)}/',
+                '/(\\\\)?\${([a-zA-Z0-9_]+)}/',
                 function ($matchedPatterns) {
-                    $nestedVariable = dotenv()->get($matchedPatterns[1]);
-                    if (is_null($nestedVariable)) {
-                        return $matchedPatterns[0];
+                    if ($matchedPatterns[1]) {
+                        return substr($matchedPatterns[0], 1);
                     } else {
-                        return  $nestedVariable;
+                        $nestedVariable = dotenv()->get($matchedPatterns[2]);
+                        if (is_null($nestedVariable)) {
+                            return '';
+                        } else {
+                            return  $nestedVariable;
+                        }
                     }
                 },
                 $value

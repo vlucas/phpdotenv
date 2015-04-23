@@ -45,6 +45,18 @@ class DotenvPhpTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('$PNVAR1 {PNVAR2}', $_ENV['PNVAR5']); // not resolved
     }
 
+    public function testDotenvNestedNonExistentEnvironmentVars()
+    {
+        $this->dotenv->load($this->fixturesFolder, 'nested.env.php');
+        $this->assertEquals('variable', $_ENV['PNVAR6']); // resolved as empty
+    }
+
+    public function testDotenvEscapedNestedEnvironmentVars()
+    {
+        $this->dotenv->load($this->fixturesFolder, 'nested.env.php');
+        $this->assertEquals('${PNVAR1} ${PNVAR2}', $_ENV['PNVAR7']); // not resolved
+    }
+
     public function testDotenvIgnoresEmptyFile()
     {
         $this->dotenv->load($this->fixturesFolder, 'empty.env.php');
