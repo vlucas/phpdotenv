@@ -220,10 +220,11 @@ class Loader
     protected function resolveNestedVariables($value)
     {
         if (strpos($value, '$') !== false) {
+            $loader = $this;
             $value = preg_replace_callback(
                 '/\${([a-zA-Z0-9_]+)}/',
-                function ($matchedPatterns) {
-                    $nestedVariable = $this->getEnvironmentVariable($matchedPatterns[1]);
+                function ($matchedPatterns) use ($loader) {
+                    $nestedVariable = $loader->getEnvironmentVariable($matchedPatterns[1]);
                     if (is_null($nestedVariable)) {
                         return $matchedPatterns[0];
                     } else {
