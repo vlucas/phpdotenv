@@ -22,5 +22,10 @@
         "psr-4": {
             "Dotenv\\": "src/"
         }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "2.1-dev"
+        }
     }
 }
