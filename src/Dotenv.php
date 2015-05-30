@@ -1,14 +1,26 @@
 <?php
+
 namespace Dotenv;
 
 /**
- * Dotenv
+ * Dotenv.
  *
- * Loads a `.env` file in the given directory and sets the environment vars
+ * Loads a `.env` file in the given directory and sets the environment vars.
  */
 class Dotenv
 {
+    /**
+     * The file path.
+     *
+     * @var string
+     */
     protected $filePath;
+
+    /**
+     * The loader instance.
+     *
+     * @var \Dotenv\Loader|null
+     */
     protected $loader;
 
     public function __construct($path, $file = '.env')
@@ -17,20 +29,26 @@ class Dotenv
     }
 
     /**
-     * Load `.env` file in given directory
+     * Load `.env` file in given directory.
+     *
+     * @return void
      */
     public function load()
     {
         $this->loader = new Loader($this->filePath, $immutable = true);
+
         return $this->loader->load();
     }
 
     /**
-     * Load `.env` file in given directory
+     * Load `.env` file in given directory.
+     *
+     * @return void
      */
     public function overload()
     {
         $this->loader = new Loader($this->filePath, $immutable = false);
+
         return $this->loader->load();
     }
 
@@ -48,14 +66,17 @@ class Dotenv
             $file = '.env';
         }
 
-        $filePath = rtrim($path, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $file;
+        $filePath = rtrim($path, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR.$file;
+
         return $filePath;
     }
 
     /**
-     * Required ensures that the specified variables exist, and returns a new Validation object
+     * Required ensures that the specified variables exist, and returns a new Validation object.
      *
      * @param mixed $variable
+     *
+     * @return \Dotenv\Validator
      */
     public function required($variable)
     {
