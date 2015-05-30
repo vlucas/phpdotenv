@@ -19,8 +19,8 @@
         "phpunit/phpunit": "~4.0"
     },
     "autoload": {
-        "psr-0": {
-            "Dotenv": "src/"
+        "psr-4": {
+            "Dotenv\\": "src/"
         }
     },
     "extra": {
