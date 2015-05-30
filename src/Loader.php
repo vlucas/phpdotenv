@@ -1,18 +1,39 @@
 <?php
+
 namespace Dotenv;
 
+use InvalidArgumentException;
+
 /**
+ * Loader.
+ *
  * Loads Variables by reading a file from disk and:
  * - stripping comments beginning with a `#`
- * - parsing lines that look shell variable setters, e.g `export key = value`, `key="value"` …etc.
+ * - parsing lines that look shell variable setters, e.g `export key = value`, `key="value"`
  */
 class Loader
 {
+    /**
+     * The file path.
+     *
+     * @var string
+     */
     protected $filePath;
+
+    /**
+     * Are we immutable?
+     *
+     * @var bool
+     */
     protected $immutable = false;
 
     /**
-     * Constructor
+     * Create a new loader instance.
+     *
+     * @param string $filePath
+     * @param bool   $immutable
+     *
+     * @return void
      */
     public function __construct($filePath, $immutable = false)
     {
@@ -21,7 +42,9 @@ class Loader
     }
 
     /**
-     * {@inheritDoc}
+     * Load `.env` file in given directory.
+     *
+     * @return void
      */
     public function load()
     {
@@ -44,8 +67,6 @@ class Loader
     /**
      * Ensures the given filePath is readable.
      *
-     * @param $filePath
-     *
      * @throws \InvalidArgumentException
      *
      * @return void
@@ -54,15 +75,17 @@ class Loader
     {
         $filePath = $this->filePath;
         if (!is_readable($filePath) || !is_file($filePath)) {
-            throw new \InvalidArgumentException(sprintf(
-                "Dotenv: Environment file .env not found or not readable. " .
-                "Create file with your environment settings at %s",
+            throw new InvalidArgumentException(sprintf(
+                'Dotenv: Environment file .env not found or not readable. '.
+                'Create file with your environment settings at %s',
                 $filePath
             ));
         }
     }
 
     /**
+     * Normalise the given environment variable.
+     *
      * Takes value as passed in by developer and:
      * - ensures we're dealing with a separate name and value, breaking apart the name string if needed
      * - cleaning the value of quotes
@@ -71,6 +94,7 @@ class Loader
      *
      * @param $name
      * @param $value
+     *
      * @return array
      */
     protected function normaliseEnvironmentVariable($name, $value)
@@ -121,7 +145,7 @@ class Loader
     }
 
     /**
-     * Determine if the line in the file is a comment, e.g. begins with a #
+     * Determine if the line in the file is a comment, e.g. begins with a #.
      *
      * @param string $line
      *
@@ -145,6 +169,8 @@ class Loader
     }
 
     /**
+     * Split the compound string into parts.
+     *
      * If the `$name` contains an `=` sign, then we split it into 2 parts, a `name` & `value`
      * disregarding the `$value` passed in.
      *
@@ -167,6 +193,8 @@ class Loader
      *
      * @param string $name
      * @param string $value
+     *
+     * @throws \InvalidArgumentException
      *
      * @return array
      */
@@ -203,7 +231,7 @@ class Loader
 
             // Unquoted values cannot contain whitespace
             if (preg_match('/\s+/', $value) > 0) {
-                throw new \InvalidArgumentException("Dotenv values containing spaces must be surrounded by quotes.");
+                throw new InvalidArgumentException('Dotenv values containing spaces must be surrounded by quotes.');
             }
         }
 
@@ -211,10 +239,13 @@ class Loader
     }
 
     /**
+     * Resolve the nested variables.
+     *
      * Look for {$varname} patterns in the variable value and replace with an existing
      * environment variable.
      *
      * @param $value
+     *
      * @return mixed
      */
     protected function resolveNestedVariables($value)
@@ -254,7 +285,7 @@ class Loader
     }
 
     /**
-     * Determine if the given string begins with a quote
+     * Determine if the given string begins with a quote.
      *
      * @param string $value
      *
@@ -267,7 +298,9 @@ class Loader
 
     /**
      * Search the different places for environment variables and return first value found.
-     * @param $name
+     *
+     * @param string $name
+     *
      * @return string
      */
     public function getEnvironmentVariable($name)
@@ -279,21 +312,24 @@ class Loader
                 return $_SERVER[$name];
             default:
                 $value = getenv($name);
-
                 return $value === false ? null : $value; // switch getenv default to null
         }
     }
 
     /**
-     * Set a variable using:
+     * Set an environment variable.
+     *
+     * This is done using:
      * - putenv
      * - $_ENV
-     * - $_SERVER
+     * - $_SERVER.
      *
      * The environment variable value is stripped of single and double quotes.
      *
      * @param $name
-     * @param null $value
+     * @param string|null $value
+     *
+     * @return void
      */
     public function setEnvironmentVariable($name, $value = null)
     {

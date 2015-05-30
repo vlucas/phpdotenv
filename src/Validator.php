@@ -3,16 +3,34 @@
 namespace Dotenv;
 
 /**
- * Validations to be applied against a number of Variables.
+ * Validator.
+ *
+ * Validations to be applied against a number of variables.
  */
 class Validator
 {
     /**
-     * @param array $variables
+     * The variables to validate.
+     *
+     * @var array
      */
     protected $variables;
+
+    /**
+     * The loader instance.
+     *
+     * @var \Dotenv\Loader
+     */
     protected $loader;
 
+    /**
+     * Create a new validator instance.
+     *
+     * @param array          $variables
+     * @param \Dotenv\Loader $loader
+     *
+     * @return void
+     */
     public function __construct(array $variables, Loader $loader)
     {
         $this->variables = $variables;
@@ -29,7 +47,7 @@ class Validator
     /**
      * Assert that each variable is not empty.
      *
-     * @return VariableAssertion
+     * @return \Dotenv\Validator
      */
     public function notEmpty()
     {
@@ -44,8 +62,9 @@ class Validator
     /**
      * Assert that each variable is amongst the given choices.
      *
-     * @param  string[]          $choices
-     * @return VariableAssertion
+     * @param string[] $choices
+     *
+     * @return \Dotenv\Validator
      */
     public function allowedValues(array $choices)
     {
@@ -61,9 +80,9 @@ class Validator
      * Assert that the callback returns true for each variable.
      *
      * @param callable $callback
-     * @param string   $message  to use if the assertion fails
+     * @param string   $message
      *
-     * @return $this
+     * @return \Dotenv\Validator
      */
     protected function assertCallback($callback, $message = 'failed callback assertion')
     {

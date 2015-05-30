@@ -1,12 +1,13 @@
 <?php
+
 use Dotenv\Dotenv;
 
 class DotenvTest extends \PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
-        $this->fixturesFolder = dirname(__DIR__) . '/fixtures/env';
-        $this->fixturesFolderWrong = dirname(__DIR__) . '/fixtures/env-wrong';
+        $this->fixturesFolder = dirname(__DIR__).'/fixtures/env';
+        $this->fixturesFolderWrong = dirname(__DIR__).'/fixtures/env-wrong';
     }
 
     public function testDotenvLoadsEnvironmentVars()
@@ -148,8 +149,9 @@ class DotenvTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * The fixture data has whitespace between the key and in the value string
-     *     Test that these keys are trimmed down
+     * The fixture data has whitespace between the key and in the value string.
+     *
+     * Test that these keys are trimmed down.
      */
     public function testDotenvTrimmedKeys()
     {
@@ -181,7 +183,7 @@ class DotenvTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('?BUty3koaV3%GA*hMAwH}B', getenv('SPVAR2'));
         $this->assertEquals('jdgEB4{QgEC]HL))&GcXxokB+wqoN+j>xkV7K?m$r', getenv('SPVAR3'));
         $this->assertEquals('22222:22#2^{', getenv('SPVAR4'));
-        $this->assertEquals("test some escaped characters like a quote \" or maybe a backslash \\", getenv('SPVAR5'));
+        $this->assertEquals('test some escaped characters like a quote " or maybe a backslash \\', getenv('SPVAR5'));
     }
 
     public function testDotenvAssertions()
