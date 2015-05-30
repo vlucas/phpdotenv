@@ -71,7 +71,7 @@ class DotenvTest extends \PHPUnit_Framework_TestCase
     public function testDotenvRequiredArrayEnvironmentVars()
     {
         Dotenv::load(dirname(__DIR__).'/fixtures');
-        $res = Dotenv::required(['FOO', 'BAR']);
+        $res = Dotenv::required(array('FOO', 'BAR'));
         $this->assertTrue($res);
     }
 
@@ -86,7 +86,7 @@ class DotenvTest extends \PHPUnit_Framework_TestCase
     public function testDotenvAllowedValues()
     {
         Dotenv::load(dirname(__DIR__).'/fixtures');
-        $res = Dotenv::required('FOO', ['bar', 'baz']);
+        $res = Dotenv::required('FOO', array('bar', 'baz'));
         $this->assertTrue($res);
     }
 
@@ -97,7 +97,7 @@ class DotenvTest extends \PHPUnit_Framework_TestCase
     public function testDotenvProhibitedValues()
     {
         Dotenv::load(dirname(__DIR__).'/fixtures');
-        $res = Dotenv::required('FOO', ['buzz']);
+        $res = Dotenv::required('FOO', array('buzz'));
         $this->assertTrue($res);
     }
 
@@ -108,7 +108,7 @@ class DotenvTest extends \PHPUnit_Framework_TestCase
     public function testDotenvRequiredThrowsRuntimeException()
     {
         Dotenv::load(dirname(__DIR__).'/fixtures');
-        $res = Dotenv::required(['FOOX', 'NOPE']);
+        $res = Dotenv::required(array('FOOX', 'NOPE'));
     }
 
     public function testDotenvNullFileArgumentUsesDefault()
