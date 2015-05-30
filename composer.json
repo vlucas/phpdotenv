@@ -22,10 +22,5 @@
         "psr-0": {
             "Dotenv": "src/"
         }
-    },
-    "extra": {
-        "branch-alias": {
-            "dev-master": "1.1-dev"
-        }
     }
 }
