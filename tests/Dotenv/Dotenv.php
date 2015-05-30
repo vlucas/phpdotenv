@@ -1,6 +1,6 @@
 <?php
 
-class DotenvTest extends \PHPUnit_Framework_TestCase
+class DotenvTest extends PHPUnit_Framework_TestCase
 {
     public function testDotenvLoadsEnvironmentVars()
     {
