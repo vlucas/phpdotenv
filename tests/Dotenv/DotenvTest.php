@@ -85,20 +85,30 @@ class DotenvTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('', $_ENV['NULL']);
     }
 
+    /**
+     * @depends testDotenvLoadsEnvironmentVars
+     * @depends testDotenvLoadsEnvGlobals
+     * @depends testDotenvLoadsServerGlobals
+     */
     public function testDotenvRequiredStringEnvironmentVars()
     {
         $dotenv = new Dotenv($this->fixturesFolder);
         $dotenv->load();
         $dotenv->required('FOO');
-        $this->assertTrue(true); // anything wrong an an exception will be thrown
+        $this->assertTrue(true); // anything wrong an exception will be thrown
     }
 
+    /**
+     * @depends testDotenvLoadsEnvironmentVars
+     * @depends testDotenvLoadsEnvGlobals
+     * @depends testDotenvLoadsServerGlobals
+     */
     public function testDotenvRequiredArrayEnvironmentVars()
     {
         $dotenv = new Dotenv($this->fixturesFolder);
         $dotenv->load();
         $dotenv->required(array('FOO', 'BAR'));
-        $this->assertTrue(true); // anything wrong an an exception will be thrown
+        $this->assertTrue(true); // anything wrong an exception will be thrown
     }
 
     public function testDotenvNestedEnvironmentVars()
@@ -110,15 +120,24 @@ class DotenvTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('$NVAR1 {NVAR2}', $_ENV['NVAR5']); // not resolved
     }
 
+    /**
+     * @depends testDotenvLoadsEnvironmentVars
+     * @depends testDotenvLoadsEnvGlobals
+     * @depends testDotenvLoadsServerGlobals
+     */
     public function testDotenvAllowedValues()
     {
         $dotenv = new Dotenv($this->fixturesFolder);
         $dotenv->load();
         $dotenv->required('FOO')->allowedValues(array('bar', 'baz'));
-        $this->assertTrue(true); // anything wrong an an exception will be thrown
+        $this->assertTrue(true); // anything wrong an exception will be thrown
     }
 
     /**
+     * @depends testDotenvLoadsEnvironmentVars
+     * @depends testDotenvLoadsEnvGlobals
+     * @depends testDotenvLoadsServerGlobals
+     *
      * @expectedException RuntimeException
      * @expectedExceptionMessage One or more environment variables failed assertions: FOO is not an allowed value
      */
@@ -127,7 +146,6 @@ class DotenvTest extends \PHPUnit_Framework_TestCase
         $dotenv = new Dotenv($this->fixturesFolder);
         $dotenv->load();
         $dotenv->required('FOO')->allowedValues(array('buzz'));
-        $this->assertTrue(true); // anything wrong an an exception will be thrown
     }
 
     /**
@@ -138,6 +156,8 @@ class DotenvTest extends \PHPUnit_Framework_TestCase
     {
         $dotenv = new Dotenv($this->fixturesFolder);
         $dotenv->load();
+        $this->assertEquals(false, getenv('FOOX'));
+        $this->assertEquals(false, getenv('NOPE'));
         $dotenv->required(array('FOOX', 'NOPE'));
     }
 
@@ -157,7 +177,7 @@ class DotenvTest extends \PHPUnit_Framework_TestCase
     {
         $dotenv = new Dotenv($this->fixturesFolder, 'quoted.env');
         $dotenv->load();
-        $this->assertTrue(isset($_ENV['QWHITESPACE']));
+        $this->assertEquals('no space', getenv('QWHITESPACE'));
     }
 
     public function testDotenvLoadDoesNotOverwriteEnv()
@@ -190,6 +210,11 @@ class DotenvTest extends \PHPUnit_Framework_TestCase
     {
         $dotenv = new Dotenv($this->fixturesFolder, 'assertions.env');
         $dotenv->load();
+        $this->assertEquals('val1', getenv('ASSERTVAR1'));
+        $this->assertEquals('', getenv('ASSERTVAR2'));
+        $this->assertEquals('', getenv('ASSERTVAR3'));
+        $this->assertEquals('0', getenv('ASSERTVAR4'));
+
         $dotenv->required(array(
             'ASSERTVAR1',
             'ASSERTVAR2',
@@ -218,6 +243,8 @@ class DotenvTest extends \PHPUnit_Framework_TestCase
     {
         $dotenv = new Dotenv($this->fixturesFolder, 'assertions.env');
         $dotenv->load();
+        $this->assertEquals('', getenv('ASSERTVAR2'));
+
         $dotenv->required('ASSERTVAR2')->notEmpty();
     }
 
@@ -229,6 +256,8 @@ class DotenvTest extends \PHPUnit_Framework_TestCase
     {
         $dotenv = new Dotenv($this->fixturesFolder, 'assertions.env');
         $dotenv->load();
+        $this->assertEquals('', getenv('ASSERTVAR3'));
+
         $dotenv->required('ASSERTVAR3')->notEmpty();
     }
 
