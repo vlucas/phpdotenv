@@ -44,7 +44,7 @@ class Loader
     /**
      * Load `.env` file in given directory.
      *
-     * @return void
+     * @return array
      */
     public function load()
     {
