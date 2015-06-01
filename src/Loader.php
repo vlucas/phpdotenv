@@ -34,6 +34,8 @@ class Loader
      *
      * @param string $filePath
      * @param bool   $immutable
+     *
+     * @return void
      */
     public function __construct($filePath, $immutable = false)
     {
@@ -75,21 +77,10 @@ class Loader
     protected function ensureFileIsReadable()
     {
         $filePath = $this->filePath;
-        $fileName = basename($filePath);
         if (!is_file($filePath)) {
-            throw new FileNotFoundException(sprintf(
-                'Dotenv: Environment file %s not found. '.
-                'Create file with your environment settings at %s',
-                $fileName,
-                $filePath
-            ));
+            throw new FileNotFoundException($filePath);
         } elseif (!is_readable($filePath)) {
-            throw new FilePermissionException(sprintf(
-                'Dotenv: Environment file %s not readable. '.
-                'Ensures the given filePath %s is readable',
-                $fileName,
-                $filePath
-            ));
+            throw new FilePermissionException($filePath);
         }
     }
 
@@ -204,7 +195,7 @@ class Loader
      * @param string $name
      * @param string $value
      *
-     * @throws SyntaxException
+     * @throws \Dotenv\Exception\SyntaxException
      *
      * @return array
      */
@@ -241,7 +232,7 @@ class Loader
 
             // Unquoted values cannot contain whitespace
             if (preg_match('/\s+/', $value) > 0) {
-                throw new SyntaxException('Dotenv values containing spaces must be surrounded by quotes.');
+                throw new SyntaxException();
             }
         }
 
