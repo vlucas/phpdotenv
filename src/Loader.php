@@ -2,7 +2,9 @@
 
 namespace Dotenv;
 
-use InvalidArgumentException;
+use Dotenv\Exception\FileNotFoundException;
+use Dotenv\Exception\FilePermissionException;
+use Dotenv\Exception\SyntaxException;
 
 /**
  * Loader.
@@ -32,8 +34,6 @@ class Loader
      *
      * @param string $filePath
      * @param bool   $immutable
-     *
-     * @return void
      */
     public function __construct($filePath, $immutable = false)
     {
@@ -67,17 +67,27 @@ class Loader
     /**
      * Ensures the given filePath is readable.
      *
-     * @throws \InvalidArgumentException
+     * @throws FileNotFoundException
+     * @throws FilePermissionException
      *
      * @return void
      */
     protected function ensureFileIsReadable()
     {
         $filePath = $this->filePath;
-        if (!is_readable($filePath) || !is_file($filePath)) {
-            throw new InvalidArgumentException(sprintf(
-                'Dotenv: Environment file .env not found or not readable. '.
+        $fileName = basename($filePath);
+        if (!is_file($filePath)) {
+            throw new FileNotFoundException(sprintf(
+                'Dotenv: Environment file %s not found. '.
                 'Create file with your environment settings at %s',
+                $fileName,
+                $filePath
+            ));
+        } elseif (!is_readable($filePath)) {
+            throw new FilePermissionException(sprintf(
+                'Dotenv: Environment file %s not readable. '.
+                'Ensures the given filePath %s is readable',
+                $fileName,
                 $filePath
             ));
         }
@@ -194,7 +204,7 @@ class Loader
      * @param string $name
      * @param string $value
      *
-     * @throws \InvalidArgumentException
+     * @throws SyntaxException
      *
      * @return array
      */
@@ -231,7 +241,7 @@ class Loader
 
             // Unquoted values cannot contain whitespace
             if (preg_match('/\s+/', $value) > 0) {
-                throw new InvalidArgumentException('Dotenv values containing spaces must be surrounded by quotes.');
+                throw new SyntaxException('Dotenv values containing spaces must be surrounded by quotes.');
             }
         }
 

@@ -10,6 +10,36 @@ class DotenvTest extends \PHPUnit_Framework_TestCase
         $this->fixturesFolderWrong = dirname(__DIR__).'/fixtures/env-wrong';
     }
 
+    /**
+     * @expectedException \Dotenv\Exception\FileNotFoundException
+     */
+    public function testDotenvLoadsEnvironmentVarsNotExist()
+    {
+        $dotenv = new Dotenv($this->fixturesFolder, 'not-exist');
+        $dotenv->load();
+    }
+
+    /**
+     * @expectedException \Dotenv\Exception\FilePermissionException
+     */
+    public function testDotenvLoadsEnvironmentVarsNotReadable()
+    {
+        $myUid = getmyuid();
+        $tmpFolder = sys_get_temp_dir();
+        $file = 'dot-env-not-readable-'.$myUid;
+        $path = $tmpFolder.DIRECTORY_SEPARATOR.$file;
+        if (!file_exists($path)) {
+            file_put_contents($path, '');
+        } else {
+            if (getmyuid() !== fileowner($path)) {
+                throw new \Exception("Remove $file first.");
+            }
+        }
+        chmod($path, 0);
+        $dotenv = new Dotenv($tmpFolder, $file);
+        $dotenv->load();
+    }
+
     public function testDotenvLoadsEnvironmentVars()
     {
         $dotenv = new Dotenv($this->fixturesFolder);
@@ -46,7 +76,7 @@ class DotenvTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException InvalidArgumentException
+     * @expectedException \Dotenv\Exception\SyntaxException
      * @expectedExceptionMessage Dotenv values containing spaces must be surrounded by quotes.
      */
     public function testSpacedValuesWithoutQuotesThrowsException()
