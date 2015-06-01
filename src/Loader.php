@@ -69,8 +69,8 @@ class Loader
     /**
      * Ensures the given filePath is readable.
      *
-     * @throws FileNotFoundException
-     * @throws FilePermissionException
+     * @throws \Dotenv\Exception\FileNotFoundException
+     * @throws \Dotenv\Exception\FilePermissionException
      *
      * @return void
      */
