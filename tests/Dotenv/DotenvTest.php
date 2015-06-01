@@ -12,7 +12,6 @@ class DotenvTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @expectedException \Dotenv\Exception\FileNotFoundException
-     * @expectedExceptionMessage Dotenv: Environment file not-exist not found. Create file with your environment settings at /home/vagrant/Projects/phpdotenv/tests/fixtures/env/not-exist
      */
     public function testDotenvLoadsEnvironmentVarsNotExist()
     {
