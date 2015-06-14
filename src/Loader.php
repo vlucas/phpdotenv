@@ -232,7 +232,7 @@ class Loader
 
             // Unquoted values cannot contain whitespace
             if (preg_match('/\s+/', $value) > 0) {
-                throw new SyntaxException();
+                throw new SyntaxException('Dotenv values containing spaces must be surrounded by quotes.');
             }
         }
 
