@@ -26,6 +26,7 @@ class Dotenv
     public function __construct($path, $file = '.env')
     {
         $this->filePath = $this->getFilePath($path, $file);
+        $this->loader = new Loader($this->filePath, $immutable = true);
     }
 
     /**
@@ -35,8 +36,6 @@ class Dotenv
      */
     public function load()
     {
-        $this->loader = new Loader($this->filePath, $immutable = true);
-
         return $this->loader->load();
     }
 
