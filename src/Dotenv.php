@@ -36,6 +36,8 @@ class Dotenv
      */
     public function load()
     {
+        $this->loader = new Loader($this->filePath, $immutable = true);
+
         return $this->loader->load();
     }
 
