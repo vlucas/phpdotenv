@@ -188,6 +188,30 @@ class DotenvTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('true', getenv('IMMUTABLE'));
     }
 
+    public function testDotenvLoadAfterOverload()
+    {
+        putenv('IMMUTABLE=true');
+        $dotenv = new Dotenv($this->fixturesFolder, 'immutable.env');
+        $dotenv->overload();
+        $this->assertEquals('false', getenv('IMMUTABLE'));
+
+        putenv('IMMUTABLE=true');
+        $dotenv->load();
+        $this->assertEquals('true', getenv('IMMUTABLE'));
+    }
+
+    public function testDotenvOverloadAfterLoad()
+    {
+        putenv('IMMUTABLE=true');
+        $dotenv = new Dotenv($this->fixturesFolder, 'immutable.env');
+        $dotenv->load();
+        $this->assertEquals('true', getenv('IMMUTABLE'));
+
+        putenv('IMMUTABLE=true');
+        $dotenv->overload();
+        $this->assertEquals('false', getenv('IMMUTABLE'));
+    }
+
     public function testDotenvOverloadDoesOverwriteEnv()
     {
         $dotenv = new Dotenv($this->fixturesFolder, 'mutable.env');
