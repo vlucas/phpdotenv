@@ -271,4 +271,14 @@ class DotenvTest extends \PHPUnit_Framework_TestCase
         $dotenv->load();
         $dotenv->required('ASSERTVAR3')->notEmpty();
     }
+
+    /**
+     * @expectedException RuntimeException
+     * @expectedExceptionMessage One or more environment variables failed assertions: foo is missing
+     */
+    public function testDotenvValidateRequiredWithoutLoading()
+    {
+        $dotenv = new Dotenv($this->fixturesFolder, 'assertions.env');
+        $dotenv->required('foo');
+    }
 }
