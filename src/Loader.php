@@ -349,6 +349,9 @@ class Loader
     /**
      * Clear an environment variable.
      *
+     * This is not (currently) used by Dotenv but is provided as a utility
+     * method for 3rd party code.
+     *
      * This is done using:
      * - putenv
      * - unset($_ENV, $_SERVER)
