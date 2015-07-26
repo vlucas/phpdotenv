@@ -345,4 +345,27 @@ class Loader
         $_ENV[$name] = $value;
         $_SERVER[$name] = $value;
     }
+
+    /**
+     * Clear an environment variable.
+     *
+     * This is done using:
+     * - putenv
+     * - unset($_ENV, $_SERVER)
+     *
+     * @param string $name
+     *
+     * @see setEnvironmentVariable()
+     *
+     * @return void
+     */
+    public function clearEnvironmentVariable($name)
+    {
+        // Don't clear anything if we're immutable.
+        if (!$this->immutable) {
+            putenv($name);
+            unset($_ENV[$name]);
+            unset($_SERVER[$name]);
+        }
+    }
 }
