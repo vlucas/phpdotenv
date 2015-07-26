@@ -25,7 +25,7 @@ class LoaderTest extends \PHPUnit_Framework_TestCase
      *
      * Since most of our functionality revolves around setting/retrieving keys
      * and values, we have this utility function to help generate new, unique
-     * pairs of strings.
+     * key/value pairs.
      *
      * @param  boolean $reset
      *   If true, a new pair will be generated. If false, the last returned pair
