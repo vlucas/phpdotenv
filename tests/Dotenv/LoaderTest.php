@@ -80,6 +80,9 @@ class LoaderTest extends \PHPUnit_Framework_TestCase
         // Clear the set environment variable.
         $this->mutableLoader->clearEnvironmentVariable($this->key());
         $this->assertSame(null, $this->mutableLoader->getEnvironmentVariable($this->key()));
+        $this->assertSame(false, getenv($this->key()));
+        $this->assertSame(false, isset($_ENV[$this->key()]));
+        $this->assertSame(false, isset($_SERVER[$this->key()]));
     }
 
     /**
@@ -90,10 +93,13 @@ class LoaderTest extends \PHPUnit_Framework_TestCase
     public function testImmutableLoaderCannotClearEnvironmentVars()
     {
         // Set an environment variable.
-        $this->immutableLoader()->setEnvironmentVariable($this->key(), $this->value());
+        $this->immutableLoader->setEnvironmentVariable($this->key(), $this->value());
 
         // Attempt to clear the environment variable, check that it fails.
-        $this->immutableLoader()->clearEnvironmentVariable($this->key());
+        $this->immutableLoader->clearEnvironmentVariable($this->key());
         $this->assertSame($this->value(), $this->immutableLoader->getEnvironmentVariable($this->key()));
+        $this->assertSame($this->value(), getenv($this->key()));
+        $this->assertSame(true, isset($_ENV[$this->key()]));
+        $this->assertSame(true, isset($_SERVER[$this->key()]));
     }
 }
