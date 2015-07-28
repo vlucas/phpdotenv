@@ -6,8 +6,8 @@ class LoaderTest extends \PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
-        $this->fixturesFolder = dirname(__DIR__).'/fixtures/env';
-        $this->fixturesFolderWrong = dirname(__DIR__).'/fixtures/env-wrong';
+        $this->fixturesFolder = dirname(__DIR__) . '/fixtures/env';
+        $this->fixturesFolderWrong = dirname(__DIR__) . '/fixtures/env-wrong';
 
         // Generate a new, random keyVal.
         $this->keyVal(true);
@@ -36,7 +36,7 @@ class LoaderTest extends \PHPUnit_Framework_TestCase
     protected function keyVal($reset = false)
     {
         if (!isset($this->keyVal) || $reset) {
-            $this->keyVal = [uniqid() => uniqid()];
+            $this->keyVal = array(uniqid() => uniqid());
         }
 
         return $this->keyVal;
