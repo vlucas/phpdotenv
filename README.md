@@ -7,8 +7,7 @@ Loads environment variables from `.env` to `getenv()`, `$_ENV` and
 This is a PHP version of the original [Ruby
 dotenv](https://github.com/bkeepers/dotenv).
 
-[![Build
-Status](https://secure.travis-ci.org/vlucas/phpdotenv.png)](http://travis-ci.org/vlucas/phpdotenv)
+[![Build Status](https://travis-ci.org/vlucas/phpdotenv.svg?branch=master)](https://travis-ci.org/vlucas/phpdotenv)
 
 Why .env?
 ---------

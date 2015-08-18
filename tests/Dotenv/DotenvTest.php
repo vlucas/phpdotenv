@@ -4,10 +4,28 @@ use Dotenv\Dotenv;
 
 class DotenvTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @var string
+     */
+    private $fixturesFolder;
+
+    /**
+     * @var string
+     */
+    private $fixturesFolderWrong;
+
     public function setUp()
     {
         $this->fixturesFolder = dirname(__DIR__).'/fixtures/env';
         $this->fixturesFolderWrong = dirname(__DIR__).'/fixtures/env-wrong';
+    }
+
+    public function testDotenvThrowsExceptionIfUnableToLoadFile()
+    {
+        $this->setExpectedException('InvalidArgumentException');
+
+        $dotenv = new Dotenv(__DIR__);
+        $dotenv->load();
     }
 
     public function testDotenvLoadsEnvironmentVars()
