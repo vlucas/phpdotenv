@@ -10,6 +10,14 @@ class DotenvTest extends \PHPUnit_Framework_TestCase
         $this->fixturesFolderWrong = dirname(__DIR__).'/fixtures/env-wrong';
     }
 
+    public function testDotenvThrowsExceptionIfUnableToLoadFile()
+    {
+        $this->setExpectedException('InvalidArgumentException');
+
+        $dotenv = new Dotenv(__DIR__);
+        $dotenv->load();
+    }
+
     public function testDotenvLoadsEnvironmentVars()
     {
         $dotenv = new Dotenv($this->fixturesFolder);
