@@ -60,6 +60,21 @@ class Validator
     }
 
     /**
+     * Assert that each variable is a number.
+     *
+     * @return \Dotenv\Validator
+     */
+    public function isInteger()
+    {
+        return $this->assertCallback(
+            function ($value) {
+                return (is_int($value) == true);
+            },
+            'is not an integer'
+        );
+    }
+
+    /**
      * Assert that each variable is amongst the given choices.
      *
      * @param string[] $choices
