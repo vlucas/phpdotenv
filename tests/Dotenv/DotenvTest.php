@@ -4,6 +4,16 @@ use Dotenv\Dotenv;
 
 class DotenvTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @var string
+     */
+    private $fixturesFolder;
+
+    /**
+     * @var string
+     */
+    private $fixturesFolderWrong;
+
     public function setUp()
     {
         $this->fixturesFolder = dirname(__DIR__).'/fixtures/env';
