@@ -70,7 +70,7 @@ class Validator
             function ($value) {
                 return (is_int($value) == true);
             },
-            'is not integer'
+            'is not an integer'
         );
     }
 
