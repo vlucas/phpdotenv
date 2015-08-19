@@ -60,7 +60,7 @@ class Validator
     }
 
     /**
-     * Assert that each variable is a number.
+     * Assert that specified variables is a number.
      *
      * @return \Dotenv\Validator
      */
@@ -68,7 +68,7 @@ class Validator
     {
         return $this->assertCallback(
             function ($value) {
-                return (is_int($value) == true);
+                return (ctype_digit($value) == true);
             },
             'is not an integer'
         );

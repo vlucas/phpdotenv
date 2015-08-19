@@ -170,8 +170,7 @@ One or more environment variables failed assertions: DATABASE_DSN is empty
 
 ### Integer Variables
 
-Beyond simply requiring a variable to be set, you might also need to ensure the
-variable is not empty:
+You might also need to ensure the the variable is of an integer value. You may do the following:
 
 ```php
 $dotenv->required('FOO')->isInteger();
