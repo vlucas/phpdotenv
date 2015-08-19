@@ -68,7 +68,7 @@ class Validator
     {
         return $this->assertCallback(
             function ($value) {
-                return (ctype_digit($value) == true);
+                return ctype_digit($value) == true;
             },
             'is not an integer'
         );
