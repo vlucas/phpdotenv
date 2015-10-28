@@ -323,4 +323,11 @@ class DotenvTest extends \PHPUnit_Framework_TestCase
         $dotenv = new Dotenv($this->fixturesFolder, 'assertions.env');
         $dotenv->required('foo');
     }
+
+    public function testDotenvRequiredCanBeUsedWithoutLoadingFile()
+    {
+        putenv('REQUIRED_VAR=1');
+        $dotenv = new Dotenv($this->fixturesFolder);
+        $dotenv->required('REQUIRED_VAR')->notEmpty();
+    }
 }
