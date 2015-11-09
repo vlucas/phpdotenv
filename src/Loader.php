@@ -259,7 +259,7 @@ class Loader
                     if (is_null($nestedVariable)) {
                         return $matchedPatterns[0];
                     } else {
-                        return  $nestedVariable;
+                        return $nestedVariable;
                     }
                 },
                 $value
