@@ -83,6 +83,13 @@ $dotenv = new Dotenv\Dotenv(__DIR__);
 $dotenv->load();
 ```
 
+Optionally you can pass in a filename as the second parameter, if you would like to use something other than `.env`
+
+```php
+$dotenv = new Dotenv\Dotenv(__DIR__, 'myconfig');
+$dotenv->load();
+```
+
 All of the defined variables are now accessible with the `getenv`
 method, and are available in the `$_ENV` and `$_SERVER` super-globals.
 
