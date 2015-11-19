@@ -17,7 +17,6 @@ class LoaderTest extends \PHPUnit_Framework_TestCase
         $this->immutableLoader = new Loader($this->fixturesFolder, true);
     }
 
-    // @see keyVal()
     protected $keyVal;
 
     /**
@@ -27,7 +26,7 @@ class LoaderTest extends \PHPUnit_Framework_TestCase
      * and values, we have this utility function to help generate new, unique
      * key/value pairs.
      *
-     * @param  boolean $reset
+     * @param bool $reset
      *   If true, a new pair will be generated. If false, the last returned pair
      *   will be returned.
      *
@@ -45,33 +44,26 @@ class LoaderTest extends \PHPUnit_Framework_TestCase
     /**
      * Returns the key from keyVal(), without reset.
      *
-     * @see keyVal()
-     *
      * @return string
      */
     protected function key()
     {
         $keyVal = $this->keyVal();
+
         return key($keyVal);
     }
 
     /**
      * Returns the value from keyVal(), without reset.
      *
-     * @see keyVal()
-     *
      * @return string
      */
     protected function value() {
         $keyVal = $this->keyVal();
+
         return reset($keyVal);
     }
 
-    /**
-     * Tests that the mutable loader can clear environment variables.
-     *
-     * @return void
-     */
     public function testMutableLoaderClearsEnvironmentVars()
     {
         // Set an environment variable.
@@ -85,11 +77,6 @@ class LoaderTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(false, isset($_SERVER[$this->key()]));
     }
 
-    /**
-     * Tests the immutable loader cannot clear environment variables.
-     *
-     * @return void
-     */
     public function testImmutableLoaderCannotClearEnvironmentVars()
     {
         // Set an environment variable.
