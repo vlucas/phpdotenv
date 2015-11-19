@@ -58,7 +58,8 @@ class LoaderTest extends \PHPUnit_Framework_TestCase
      *
      * @return string
      */
-    protected function value() {
+    protected function value()
+    {
         $keyVal = $this->keyVal();
 
         return reset($keyVal);
