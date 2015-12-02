@@ -19,22 +19,20 @@ class Validator
     /**
      * The loader instance.
      *
-     * @var \Dotenv\Loader
+     * @var Environment
      */
-    protected $loader;
+    protected $environment;
 
     /**
      * Create a new validator instance.
      *
      * @param array          $variables
-     * @param \Dotenv\Loader $loader
-     *
-     * @return void
+     * @param Environment    $environment
      */
-    public function __construct(array $variables, Loader $loader)
+    public function __construct(array $variables, Environment $environment)
     {
         $this->variables = $variables;
-        $this->loader = $loader;
+        $this->environment = $environment;
 
         $this->assertCallback(
             function ($value) {
@@ -92,7 +90,7 @@ class Validator
 
         $variablesFailingAssertion = array();
         foreach ($this->variables as $variableName) {
-            $variableValue = $this->loader->getEnvironmentVariable($variableName);
+            $variableValue = $this->environment->getVariable($variableName)->getValue();
             if (call_user_func($callback, $variableValue) === false) {
                 $variablesFailingAssertion[] = $variableName." $message";
             }
