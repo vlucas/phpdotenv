@@ -23,10 +23,16 @@ class Dotenv
      */
     protected $loader;
 
+    /**
+     * @var Environment
+     */
+    private $environment;
+
     public function __construct($path, $file = '.env')
     {
-        $this->filePath = $this->getFilePath($path, $file);
-        $this->loader = new Loader($this->filePath, $immutable = true);
+        $this->filePath     = $this->getFilePath($path, $file);
+        $this->loader       = new Loader($this->filePath);
+        $this->environment  = new Environment();
     }
 
     /**
@@ -36,9 +42,8 @@ class Dotenv
      */
     public function load()
     {
-        $this->loader = new Loader($this->filePath, $immutable = true);
-
-        return $this->loader->load();
+        $this->environment->setImmutable(true);
+        return $this->parseLines();
     }
 
     /**
@@ -48,9 +53,19 @@ class Dotenv
      */
     public function overload()
     {
-        $this->loader = new Loader($this->filePath, $immutable = false);
+        $this->environment->setImmutable(false);
+        return $this->parseLines();
+    }
 
-        return $this->loader->load();
+    /**
+     * @return array
+     */
+    private function parseLines()
+    {
+        $environment = $this->environment;
+        return $this->loader->next(function ($line) use ($environment) {
+            $environment->setVariable(new Variable($line));
+        });
     }
 
     /**
@@ -81,6 +96,6 @@ class Dotenv
      */
     public function required($variable)
     {
-        return new Validator((array) $variable, $this->loader);
+        return new Validator((array) $variable, $this->environment);
     }
 }
