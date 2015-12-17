@@ -305,6 +305,7 @@ class Loader
      */
     public function getEnvironmentVariable($name)
     {
+        if(!isset($_ENV))$_ENV=array();
         switch (true) {
             case array_key_exists($name, $_ENV):
                 return $_ENV[$name];
