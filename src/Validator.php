@@ -56,7 +56,7 @@ class Validator
     {
         return $this->assertCallback(
             function ($value) {
-                return (strlen(trim($value)) > 0);
+                return strlen(trim($value)) > 0;
             },
             'is empty'
         );

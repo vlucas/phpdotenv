@@ -26,7 +26,7 @@ class Loader
      *
      * @var bool
      */
-    protected $immutable = false;
+    protected $immutable;
 
     /**
      * Create a new loader instance.
@@ -54,10 +54,7 @@ class Loader
         $filePath = $this->filePath;
         $lines = $this->readLinesFromFile($filePath);
         foreach ($lines as $line) {
-            if ($this->isComment($line)) {
-                continue;
-            }
-            if ($this->looksLikeSetter($line)) {
+            if (!$this->isComment($line) && $this->looksLikeSetter($line)) {
                 $this->setEnvironmentVariable($line);
             }
         }
@@ -98,6 +95,7 @@ class Loader
         list($name, $value) = $this->splitCompoundStringIntoParts($name, $value);
         list($name, $value) = $this->sanitiseVariableName($name, $value);
         list($name, $value) = $this->sanitiseVariableValue($name, $value);
+
         $value = $this->resolveNestedVariables($value);
 
         return array($name, $value);
@@ -333,11 +331,12 @@ class Loader
 
         // Don't overwrite existing environment variables if we're immutable
         // Ruby's dotenv does this with `ENV[key] ||= value`.
-        if ($this->immutable === true && $this->getEnvironmentVariable($name) !== null) {
+        if ($this->immutable && $this->getEnvironmentVariable($name) !== null) {
             return;
         }
 
         putenv("$name=$value");
+
         $_ENV[$name] = $value;
         $_SERVER[$name] = $value;
     }
@@ -361,10 +360,12 @@ class Loader
     public function clearEnvironmentVariable($name)
     {
         // Don't clear anything if we're immutable.
-        if (!$this->immutable) {
-            putenv($name);
-            unset($_ENV[$name]);
-            unset($_SERVER[$name]);
+        if ($this->immutable) {
+            return;
         }
+
+        putenv($name);
+
+        unset($_ENV[$name], $_SERVER[$name]);
     }
 }
