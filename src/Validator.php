@@ -2,6 +2,9 @@
 
 namespace Dotenv;
 
+use Dotenv\Exception\InvalidCallbackException;
+use Dotenv\Exception\InvalidPathException;
+
 /**
  * Validator.
  *
@@ -82,12 +85,14 @@ class Validator
      * @param callable $callback
      * @param string   $message
      *
+     * @throws \Dotenv\Exception\InvalidCallbackException|\Dotenv\Exception\ValidationException
+     *
      * @return \Dotenv\Validator
      */
     protected function assertCallback($callback, $message = 'failed callback assertion')
     {
         if (!is_callable($callback)) {
-            throw new \InvalidArgumentException('Callback must be callable');
+            throw new InvalidCallbackException('The provided callback must be callable.');
         }
 
         $variablesFailingAssertion = array();
@@ -99,8 +104,8 @@ class Validator
         }
 
         if (count($variablesFailingAssertion) > 0) {
-            throw new \RuntimeException(sprintf(
-                'One or more environment variables failed assertions: %s',
+            throw new ValidationException(sprintf(
+                'One or more environment variables failed assertions: %s.',
                 implode(', ', $variablesFailingAssertion)
             ));
         }

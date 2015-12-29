@@ -2,7 +2,8 @@
 
 namespace Dotenv;
 
-use InvalidArgumentException;
+use Dotenv\Exception\InvalidFileException;
+use Dotenv\Exception\InvalidPathException;
 
 /**
  * Loader.
@@ -67,7 +68,7 @@ class Loader
     /**
      * Ensures the given filePath is readable.
      *
-     * @throws \InvalidArgumentException
+     * @throws \Dotenv\Exception\InvalidPathException
      *
      * @return void
      */
@@ -75,9 +76,9 @@ class Loader
     {
         $filePath = $this->filePath;
         if (!is_readable($filePath) || !is_file($filePath)) {
-            throw new InvalidArgumentException(sprintf(
+            throw new InvalidPathException(sprintf(
                 'Dotenv: Environment file .env not found or not readable. '.
-                'Create file with your environment settings at %s',
+                'Create file with your environment settings at %s.',
                 $filePath
             ));
         }
@@ -194,7 +195,7 @@ class Loader
      * @param string $name
      * @param string $value
      *
-     * @throws \InvalidArgumentException
+     * @throws \Dotenv\Exception\InvalidFileException
      *
      * @return array
      */
@@ -231,7 +232,7 @@ class Loader
 
             // Unquoted values cannot contain whitespace
             if (preg_match('/\s+/', $value) > 0) {
-                throw new InvalidArgumentException('Dotenv values containing spaces must be surrounded by quotes.');
+                throw new InvalidFileException('Dotenv values containing spaces must be surrounded by quotes.');
             }
         }
 
