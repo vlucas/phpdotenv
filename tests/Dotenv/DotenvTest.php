@@ -2,28 +2,24 @@
 
 use Dotenv\Dotenv;
 
-class DotenvTest extends \PHPUnit_Framework_TestCase
+class DotenvTest extends PHPUnit_Framework_TestCase
 {
     /**
      * @var string
      */
     private $fixturesFolder;
 
-    /**
-     * @var string
-     */
-    private $fixturesFolderWrong;
-
     public function setUp()
     {
         $this->fixturesFolder = dirname(__DIR__).'/fixtures/env';
-        $this->fixturesFolderWrong = dirname(__DIR__).'/fixtures/env-wrong';
     }
 
+    /**
+     * @expectedException \Dotenv\Exception\InvalidPathException
+     * @expectedExceptionMessage Unable to read the environment file at
+     */
     public function testDotenvThrowsExceptionIfUnableToLoadFile()
     {
-        $this->setExpectedException('InvalidArgumentException');
-
         $dotenv = new Dotenv(__DIR__);
         $dotenv->load();
     }
@@ -64,12 +60,12 @@ class DotenvTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException InvalidArgumentException
+     * @expectedException \Dotenv\Exception\InvalidFileException
      * @expectedExceptionMessage Dotenv values containing spaces must be surrounded by quotes.
      */
     public function testSpacedValuesWithoutQuotesThrowsException()
     {
-        $dotenv = new Dotenv($this->fixturesFolderWrong, 'spaced-wrong.env');
+        $dotenv = new Dotenv(dirname(__DIR__).'/fixtures/env-wrong', 'spaced-wrong.env');
         $dotenv->load();
     }
 
@@ -156,8 +152,8 @@ class DotenvTest extends \PHPUnit_Framework_TestCase
      * @depends testDotenvLoadsEnvGlobals
      * @depends testDotenvLoadsServerGlobals
      *
-     * @expectedException RuntimeException
-     * @expectedExceptionMessage One or more environment variables failed assertions: FOO is not an allowed value
+     * @expectedException \Dotenv\Exception\ValidationException
+     * @expectedExceptionMessage One or more environment variables failed assertions: FOO is not an allowed value.
      */
     public function testDotenvProhibitedValues()
     {
@@ -167,8 +163,8 @@ class DotenvTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException RuntimeException
-     * @expectedExceptionMessage One or more environment variables failed assertions: FOOX is missing, NOPE is missing
+     * @expectedException \Dotenv\Exception\ValidationException
+     * @expectedExceptionMessage One or more environment variables failed assertions: FOOX is missing, NOPE is missing.
      */
     public function testDotenvRequiredThrowsRuntimeException()
     {
@@ -278,8 +274,8 @@ class DotenvTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException RuntimeException
-     * @expectedExceptionMessage One or more environment variables failed assertions: ASSERTVAR2 is empty
+     * @expectedException \Dotenv\Exception\ValidationException
+     * @expectedExceptionMessage One or more environment variables failed assertions: ASSERTVAR2 is empty.
      */
     public function testDotenvEmptyThrowsRuntimeException()
     {
@@ -291,8 +287,8 @@ class DotenvTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException RuntimeException
-     * @expectedExceptionMessage One or more environment variables failed assertions: ASSERTVAR3 is empty
+     * @expectedException \Dotenv\Exception\ValidationException
+     * @expectedExceptionMessage One or more environment variables failed assertions: ASSERTVAR3 is empty.
      */
     public function testDotenvStringOfSpacesConsideredEmpty()
     {
@@ -304,8 +300,8 @@ class DotenvTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException RuntimeException
-     * @expectedExceptionMessage One or more environment variables failed assertions: ASSERTVAR3 is empty
+     * @expectedException \Dotenv\Exception\ValidationException
+     * @expectedExceptionMessage One or more environment variables failed assertions: ASSERTVAR3 is empty.
      */
     public function testDotenvHitsLastChain()
     {
@@ -315,8 +311,8 @@ class DotenvTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException RuntimeException
-     * @expectedExceptionMessage One or more environment variables failed assertions: foo is missing
+     * @expectedException \Dotenv\Exception\ValidationException
+     * @expectedExceptionMessage One or more environment variables failed assertions: foo is missing.
      */
     public function testDotenvValidateRequiredWithoutLoading()
     {

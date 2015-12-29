@@ -2,19 +2,18 @@
 
 use Dotenv\Loader;
 
-class LoaderTest extends \PHPUnit_Framework_TestCase
+class LoaderTest extends PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
-        $this->fixturesFolder = dirname(__DIR__) . '/fixtures/env';
-        $this->fixturesFolderWrong = dirname(__DIR__) . '/fixtures/env-wrong';
+        $folder = dirname(__DIR__) . '/fixtures/env';
 
         // Generate a new, random keyVal.
         $this->keyVal(true);
 
         // Build an immutable and mutable loader for convenience.
-        $this->mutableLoader = new Loader($this->fixturesFolder);
-        $this->immutableLoader = new Loader($this->fixturesFolder, true);
+        $this->mutableLoader = new Loader($folder);
+        $this->immutableLoader = new Loader($folder, true);
     }
 
     protected $keyVal;
