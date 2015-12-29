@@ -41,7 +41,7 @@ class Validator
 
         $this->assertCallback(
             function ($value) {
-                return !is_null($value);
+                return $value !== null;
             },
             'is missing'
         );

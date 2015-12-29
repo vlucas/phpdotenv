@@ -252,7 +252,7 @@ class Loader
                 '/\${([a-zA-Z0-9_]+)}/',
                 function ($matchedPatterns) use ($loader) {
                     $nestedVariable = $loader->getEnvironmentVariable($matchedPatterns[1]);
-                    if (is_null($nestedVariable)) {
+                    if ($nestedVariable === null) {
                         return $matchedPatterns[0];
                     } else {
                         return $nestedVariable;
@@ -333,7 +333,7 @@ class Loader
 
         // Don't overwrite existing environment variables if we're immutable
         // Ruby's dotenv does this with `ENV[key] ||= value`.
-        if ($this->immutable === true && !is_null($this->getEnvironmentVariable($name))) {
+        if ($this->immutable === true && $this->getEnvironmentVariable($name) !== null) {
             return;
         }
 
