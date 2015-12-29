@@ -74,13 +74,8 @@ class Loader
      */
     protected function ensureFileIsReadable()
     {
-        $filePath = $this->filePath;
-        if (!is_readable($filePath) || !is_file($filePath)) {
-            throw new InvalidPathException(sprintf(
-                'Dotenv: Environment file .env not found or not readable. '.
-                'Create file with your environment settings at %s.',
-                $filePath
-            ));
+        if (!is_readable($this->filePath) || !is_file($this->filePath)) {
+            throw new InvalidPathException(sprintf('Unable to read the environment file at %s.', $this->filePath));
         }
     }
 
