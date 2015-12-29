@@ -175,6 +175,20 @@ If the environment variable is empty, you'd get an Exception:
 One or more environment variables failed assertions: DATABASE_DSN is empty
 ```
 
+### Integer Variables
+
+You might also need to ensure the the variable is of an integer value. You may do the following:
+
+```php
+$dotenv->required('FOO')->isInteger();
+```
+
+If the environment variable is not an integer, you'd get an Exception:
+
+```
+One or more environment variables failed assertions: FOO is not an integer
+```
+
 ### Allowed Values
 
 It is also possible to define a set of values that your environment variable
