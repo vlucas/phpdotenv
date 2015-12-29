@@ -6,11 +6,11 @@ use Dotenv\Exception\InvalidFileException;
 use Dotenv\Exception\InvalidPathException;
 
 /**
- * Loader.
+ * This is the loaded class.
  *
- * Loads Variables by reading a file from disk and:
- * - stripping comments beginning with a `#`
- * - parsing lines that look shell variable setters, e.g `export key = value`, `key="value"`
+ * It's responsible for loading variables by reading a file from disk and:
+ * - stripping comments beginning with a `#`,
+ * - parsing lines that look shell variable setters, e.g `export key = value`, `key="value"`.
  */
 class Loader
 {
@@ -88,13 +88,13 @@ class Loader
      * Normalise the given environment variable.
      *
      * Takes value as passed in by developer and:
-     * - ensures we're dealing with a separate name and value, breaking apart the name string if needed
-     * - cleaning the value of quotes
-     * - cleaning the name of quotes
-     * - resolving nested variables
+     * - ensures we're dealing with a separate name and value, breaking apart the name string if needed,
+     * - cleaning the value of quotes,
+     * - cleaning the name of quotes,
+     * - resolving nested variables.
      *
-     * @param $name
-     * @param $value
+     * @param string $name
+     * @param string $value
      *
      * @return array
      */
@@ -245,7 +245,7 @@ class Loader
      * Look for {$varname} patterns in the variable value and replace with an existing
      * environment variable.
      *
-     * @param $value
+     * @param string $value
      *
      * @return mixed
      */
@@ -321,13 +321,13 @@ class Loader
      * Set an environment variable.
      *
      * This is done using:
-     * - putenv
-     * - $_ENV
+     * - putenv,
+     * - $_ENV,
      * - $_SERVER.
      *
      * The environment variable value is stripped of single and double quotes.
      *
-     * @param $name
+     * @param string      $name
      * @param string|null $value
      *
      * @return void
@@ -354,8 +354,8 @@ class Loader
      * method for 3rd party code.
      *
      * This is done using:
-     * - putenv
-     * - unset($_ENV, $_SERVER)
+     * - putenv,
+     * - unset($_ENV, $_SERVER).
      *
      * @param string $name
      *

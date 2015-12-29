@@ -6,9 +6,9 @@ use Dotenv\Exception\InvalidCallbackException;
 use Dotenv\Exception\InvalidPathException;
 
 /**
- * Validator.
+ * This is the validator class.
  *
- * Validations to be applied against a number of variables.
+ * It's responsible for applying validations against a number of variables.
  */
 class Validator
 {

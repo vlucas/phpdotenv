@@ -3,9 +3,10 @@
 namespace Dotenv;
 
 /**
- * Dotenv.
+ * This is the dotenv class.
  *
- * Loads a `.env` file in the given directory and sets the environment vars.
+ * It's responsible for loading a `.env` file in the given directory and
+ * setting the environment vars.
  */
 class Dotenv
 {
