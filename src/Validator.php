@@ -63,7 +63,7 @@ class Validator
     }
 
     /**
-     * Assert that each specified variable is a number.
+     * Assert that each specified variable is an integer.
      *
      * @return \Dotenv\Validator
      */
