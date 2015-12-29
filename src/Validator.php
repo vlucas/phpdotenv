@@ -3,7 +3,7 @@
 namespace Dotenv;
 
 use Dotenv\Exception\InvalidCallbackException;
-use Dotenv\Exception\InvalidPathException;
+use Dotenv\Exception\ValidationException;
 
 /**
  * This is the validator class.
