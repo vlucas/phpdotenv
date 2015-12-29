@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <phpunit backupGlobals="false"
          backupStaticAttributes="false"
-         bootstrap="./tests/bootstrap.php"
+         beStrictAboutTestsThatDoNotTestAnything="true"
+         beStrictAboutOutputDuringTests="true"
+         bootstrap="vendor/autoload.php"
          colors="true"
          convertErrorsToExceptions="true"
          convertNoticesToExceptions="true"
@@ -9,8 +11,6 @@
          processIsolation="false"
          stopOnError="false"
          stopOnFailure="false"
-         syntaxCheck="true"
-         strict="true"
          verbose="true"
 >
     <testsuites>
