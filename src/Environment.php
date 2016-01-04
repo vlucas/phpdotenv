@@ -16,6 +16,11 @@ class Environment
     protected $immutable = true;
 
     /**
+     * @var Variable[]
+     */
+    protected $variables = array();
+
+    /**
      * @param boolean $immutable
      *
      * @return void
