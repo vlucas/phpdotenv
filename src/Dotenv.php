@@ -23,7 +23,7 @@ class Dotenv
      * @var \Dotenv\Loader|null
      */
     protected $loader;
-    
+
     /**
      * Create a new Dotenv instance.
      *
