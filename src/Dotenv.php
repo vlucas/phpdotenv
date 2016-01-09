@@ -24,6 +24,12 @@ class Dotenv
      */
     protected $loader;
 
+    /**
+     * Create a new Dotenv instance.
+     *
+     * @param string $path
+     * @param string $file
+     */
     public function __construct($path, $file = '.env')
     {
         $this->filePath = $this->getFilePath($path, $file);
