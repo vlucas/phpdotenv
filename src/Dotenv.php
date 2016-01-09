@@ -25,7 +25,7 @@ class Dotenv
     protected $loader;
     
     /**
-     * Dotenv constructor.
+     * Create a new Dotenv instance.
      *
      * @param string $path
      * @param string $file
