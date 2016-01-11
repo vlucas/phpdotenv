@@ -1,4 +1,5 @@
 * text=auto
+* eol=lf
 
 /tests export-ignore
 /.gitattributes export-ignore
