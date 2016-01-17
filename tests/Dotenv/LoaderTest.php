@@ -4,6 +4,16 @@ use Dotenv\Loader;
 
 class LoaderTest extends PHPUnit_Framework_TestCase
 {
+    /**
+     * @var \Dotenv\Loader
+     */
+    private $immutableLoader;
+
+    /**
+     * @var \Dotenv\Loader
+     */
+    private $mutableLoader;
+    
     public function setUp()
     {
         $folder = dirname(__DIR__) . '/fixtures/env';
