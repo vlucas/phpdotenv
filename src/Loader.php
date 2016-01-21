@@ -2,15 +2,15 @@
 
 namespace Dotenv;
 
-use Dotenv\Exception\InvalidFileException;
-use Dotenv\Exception\InvalidPathException;
+use Dotenv\Exception\InvalidFileException,
+    Dotenv\Exception\InvalidPathException;
 
 /**
- * This is the loaded class.
+ * This is the loader class.
  *
  * It's responsible for loading variables by reading a file from disk and:
  * - stripping comments beginning with a `#`,
- * - parsing lines that look shell variable setters, e.g `export key = value`, `key="value"`.
+ * - parsing lines that look like shell variable setters, e.g `export key = value`, `key="value"`.
  */
 class Loader
 {
@@ -51,8 +51,7 @@ class Loader
     {
         $this->ensureFileIsReadable();
 
-        $filePath = $this->filePath;
-        $lines = $this->readLinesFromFile($filePath);
+        $lines = $this->readLinesFromFile($this->filePath);
         foreach ($lines as $line) {
             if (!$this->isComment($line) && $this->looksLikeSetter($line)) {
                 $this->setEnvironmentVariable($line);
@@ -93,8 +92,8 @@ class Loader
     protected function normaliseEnvironmentVariable($name, $value)
     {
         list($name, $value) = $this->splitCompoundStringIntoParts($name, $value);
-        list($name, $value) = $this->sanitiseVariableName($name, $value);
-        list($name, $value) = $this->sanitiseVariableValue($name, $value);
+        $name = $this->sanitiseVariableName($name);
+        $value = $this->sanitiseVariableValue($value);
 
         $value = $this->resolveNestedVariables($value);
 
@@ -114,8 +113,8 @@ class Loader
     public function processFilters($name, $value)
     {
         list($name, $value) = $this->splitCompoundStringIntoParts($name, $value);
-        list($name, $value) = $this->sanitiseVariableName($name, $value);
-        list($name, $value) = $this->sanitiseVariableValue($name, $value);
+        $name = $this->sanitiseVariableName($name);
+        $value = $this->sanitiseVariableValue($value);
 
         return array($name, $value);
     }
@@ -185,18 +184,17 @@ class Loader
     /**
      * Strips quotes from the environment variable value.
      *
-     * @param string $name
      * @param string $value
      *
      * @throws \Dotenv\Exception\InvalidFileException
      *
      * @return array
      */
-    protected function sanitiseVariableValue($name, $value)
+    protected function sanitiseVariableValue($value)
     {
         $value = trim($value);
         if (!$value) {
-            return array($name, $value);
+            return $value;
         }
 
         if ($this->beginsWithAQuote($value)) { // value starts with a quote
@@ -229,7 +227,7 @@ class Loader
             }
         }
 
-        return array($name, trim($value));
+        return trim($value);
     }
 
     /**
@@ -245,16 +243,14 @@ class Loader
     protected function resolveNestedVariables($value)
     {
         if (strpos($value, '$') !== false) {
-            $loader = $this;
-            $value = preg_replace_callback(
+            return preg_replace_callback(
                 '/\${([a-zA-Z0-9_]+)}/',
-                function ($matchedPatterns) use ($loader) {
-                    $nestedVariable = $loader->getEnvironmentVariable($matchedPatterns[1]);
+                function ($matchedPatterns) {
+                    $nestedVariable = $this->getEnvironmentVariable($matchedPatterns[1]);
                     if ($nestedVariable === null) {
                         return $matchedPatterns[0];
-                    } else {
-                        return $nestedVariable;
                     }
+                    return $nestedVariable;
                 },
                 $value
             );
@@ -267,15 +263,12 @@ class Loader
      * Strips quotes and the optional leading "export " from the environment variable name.
      *
      * @param string $name
-     * @param string $value
      *
      * @return array
      */
-    protected function sanitiseVariableName($name, $value)
+    protected function sanitiseVariableName($name)
     {
-        $name = trim(str_replace(array('export ', '\'', '"'), '', $name));
-
-        return array($name, $value);
+        return trim(str_replace(array('export ', '\'', '"'), '', $name));
     }
 
     /**
