@@ -340,9 +340,11 @@ class Loader
         if (function_exists('apache_getenv') && function_exists('apache_setenv') && apache_getenv($name)) {
             apache_setenv($name, $value);
         }
-
-        putenv("$name=$value");
-
+        
+        if (function_exists('putenv')){
+            putenv("$name=$value");
+        }
+        
         $_ENV[$name] = $value;
         $_SERVER[$name] = $value;
     }
@@ -369,8 +371,10 @@ class Loader
         if ($this->immutable) {
             return;
         }
-
-        putenv($name);
+        
+        if (function_exists('putenv')){
+            putenv($name);
+        }
 
         unset($_ENV[$name], $_SERVER[$name]);
     }
