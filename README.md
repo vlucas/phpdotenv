@@ -160,6 +160,8 @@ If any ENV vars are missing, Dotenv will throw a `RuntimeException` like this:
 One or more environment variables failed assertions: DATABASE_DSN is missing
 ```
 
+> **NOTICE**: For the `DotEnv:load()` must be executed before
+
 ### Empty Variables
 
 Beyond simply requiring a variable to be set, you might also need to ensure the
