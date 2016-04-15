@@ -325,5 +325,6 @@ class DotenvTest extends PHPUnit_Framework_TestCase
         putenv('REQUIRED_VAR=1');
         $dotenv = new Dotenv($this->fixturesFolder);
         $dotenv->required('REQUIRED_VAR')->notEmpty();
+        $this->assertTrue(true);
     }
 }
