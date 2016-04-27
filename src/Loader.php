@@ -335,10 +335,8 @@ class Loader
             return;
         }
 
-        if (function_exists('apache_setenv')) {
-            if (function_exists('apache_getenv') && apache_getenv($name)) {
-                apache_setenv($name, $value);
-            }
+        if (function_exists('apache_setenv') && function_exists('apache_getenv') && apache_getenv($name)) {
+            apache_setenv($name, $value);
         }
 
         putenv("$name=$value");
