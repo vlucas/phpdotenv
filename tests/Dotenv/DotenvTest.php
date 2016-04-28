@@ -196,41 +196,41 @@ class DotenvTest extends PHPUnit_Framework_TestCase
 
     public function testDotenvLoadDoesNotOverwriteEnv()
     {
-        putenv('IMMUTABLE=true');
+        putenv('VALUE=set_by_environment');
         $dotenv = new Dotenv($this->fixturesFolder, 'immutable.env');
         $dotenv->load();
-        $this->assertSame('true', getenv('IMMUTABLE'));
+        $this->assertSame('set_by_environment', getenv('VALUE'));
     }
 
     public function testDotenvLoadAfterOverload()
     {
-        putenv('IMMUTABLE=true');
+        putenv('VALUE=set_by_environment');
         $dotenv = new Dotenv($this->fixturesFolder, 'immutable.env');
         $dotenv->overload();
-        $this->assertSame('false', getenv('IMMUTABLE'));
+        $this->assertSame('set_by_file', getenv('VALUE'));
 
-        putenv('IMMUTABLE=true');
+        putenv('VALUE=set_by_environment');
         $dotenv->load();
-        $this->assertSame('true', getenv('IMMUTABLE'));
+        $this->assertSame('set_by_environment', getenv('VALUE'));
     }
 
     public function testDotenvOverloadAfterLoad()
     {
-        putenv('IMMUTABLE=true');
+        putenv('VALUE=set_by_environment');
         $dotenv = new Dotenv($this->fixturesFolder, 'immutable.env');
         $dotenv->load();
-        $this->assertSame('true', getenv('IMMUTABLE'));
+        $this->assertSame('set_by_environment', getenv('VALUE'));
 
-        putenv('IMMUTABLE=true');
+        putenv('VALUE=set_by_environment');
         $dotenv->overload();
-        $this->assertSame('false', getenv('IMMUTABLE'));
+        $this->assertSame('set_by_file', getenv('VALUE'));
     }
 
     public function testDotenvOverloadDoesOverwriteEnv()
     {
         $dotenv = new Dotenv($this->fixturesFolder, 'mutable.env');
         $dotenv->overload();
-        $this->assertSame('true', getenv('MUTABLE'));
+        $this->assertSame('set_by_file', getenv('MUTABLE'));
     }
 
     public function testDotenvAllowsSpecialCharacters()
