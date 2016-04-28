@@ -327,4 +327,37 @@ class DotenvTest extends PHPUnit_Framework_TestCase
         $dotenv->required('REQUIRED_VAR')->notEmpty();
         $this->assertTrue(true);
     }
+    public function testDotenvFalseyValuesAreFalsey()
+    {
+        $dotenv = new Dotenv($this->fixturesFolder, 'falsey.env');
+        $dotenv->load();
+        $this->assertFalse(!!getenv('FALSEY_BECAUSE_EMPTY'));
+        $this->assertFalse(!!getenv('FALSEY_BECAUSE_ZERO'));
+        $this->assertFalse(!!getenv('LOWERCASE_FALSE'));
+    }
+    public function testDotenvTruthyValuesAreTruthy()
+    {
+        $dotenv = new Dotenv($this->fixturesFolder, 'falsey.env');
+        $dotenv->load();
+
+        $this->assertTrue(!!getenv('CAPITALISED_FALSE'));
+        $this->assertTrue(!!getenv('UPPERCASE_FALSE'));
+        $this->assertTrue(!!getenv('FUNKY_CASE_FALSE'));
+
+        $this->assertTrue(!!getenv('LOWERCASE_TRUE'));
+        $this->assertTrue(!!getenv('CAPITALISED_TRUE'));
+        $this->assertTrue(!!getenv('UPPERCASE_TRUE'));
+        $this->assertTrue(!!getenv('FUNKY_CASE_TRUE'));
+
+        $this->assertTrue(!!getenv('LOWERCASE_NULL'));
+        $this->assertTrue(!!getenv('CAPITALISED_NULL'));
+        $this->assertTrue(!!getenv('UPPERCASE_NULL'));
+        $this->assertTrue(!!getenv('FUNKY_CASE_NULL'));
+
+        $this->assertTrue(!!getenv('GIBBERISH'));
+        $this->assertTrue(!!getenv('NONZERO_NUMBER'));
+    }
+
+
+
 }
