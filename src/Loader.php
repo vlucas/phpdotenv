@@ -29,17 +29,26 @@ class Loader
     protected $immutable;
 
     /**
+     * Trim quoted variables?
+     *
+     * @var bool
+     */
+    protected $trim;
+
+    /**
      * Create a new loader instance.
      *
      * @param string $filePath
      * @param bool   $immutable
+     * @param bool   $trim
      *
      * @return void
      */
-    public function __construct($filePath, $immutable = false)
+    public function __construct($filePath, $immutable = false, $trim = true)
     {
         $this->filePath = $filePath;
         $this->immutable = $immutable;
+        $this->trim = $trim;
     }
 
     /**
@@ -176,7 +185,7 @@ class Loader
     protected function splitCompoundStringIntoParts($name, $value)
     {
         if (strpos($name, '=') !== false) {
-            list($name, $value) = array_map('trim', explode('=', $name, 2));
+            list($name, $value) = explode('=', $name, 2);
         }
 
         return array($name, $value);
@@ -195,6 +204,7 @@ class Loader
     protected function sanitiseVariableValue($name, $value)
     {
         $value = trim($value);
+
         if (!$value) {
             return array($name, $value);
         }
@@ -219,6 +229,10 @@ class Loader
             $value = preg_replace($regexPattern, '$1', $value);
             $value = str_replace("\\$quote", $quote, $value);
             $value = str_replace('\\\\', '\\', $value);
+
+            if ($this->trim) {
+                $value = trim($value);
+            }
         } else {
             $parts = explode(' #', $value, 2);
             $value = trim($parts[0]);
@@ -229,7 +243,7 @@ class Loader
             }
         }
 
-        return array($name, trim($value));
+        return array($name, $value);
     }
 
     /**
