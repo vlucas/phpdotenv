@@ -47,6 +47,14 @@ class DotenvTest extends PHPUnit_Framework_TestCase
         $this->assertEmpty(getenv('CNULL'));
     }
 
+    public function testDotenvLoadsEnvironmentVarsWithoutTrimmingQuoted()
+    {
+        $dotenv = new Dotenv($this->fixturesFolder, 'commented.env', false);
+        $dotenv->load();
+        $this->assertSame('bar', getenv('CFOO'));
+        $this->assertSame('with spaces   ', getenv('CSPACED'));
+    }
+
     public function testQuotedDotenvLoadsEnvironmentVars()
     {
         $dotenv = new Dotenv($this->fixturesFolder, 'quoted.env');
