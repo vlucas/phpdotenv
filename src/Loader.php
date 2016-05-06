@@ -147,7 +147,7 @@ class Loader
      */
     protected function isComment($line)
     {
-        return strpos(trim($line), '#') === 0;
+        return strpos(ltrim($line), '#') === 0;
     }
 
     /**
