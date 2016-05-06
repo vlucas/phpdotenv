@@ -295,7 +295,7 @@ class Loader
      *
      * @param string $name
      *
-     * @return string
+     * @return string|null
      */
     public function getEnvironmentVariable($name)
     {
