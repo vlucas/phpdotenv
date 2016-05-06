@@ -29,7 +29,7 @@ class Loader
     protected $immutable;
 
     /**
-     * Trim variables?
+     * Trim quoted variables?
      *
      * @var bool
      */

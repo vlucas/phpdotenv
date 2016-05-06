@@ -18,7 +18,7 @@ class Dotenv
     protected $filePath;
 
     /**
-     * Trim variables?
+     * Trim quoted variables?
      *
      * @var bool
      */
