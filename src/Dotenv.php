@@ -18,6 +18,13 @@ class Dotenv
     protected $filePath;
 
     /**
+     * Trim variables?
+     *
+     * @var bool
+     */
+    protected $trim;
+
+    /**
      * The loader instance.
      *
      * @var \Dotenv\Loader|null
@@ -29,13 +36,15 @@ class Dotenv
      *
      * @param string $path
      * @param string $file
+     * @param bool   $trim
      *
      * @return void
      */
-    public function __construct($path, $file = '.env')
+    public function __construct($path, $file = '.env', $trim = true)
     {
         $this->filePath = $this->getFilePath($path, $file);
-        $this->loader = new Loader($this->filePath, true);
+        $this->trim = $trim;
+        $this->loader = new Loader($this->filePath, true, $this->trim);
     }
 
     /**
@@ -45,7 +54,7 @@ class Dotenv
      */
     public function load()
     {
-        $this->loader = new Loader($this->filePath, true);
+        $this->loader = new Loader($this->filePath, true, $this->trim);
 
         return $this->loader->load();
     }
@@ -57,7 +66,7 @@ class Dotenv
      */
     public function overload()
     {
-        $this->loader = new Loader($this->filePath, false);
+        $this->loader = new Loader($this->filePath, false, $this->trim);
 
         return $this->loader->load();
     }

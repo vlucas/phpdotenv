@@ -29,17 +29,26 @@ class Loader
     protected $immutable;
 
     /**
+     * Trim variables?
+     *
+     * @var bool
+     */
+    protected $trim;
+
+    /**
      * Create a new loader instance.
      *
      * @param string $filePath
      * @param bool   $immutable
+     * @param bool   $trim
      *
      * @return void
      */
-    public function __construct($filePath, $immutable = false)
+    public function __construct($filePath, $immutable = false, $trim = true)
     {
         $this->filePath = $filePath;
         $this->immutable = $immutable;
+        $this->trim = $trim;
     }
 
     /**
@@ -195,6 +204,7 @@ class Loader
     protected function sanitiseVariableValue($name, $value)
     {
         $value = trim($value);
+
         if (!$value) {
             return array($name, $value);
         }
@@ -229,7 +239,11 @@ class Loader
             }
         }
 
-        return array($name, trim($value));
+        if ($this->trim) {
+            $value = trim($value);
+        }
+
+        return array($name, $value);
     }
 
     /**
