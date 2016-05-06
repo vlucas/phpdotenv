@@ -185,7 +185,7 @@ class Loader
     protected function splitCompoundStringIntoParts($name, $value)
     {
         if (strpos($name, '=') !== false) {
-            list($name, $value) = array_map('trim', explode('=', $name, 2));
+            list($name, $value) = explode('=', $name, 2);
         }
 
         return array($name, $value);
@@ -229,6 +229,10 @@ class Loader
             $value = preg_replace($regexPattern, '$1', $value);
             $value = str_replace("\\$quote", $quote, $value);
             $value = str_replace('\\\\', '\\', $value);
+
+            if ($this->trim) {
+                $value = trim($value);
+            }
         } else {
             $parts = explode(' #', $value, 2);
             $value = trim($parts[0]);
@@ -237,10 +241,6 @@ class Loader
             if (preg_match('/\s+/', $value) > 0) {
                 throw new InvalidFileException('Dotenv values containing spaces must be surrounded by quotes.');
             }
-        }
-
-        if ($this->trim) {
-            $value = trim($value);
         }
 
         return array($name, $value);
