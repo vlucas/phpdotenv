@@ -235,8 +235,8 @@ class Loader
     /**
      * Resolve the nested variables.
      *
-     * Look for {$varname} patterns in the variable value and replace with an existing
-     * environment variable.
+     * Look for {$varname} patterns in the variable value and replace with an
+     * existing environment variable.
      *
      * @param string $value
      *
