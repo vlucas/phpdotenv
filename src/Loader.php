@@ -337,7 +337,7 @@ class Loader
 
         // If PHP is running as an Apache module and an existing
         // Apache environment variable exists, overwrite it
-        if (function_exists('apache_setenv') && apache_getenv($name)) {
+        if (function_exists('apache_getenv') && function_exists('apache_setenv') && apache_getenv($name)) {
             apache_setenv($name, $value);
         }
 
