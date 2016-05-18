@@ -327,4 +327,13 @@ class DotenvTest extends PHPUnit_Framework_TestCase
         $dotenv->required('REQUIRED_VAR')->notEmpty();
         $this->assertTrue(true);
     }
+
+    public function testDotenvSourceOtherEnvFile()
+    {
+        $dotenv = new Dotenv($this->fixturesFolder, 'source.env');
+        $dotenv->load();
+        $this->assertSame('source1', getenv('SOURCE1'));
+        $this->assertSame('source2', getenv('SOURCE2'));
+        $this->assertSame('sub_source3', getenv('SOURCE3'));
+    }
 }
