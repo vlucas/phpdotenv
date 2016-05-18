@@ -58,7 +58,8 @@ class Loader
                 continue;
             }
             if ($this->isLoadFile($line)) {
-                (new Loader($this->getLoadFilePath($line), $this->immutable))->load();
+                $loader = new self($this->getLoadFilePath($line), $this->immutable);
+                $loader->load();
             } elseif ($this->looksLikeSetter($line)) {
                 $this->setEnvironmentVariable($line);
             }
@@ -188,7 +189,7 @@ class Loader
      */
     protected function getLoadFilePath($line)
     {
-        $path = trim(preg_replace(['/^source /i', '/^\. /i '], '', $line));
+        $path = trim(preg_replace(array('/^source /i', '/^\. /i '), '', $line));
         if (strpos($path, DIRECTORY_SEPARATOR) === 0) {
             return $path;
         }
