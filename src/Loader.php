@@ -341,7 +341,9 @@ class Loader
             apache_setenv($name, $value);
         }
 
-        putenv("$name=$value");
+        if (function_exists('putenv')) {
+            putenv("$name=$value");
+        }
 
         $_ENV[$name] = $value;
         $_SERVER[$name] = $value;
@@ -370,7 +372,9 @@ class Loader
             return;
         }
 
-        putenv($name);
+        if (function_exists('putenv')) {
+            putenv($name);
+        }
 
         unset($_ENV[$name], $_SERVER[$name]);
     }
