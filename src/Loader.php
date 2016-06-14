@@ -29,6 +29,13 @@ class Loader
     protected $immutable;
 
     /**
+     * Is `putenv` allowed?
+     *
+     * @var bool
+     */
+    protected $putenvAllowed;
+
+    /**
      * Create a new loader instance.
      *
      * @param string $filePath
@@ -40,6 +47,7 @@ class Loader
     {
         $this->filePath = $filePath;
         $this->immutable = $immutable;
+        $this->putenvAllowed = function_exists('putenv');
     }
 
     /**
@@ -340,9 +348,11 @@ class Loader
         if (function_exists('apache_getenv') && function_exists('apache_setenv') && apache_getenv($name)) {
             apache_setenv($name, $value);
         }
-
-        putenv("$name=$value");
-
+        
+        if ($this->putenvAllowed){
+            putenv("$name=$value");
+        }
+        
         $_ENV[$name] = $value;
         $_SERVER[$name] = $value;
     }
@@ -369,8 +379,10 @@ class Loader
         if ($this->immutable) {
             return;
         }
-
-        putenv($name);
+        
+        if ($this->putenvAllowed){
+            putenv($name);
+        }
 
         unset($_ENV[$name], $_SERVER[$name]);
     }
