@@ -45,9 +45,7 @@ class Dotenv
      */
     public function load()
     {
-        $this->loader = new Loader($this->filePath, true);
-
-        return $this->loader->load();
+        return $this->getLoaderData();
     }
 
     /**
@@ -57,9 +55,7 @@ class Dotenv
      */
     public function overload()
     {
-        $this->loader = new Loader($this->filePath, false);
-
-        return $this->loader->load();
+        return $this->getLoaderData(true);
     }
 
     /**
@@ -79,6 +75,16 @@ class Dotenv
         $filePath = rtrim($path, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR.$file;
 
         return $filePath;
+    }
+    
+    /**
+     * Load data from '.env'
+     * @return array
+     */
+    private function getLoaderData($overload = false)
+    {
+        $this->loader = new Loader($this->filePath, !$overload);
+        return $this->loader->load();
     }
 
     /**
