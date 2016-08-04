@@ -1,6 +1,6 @@
 <?php
 
-class HelpersTest extends PHPUnit_Framework_Testcase
+class HelpersTest extends PHPUnit_Framework_TestCase
 {
     /**
      * Setup a new enviroment.
