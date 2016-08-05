@@ -59,6 +59,19 @@ class Dotenv
     }
 
     /**
+     * Return a new instance.
+     *
+     * @param string $directory
+     * @param string $file
+     *
+     * @return \Dotenv\Dotenv
+     */
+    public static function create($directory, $file = '.env')
+    {
+        return new static($directory, $file);
+    }
+
+    /**
      * Returns the full path to the file.
      *
      * @param string $path

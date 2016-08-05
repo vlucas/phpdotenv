@@ -273,6 +273,15 @@ class DotenvTest extends PHPUnit_Framework_TestCase
         $this->assertTrue(true); // anything wrong an an exception will be thrown
     }
 
+    public function testDotenvLoadsWithoutNewInstance()
+    {
+        $dotenv = Dotenv::create($this->fixturesFolder);
+        $dotenv->overload();
+
+        $this->assertSame('bar', getenv('FOO'));
+        $this->assertSame('baz', getenv('BAR'));
+    }
+
     /**
      * @expectedException \Dotenv\Exception\ValidationException
      * @expectedExceptionMessage One or more environment variables failed assertions: ASSERTVAR2 is empty.
