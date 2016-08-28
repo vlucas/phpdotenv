@@ -189,6 +189,21 @@ If the environment variable is not an integer, you'd get an Exception:
 One or more environment variables failed assertions: FOO is not an integer
 ```
 
+### Boolean Variables
+
+Just as integers, you might also need to ensure the the variable is of a boolean value. You may do the following:
+
+```php
+$dotenv->required('BAR')->isBoolean();
+```
+
+If the environment variable is not an boolean, you'd get an Exception:
+
+```
+One or more environment variables failed assertions: BAR is not a boolean
+```
+
+
 ### Allowed Values
 
 It is also possible to define a set of values that your environment variable
