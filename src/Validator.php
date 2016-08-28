@@ -76,6 +76,21 @@ class Validator
             'is not an integer'
         );
     }
+    
+    /**
+     * Assert that each specified variable is an boolean.
+     *
+     * @return \Dotenv\Validator
+     */
+    public function isBoolean()
+    {
+        return $this->assertCallback(
+            function ($value) {
+                return is_bool($value);
+            },
+            'is not a boolean'
+        );
+    }
 
     /**
      * Assert that each variable is amongst the given choices.
