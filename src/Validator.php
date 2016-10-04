@@ -22,19 +22,19 @@ class Validator
     /**
      * The loader instance.
      *
-     * @var \Dotenv\Loader
+     * @var \Dotenv\LoaderInterface
      */
     protected $loader;
 
     /**
      * Create a new validator instance.
      *
-     * @param array          $variables
-     * @param \Dotenv\Loader $loader
+     * @param array                   $variables
+     * @param \Dotenv\LoaderInterface $loader
      *
      * @return void
      */
-    public function __construct(array $variables, Loader $loader)
+    public function __construct(array $variables, LoaderInterface $loader)
     {
         $this->variables = $variables;
         $this->loader = $loader;
