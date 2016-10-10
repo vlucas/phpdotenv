@@ -33,7 +33,7 @@ class Loader
      *
      * @var array
      */
-    protected $configFlags = [];
+    protected $configFlags = array();
 
     /**
      * Have we set an environment variable yet?
