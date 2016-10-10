@@ -29,6 +29,20 @@ class Loader
     protected $immutable;
 
     /**
+     * Array of config variables
+     *
+     * @var array
+     */
+    protected $configFlags = [];
+
+    /**
+     * Have we set an environment variable yet?
+     *
+     * @var bool
+     */
+    protected $hasSetEnvironmentVariable = false;
+
+    /**
      * Create a new loader instance.
      *
      * @param string $filePath
@@ -54,6 +68,12 @@ class Loader
         $filePath = $this->filePath;
         $lines = $this->readLinesFromFile($filePath);
         foreach ($lines as $line) {
+            if (!$this->isComment($line) && $this->looksLikeConfigFlag($line)) {
+                if ($this->hasSetEnvironmentVariable) {
+                    throw new InvalidFileException('PHPDOTENV_ flags must appear before any environment variables are set');
+                }
+                $this->setConfigFlag($line);
+            }
             if (!$this->isComment($line) && $this->looksLikeSetter($line)) {
                 $this->setEnvironmentVariable($line);
             }
@@ -160,6 +180,18 @@ class Loader
     protected function looksLikeSetter($line)
     {
         return strpos($line, '=') !== false;
+    }
+
+    /**
+     * Determine if the given line looks like a config flag
+     *
+     * @param  string $line
+     *
+     * @return bool
+     */
+    protected function looksLikeConfigFlag($line)
+    {
+        return strpos(ltrim($line), 'PHPDOTENV_') === 0;
     }
 
     /**
@@ -279,6 +311,23 @@ class Loader
     }
 
     /**
+     * Removes EOL comments and santises config flag values
+     *
+     * @param  string $name
+     * @return string
+     */
+    protected function sanitiseConfigFlag($name)
+    {
+        // Remove EOL comments from flags
+        $parts = explode(' #', $name, 2);
+        $name = trim($parts[0]);
+
+        $name = trim(str_replace(array('export ', '\'', '"'), '', $name));
+
+        return $name;
+    }
+
+    /**
      * Determine if the given string begins with a quote.
      *
      * @param string $value
@@ -327,6 +376,10 @@ class Loader
      */
     public function setEnvironmentVariable($name, $value = null)
     {
+        if (!$this->hasSetEnvironmentVariable) {
+            $this->hasSetEnvironmentVariable = true;
+        }
+
         list($name, $value) = $this->normaliseEnvironmentVariable($name, $value);
 
         // Don't overwrite existing environment variables if we're immutable
@@ -345,8 +398,15 @@ class Loader
             putenv("$name=$value");
         }
 
-        $_ENV[$name] = $value;
-        $_SERVER[$name] = $value;
+        // Set the $_ENV superglobal if NO_SET_ENV flag has not been set
+        if (!$this->hasConfigFlag('NO_SET_ENV')) {
+            $_ENV[$name] = $value;
+        }
+
+        // Set the $_SERVER superglobal if NO_SET_SERVER flag has not been set
+        if (!$this->hasConfigFlag('NO_SET_SERVER')) {
+            $_SERVER[$name] = $value;
+        }
     }
 
     /**
@@ -377,5 +437,34 @@ class Loader
         }
 
         unset($_ENV[$name], $_SERVER[$name]);
+    }
+
+    /**
+     * Set a config variable to the $config array
+     *
+     * @param string $name
+     *
+     * @return void
+     */
+    public function setConfigFlag($name)
+    {
+        $name = $this->sanitiseConfigFlag($name);
+
+        // Remove the PHPDOTENV_ prefix
+        $name = substr($name, 10);
+
+        $this->configFlags[$name] = true;
+    }
+
+    /**
+     * Utility method to check for config flag being set
+     *
+     * @param  string  $name
+     *
+     * @return boolean
+     */
+    public function hasConfigFlag($name)
+    {
+        return (isset($this->configFlags[$name]));
     }
 }
