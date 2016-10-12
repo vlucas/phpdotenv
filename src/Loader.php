@@ -229,7 +229,27 @@ class Loader
             }
         }
 
-        return array($name, trim($value));
+        $v = strtolower(trim($value));
+
+        switch ($v) {
+            case 'null' :
+                $value = null;
+                break;
+
+            case 'true' :
+            case 'yes' :
+            case 'on' :
+                $value = true;
+                break;
+
+            case 'false' :
+            case 'no' :
+            case 'off' :
+                $value = false;
+                break;
+        }
+
+        return array($name, $value);
     }
 
     /**
