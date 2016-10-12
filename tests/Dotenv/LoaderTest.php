@@ -13,10 +13,10 @@ class LoaderTest extends PHPUnit_Framework_TestCase
      * @var \Dotenv\Loader
      */
     private $mutableLoader;
-    
+
     public function setUp()
     {
-        $folder = dirname(__DIR__) . '/fixtures/env';
+        $folder = dirname(__DIR__).'/fixtures/env';
 
         // Generate a new, random keyVal.
         $this->keyVal(true);
@@ -36,8 +36,8 @@ class LoaderTest extends PHPUnit_Framework_TestCase
      * key/value pairs.
      *
      * @param bool $reset
-     *   If true, a new pair will be generated. If false, the last returned pair
-     *   will be returned.
+     *                    If true, a new pair will be generated. If false, the last returned pair
+     *                    will be returned
      *
      * @return array
      */

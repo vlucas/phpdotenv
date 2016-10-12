@@ -33,8 +33,6 @@ class Loader
      *
      * @param string $filePath
      * @param bool   $immutable
-     *
-     * @return void
      */
     public function __construct($filePath, $immutable = false)
     {
@@ -66,8 +64,6 @@ class Loader
      * Ensures the given filePath is readable.
      *
      * @throws \Dotenv\Exception\InvalidPathException
-     *
-     * @return void
      */
     protected function ensureFileIsReadable()
     {
@@ -233,21 +229,21 @@ class Loader
             $v = strtolower(trim($value));
 
             switch ($v) {
-                case 'null' :
+                case 'null':
                     $value = null;
     //                die('value: '.(is_null($value) ? 'null' : 'not null'));
                     break;
 
-                case 'true' :
-                case 'yes' :
-                case 'on' :
+                case 'true':
+                case 'yes':
+                case 'on':
                     $value = true;
 
                     break;
 
-                case 'false' :
-                case 'no' :
-                case 'off' :
+                case 'false':
+                case 'no':
+                case 'off':
                     $value = false;
                     break;
             }
@@ -330,6 +326,7 @@ class Loader
                 return $_SERVER[$name];
             default:
                 $value = getenv($name);
+
                 return $value === false ? null : $value; // switch getenv default to null
         }
     }
@@ -346,8 +343,6 @@ class Loader
      *
      * @param string      $name
      * @param string|null $value
-     *
-     * @return void
      */
     public function setEnvironmentVariable($name, $value = null)
     {
@@ -386,8 +381,6 @@ class Loader
      * @param string $name
      *
      * @see setEnvironmentVariable()
-     *
-     * @return void
      */
     public function clearEnvironmentVariable($name)
     {

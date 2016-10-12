@@ -7,5 +7,4 @@ namespace Dotenv\Exception;
  */
 interface ExceptionInterface
 {
-    //
 }
