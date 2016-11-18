@@ -35,7 +35,9 @@ class Dotenv
     public function __construct($path, $file = '.env')
     {
         $this->filePath = $this->getFilePath($path, $file);
-        $this->loader = new Loader($this->filePath, true);
+
+        // This loader is only a placeholder so that Validate can work.
+        $this->loader = new Loader('');
     }
 
     /**
