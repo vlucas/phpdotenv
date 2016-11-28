@@ -12,7 +12,7 @@ use Dotenv\Exception\InvalidPathException;
  * - stripping comments beginning with a `#`,
  * - parsing lines that look shell variable setters, e.g `export key = value`, `key="value"`.
  */
-class Loader
+class Loader implements LoaderInterface
 {
     /**
      * The file path.
