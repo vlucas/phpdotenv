@@ -74,6 +74,17 @@ class LoaderTest extends PHPUnit_Framework_TestCase
         return reset($keyVal);
     }
 
+    public function testMutableLoaderSetUnsetImmutable()
+    {
+        $immutable = $this->mutableLoader->getImmutable();
+
+        // Set Immutable.
+        $this->mutableLoader->setImmutable(!$immutable);
+        $this->assertSame(!$immutable, $this->mutableLoader->getImmutable());
+        $this->mutableLoader->setImmutable($immutable);
+        $this->assertSame($immutable, $this->mutableLoader->getImmutable());
+    }
+
     public function testMutableLoaderClearsEnvironmentVars()
     {
         // Set an environment variable.
@@ -85,6 +96,17 @@ class LoaderTest extends PHPUnit_Framework_TestCase
         $this->assertSame(false, getenv($this->key()));
         $this->assertSame(false, isset($_ENV[$this->key()]));
         $this->assertSame(false, isset($_SERVER[$this->key()]));
+    }
+
+    public function testImmutableLoaderSetUnsetImmutable()
+    {
+        $immutable = $this->immutableLoader->getImmutable();
+
+        // Set Immutable.
+        $this->immutableLoader->setImmutable(!$immutable);
+        $this->assertSame(!$immutable, $this->immutableLoader->getImmutable());
+        $this->immutableLoader->setImmutable($immutable);
+        $this->assertSame($immutable, $this->immutableLoader->getImmutable());
     }
 
     public function testImmutableLoaderCannotClearEnvironmentVars()

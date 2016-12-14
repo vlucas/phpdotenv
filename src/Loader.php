@@ -43,6 +43,29 @@ class Loader
     }
 
     /**
+     * Set immutable value.
+     *
+     * @param bool $immutable
+     * @return $this
+     */
+    public function setImmutable($immutable = false)
+    {
+        $this->immutable = $immutable;
+
+        return $this;
+    }
+
+    /**
+     * Set immutable value.
+     *
+     * @return bool
+     */
+    public function getImmutable()
+    {
+        return $this->immutable;
+    }
+
+    /**
      * Load `.env` file in given directory.
      *
      * @return array
