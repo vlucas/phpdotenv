@@ -39,7 +39,30 @@ class Loader
     public function __construct($filePath, $immutable = false)
     {
         $this->filePath = $filePath;
-        $this->immutable = $immutable;
+        $this->immutable = (bool) $immutable;
+    }
+
+    /**
+     * Set immutable value.
+     *
+     * @param bool $immutable
+     * @return $this
+     */
+    public function setImmutable($immutable = false)
+    {
+        $this->immutable = (bool) $immutable;
+
+        return $this;
+    }
+
+    /**
+     * Get immutable value.
+     *
+     * @return bool
+     */
+    public function getImmutable()
+    {
+        return $this->immutable;
     }
 
     /**
@@ -147,7 +170,9 @@ class Loader
      */
     protected function isComment($line)
     {
-        return strpos(ltrim($line), '#') === 0;
+        $line = ltrim($line);
+
+        return isset($line[0]) && $line[0] === '#';
     }
 
     /**
@@ -341,7 +366,9 @@ class Loader
             apache_setenv($name, $value);
         }
 
-        putenv("$name=$value");
+        if (function_exists('putenv')) {
+            putenv("$name=$value");
+        }
 
         $_ENV[$name] = $value;
         $_SERVER[$name] = $value;
@@ -370,7 +397,9 @@ class Loader
             return;
         }
 
-        putenv($name);
+        if (function_exists('putenv')) {
+            putenv($name);
+        }
 
         unset($_ENV[$name], $_SERVER[$name]);
     }
