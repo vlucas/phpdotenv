@@ -39,7 +39,7 @@ class Loader
     public function __construct($filePath, $immutable = false)
     {
         $this->filePath = $filePath;
-        $this->immutable = $immutable;
+        $this->immutable = (bool) $immutable;
     }
 
     /**
@@ -50,13 +50,13 @@ class Loader
      */
     public function setImmutable($immutable = false)
     {
-        $this->immutable = $immutable;
+        $this->immutable = (bool) $immutable;
 
         return $this;
     }
 
     /**
-     * Set immutable value.
+     * Get immutable value.
      *
      * @return bool
      */
