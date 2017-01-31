@@ -60,4 +60,36 @@ class ValidatorBooleanTest extends PHPUnit_Framework_TestCase
 
         $this->assertTrue(true); // anything wrong - an exception will be thrown
     }
+
+    /**
+     * List of non-boolean values in fixtures/env/booleans.env
+     *
+     * @return array
+     */
+    public function invalidBooleanValuesDataProvider()
+    {
+        return [
+            ['INVALID_SOMETHING'],
+            ['INVALID_EMPTY'],
+            ['INVALID_EMPTY_STRING'],
+            ['INVALID_NULL'],
+            ['INVALID_NUMBER_POSITIVE'],
+            ['INVALID_NUMBER_NEGATIVE'],
+            ['INVALID_MINUS'],
+            ['INVALID_TILDA'],
+            ['INVALID_EXCLAMATION'],
+        ];
+    }
+
+    /**
+     * @dataProvider invalidBooleanValuesDataProvider
+     * @expectedException Dotenv\Exception\ValidationException
+     */
+    public function testCanInvalidateNonBooleans($boolean)
+    {
+        $dotenv = new Dotenv($this->fixturesFolder, 'booleans.env');
+        $dotenv->load();
+
+        $dotenv->required($boolean)->isBoolean();
+    }
 }
