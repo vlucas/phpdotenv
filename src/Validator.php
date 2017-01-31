@@ -86,6 +86,10 @@ class Validator
     {
         return $this->assertCallback(
             function ($value) {
+                if ($value === '') {
+                    return false;
+                }
+
                 return (filter_var($value, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) !== NULL);
             },
             'is not a boolean'
