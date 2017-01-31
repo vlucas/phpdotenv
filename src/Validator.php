@@ -76,7 +76,7 @@ class Validator
             'is not an integer'
         );
     }
-    
+
     /**
      *  Asset that each specified variable is a boolean.
      *
@@ -84,13 +84,13 @@ class Validator
      */
     public function isBoolean()
     {
-		return $this->assertCallback(
-			function($value) {
-				return (filter_var($value, FILTER_VALIDATE_BOOLEAN,  FILTER_NULL_ON_FAILURE) !== NULL);
-			},
-			'is not a boolean'
-		);
-	}
+        return $this->assertCallback(
+            function($value) {
+                return (filter_var($value, FILTER_VALIDATE_BOOLEAN,  FILTER_NULL_ON_FAILURE) !== NULL);
+            },
+            'is not a boolean'
+        );
+    }
 
     /**
      * Assert that each variable is amongst the given choices.
