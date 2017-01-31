@@ -78,7 +78,7 @@ class Validator
     }
 
     /**
-     *  Asset that each specified variable is a boolean.
+     * Assert that each specified variable is a boolean.
      *
      * @return \Dotenv\Validator
      */
