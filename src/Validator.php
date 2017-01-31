@@ -85,7 +85,7 @@ class Validator
     public function isBoolean()
     {
         return $this->assertCallback(
-            function($value) {
+            function ($value) {
                 return (filter_var($value, FILTER_VALIDATE_BOOLEAN,  FILTER_NULL_ON_FAILURE) !== NULL);
             },
             'is not a boolean'
