@@ -325,9 +325,9 @@ class Loader
     public function getEnvironmentVariable($name)
     {
         switch (true) {
-            case array_key_exists($name, $_ENV):
+            case isset($_ENV[$name]):
                 return $_ENV[$name];
-            case array_key_exists($name, $_SERVER):
+            case isset($_SERVER[$name]):
                 return $_SERVER[$name];
             default:
                 $value = getenv($name);
