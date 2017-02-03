@@ -77,7 +77,13 @@ class Loader
         $filePath = $this->filePath;
         $lines = $this->readLinesFromFile($filePath);
         foreach ($lines as $line) {
-            if (!$this->isComment($line) && $this->looksLikeSetter($line)) {
+            if ($this->isComment($line)) {
+                continue;
+            }
+            if ($this->isLoadFile($line)) {
+                $loader = new self($this->getLoadFilePath($line), $this->immutable);
+                $loader->load();
+            } elseif ($this->looksLikeSetter($line)) {
                 $this->setEnvironmentVariable($line);
             }
         }
@@ -185,6 +191,35 @@ class Loader
     protected function looksLikeSetter($line)
     {
         return strpos($line, '=') !== false;
+    }
+
+    /**
+     * Determine if the line in the file is loading file, e.g. 'source source.env' or '. source.env'.
+     *
+     * @param string $line
+     *
+     * @return bool
+     */
+    protected function isLoadFile($line)
+    {
+        return strpos($line, '=') === false && (strpos($line, 'source ') === 0 || strpos($line, '. ') === 0);
+    }
+
+    /**
+     * Get file path on the line.
+     *
+     * @param string $line
+     *
+     * @return string
+     */
+    protected function getLoadFilePath($line)
+    {
+        $path = trim(preg_replace(array('/^source /i', '/^\. /i '), '', $line));
+        if (strpos($path, DIRECTORY_SEPARATOR) === 0) {
+            return $path;
+        }
+
+        return rtrim(dirname($this->filePath), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $path;
     }
 
     /**
