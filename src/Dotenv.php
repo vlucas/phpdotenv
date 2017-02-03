@@ -29,8 +29,6 @@ class Dotenv
      *
      * @param string $path
      * @param string $file
-     *
-     * @return void
      */
     public function __construct($path, $file = '.env')
     {
