@@ -327,4 +327,34 @@ class DotenvTest extends PHPUnit_Framework_TestCase
         $dotenv->required('REQUIRED_VAR')->notEmpty();
         $this->assertTrue(true);
     }
+
+    public function testDotenvConfigFlagSets()
+    {
+        $dotenv = new Dotenv($this->fixturesFolder, 'flag.env');
+        $dotenv->load();
+        
+        $this->assertEquals($_SERVER['CONFIG_SET'], 'true');
+        $this->assertEquals(getenv('CONFIG_SET'), 'true');
+        $this->assertTrue(!isset($_ENV['CONFIG_SET']));
+    }
+
+    public function testDotenvConfigFlagSetsWithEOLComment()
+    {
+        $dotenv = new Dotenv($this->fixturesFolder, 'flag-comment.env');
+        $dotenv->load();
+        
+        $this->assertEquals($_SERVER['CONFIG_SET'], 'true');
+        $this->assertEquals(getenv('CONFIG_SET'), 'true');
+        $this->assertTrue(!isset($_ENV['CONFIG_SET']));
+    }
+
+    /**
+     * @expectedException \Dotenv\Exception\InvalidFileException
+     * @expectedExceptionMessage PHPDOTENV_ flags must appear before any environment variables are set
+     */
+    public function testDotenvFailsWhenConfigFlagOutOfOrder()
+    {
+        $dotenv = new Dotenv(dirname(__DIR__).'/fixtures/env-wrong', 'flag-wrong.env');
+        $dotenv->load();
+    }
 }

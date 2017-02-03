@@ -217,6 +217,17 @@ VAR="value" # comment
 VAR=value # comment
 ```
 
+Configuration Flags
+-----------------------------
+
+You may enable or disable certain features by using configuration flags at
+the top of a .env file, before any variable declarations.
+
+```shell
+PHPDOTENV_NO_SET_ENV    # Prevents environment variables being set to the $_ENV superglobal
+PHPDOTENV_NO_SET_SERVER # Prevents environment variables being set to the $_SERVER superglobal
+```
+
 Usage Notes
 -----------
 
