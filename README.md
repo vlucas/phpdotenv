@@ -79,6 +79,8 @@ SECRET_KEY="abc123"
 You can then load `.env` in your application with:
 
 ```php
+require __DIR__ . '/vendor/autoload.php';
+...
 $dotenv = new Dotenv\Dotenv(__DIR__);
 $dotenv->load();
 ```
@@ -86,6 +88,8 @@ $dotenv->load();
 Optionally you can pass in a filename as the second parameter, if you would like to use something other than `.env`
 
 ```php
+require __DIR__ . '/vendor/autoload.php';
+...
 $dotenv = new Dotenv\Dotenv(__DIR__, 'myconfig');
 $dotenv->load();
 ```
