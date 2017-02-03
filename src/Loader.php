@@ -248,6 +248,10 @@ class Loader
             $parts = explode(' #', $value, 2);
             $value = trim($parts[0]);
 
+			if ('false' == $value) { # getenv() returns a string, 'false' is not falsey
+				$value = false;
+			}
+
             // Unquoted values cannot contain whitespace
             if (preg_match('/\s+/', $value) > 0) {
                 throw new InvalidFileException('Dotenv values containing spaces must be surrounded by quotes.');

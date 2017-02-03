@@ -196,41 +196,41 @@ class DotenvTest extends PHPUnit_Framework_TestCase
 
     public function testDotenvLoadDoesNotOverwriteEnv()
     {
-        putenv('IMMUTABLE=true');
+        putenv('VALUE=set_by_environment');
         $dotenv = new Dotenv($this->fixturesFolder, 'immutable.env');
         $dotenv->load();
-        $this->assertSame('true', getenv('IMMUTABLE'));
+        $this->assertSame('set_by_environment', getenv('VALUE'));
     }
 
     public function testDotenvLoadAfterOverload()
     {
-        putenv('IMMUTABLE=true');
+        putenv('VALUE=set_by_environment');
         $dotenv = new Dotenv($this->fixturesFolder, 'immutable.env');
         $dotenv->overload();
-        $this->assertSame('false', getenv('IMMUTABLE'));
+        $this->assertSame('set_by_file', getenv('VALUE'));
 
-        putenv('IMMUTABLE=true');
+        putenv('VALUE=set_by_environment');
         $dotenv->load();
-        $this->assertSame('true', getenv('IMMUTABLE'));
+        $this->assertSame('set_by_environment', getenv('VALUE'));
     }
 
     public function testDotenvOverloadAfterLoad()
     {
-        putenv('IMMUTABLE=true');
+        putenv('VALUE=set_by_environment');
         $dotenv = new Dotenv($this->fixturesFolder, 'immutable.env');
         $dotenv->load();
-        $this->assertSame('true', getenv('IMMUTABLE'));
+        $this->assertSame('set_by_environment', getenv('VALUE'));
 
-        putenv('IMMUTABLE=true');
+        putenv('VALUE=set_by_environment');
         $dotenv->overload();
-        $this->assertSame('false', getenv('IMMUTABLE'));
+        $this->assertSame('set_by_file', getenv('VALUE'));
     }
 
     public function testDotenvOverloadDoesOverwriteEnv()
     {
         $dotenv = new Dotenv($this->fixturesFolder, 'mutable.env');
         $dotenv->overload();
-        $this->assertSame('true', getenv('MUTABLE'));
+        $this->assertSame('set_by_file', getenv('MUTABLE'));
     }
 
     public function testDotenvAllowsSpecialCharacters()
@@ -327,4 +327,37 @@ class DotenvTest extends PHPUnit_Framework_TestCase
         $dotenv->required('REQUIRED_VAR')->notEmpty();
         $this->assertTrue(true);
     }
+    public function testDotenvFalseyValuesAreFalsey()
+    {
+        $dotenv = new Dotenv($this->fixturesFolder, 'falsey.env');
+        $dotenv->load();
+        $this->assertFalse(!!getenv('FALSEY_BECAUSE_EMPTY'));
+        $this->assertFalse(!!getenv('FALSEY_BECAUSE_ZERO'));
+        $this->assertFalse(!!getenv('LOWERCASE_FALSE'));
+    }
+    public function testDotenvTruthyValuesAreTruthy()
+    {
+        $dotenv = new Dotenv($this->fixturesFolder, 'falsey.env');
+        $dotenv->load();
+
+        $this->assertTrue(!!getenv('CAPITALISED_FALSE'));
+        $this->assertTrue(!!getenv('UPPERCASE_FALSE'));
+        $this->assertTrue(!!getenv('FUNKY_CASE_FALSE'));
+
+        $this->assertTrue(!!getenv('LOWERCASE_TRUE'));
+        $this->assertTrue(!!getenv('CAPITALISED_TRUE'));
+        $this->assertTrue(!!getenv('UPPERCASE_TRUE'));
+        $this->assertTrue(!!getenv('FUNKY_CASE_TRUE'));
+
+        $this->assertTrue(!!getenv('LOWERCASE_NULL'));
+        $this->assertTrue(!!getenv('CAPITALISED_NULL'));
+        $this->assertTrue(!!getenv('UPPERCASE_NULL'));
+        $this->assertTrue(!!getenv('FUNKY_CASE_NULL'));
+
+        $this->assertTrue(!!getenv('GIBBERISH'));
+        $this->assertTrue(!!getenv('NONZERO_NUMBER'));
+    }
+
+
+
 }
