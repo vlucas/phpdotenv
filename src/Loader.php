@@ -312,7 +312,7 @@ class Loader
      */
     protected function beginsWithAQuote($value)
     {
-        return strpbrk($value[0], '"\'') !== false;
+        return isset($value[0]) && ($value[0] === '"' || $value[0] === '\'');
     }
 
     /**
