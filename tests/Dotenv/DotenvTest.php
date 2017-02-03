@@ -31,7 +31,17 @@ class DotenvTest extends PHPUnit_Framework_TestCase
         $this->assertSame('bar', getenv('FOO'));
         $this->assertSame('baz', getenv('BAR'));
         $this->assertSame('with spaces', getenv('SPACED'));
+        $this->assertEmpty(getenv('EMPTY'));
+
         $this->assertEmpty(getenv('NULL'));
+
+        $this->assertEquals(1, getenv('ETRUE'));
+        $this->assertEquals(1, getenv('EYES'));
+        $this->assertEquals(1, getenv('EON'));
+
+        $this->assertEmpty(getenv('EFALSE'));
+        $this->assertEmpty(getenv('ENO'));
+        $this->assertEmpty(getenv('EOFF'));
     }
 
     public function testCommentedDotenvLoadsEnvironmentVars()
@@ -54,9 +64,18 @@ class DotenvTest extends PHPUnit_Framework_TestCase
         $this->assertSame('bar', getenv('QFOO'));
         $this->assertSame('baz', getenv('QBAR'));
         $this->assertSame('with spaces', getenv('QSPACED'));
-        $this->assertEmpty(getenv('QNULL'));
+        $this->assertEmpty(getenv('QEMPTY'));
         $this->assertSame('pgsql:host=localhost;dbname=test', getenv('QEQUALS'));
         $this->assertSame('test some escaped characters like a quote (") or maybe a backslash (\\)', getenv('QESCAPED'));
+
+        $this->assertSame('null', getenv('QNULL'));
+        $this->assertSame('true', getenv('QTRUE'));
+        $this->assertSame('yes', getenv('QYES'));
+        $this->assertSame('on', getenv('QON'));
+
+        $this->assertSame('false', getenv('QFALSE'));
+        $this->assertSame('no', getenv('QNO'));
+        $this->assertSame('off', getenv('QOFF'));
     }
 
     /**
@@ -87,6 +106,24 @@ class DotenvTest extends PHPUnit_Framework_TestCase
         $this->assertSame('baz', $_SERVER['BAR']);
         $this->assertSame('with spaces', $_SERVER['SPACED']);
         $this->assertEmpty($_SERVER['NULL']);
+
+        $this->assertSame('null', $_SERVER['QNULL']);
+
+        $this->assertTrue($_SERVER['ETRUE']);
+        $this->assertTrue($_SERVER['EYES']);
+        $this->assertTrue($_SERVER['EON']);
+
+        $this->assertFalse($_SERVER['EFALSE']);
+        $this->assertFalse($_SERVER['ENO']);
+        $this->assertFalse($_SERVER['EOFF']);
+
+        $this->assertSame('true', $_SERVER['QTRUE']);
+        $this->assertSame('yes', $_SERVER['QYES']);
+        $this->assertSame('on', $_SERVER['QON']);
+
+        $this->assertSame('false', $_SERVER['QFALSE']);
+        $this->assertSame('no', $_SERVER['QNO']);
+        $this->assertSame('off', $_SERVER['QOFF']);
     }
 
     public function testDotenvLoadsServerGlobals()
@@ -97,6 +134,24 @@ class DotenvTest extends PHPUnit_Framework_TestCase
         $this->assertSame('baz', $_ENV['BAR']);
         $this->assertSame('with spaces', $_ENV['SPACED']);
         $this->assertEmpty($_ENV['NULL']);
+
+        $this->assertSame('null', $_ENV['QNULL']);
+
+        $this->assertTrue($_ENV['ETRUE']);
+        $this->assertTrue($_ENV['EYES']);
+        $this->assertTrue($_ENV['EON']);
+
+        $this->assertFalse($_ENV['EFALSE']);
+        $this->assertFalse($_ENV['ENO']);
+        $this->assertFalse($_ENV['EOFF']);
+
+        $this->assertSame('true', $_ENV['QTRUE']);
+        $this->assertSame('yes', $_ENV['QYES']);
+        $this->assertSame('on', $_ENV['QON']);
+
+        $this->assertSame('false', $_ENV['QFALSE']);
+        $this->assertSame('no', $_ENV['QNO']);
+        $this->assertSame('off', $_ENV['QOFF']);
     }
 
     /**
@@ -207,11 +262,11 @@ class DotenvTest extends PHPUnit_Framework_TestCase
         putenv('IMMUTABLE=true');
         $dotenv = new Dotenv($this->fixturesFolder, 'immutable.env');
         $dotenv->overload();
-        $this->assertSame('false', getenv('IMMUTABLE'));
+        $this->assertEmpty(getenv('IMMUTABLE'));
 
         putenv('IMMUTABLE=true');
         $dotenv->load();
-        $this->assertSame('true', getenv('IMMUTABLE'));
+        $this->assertEquals('true', getenv('IMMUTABLE'));
     }
 
     public function testDotenvOverloadAfterLoad()
@@ -223,14 +278,14 @@ class DotenvTest extends PHPUnit_Framework_TestCase
 
         putenv('IMMUTABLE=true');
         $dotenv->overload();
-        $this->assertSame('false', getenv('IMMUTABLE'));
+        $this->assertEmpty(getenv('IMMUTABLE'));
     }
 
     public function testDotenvOverloadDoesOverwriteEnv()
     {
         $dotenv = new Dotenv($this->fixturesFolder, 'mutable.env');
         $dotenv->overload();
-        $this->assertSame('true', getenv('MUTABLE'));
+        $this->assertEquals(1, getenv('MUTABLE'));
     }
 
     public function testDotenvAllowsSpecialCharacters()

@@ -31,8 +31,6 @@ class Validator
      *
      * @param array          $variables
      * @param \Dotenv\Loader $loader
-     *
-     * @return void
      */
     public function __construct(array $variables, Loader $loader)
     {

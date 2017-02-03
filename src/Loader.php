@@ -33,8 +33,6 @@ class Loader
      *
      * @param string $filePath
      * @param bool   $immutable
-     *
-     * @return void
      */
     public function __construct($filePath, $immutable = false)
     {
@@ -89,8 +87,6 @@ class Loader
      * Ensures the given filePath is readable.
      *
      * @throws \Dotenv\Exception\InvalidPathException
-     *
-     * @return void
      */
     protected function ensureFileIsReadable()
     {
@@ -219,10 +215,11 @@ class Loader
      */
     protected function sanitiseVariableValue($name, $value)
     {
-        $value = trim($value);
-        if (!$value) {
+        if (!$value || !is_string($value)) {
             return array($name, $value);
         }
+
+        $value = trim($value);
 
         if ($this->beginsWithAQuote($value)) { // value starts with a quote
             $quote = $value[0];
@@ -244,6 +241,7 @@ class Loader
             $value = preg_replace($regexPattern, '$1', $value);
             $value = str_replace("\\$quote", $quote, $value);
             $value = str_replace('\\\\', '\\', $value);
+            $value = trim($value);
         } else {
             $parts = explode(' #', $value, 2);
             $value = trim($parts[0]);
@@ -252,9 +250,31 @@ class Loader
             if (preg_match('/\s+/', $value) > 0) {
                 throw new InvalidFileException('Dotenv values containing spaces must be surrounded by quotes.');
             }
+
+            $v = strtolower(trim($value));
+
+            switch ($v) {
+                case 'null':
+                    $value = null;
+    //                die('value: '.(is_null($value) ? 'null' : 'not null'));
+                    break;
+
+                case 'true':
+                case 'yes':
+                case 'on':
+                    $value = true;
+
+                    break;
+
+                case 'false':
+                case 'no':
+                case 'off':
+                    $value = false;
+                    break;
+            }
         }
 
-        return array($name, trim($value));
+        return array($name, $value);
     }
 
     /**
@@ -331,6 +351,7 @@ class Loader
                 return $_SERVER[$name];
             default:
                 $value = getenv($name);
+
                 return $value === false ? null : $value; // switch getenv default to null
         }
     }
@@ -347,8 +368,6 @@ class Loader
      *
      * @param string      $name
      * @param string|null $value
-     *
-     * @return void
      */
     public function setEnvironmentVariable($name, $value = null)
     {
@@ -387,8 +406,6 @@ class Loader
      * @param string $name
      *
      * @see setEnvironmentVariable()
-     *
-     * @return void
      */
     public function clearEnvironmentVariable($name)
     {
