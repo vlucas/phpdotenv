@@ -24,6 +24,13 @@ class DotenvTest extends PHPUnit_Framework_TestCase
         $dotenv->load();
     }
 
+    public function testDotenvDoesNotThrowExceptionWhenLoadRequirementIsFalse()
+    {
+        $dotenv = new Dotenv(__DIR__);
+        $lines = array();
+        $this->assertSame($lines, $dotenv->load(false));
+    }
+
     public function testDotenvLoadsEnvironmentVars()
     {
         $dotenv = new Dotenv($this->fixturesFolder);
