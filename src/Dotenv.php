@@ -41,11 +41,17 @@ class Dotenv
     /**
      * Load environment file in given directory.
      *
+     * @param bool $requireDotEnv
+     *
      * @return array
      */
-    public function load()
+    public function load($requireDotenv = true)
     {
-        return $this->loadData();
+        if ($requireDotenv) {
+            return $this->loadData();
+        }
+
+        return array();
     }
 
     /**
