@@ -114,12 +114,12 @@ $s3_bucket = env('S3_BUCKET');
 It's possible to nest an environment variable within another, useful to cut
 down on repetition.
 
-This is done by wrapping an existing environment variable in `${…}` e.g.
+This is done by wrapping an existing environment variable in `{$…}` e.g.
 
 ```shell
 BASE_DIR="/var/webroot/project-root"
-CACHE_DIR="${BASE_DIR}/cache"
-TMP_DIR="${BASE_DIR}/tmp"
+CACHE_DIR="{$BASE_DIR}/cache"
+TMP_DIR="{$BASE_DIR}/tmp"
 ```
 
 ### Immutability
