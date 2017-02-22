@@ -22,11 +22,9 @@ class Loader
     protected $filePath;
 
     /**
-     * Are we immutable?
-     *
-     * @var bool
+     * @var Environment
      */
-    protected $immutable;
+    protected $environment;
 
     /**
      * Create a new loader instance.
@@ -40,6 +38,8 @@ class Loader
     {
         $this->filePath = $filePath;
         $this->immutable = $immutable;
+        $this->environment = new Environment();
+        $this->environment->setImmutable($immutable);
     }
 
     /**
@@ -356,7 +356,7 @@ class Loader
 
         // Don't overwrite existing environment variables if we're immutable
         // Ruby's dotenv does this with `ENV[key] ||= value`.
-        if ($this->immutable && $this->getEnvironmentVariable($name) !== null) {
+        if ($this->environment->isImmutable() && $this->getEnvironmentVariable($name) !== null) {
             return;
         }
 
@@ -393,7 +393,7 @@ class Loader
     public function clearEnvironmentVariable($name)
     {
         // Don't clear anything if we're immutable.
-        if ($this->immutable) {
+        if ($this->environment->isImmutable()) {
             return;
         }
 
