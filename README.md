@@ -232,7 +232,7 @@ and `path/to/secret` points to an existing and readable file, an environment var
 
 If the file does not exist or is unreadable, the `VAR_FILE` environment variable is treated normally, ie a `VAR_FILE` environment variable is created with the value `/path/to/secret`.
 
-In production, on a real docker container, you should use the actual path, ie `/run/secrets/my_secret`. The `/run/secret/` path is not hard-coded to allow for changes to Docker implementation (all too frequent, unfortunately), and to support testing with arbitrary locations.
+In production, on a real docker container, you should use the actual path, ie `/run/secrets/my_secret`. The `/run/secrets/` path is not hard-coded to allow for changes to Docker implementation (all too frequent, unfortunately), and to support testing with arbitrary locations.
 
 The path should not be quoted.
 
