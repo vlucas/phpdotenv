@@ -208,7 +208,11 @@ class Loader
 
             $file = realpath($value);
 
-            if ($file && is_readable($file)) {
+            if (false === $file) {
+                $file = realpath(dirname($this->filePath).'/'.$value);
+            }
+
+            if (false !== $file && is_readable($file)) {
                 $name = $matches[1];
 
                 $value = file_get_contents($file);
