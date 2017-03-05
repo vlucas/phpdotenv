@@ -236,6 +236,8 @@ In production, on a real docker container, you should use the actual path, ie `/
 
 The path should not be quoted.
 
+Please note that this does not actually create the docker secret. You still need to use the appropriate docker command to create the secret. Declaring the environment variable with a `_FILE` suffix via PHP dotenv merely allows you to load an existing secret value as an environment variable without having to disclose the value in clear text.
+
 
 Usage Notes
 -----------
