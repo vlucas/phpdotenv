@@ -327,4 +327,12 @@ class DotenvTest extends PHPUnit_Framework_TestCase
         $dotenv->required('REQUIRED_VAR')->notEmpty();
         $this->assertTrue(true);
     }
+
+    public function testDockerSecrets()
+    {
+        $dotenv = new Dotenv($this->fixturesFolder, 'docker_secrets.env');
+        $dotenv->load();
+        $this->assertSame('secret', $_ENV['MYSQL_PASSWORD']);
+        $this->assertSame('secret', getenv('MYSQL_PASSWORD'));
+    }
 }

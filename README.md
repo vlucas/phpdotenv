@@ -217,6 +217,28 @@ VAR="value" # comment
 VAR=value # comment
 ```
 
+### Docker secrets
+
+Docker allows sensitive information such as passwords or API keys to be declared as `secrets` in a container, in order to avoid having them stored in an image, having to mount them as volumes, or otherwise declare them as clear-text environment variables. The value of such secrets is stored as the contents of a file named after the secret name and stored under `/run/secrets`. For example, a MySQL password could be defined as the secret named `mysql_password` and its value would be stored in `/run/secrets/mysql_password`. See https://docs.docker.com/engine/swarm/secrets/.
+
+It seems to be a Docker convention to declare the secret name as the value of an environment variable named after the originally desired environment variable with the suffix '_FILE' added. For example, the mysql image, which normally supports the environment variable `MYSQL_PASSWORD`, also supports the environment variable `MYSQL_PASSWORD_FILE`. If `MYSQL_PASSWORD_FILE` is declared, its value is assumed to be the secret name. The image will read the secret value from the secret file, and assign it as the value of the `MYSQL_PASSWORD` environment variable. In other words, the option `-e MYSQL_PASSWORD_FILE=mysql_password` will result in `MYSQL_PASSWORD` being defined with a value equal to the `mysql_password` secret, which is equal to the contents of the file `/run/secrets/mysql_password`.
+
+An equivalent convention is now supported by PHP dotenv. If you include in your .env file a line like this:
+
+```shell
+VAR_FILE=/path/to/secret
+```
+and `path/to/secret` points to an existing and readable file, an environment variable named `VAR` will be created, and its value will be set to the contents of the file at the path indicated.
+
+If the file does not exist or is unreadable, the `VAR_FILE` environment variable is treated normally, ie a `VAR_FILE` environment variable is created with the value `/path/to/secret`.
+
+In production, on a real docker container, you should use the actual path, ie `/run/secrets/my_secret`. The `/run/secrets/` path is not hard-coded to allow for changes to the Docker implementation (all too frequent, unfortunately), and to support testing with arbitrary locations. Relative locations are computed relative to the `.env` file that defines the environment variable.
+
+The path should not be quoted.
+
+Please note that this does not actually create the docker secret. You still need to use the appropriate docker command to create the secret (`docker secret create` at the time of this writing). Declaring the environment variable with a `_FILE` suffix via PHP dotenv allows you to load an existing secret value as an environment variable without having to disclose the value in clear text.
+
+
 Usage Notes
 -----------
 

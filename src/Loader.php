@@ -204,6 +204,21 @@ class Loader
             list($name, $value) = array_map('trim', explode('=', $name, 2));
         }
 
+        if (preg_match('/^(.+)_FILE$/', $name, $matches)) {
+
+            $file = realpath($value);
+
+            if (false === $file) {
+                $file = realpath(dirname($this->filePath).'/'.$value);
+            }
+
+            if (false !== $file && is_readable($file)) {
+                $name = $matches[1];
+
+                $value = file_get_contents($file);
+            }
+        }
+
         return array($name, $value);
     }
 
