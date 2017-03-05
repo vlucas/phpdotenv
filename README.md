@@ -223,12 +223,12 @@ Docker allows sensitive information such as passwords or API keys to be declared
 
 It seems that it is a Docker convention to declare the secret name as the value of an environment named after the original environment variable with the suffix '_FILE' added. For example, the mysql image, which normally supports the environment variable `MYSQL_PASSWORD`, also supports the environment variable `MYSQL_PASSWORD_FILE`. If `MYSQL_PASSWORD_FILE` is declared, its value is assumed to be the secret name. The image will read the secret value from the secret file, and assign it as the value of the `MYSQL_PASSWORD` environment variable. In other words, `-e MYSQL_PASSWORD_FILE=mysql_password` will result in `MYSQL_PASSWORD` being defined with a value equal to the `mysql_password` secret, which is equal to the contents of the file `/run/secrets/mysql_password`.
 
-An equivalent convention is now suported by PHP dotenv. If you include in your .env file a line like this:
+An equivalent convention is now supported by PHP dotenv. If you include in your .env file a line like this:
 
 ```shell
 VAR_FILE=/path/to/secret
 ```
-and `path/to/secret` points to a existing and readable file, an environment variable named `VAR` will be created, and its value set to the contents of the file at the path indicated.
+and `path/to/secret` points to an existing and readable file, an environment variable named `VAR` will be created, and its value will be set to the contents of the file at the path indicated.
 
 If the file does not exist or is unreadable, the `VAR_FILE` environment variable is treated normally, ie a `VAR_FILE` environment variable is created with the value `/path/to/secret`.
 
