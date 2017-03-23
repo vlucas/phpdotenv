@@ -59,6 +59,16 @@ class Dotenv
     }
 
     /**
+     * Loader getter 
+     * 
+     * @return Loader
+     */
+    public function getLoader()
+    {
+        return $this->loader;
+    }
+
+    /**
      * Returns the full path to the file.
      *
      * @param string $path
