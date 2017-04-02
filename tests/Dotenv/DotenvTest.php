@@ -327,4 +327,44 @@ class DotenvTest extends PHPUnit_Framework_TestCase
         $dotenv->required('REQUIRED_VAR')->notEmpty();
         $this->assertTrue(true);
     }
+
+    public function testDotenvUseDefaultValues()
+    {
+        $dotenv = new Dotenv($this->fixturesFolder, 'default_values.env', array(
+            'DEFAULT_VAR1' => 'default value 1',
+            'DEFAULT_VAR2' => 'default value 2',
+            'DEFAULT_VAR3' => 'default value 3',
+            'DEFAULT_VAR4' => 'default value 4',
+            'DEFAULT_VAR5' => 42,
+            'DEFAULT_VAR6' => 1000,
+            'DEFAULT_VAR11' => 'default value 11',
+        ));
+        $dotenv->load();
+
+        $dotenv
+            ->required(array(
+                'DEFAULT_VAR1',
+                'DEFAULT_VAR2',
+                'DEFAULT_VAR3',
+                'DEFAULT_VAR4',
+            ));
+        $dotenv
+            ->required(array(
+                'DEFAULT_VAR4',
+                'DEFAULT_VAR5',
+                'DEFAULT_VAR6',
+            ))
+            ->isInteger();
+
+        $this->assertSame('value', getenv('DEFAULT_VAR1'));
+        $this->assertSame('default value 2', getenv('DEFAULT_VAR2'));
+        $this->assertSame('default value 3', getenv('DEFAULT_VAR3'));
+        $this->assertSame('0', getenv('DEFAULT_VAR4'));
+        $this->assertSame('42', getenv('DEFAULT_VAR5'));
+        $this->assertSame('1', getenv('DEFAULT_VAR6'));
+        $this->assertSame('42', getenv('DEFAULT_VAR7'));
+        $this->assertSame('default value 8', getenv('DEFAULT_VAR8'));
+        $this->assertSame('', getenv('DEFAULT_VAR9'));
+        $this->assertSame('default value 10', getenv('DEFAULT_VAR10'));
+    }
 }
