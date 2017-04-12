@@ -37,9 +37,7 @@ class Loader
     public function __construct($filePath, $immutable = false)
     {
         $this->filePath = $filePath;
-        $this->environmentVariables = $immutable
-            ? EnvironmentVariables::createImmutable()
-            : EnvironmentVariables::create();
+        $this->setImmutable($immutable);
     }
 
     /**
@@ -50,7 +48,9 @@ class Loader
      */
     public function setImmutable($immutable = false)
     {
-        $this->immutable = $immutable;
+        $this->environmentVariables = $immutable
+            ? EnvironmentVariables::createImmutable()
+            : EnvironmentVariables::create();
 
         return $this;
     }
@@ -62,7 +62,7 @@ class Loader
      */
     public function getImmutable()
     {
-        return $this->immutable;
+        return $this->environmentVariables;
     }
 
     /**

@@ -7,12 +7,7 @@ class LoaderTest extends PHPUnit_Framework_TestCase
     /**
      * @var \Dotenv\Loader
      */
-    private $immutableLoader;
-
-    /**
-     * @var \Dotenv\Loader
-     */
-    private $mutableLoader;
+    private $loader;
     
     public function setUp()
     {
@@ -22,8 +17,7 @@ class LoaderTest extends PHPUnit_Framework_TestCase
         $this->keyVal(true);
 
         // Build an immutable and mutable loader for convenience.
-        $this->mutableLoader = new Loader($folder);
-        $this->immutableLoader = new Loader($folder, true);
+        $this->loader = new Loader($folder, false);
     }
 
     protected $keyVal;
@@ -74,49 +68,29 @@ class LoaderTest extends PHPUnit_Framework_TestCase
         return reset($keyVal);
     }
 
-    public function testMutableLoaderSetUnsetImmutable()
-    {
-        $immutable = $this->mutableLoader->getImmutable();
-
-        // Set Immutable.
-        $this->mutableLoader->setImmutable(!$immutable);
-        $this->assertSame(!$immutable, $this->mutableLoader->getImmutable());
-        $this->mutableLoader->setImmutable($immutable);
-        $this->assertSame($immutable, $this->mutableLoader->getImmutable());
-    }
-
     public function testMutableLoaderClearsEnvironmentVars()
     {
         // Set an environment variable.
-        $this->mutableLoader->setEnvironmentVariable($this->key(), $this->value());
+        $this->loader->setEnvironmentVariable($this->key(), $this->value());
 
         // Clear the set environment variable.
-        $this->mutableLoader->clearEnvironmentVariable($this->key());
-        $this->assertSame(null, $this->mutableLoader->getEnvironmentVariable($this->key()));
+        $this->loader->clearEnvironmentVariable($this->key());
+        $this->assertSame(null, $this->loader->getEnvironmentVariable($this->key()));
         $this->assertSame(false, getenv($this->key()));
         $this->assertSame(false, isset($_ENV[$this->key()]));
         $this->assertSame(false, isset($_SERVER[$this->key()]));
     }
 
-    public function testImmutableLoaderSetUnsetImmutable()
-    {
-        $immutable = $this->immutableLoader->getImmutable();
-
-        // Set Immutable.
-        $this->immutableLoader->setImmutable(!$immutable);
-        $this->assertSame(!$immutable, $this->immutableLoader->getImmutable());
-        $this->immutableLoader->setImmutable($immutable);
-        $this->assertSame($immutable, $this->immutableLoader->getImmutable());
-    }
-
     public function testImmutableLoaderCannotClearEnvironmentVars()
     {
+        $this->loader->setImmutable(true);
+
         // Set an environment variable.
-        $this->immutableLoader->setEnvironmentVariable($this->key(), $this->value());
+        $this->loader->setEnvironmentVariable($this->key(), $this->value());
 
         // Attempt to clear the environment variable, check that it fails.
-        $this->immutableLoader->clearEnvironmentVariable($this->key());
-        $this->assertSame($this->value(), $this->immutableLoader->getEnvironmentVariable($this->key()));
+        $this->loader->clearEnvironmentVariable($this->key());
+        $this->assertSame($this->value(), $this->loader->getEnvironmentVariable($this->key()));
         $this->assertSame($this->value(), getenv($this->key()));
         $this->assertSame(true, isset($_ENV[$this->key()]));
         $this->assertSame(true, isset($_SERVER[$this->key()]));
