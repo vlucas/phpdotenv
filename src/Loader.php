@@ -56,16 +56,6 @@ class Loader
     }
 
     /**
-     * Set immutable value.
-     *
-     * @return bool
-     */
-    public function getImmutable()
-    {
-        return $this->environmentVariables;
-    }
-
-    /**
      * Load `.env` file in given directory.
      *
      * @return array
