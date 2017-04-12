@@ -86,9 +86,7 @@ class Dotenv
      */
     protected function loadData($overload = false)
     {
-        $this->loader = new Loader($this->filePath, !$overload);
-
-        return $this->loader->load();
+        return $this->loader->setImmutable(!$overload)->load();
     }
 
     /**
