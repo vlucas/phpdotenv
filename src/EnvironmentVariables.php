@@ -26,7 +26,7 @@ class EnvironmentVariables implements ArrayAccess
      */
     public static function create()
     {
-        return new self(false);
+        return new static(false);
     }
 
     /**
@@ -36,7 +36,7 @@ class EnvironmentVariables implements ArrayAccess
      */
     public static function createImmutable()
     {
-        return new self(true);
+        return new static(true);
     }
 
     /**
