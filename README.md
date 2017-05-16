@@ -138,8 +138,8 @@ $dotenv->overload();
 Requiring Variables to be Set
 -----------------------------
 
-Using Dotenv, you can require specific ENV vars to be defined ($_ENV, $_SERVER or getenv()). Note: It does not check for existance of a variable in a '.env' file.
-Throw an exception if these ENV vars are not. This is particularly useful to let people know any explicit required variables that your app will not work without.
+Using Dotenv, you can require specific ENV vars to be defined ($_ENV, $_SERVER or getenv()) - throws an exception otherwise.
+Note: It does not check for existence of a variable in a '.env' file. This is particularly useful to let people know any explicit required variables that your app will not work without.
 
 You can use a single string:
 
