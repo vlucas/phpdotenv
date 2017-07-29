@@ -160,6 +160,9 @@ If any ENV vars are missing, Dotenv will throw a `RuntimeException` like this:
 One or more environment variables failed assertions: DATABASE_DSN is missing
 ```
 
+You can also use [morrislaptop/phpdotenv-safe](https://github.com/morrislaptop/phpdotenv-safe) to throw an exception if you are missing
+any vars that exist in your `.env.example` file
+
 ### Empty Variables
 
 Beyond simply requiring a variable to be set, you might also need to ensure the
