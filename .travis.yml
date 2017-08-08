@@ -1,4 +1,6 @@
 language: php
+dist: trusty
+sudo: false
 
 php:
   - 5.3
@@ -8,9 +10,8 @@ php:
   - 5.6
   - 7.0
   - 7.1
+  - 7.2
   - hhvm
-
-sudo: false
 
 install: travis_retry composer install --no-interaction --prefer-source
 
