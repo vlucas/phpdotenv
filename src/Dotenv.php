@@ -27,17 +27,26 @@ class Dotenv
     protected $loader;
 
     /**
+     * The keyword to decide if this is a path and not a regular variable
+     * 
+     * @var string
+     */
+    protected $pathKey;
+
+    /**
      * Create a new dotenv instance.
      *
      * @param string $path
      * @param string $file
+     * @param string $pathKey
      *
      * @return void
      */
-    public function __construct($path, $file = '.env')
+    public function __construct($path, $file = '.env', $pathKey = 'INCLUDE')
     {
         $this->filePath = $this->getFilePath($path, $file);
-        $this->loader = new Loader($this->filePath, true);
+        $this->pathKey = $pathKey;
+        $this->loader = new Loader($this->filePath, true, $this->pathKey);
     }
 
     /**

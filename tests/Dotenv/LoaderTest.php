@@ -22,8 +22,8 @@ class LoaderTest extends PHPUnit_Framework_TestCase
         $this->keyVal(true);
 
         // Build an immutable and mutable loader for convenience.
-        $this->mutableLoader = new Loader($folder);
-        $this->immutableLoader = new Loader($folder, true);
+        $this->mutableLoader = new Loader($folder, false, 'INCLUDE');
+        $this->immutableLoader = new Loader($folder, true, 'INCLUDE');
     }
 
     protected $keyVal;
