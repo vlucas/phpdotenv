@@ -217,7 +217,8 @@ VAR="value" # comment
 VAR=value # comment
 ```
 
-### Using Include Files
+Using Include Files
+-------------------
 
 Sometimes `.env` files can become quite large and unwieldy. To help with this, 
 you can include sub-`.env` files inside your main `.env` file. E.g.
@@ -236,8 +237,7 @@ USERNAME=johndoe
 PASSWORD=oth3rs3cr3t
 ```
 
-In Paractice
-------------
+### In Practice
 
 The path to your included `.env` files is always **relative** to your root `.env` 
 file.
@@ -250,8 +250,7 @@ echo getenv('DB_NAME'); // would output "mydb"
 echo getenv('MAIL_PASSWORD'); // would output "oth3rs3cr3t"
 ```
 
-Nested Includes
----------------
+### Nested Includes
 
 Though it may be cumbersome, you can include `.env` files inside included `.env` 
 files. E.g.
@@ -274,8 +273,7 @@ In the example above you would reference the `S3_STATIC` variable like so:
 echo getenv('ASSETS_IMG_S3_STATIC');
 ```
 
-Specifying a Path Key
----------------------
+### Customizing the Path Key
 
 By default, the `INCLUDE` keyword is used to direct `Dotenv` that your variable 
 represents an include file. You can customize this as the third argument when
@@ -292,12 +290,12 @@ Then in your `.env` file:
 S3_PATH=s3.env
 ```
 
-Include Caveat
---------------
+### Include Caveat
 
 Include files will **not** work in [Command Line Scripts](https://github.com/etelford/phpdotenv#command-line-scripts).
 
-### Usage Notes
+Usage Notes
+-----------
 
 When a new developer clones your codebase, they will have an additional
 **one-time step** to manually copy the `.env.example` file to `.env` and fill-in
