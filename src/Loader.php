@@ -29,17 +29,26 @@ class Loader
     protected $immutable;
 
     /**
+     * The keyword to decide if this is a path and not a regular variable
+     * 
+     * @var string
+     */
+    protected $pathKey;
+
+    /**
      * Create a new loader instance.
      *
      * @param string $filePath
      * @param bool   $immutable
+     * @param string $pathKey
      *
      * @return void
      */
-    public function __construct($filePath, $immutable = false)
+    public function __construct($filePath, $immutable = false, $pathKey)
     {
         $this->filePath = $filePath;
         $this->immutable = $immutable;
+        $this->pathKey = $pathKey;
     }
 
     /**
@@ -47,15 +56,32 @@ class Loader
      *
      * @return array
      */
-    public function load()
+    public function load($lines = null, $prefix = '')
     {
-        $this->ensureFileIsReadable();
+        if (is_null($lines)) {      
+            $this->ensureFileIsReadable();
 
-        $filePath = $this->filePath;
-        $lines = $this->readLinesFromFile($filePath);
+            $filePath = $this->filePath;
+            $lines = $this->readLinesFromFile($filePath);
+        }
+
         foreach ($lines as $line) {
-            if (!$this->isComment($line) && $this->looksLikeSetter($line)) {
-                $this->setEnvironmentVariable($line);
+            if ($this->isComment($line)) {
+                continue;
+            }
+
+            if ($this->looksLikePath($line)) {
+                list($name, $file) = $this->parsePathedEnvironmentVariable($line);
+
+                if ($this->canLoadInclude($file)) {
+                    $lines = $this->readLinesFromFile($this->parseIncludeFilePath($file));
+
+                    $this->load($lines, $prefix . $name . '_');
+                }
+            }
+
+            if ($this->looksLikeSetter($line)) {
+                $this->setEnvironmentVariable($prefix . $line);
             }
         }
 
@@ -154,12 +180,65 @@ class Loader
      * Determine if the given line looks like it's setting a variable.
      *
      * @param string $line
+     * @return bool
+     */
+    protected function looksLikePath($line)
+    {
+        return strpos($line, '_' . $this->pathKey) !== false;
+    }
+
+    /**
+     * Determine if the given line looks like it's setting a variable.
+     *
+     * @param string $line
      *
      * @return bool
      */
     protected function looksLikeSetter($line)
     {
         return strpos($line, '=') !== false;
+    }
+
+    /**
+     * Parse the root name of the variable and its value, which will be the
+     * path to the include
+     * 
+     * @param  string       $name  
+     * @param  string|null  $value
+     * @return void
+     */
+    protected function parsePathedEnvironmentVariable($name, $value = null)
+    {
+        list($name, $value) = $this->normaliseEnvironmentVariable($name, $value);
+
+        return [str_replace('_'.$this->pathKey, '', $name), $value];
+    }
+
+    /**
+     * Get the contents of the include file
+     * 
+     * @param  string $path
+     * @return string
+     */
+    protected function canLoadInclude($file)
+    {
+        $includeFilePath = $this->parseIncludeFilePath($file);
+
+        return is_readable($includeFilePath) && is_file($includeFilePath);
+    }
+
+    /**
+     * Figure out the path of the include file relative to the loaded .env
+     * 
+     * @param  string $file
+     * @return string
+     */
+    protected function parseIncludeFilePath($file)
+    {
+        $path = explode('/', $this->filePath);
+        array_pop($path);
+        
+        return implode($path, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $file;
     }
 
     /**
