@@ -217,20 +217,6 @@ VAR="value" # comment
 VAR=value # comment
 ```
 
-Usage Notes
------------
-
-When a new developer clones your codebase, they will have an additional
-**one-time step** to manually copy the `.env.example` file to `.env` and fill-in
-their own values (or get any sensitive values from a project co-worker).
-
-phpdotenv is made for development environments, and generally should not be
-used in production. In production, the actual environment variables should be
-set so that there is no overhead of loading the `.env` file on each request.
-This can be achieved via an automated deployment process with tools like
-Vagrant, chef, or Puppet, or can be set manually with cloud hosts like
-Pagodabox and Heroku.
-
 ### Using Include Files
 
 Sometimes `.env` files can become quite large and unwieldy. To help with this, 
@@ -250,8 +236,8 @@ USERNAME=johndoe
 PASSWORD=oth3rs3cr3t
 ```
 
-Usage
------
+In Paractice
+------------
 
 The path to your included `.env` files is always **relative** to your root `.env` 
 file.
@@ -306,10 +292,23 @@ Then in your `.env` file:
 S3_PATH=s3.env
 ```
 
-Caveat
-------
+Include Caveat
+--------------
 
 Include files will **not** work in [Command Line Scripts](https://github.com/etelford/phpdotenv#command-line-scripts).
+
+### Usage Notes
+
+When a new developer clones your codebase, they will have an additional
+**one-time step** to manually copy the `.env.example` file to `.env` and fill-in
+their own values (or get any sensitive values from a project co-worker).
+
+phpdotenv is made for development environments, and generally should not be
+used in production. In production, the actual environment variables should be
+set so that there is no overhead of loading the `.env` file on each request.
+This can be achieved via an automated deployment process with tools like
+Vagrant, chef, or Puppet, or can be set manually with cloud hosts like
+Pagodabox and Heroku.
 
 ### Command Line Scripts
 
