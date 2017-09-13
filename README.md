@@ -231,6 +231,86 @@ This can be achieved via an automated deployment process with tools like
 Vagrant, chef, or Puppet, or can be set manually with cloud hosts like
 Pagodabox and Heroku.
 
+### Using Include Files
+
+Sometimes `.env` files can become quite large and unwieldy. To help with this, 
+you can include sub-`.env` files inside your main `.env` file. E.g.
+
+```shell
+# root .env file
+DB_INCLUDE=db.env
+MAIL_INCLUDE=mail.env
+
+# db.env
+NAME=mydb
+PASSWORD=s3cr3t
+
+# mail.env
+USERNAME=johndoe
+PASSWORD=oth3rs3cr3t
+```
+
+Usage
+-----
+
+The path to your included `.env` files is always **relative** to your root `.env` 
+file.
+
+When you want to reference included `.env` variables, you use the prefix of the 
+include name. Using the example above:
+
+```php
+echo getenv('DB_NAME'); // would output "mydb"
+echo getenv('MAIL_PASSWORD'); // would output "oth3rs3cr3t"
+```
+
+Nested Includes
+---------------
+
+Though it may be cumbersome, you can include `.env` files inside included `.env` 
+files. E.g.
+
+```shell
+# root .env file
+ASSETS_INCLUDE=assets.env
+
+# assets.env
+IMG_INCLUDE=images.env
+DOCS_INCLUDE=docs.env
+
+# images.env
+S3_STATIC=https://...
+```
+
+In the example above you would reference the `S3_STATIC` variable like so:
+
+```php
+echo getenv('ASSETS_IMG_S3_STATIC');
+```
+
+Specifying a Path Key
+---------------------
+
+By default, the `INCLUDE` keyword is used to direct `Dotenv` that your variable 
+represents an include file. You can customize this as the third argument when
+creating your `Dotenv` instance:
+
+```php
+$dotenv = new Dotenv\Dotenv(__DIR__, '.env', 'PATH');
+$dotenv->load();
+```
+
+Then in your `.env` file:
+
+```shell
+S3_PATH=s3.env
+```
+
+Caveat
+------
+
+Include files will **not** work in [Command Line Scripts](https://github.com/etelford/phpdotenv#command-line-scripts).
+
 ### Command Line Scripts
 
 If you need to use environment variables that you have set in your `.env` file
