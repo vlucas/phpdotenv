@@ -24,6 +24,12 @@ class DotenvTest extends PHPUnit_Framework_TestCase
         $dotenv->load();
     }
 
+    public function testDotenvSkipsLoadingIfFileIsMissing()
+    {
+        $dotenv = new Dotenv(__DIR__);
+        $this->assertEmpty($dotenv->safeLoad());
+    }
+
     public function testDotenvLoadsEnvironmentVars()
     {
         $dotenv = new Dotenv($this->fixturesFolder);

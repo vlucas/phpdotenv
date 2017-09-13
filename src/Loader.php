@@ -52,6 +52,29 @@ class Loader
     }
 
     /**
+     * Set immutable value.
+     *
+     * @param bool $immutable
+     * @return $this
+     */
+    public function setImmutable($immutable = false)
+    {
+        $this->immutable = $immutable;
+
+        return $this;
+    }
+
+    /**
+     * Set immutable value.
+     *
+     * @return bool
+     */
+    public function getImmutable()
+    {
+        return $this->immutable;
+    }
+
+    /**
      * Load `.env` file in given directory.
      *
      * @return array
@@ -173,7 +196,9 @@ class Loader
      */
     protected function isComment($line)
     {
-        return strpos(ltrim($line), '#') === 0;
+        $line = ltrim($line);
+
+        return isset($line[0]) && $line[0] === '#';
     }
 
     /**
@@ -366,7 +391,7 @@ class Loader
      */
     protected function beginsWithAQuote($value)
     {
-        return strpbrk($value[0], '"\'') !== false;
+        return isset($value[0]) && ($value[0] === '"' || $value[0] === '\'');
     }
 
     /**
@@ -420,7 +445,9 @@ class Loader
             apache_setenv($name, $value);
         }
 
-        putenv("$name=$value");
+        if (function_exists('putenv')) {
+            putenv("$name=$value");
+        }
 
         $_ENV[$name] = $value;
         $_SERVER[$name] = $value;
@@ -449,7 +476,9 @@ class Loader
             return;
         }
 
-        putenv($name);
+        if (function_exists('putenv')) {
+            putenv($name);
+        }
 
         unset($_ENV[$name], $_SERVER[$name]);
     }
