@@ -134,6 +134,36 @@ class DotenvTest extends PHPUnit_Framework_TestCase
         $this->assertSame('$NVAR1 {NVAR2}', $_ENV['NVAR5']); // not resolved
     }
 
+    public function testDotenvIncludedLocalEnvironmentVars()
+    {
+        $dotenv = new Dotenv($this->fixturesFolder, 'included.env');
+        $dotenv->load();
+
+        $this->assertSame('bar', $_ENV['LOCAL_INCFOO']);
+        $this->assertSame('baz', $_ENV['LOCAL_INCBAR']);
+        $this->assertSame('bar baz', $_ENV['LOCAL_INCBAZ']);
+    }
+
+    public function testDotenvIncludedFolderEnvironmentVars()
+    {
+        $dotenv = new Dotenv($this->fixturesFolder, 'included.env');
+        $dotenv->load();
+
+        $this->assertSame('bar', $_ENV['FOLDER_FFOO']);
+        $this->assertSame('baz', $_ENV['FOLDER_FBAR']);
+        $this->assertSame('bar baz', $_ENV['FOLDER_FBAZ']);
+    }
+
+    public function testDotenvIncludedSubfolderEnvironmentVars()
+    {
+        $dotenv = new Dotenv($this->fixturesFolder, 'included.env');
+        $dotenv->load();
+
+        $this->assertSame('bar', $_ENV['FOLDER_SUBFOLDER_SFOO']);
+        $this->assertSame('baz', $_ENV['FOLDER_SUBFOLDER_SBAR']);
+        $this->assertSame('bar baz', $_ENV['FOLDER_SUBFOLDER_SBAZ']);
+    }
+
     /**
      * @depends testDotenvLoadsEnvironmentVars
      * @depends testDotenvLoadsEnvGlobals
