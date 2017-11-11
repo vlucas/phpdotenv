@@ -1,8 +1,9 @@
 <?php
 
 use Dotenv\Loader;
+use PHPUnit\Framework\TestCase;
 
-class LoaderTest extends PHPUnit_Framework_TestCase
+class LoaderTest extends TestCase
 {
     /**
      * @var \Dotenv\Loader
@@ -13,7 +14,7 @@ class LoaderTest extends PHPUnit_Framework_TestCase
      * @var \Dotenv\Loader
      */
     private $mutableLoader;
-    
+
     public function setUp()
     {
         $folder = dirname(__DIR__) . '/fixtures/env';

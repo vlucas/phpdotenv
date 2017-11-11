@@ -1,8 +1,9 @@
 <?php
 
 use Dotenv\Dotenv;
+use PHPUnit\Framework\TestCase;
 
-class DotenvTest extends PHPUnit_Framework_TestCase
+class DotenvTest extends TestCase
 {
     /**
      * @var string
