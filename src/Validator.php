@@ -71,7 +71,9 @@ class Validator
     {
         return $this->assertCallback(
             function ($value) {
-                return ctype_digit($value);
+                // After adding default values we may got a 'real' integer, so
+                // we also should use `is_numeric` here.
+                return is_numeric($value);
             },
             'is not an integer'
         );

@@ -31,13 +31,15 @@ class Dotenv
      *
      * @param string $path
      * @param string $file
+     * @param array $defaults Hash array where key is parameter name and value
+     *                        is default parameter value.
      *
      * @return void
      */
-    public function __construct($path, $file = '.env')
+    public function __construct($path, $file = '.env', array $defaults = array())
     {
         $this->filePath = $this->getFilePath($path, $file);
-        $this->loader = new Loader($this->filePath, true);
+        $this->loader = new Loader($this->filePath, true, $defaults);
     }
 
     /**

@@ -29,17 +29,28 @@ class Loader
     protected $immutable;
 
     /**
+     * Hash array where key is parameter name and value is default parameter
+     * value.
+     *
+     * @var mixed[]
+     */
+    protected $defaults = array();
+
+    /**
      * Create a new loader instance.
      *
      * @param string $filePath
      * @param bool   $immutable
+     * @param array $defaults Hash array where key is parameter name and value
+     *                        is default parameter value.
      *
      * @return void
      */
-    public function __construct($filePath, $immutable = false)
+    public function __construct($filePath, $immutable = false, array $defaults = array())
     {
         $this->filePath = $filePath;
         $this->immutable = $immutable;
+        $this->defaults = $defaults;
     }
 
     /**
@@ -272,11 +283,19 @@ class Loader
         if (strpos($value, '$') !== false) {
             $loader = $this;
             $value = preg_replace_callback(
-                '/\${([a-zA-Z0-9_]+)}/',
+                '/\${([a-zA-Z0-9_]+)(?:\:-([^\}]*))?}/',
                 function ($matchedPatterns) use ($loader) {
                     $nestedVariable = $loader->getEnvironmentVariable($matchedPatterns[1]);
+                    // We also should return default values if we got
+                    $hasDefaultValue = isset($matchedPatterns[2]);
+                    $defaultValue = $hasDefaultValue
+                        ? $matchedPatterns[2]
+                        : $matchedPatterns[0];
+
                     if ($nestedVariable === null) {
-                        return $matchedPatterns[0];
+                        return $defaultValue;
+                    } elseif ($hasDefaultValue && (trim($nestedVariable) === '')) {
+                        return $defaultValue;
                     } else {
                         return $nestedVariable;
                     }
@@ -353,6 +372,11 @@ class Loader
     public function setEnvironmentVariable($name, $value = null)
     {
         list($name, $value) = $this->normaliseEnvironmentVariable($name, $value);
+
+        // Use default value if we got empty variable.
+        if ((strlen(trim($value)) === 0) && isset($this->defaults[$name])) {
+            $value = $this->defaults[$name];
+        }
 
         // Don't overwrite existing environment variables if we're immutable
         // Ruby's dotenv does this with `ENV[key] ||= value`.
