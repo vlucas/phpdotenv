@@ -3,7 +3,6 @@ dist: trusty
 sudo: false
 
 php:
-  - 5.3
   - 5.4
   - 5.5
   - 5.5.9
@@ -12,6 +11,11 @@ php:
   - 7.1
   - 7.2
   - hhvm
+
+matrix:
+  include:
+    - php: 5.3
+      dist: precise
 
 install: travis_retry composer install --no-interaction --prefer-source
 
