@@ -139,6 +139,8 @@ class DotenvTest extends TestCase
         $this->assertSame('{$NVAR1} {$NVAR2}', $_ENV['NVAR3']); // not resolved
         $this->assertSame('Hello World!', $_ENV['NVAR4']);
         $this->assertSame('$NVAR1 {NVAR2}', $_ENV['NVAR5']); // not resolved
+        $this->assertSame('Special Value', $_ENV['N.VAR6']); // new '.' (dot) in var name
+        $this->assertSame('Special Value', $_ENV['NVAR7']);  // nested '.' (dot) variable
     }
 
     /**
