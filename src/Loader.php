@@ -115,9 +115,7 @@ class Loader
      */
     protected function normaliseEnvironmentVariable($name, $value)
     {
-        list($name, $value) = $this->splitCompoundStringIntoParts($name, $value);
-        list($name, $value) = $this->sanitiseVariableName($name, $value);
-        list($name, $value) = $this->sanitiseVariableValue($name, $value);
+        list($name, $value) = $this->processFilters($name, $value);
 
         $value = $this->resolveNestedVariables($value);
 
