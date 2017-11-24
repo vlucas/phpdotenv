@@ -56,7 +56,7 @@ class Loader
     }
 
     /**
-     * Set immutable value.
+     * Get immutable value.
      *
      * @return bool
      */
