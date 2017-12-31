@@ -1,7 +1,7 @@
 The BSD 3-Clause License
 http://opensource.org/licenses/BSD-3-Clause
 
-Copyright (c) 2013, Vance Lucas
+Copyright (c) 2018, Vance Lucas
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
