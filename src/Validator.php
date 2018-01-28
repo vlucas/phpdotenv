@@ -78,6 +78,25 @@ class Validator
     }
 
     /**
+     * Assert that each specified variable is a boolean.
+     *
+     * @return \Dotenv\Validator
+     */
+    public function isBoolean()
+    {
+        return $this->assertCallback(
+            function ($value) {
+                if ($value === '') {
+                    return false;
+                }
+
+                return (filter_var($value, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) !== NULL);
+            },
+            'is not a boolean'
+        );
+    }
+
+    /**
      * Assert that each variable is amongst the given choices.
      *
      * @param string[] $choices
