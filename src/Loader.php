@@ -21,6 +21,13 @@ class Loader
      */
     protected $filePath;
 
+	/**
+     * The Docker secrets file path.
+     *
+     * @var string
+     */
+    protected $dockerSecretsPath;
+
     /**
      * Are we immutable?
      *
@@ -36,9 +43,10 @@ class Loader
      *
      * @return void
      */
-    public function __construct($filePath, $immutable = false)
+    public function __construct($filePath, $immutable = false, $dockerSecretsPath = '/run/secrets/')
     {
         $this->filePath = $filePath;
+        $this->dockerSecretsPath = $dockerSecretsPath;
         $this->immutable = $immutable;
     }
 
@@ -79,6 +87,11 @@ class Loader
         foreach ($lines as $line) {
             if (!$this->isComment($line) && $this->looksLikeSetter($line)) {
                 $this->setEnvironmentVariable($line);
+                continue;
+            }
+
+            if (!$this->isComment($line) && $this->looksLikeDockerSecret($line)) {
+                $this->setDockerEnvironmentVariable($line);
             }
         }
 
@@ -122,6 +135,21 @@ class Loader
         $value = $this->resolveNestedVariables($value);
 
         return array($name, $value);
+    }
+
+/**
+     * Normalise the given Docker environment variable by removing the two pipes (||) from the end of the string.
+     *
+     *
+     * @param string $name
+     *
+     * @return string
+     */
+    protected function normaliseDockerEnvironmentVariable($name)
+    {
+        $name = substr($name, 0, strlen($name) - 2); //The variable name without the final two ||
+
+        return $name;
     }
 
     /**
@@ -185,6 +213,18 @@ class Loader
     protected function looksLikeSetter($line)
     {
         return strpos($line, '=') !== false;
+    }
+
+	/**
+     * Determine if the given line looks like it's setting a variable from a Docker secret.
+     *
+     * @param string $line
+     *
+     * @return bool
+     */
+    protected function looksLikeDockerSecret($line)
+    {
+    	return strpos($line, '||') !== false;
     }
 
     /**
@@ -353,6 +393,48 @@ class Loader
     public function setEnvironmentVariable($name, $value = null)
     {
         list($name, $value) = $this->normaliseEnvironmentVariable($name, $value);
+
+        // Don't overwrite existing environment variables if we're immutable
+        // Ruby's dotenv does this with `ENV[key] ||= value`.
+        if ($this->immutable && $this->getEnvironmentVariable($name) !== null) {
+            return;
+        }
+
+        // If PHP is running as an Apache module and an existing
+        // Apache environment variable exists, overwrite it
+        if (function_exists('apache_getenv') && function_exists('apache_setenv') && apache_getenv($name)) {
+            apache_setenv($name, $value);
+        }
+
+        if (function_exists('putenv')) {
+            putenv("$name=$value");
+        }
+
+        $_ENV[$name] = $value;
+        $_SERVER[$name] = $value;
+    }
+
+	/**
+     * Set an environment variable from a Docker secret.
+     *
+     * This is done using:
+     * - putenv,
+     * - $_ENV,
+     * - $_SERVER.
+     *
+     * The environment variable value is stripped of single and double quotes.
+     *
+     * @param string      $name
+     * @param string|null $value
+     *
+     * @return void
+     */
+    public function setDockerEnvironmentVariable($name)
+    {
+    	$name = $this->normaliseDockerEnvironmentVariable($name);
+    	$value = trim(file_get_contents($this->dockerSecretsPath . $name));
+
+    	list($name, $value) = $this->sanitiseVariableValue($name, $value);
 
         // Don't overwrite existing environment variables if we're immutable
         // Ruby's dotenv does this with `ENV[key] ||= value`.
