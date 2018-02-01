@@ -1,5 +1,5 @@
 {
-    "name": "vlucas/phpdotenv",
+    "name": "publiux/phpdotenv",
     "description": "Loads environment variables from `.env` to `getenv()`, `$_ENV` and `$_SERVER` automagically.",
     "keywords": ["env", "dotenv", "environment"],
     "license" : "BSD-3-Clause-Attribution",
@@ -8,6 +8,10 @@
             "name": "Vance Lucas",
             "email": "vance@vancelucas.com",
             "homepage": "http://www.vancelucas.com"
+        },
+        {
+            "name": "Raul Ruiz",
+            "email": "publiux@gmail.com"
         }
     ],
     "require": {
@@ -19,11 +23,6 @@
     "autoload": {
         "psr-4": {
             "Dotenv\\": "src/"
-        }
-    },
-    "extra": {
-        "branch-alias": {
-            "dev-master": "2.5-dev"
         }
     }
 }
