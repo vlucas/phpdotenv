@@ -135,6 +135,25 @@ $dotenv = new Dotenv\Dotenv(__DIR__);
 $dotenv->overload();
 ```
 
+### Docker Secrets
+
+Dotenv now support Docker secrets. By default, Dotenv can load these secrets as environment variables when the secret file is located in `/run/secrets`. To change this default, you can instantiate a new instance by passing a third argument to the constructor as follows:
+
+```php
+$dotenv = new Dotenv\Dotenv(__DIR__, 'myconfig', '/secrets');
+$dotenv->load();
+```
+
+To tell Dotenv to load a Docker secret, the name of the secret file in the secrets directory must end with two pipes `||` and contain no value. For example,
+
+```shell
+S3_BUCKET="dotenv"
+SECRET_KEY="souper_seekret_key"
+MYSQL_PASSWORD||
+```
+
+In this example, `MYSQL_PASSWORD` is a docker secret. By default, Dotenv will search `/run/secrets/MYSQL_PASSWORD` and load the value stored in that file as an environment variable name `MYSQL_PASSWORD`.
+
 Requiring Variables to be Set
 -----------------------------
 
