@@ -432,6 +432,7 @@ class Loader
     public function setDockerEnvironmentVariable($name)
     {
     	$name = $this->normaliseDockerEnvironmentVariable($name);
+
     	$value = trim(file_get_contents($this->dockerSecretsPath . $name));
 
     	list($name, $value) = $this->sanitiseVariableValue($name, $value);

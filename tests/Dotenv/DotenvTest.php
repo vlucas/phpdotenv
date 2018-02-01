@@ -10,9 +10,12 @@ class DotenvTest extends TestCase
      */
     private $fixturesFolder;
 
+    private $dockerSecretsFolder;
+
     public function setUp()
     {
         $this->fixturesFolder = dirname(__DIR__).'/fixtures/env';
+        $this->dockerSecretsFolder = dirname(__DIR__).'/fixtures/dockersecrets/';
     }
 
     /**
@@ -335,5 +338,22 @@ class DotenvTest extends TestCase
         $dotenv = new Dotenv($this->fixturesFolder);
         $dotenv->required('REQUIRED_VAR')->notEmpty();
         $this->assertTrue(true);
+    }
+
+    public function testDotenvLoadsDockerSecretVars()
+    {
+        $dotenv = new Dotenv($this->fixturesFolder, 'docker.env', $this->dockerSecretsFolder);
+        $dotenv->load();
+        $this->assertSame('bar', getenv('foo'));
+        $this->assertSame('secret', getenv('docker'));
+    }
+
+    public function testDotenvRequiredLoadsDockerSecretVars()
+    {
+        $dotenv = new Dotenv($this->fixturesFolder, 'docker.env', $this->dockerSecretsFolder);
+        $dotenv->load();
+        $dotenv->required('docker')->notEmpty();
+        $this->assertSame('bar', getenv('foo'));
+        $this->assertSame('secret', getenv('docker'));
     }
 }
