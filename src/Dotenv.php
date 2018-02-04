@@ -29,13 +29,23 @@ class Dotenv
     /**
      * Create a new dotenv instance.
      *
-     * @param string $path
-     * @param string $file
+     * @param string|array $path A folder path or an array of full file names
+     * @param string $file (ignored if $path is an array)
      *
      * @return void
      */
     public function __construct($path, $file = '.env')
     {
+        if (is_array($path) {
+            foreach($path as $candidate) {
+                if (@file_exists($candidate)) {
+                    $this->filePath=$candidate;
+                    $this->loader = new Loader($this->filePath, true);
+                    return;
+                }
+            }
+            throw new ErrorException("Dotenv: No configuration file found");
+        }
         $this->filePath = $this->getFilePath($path, $file);
         $this->loader = new Loader($this->filePath, true);
     }
