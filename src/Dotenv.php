@@ -44,7 +44,7 @@ class Dotenv
                     return;
                 }
             }
-            throw new ErrorException("Dotenv: No configuration file found");
+            throw new InvalidPathException(sprintf('Unable to find the environment file from the list: %s.', implode(',',$path)));            
         }
         $this->filePath = $this->getFilePath($path, $file);
         $this->loader = new Loader($this->filePath, true);
