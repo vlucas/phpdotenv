@@ -41,6 +41,11 @@ curl -s http://getcomposer.org/installer | php
 php composer.phar require vlucas/phpdotenv
 ```
 
+Or on Existing projects
+
+```shell
+composer require vlucas/phpdotenv
+```
 Usage
 -----
 The `.env` file is generally kept out of version control since it can contain
