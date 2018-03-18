@@ -2,7 +2,7 @@
     "name": "vlucas/phpdotenv",
     "description": "Loads environment variables from `.env` to `getenv()`, `$_ENV` and `$_SERVER` automagically.",
     "keywords": ["env", "dotenv", "environment"],
-    "license" : "BSD-3-Clause-Attribution",
+    "license" : "BSD-3-Clause",
     "authors" : [
         {
             "name": "Vance Lucas",
