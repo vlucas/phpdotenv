@@ -252,7 +252,7 @@ class Loader
             }
         }
 
-        return array($name, trim($value));
+        return array($name, $value);
     }
 
     /**
