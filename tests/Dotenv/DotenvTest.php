@@ -259,7 +259,7 @@ class DotenvTest extends TestCase
         $dotenv->load();
         $this->assertSame('val1', getenv('ASSERTVAR1'));
         $this->assertEmpty(getenv('ASSERTVAR2'));
-        $this->assertEmpty(getenv('ASSERTVAR3'));
+        $this->assertSame('   ', getenv('ASSERTVAR3'));
         $this->assertSame('0', getenv('ASSERTVAR4'));
 
         $dotenv->required(array(
@@ -271,6 +271,7 @@ class DotenvTest extends TestCase
 
         $dotenv->required(array(
             'ASSERTVAR1',
+            'ASSERTVAR3',
             'ASSERTVAR4',
         ))->notEmpty();
 
@@ -293,30 +294,6 @@ class DotenvTest extends TestCase
         $this->assertEmpty(getenv('ASSERTVAR2'));
 
         $dotenv->required('ASSERTVAR2')->notEmpty();
-    }
-
-    /**
-     * @expectedException \Dotenv\Exception\ValidationException
-     * @expectedExceptionMessage One or more environment variables failed assertions: ASSERTVAR3 is empty.
-     */
-    public function testDotenvStringOfSpacesConsideredEmpty()
-    {
-        $dotenv = new Dotenv($this->fixturesFolder, 'assertions.env');
-        $dotenv->load();
-        $this->assertEmpty(getenv('ASSERTVAR3'));
-
-        $dotenv->required('ASSERTVAR3')->notEmpty();
-    }
-
-    /**
-     * @expectedException \Dotenv\Exception\ValidationException
-     * @expectedExceptionMessage One or more environment variables failed assertions: ASSERTVAR3 is empty.
-     */
-    public function testDotenvHitsLastChain()
-    {
-        $dotenv = new Dotenv($this->fixturesFolder, 'assertions.env');
-        $dotenv->load();
-        $dotenv->required('ASSERTVAR3')->notEmpty();
     }
 
     /**
