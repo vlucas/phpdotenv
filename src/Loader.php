@@ -294,12 +294,7 @@ class Loader
      */
     protected function sanitiseVariableValue($name, $value)
     {
-        if ($value === null) {
-            return [$name, $value];
-        }
-
-        $value = trim($value);
-        if ($value === '') {
+        if ($value === null || trim($value) === '') {
             return [$name, $value];
         }
 
@@ -325,7 +320,7 @@ class Loader
             $value = str_replace('\\\\', '\\', $value);
         } else {
             $parts = explode(' #', $value, 2);
-            $value = trim($parts[0]);
+            $value = $parts[0];
 
             // Unquoted values cannot contain whitespace
             if (preg_match('/\s+/', $value) > 0) {
@@ -338,7 +333,7 @@ class Loader
             }
         }
 
-        return [$name, trim($value)];
+        return [$name, $value];
     }
 
     /**
