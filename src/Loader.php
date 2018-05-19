@@ -79,21 +79,12 @@ class Loader
         $filePath = $this->filePath;
         $lines = $this->readLinesFromFile($filePath);
 
-        // multiline managment
+        // multiline
         $multiline = false;
-        $multilineTemp = array();
+        $multilineBuffer = array();
 
         foreach ($lines as $line) {
-            if($this->looksLikeMultilineStart($line)) {
-                $multiline = true;
-            }
-            if($multiline) {
-                array_push($multilineTemp, $line);
-            }
-            if($multiline && $this->looksLikeMultilineStop($line)) {
-                $multiline = false;
-                $line = implode("\n", $multilineTemp);
-            }
+            list($multiline, $line, $multilineBuffer) = $this->multilineProcess($multiline, $line, $multilineBuffer);
 
             if (!$multiline && !$this->isComment($line) && $this->looksLikeSetter($line)) {
                 $this->setEnvironmentVariable($line);
@@ -440,5 +431,33 @@ class Loader
         }
 
         unset($_ENV[$name], $_SERVER[$name]);
+    }
+
+    /**
+     * Used to make all multiline variable process
+     *
+     * @param bool $multiline
+     * @param string $line
+     * @param array $buffer
+     *
+     * @return array
+     */
+    protected function multilineProcess($multiline, $line, $buffer)
+    {
+        // check if $line can be multiline variable
+        if($this->looksLikeMultilineStart($line)) {
+            $multiline = true;
+        }
+        if($multiline) {
+            array_push($buffer, $line);
+
+            if ($this->looksLikeMultilineStop($line)) {
+                $multiline = false;
+                $line = implode("\n", $buffer);
+                $buffer = array();
+            }
+        }
+
+        return array($multiline, $line, $buffer);
     }
 }
