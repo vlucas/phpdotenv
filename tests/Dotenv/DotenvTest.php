@@ -259,7 +259,7 @@ class DotenvTest extends TestCase
         $dotenv->load();
         $this->assertSame('val1', getenv('ASSERTVAR1'));
         $this->assertEmpty(getenv('ASSERTVAR2'));
-        $this->assertSame('   ', getenv('ASSERTVAR3'));
+        $this->assertSame('val3   ', getenv('ASSERTVAR3'));
         $this->assertSame('0', getenv('ASSERTVAR4'));
 
         $dotenv->required(array(
