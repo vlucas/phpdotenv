@@ -125,7 +125,7 @@ class Loader
     /**
      * Process the runtime filters.
      *
-     * Called from the `VariableFactory`, passed as a callback in `$this->loadFromFile()`.
+     * Called from `normaliseEnvironmentVariable` and the `VariableFactory`, passed as a callback in `$this->loadFromFile()`.
      *
      * @param string $name
      * @param string $value
