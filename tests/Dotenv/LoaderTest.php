@@ -97,6 +97,9 @@ class LoaderTest extends TestCase
         $this->assertSame(false, getenv($this->key()));
         $this->assertSame(false, isset($_ENV[$this->key()]));
         $this->assertSame(false, isset($_SERVER[$this->key()]));
+        $this->assertTrue(is_array($this->mutableLoader->variableNames));
+        $this->assertFalse(empty($this->mutableLoader->variableNames));
+
     }
 
     public function testImmutableLoaderSetUnsetImmutable()
@@ -121,5 +124,7 @@ class LoaderTest extends TestCase
         $this->assertSame($this->value(), getenv($this->key()));
         $this->assertSame(true, isset($_ENV[$this->key()]));
         $this->assertSame(true, isset($_SERVER[$this->key()]));
+        $this->assertTrue(is_array($this->immutableLoader->variableNames));
+        $this->assertFalse(empty($this->immutableLoader->variableNames));
     }
 }

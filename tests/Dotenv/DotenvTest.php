@@ -336,4 +336,12 @@ class DotenvTest extends TestCase
         $dotenv->required('REQUIRED_VAR')->notEmpty();
         $this->assertTrue(true);
     }
+
+    public function testGetEnvironmentVariablesList()
+    {
+        $dotenv = new Dotenv($this->fixturesFolder);
+        $dotenv->load();
+        $this->assertTrue(is_array($dotenv->getEnvironmentVariableNames()));
+        $this->assertSame(array('FOO', 'BAR', 'SPACED', 'NULL'), $dotenv->getEnvironmentVariableNames());
+    }
 }

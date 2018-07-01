@@ -117,4 +117,14 @@ class Dotenv
     {
         return new Validator((array) $variable, $this->loader);
     }
+
+    /**
+     * Get the list of environment variables declared inside the 'env' file.
+     *
+     * @return array
+     */
+    public function getEnvironmentVariableNames()
+    {
+        return $this->loader->variableNames;
+    }
 }

@@ -29,6 +29,13 @@ class Loader
     protected $immutable;
 
     /**
+     * The list of environment variables declared inside the 'env' file.
+     *
+     * @var array
+     */
+    public $variableNames = array();
+
+    /**
      * Create a new loader instance.
      *
      * @param string $filePath
@@ -356,6 +363,8 @@ class Loader
     public function setEnvironmentVariable($name, $value = null)
     {
         list($name, $value) = $this->normaliseEnvironmentVariable($name, $value);
+
+        $this->variableNames[] = $name;
 
         // Don't overwrite existing environment variables if we're immutable
         // Ruby's dotenv does this with `ENV[key] ||= value`.
