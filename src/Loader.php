@@ -253,14 +253,14 @@ class Loader
             $parts = explode(' #', $value, 2);
             $value = trim($parts[0]);
 
-            // Check if value is a comment (usually triggered when empty value with comment)
-            if (preg_match('/^#/', $value) > 0) {
-                $value = '';
-            }
-
             // Unquoted values cannot contain whitespace
             if (preg_match('/\s+/', $value) > 0) {
-                throw new InvalidFileException('Dotenv values containing spaces must be surrounded by quotes.');
+                // Check if value is a comment (usually triggered when empty value with comment)
+                if (preg_match('/^#/', $value) > 0) {
+                    $value = '';
+                } else {
+                    throw new InvalidFileException('Dotenv values containing spaces must be surrounded by quotes.');
+                }
             }
         }
 

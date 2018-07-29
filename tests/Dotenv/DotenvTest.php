@@ -52,6 +52,7 @@ class DotenvTest extends TestCase
         $this->assertSame('a value with a # character', getenv('CQUOTES'));
         $this->assertSame('a value with a # character & a quote " character inside quotes', getenv('CQUOTESWITHQUOTE'));
         $this->assertEmpty(getenv('CNULL'));
+        $this->assertEmpty(getenv('EMPTY'));
     }
 
     public function testQuotedDotenvLoadsEnvironmentVars()
@@ -261,23 +262,27 @@ class DotenvTest extends TestCase
         $this->assertEmpty(getenv('ASSERTVAR2'));
         $this->assertEmpty(getenv('ASSERTVAR3'));
         $this->assertSame('0', getenv('ASSERTVAR4'));
+        $this->assertSame('#foo', getenv('ASSERTVAR5'));
 
         $dotenv->required(array(
             'ASSERTVAR1',
             'ASSERTVAR2',
             'ASSERTVAR3',
             'ASSERTVAR4',
+            'ASSERTVAR5',
         ));
 
         $dotenv->required(array(
             'ASSERTVAR1',
             'ASSERTVAR4',
+            'ASSERTVAR5',
         ))->notEmpty();
 
         $dotenv->required(array(
             'ASSERTVAR1',
             'ASSERTVAR4',
-        ))->notEmpty()->allowedValues(array('0', 'val1'));
+            'ASSERTVAR5',
+        ))->notEmpty()->allowedValues(array('0', 'val1', '#foo'));
 
         $this->assertTrue(true); // anything wrong an an exception will be thrown
     }
