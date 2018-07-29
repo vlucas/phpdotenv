@@ -252,12 +252,12 @@ class Loader
                 $l = get_defined_constants(true);
                 $l = $l['pcre'];
                 $l = array_flip($l);
-                throw new \RuntimeException($l[$e]);
+                throw new InvalidFileException($l[$e]);
             }
 
-            //if they are identical, it failed to replace/match
+            // if they are identical, it failed to replace/match
             if($originalValue === $value) {
-                throw new \RuntimeException("Invalid value");
+                throw new InvalidFileException("Invalid value");
             }
             $value = str_replace("\\$quote", $quote, $value);
             $value = str_replace('\\\\', '\\', $value);
