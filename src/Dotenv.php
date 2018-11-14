@@ -36,7 +36,7 @@ class Dotenv
      */
     public function __construct($path, $file = '.env')
     {
-        if (is_array($path) {
+        if (is_array($path)) {
             foreach($path as $candidate) {
                 if (@file_exists($candidate)) {
                     $this->filePath=$candidate;
