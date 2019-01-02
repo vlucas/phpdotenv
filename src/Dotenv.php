@@ -61,7 +61,7 @@ class Dotenv
             return $this->loadData();
         } catch (InvalidPathException $e) {
             // suppressing exception
-            return array();
+            return [];
         }
     }
 

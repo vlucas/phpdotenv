@@ -17,7 +17,7 @@ class LoaderTest extends TestCase
 
     public function setUp()
     {
-        $folder = dirname(__DIR__) . '/fixtures/env';
+        $folder = dirname(__DIR__).'/fixtures/env';
 
         // Generate a new, random keyVal.
         $this->keyVal(true);
@@ -37,15 +37,15 @@ class LoaderTest extends TestCase
      * key/value pairs.
      *
      * @param bool $reset
-     *   If true, a new pair will be generated. If false, the last returned pair
-     *   will be returned.
+     *                    If true, a new pair will be generated. If false, the last returned pair
+     *                    will be returned.
      *
      * @return array
      */
     protected function keyVal($reset = false)
     {
         if (!isset($this->keyVal) || $reset) {
-            $this->keyVal = array(uniqid() => uniqid());
+            $this->keyVal = [uniqid() => uniqid()];
         }
 
         return $this->keyVal;
@@ -99,7 +99,6 @@ class LoaderTest extends TestCase
         $this->assertSame(false, isset($_SERVER[$this->key()]));
         $this->assertTrue(is_array($this->mutableLoader->variableNames));
         $this->assertFalse(empty($this->mutableLoader->variableNames));
-
     }
 
     public function testImmutableLoaderSetUnsetImmutable()
