@@ -2,8 +2,6 @@
 
 namespace Dotenv\Environment;
 
-use ArrayAccess;
-
 /**
  * This is the abstract variables implementation.
  *
