@@ -1,8 +1,9 @@
 <?php
 
 use Dotenv\Dotenv;
+use PHPUnit\Framework\TestCase;
 
-class ValidatorBooleanTest extends PHPUnit_Framework_TestCase
+class ValidatorBooleanTest extends TestCase
 {
     /**
      * @var string
