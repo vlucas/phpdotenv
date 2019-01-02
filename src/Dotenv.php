@@ -50,7 +50,7 @@ class Dotenv
             true
         );
 
-        return new Dotenv($loader);
+        return new self($loader);
     }
 
 
@@ -68,9 +68,7 @@ class Dotenv
             $file = '.env';
         }
 
-        $filePath = rtrim($path, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR.$file;
-
-        return $filePath;
+        return rtrim($path, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR.$file;
     }
 
     /**

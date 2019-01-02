@@ -305,7 +305,7 @@ class Loader
                 %1$s           # match a quote at the start of the value
                 (              # capturing sub-pattern used
                  (?:           # we do not need to capture this
-                  [^%1$s\\\\]* # any character other than a quote or backslash
+                  [^%1$s\\\\]+ # any character other than a quote or backslash
                   |\\\\\\\\    # or two backslashes together
                   |\\\\%1$s    # or an escaped quote e.g \"
                  )*            # as many characters that match the previous rules
