@@ -107,6 +107,23 @@ class Dotenv
     }
 
     /**
+     * Determine if the required argument is a configuration
+     * file rather than a direct array
+     *
+     * @param string $variable
+     * 
+     * @return bool
+     */
+    protected function isConfig($variable)
+    {
+        if (is_string($variable)) {
+            if (file_exists($variable)) {
+                return true;
+            }
+        }
+    }
+
+    /**
      * Required ensures that the specified variables exist, and returns a new validator object.
      *
      * @param string|string[] $variable
@@ -115,6 +132,9 @@ class Dotenv
      */
     public function required($variable)
     {
+        if ($this->isConfig($variable)) {
+            $variable = include $variable;
+        }
         return new Validator((array) $variable, $this->loader);
     }
 
