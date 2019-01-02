@@ -11,6 +11,8 @@ use Dotenv\Exception\InvalidPathException;
  * It's responsible for loading variables by reading a file from disk and:
  * - stripping comments beginning with a `#`,
  * - parsing lines that look shell variable setters, e.g `export key = value`, `key="value"`.
+ * - multiline variable look always start with a " and end with it, e.g: `key="value
+ *                                                                             value"`
  */
 class Loader
 {
@@ -84,8 +86,15 @@ class Loader
 
         $filePath = $this->filePath;
         $lines = $this->readLinesFromFile($filePath);
+
+        // multiline
+        $multiline = false;
+        $multilineBuffer = [];
+
         foreach ($lines as $line) {
-            if (!$this->isComment($line) && $this->looksLikeSetter($line)) {
+            list($multiline, $line, $multilineBuffer) = $this->multilineProcess($multiline, $line, $multilineBuffer);
+
+            if (!$multiline && !$this->isComment($line) && $this->looksLikeSetter($line)) {
                 $this->setEnvironmentVariable($line);
             }
         }
@@ -168,6 +177,34 @@ class Loader
     }
 
     /**
+     * Used to make all multiline variable process.
+     *
+     * @param bool   $multiline
+     * @param string $line
+     * @param array  $buffer
+     *
+     * @return array
+     */
+    protected function multilineProcess($multiline, $line, $buffer)
+    {
+        // check if $line can be multiline variable
+        if ($this->looksLikeMultilineStart($line)) {
+            $multiline = true;
+        }
+        if ($multiline) {
+            array_push($buffer, $line);
+
+            if ($this->looksLikeMultilineStop($line)) {
+                $multiline = false;
+                $line = implode("\n", $buffer);
+                $buffer = [];
+            }
+        }
+
+        return [$multiline, $line, $buffer];
+    }
+
+    /**
      * Determine if the line in the file is a comment, e.g. begins with a #.
      *
      * @param string $line
@@ -191,6 +228,30 @@ class Loader
     protected function looksLikeSetter($line)
     {
         return strpos($line, '=') !== false;
+    }
+
+    /**
+     * Determine if the given line can be the start of a multiline variable.
+     *
+     * @param string $line
+     *
+     * @return bool
+     */
+    protected function looksLikeMultilineStart($line)
+    {
+        return strpos($line, '="') !== false && substr_count($line, '"') === 1;
+    }
+
+    /**
+     * Determine if the given line can be the start of a multiline variable.
+     *
+     * @param string $line
+     *
+     * @return bool
+     */
+    protected function looksLikeMultilineStop($line)
+    {
+        return strpos($line, '"') !== false && substr_count($line, '="') === 0;
     }
 
     /**
