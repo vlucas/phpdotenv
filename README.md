@@ -9,23 +9,37 @@ dotenv](https://github.com/bkeepers/dotenv).
 
 [![Build Status](https://travis-ci.org/vlucas/phpdotenv.svg?branch=master)](https://travis-ci.org/vlucas/phpdotenv)
 
+
+UPGRADING FROM V2
+-----------------
+
+New in Version 3 is first-class support for multiline variables
+([#301](https://github.com/vlucas/phpdotenv/pull/301)) and much more
+flexibility in terms of which parts of the environment we try to read and
+modify ([#300](https://github.com/vlucas/phpdotenv/pull/300)). Consequently,
+you will need to replace any occurences of `new Dotenv(...)` with
+`Dotenv::create(...)`, since our new native constructor takes loader instance
+now, so that it can be truly customized if required. Finally, one should note
+that starting from V3, the loader will no longer be trimming values
+([#302](https://github.com/vlucas/phpdotenv/pull/302)).
+
+
 Why .env?
 ---------
 **You should never store sensitive credentials in your code**. Storing
 [configuration in the environment](http://www.12factor.net/config) is one of
 the tenets of a [twelve-factor app](http://www.12factor.net/). Anything that is
 likely to change between deployment environments – such as database credentials
-or credentials for 3rd party services – should be extracted from the
-code into environment variables.
+or credentials for 3rd party services – should be extracted from the code into
+environment variables.
 
-Basically, a `.env` file is an easy way to load custom configuration
-variables that your application needs without having to modify .htaccess
-files or Apache/nginx virtual hosts. This means you won't have to edit
-any files outside the project, and all the environment variables are
-always set no matter how you run your project - Apache, Nginx, CLI, and
-even PHP 5.4's built-in webserver. It's WAY easier than all the other
-ways you know of to set environment variables, and you're going to love
-it.
+Basically, a `.env` file is an easy way to load custom configuration variables
+that your application needs without having to modify .htaccess files or
+Apache/nginx virtual hosts. This means you won't have to edit any files outside
+the project, and all the environment variables are always set no matter how you
+run your project - Apache, Nginx, CLI, and even PHP 5.4's built-in webserver.
+It's WAY easier than all the other ways you know of to set environment
+variables, and you're going to love it!
 
 * NO editing virtual hosts in Apache or Nginx
 * NO adding `php_value` flags to .htaccess files
