@@ -84,14 +84,14 @@ SECRET_KEY="abc123"
 You can then load `.env` in your application with:
 
 ```php
-$dotenv = new Dotenv\Dotenv(__DIR__);
+$dotenv = Dotenv\Dotenv::create(__DIR__);
 $dotenv->load();
 ```
 
 Optionally you can pass in a filename as the second parameter, if you would like to use something other than `.env`
 
 ```php
-$dotenv = new Dotenv\Dotenv(__DIR__, 'myconfig');
+$dotenv = Dotenv\Dotenv::create(__DIR__, 'myconfig');
 $dotenv->load();
 ```
 
@@ -136,9 +136,25 @@ If you want Dotenv to overwrite existing environment variables, use `overload`
 instead of `load`:
 
 ```php
-$dotenv = new Dotenv\Dotenv(__DIR__);
+$dotenv = Dotenv\Dotenv::create(__DIR__);
 $dotenv->overload();
 ```
+
+### Loader Customization
+
+Need us to not set `$_ENV` but not `$_SERVER`, or have other custom requirements? No problem! Simply pass a custom implementation of `Dotenv\Environment\FactoryInterface` to `Dotenv\Loader` on construction. In practice, you may not even need a custom implementation, since our default implementation allows you provide an array of `Dotenv\Environment\Adapter\AdapterInterface` for proxing the underlying calls to.
+
+For example, if you want us to only ever fiddle with `$_ENV` and `putenv`, then you can setup Dotenv as follows:
+
+```php
+$factory = new Dotenv\Environment\DotenvFactory([
+    new Dotenv\Environment\Adapter\EnvConstAdapter(),
+    new Dotenv\Environment\Adapter\PutenvAdapter(),
+]);
+
+$dotenv = Dotenv\Dotenv::create(__DIR__, null, $factory);
+```
+
 
 Requiring Variables to be Set
 -----------------------------

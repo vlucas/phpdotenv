@@ -2,6 +2,7 @@
 
 namespace Dotenv;
 
+use Dotenv\Environment\FactoryInterface;
 use Dotenv\Exception\InvalidFileException;
 use Dotenv\Exception\InvalidPathException;
 
@@ -24,31 +25,40 @@ class Loader
     protected $filePath;
 
     /**
-     * Are we immutable?
+     * The environment factory instance.
      *
-     * @var bool
+     * @var \Dotenv\Environment\FactoryInterface
      */
-    protected $immutable;
+    protected $envFactory;
+
+    /**
+     * The environment variables instance.
+     *
+     * @var \Dotenv\Environment\VariablesInterface
+     */
+    protected $envVariables;
 
     /**
      * The list of environment variables declared inside the 'env' file.
      *
-     * @var array
+     * @var string[]
      */
-    public $variableNames = [];
+    protected $variableNames = [];
 
     /**
      * Create a new loader instance.
      *
-     * @param string $filePath
-     * @param bool   $immutable
+     * @param string                               $filePath
+     * @param \Dotenv\Environment\FactoryInterface $envFactory
+     * @param bool                                 $immutable
      *
      * @return void
      */
-    public function __construct($filePath, $immutable = false)
+    public function __construct($filePath, FactoryInterface $envFactory, $immutable = false)
     {
         $this->filePath = $filePath;
-        $this->immutable = $immutable;
+        $this->envFactory = $envFactory;
+        $this->setImmutable($immutable);
     }
 
     /**
@@ -60,23 +70,17 @@ class Loader
      */
     public function setImmutable($immutable = false)
     {
-        $this->immutable = $immutable;
+        $this->envVariables = $immutable
+            ? $this->envFactory->createImmutable()
+            : $this->envFactory->create();
 
         return $this;
     }
 
     /**
-     * Get immutable value.
-     *
-     * @return bool
-     */
-    public function getImmutable()
-    {
-        return $this->immutable;
-    }
-
-    /**
      * Load `.env` file in given directory.
+     *
+     * @throws \Dotenv\Exception\InvalidPathException|\Dotenv\Exception\InvalidFileException
      *
      * @return array
      */
@@ -125,8 +129,10 @@ class Loader
      * - cleaning the name of quotes,
      * - resolving nested variables.
      *
-     * @param string $name
-     * @param string $value
+     * @param string      $name
+     * @param string|null $value
+     *
+     * @throws \Dotenv\Exception\InvalidFileException
      *
      * @return array
      */
@@ -144,8 +150,10 @@ class Loader
      *
      * Called from `normaliseEnvironmentVariable` and the `VariableFactory`, passed as a callback in `$this->loadFromFile()`.
      *
-     * @param string $name
-     * @param string $value
+     * @param string      $name
+     * @param string|null $value
+     *
+     * @throws \Dotenv\Exception\InvalidFileException
      *
      * @return array
      */
@@ -260,8 +268,8 @@ class Loader
      * If the `$name` contains an `=` sign, then we split it into 2 parts, a `name` & `value`
      * disregarding the `$value` passed in.
      *
-     * @param string $name
-     * @param string $value
+     * @param string      $name
+     * @param string|null $value
      *
      * @return array
      */
@@ -277,8 +285,8 @@ class Loader
     /**
      * Strips quotes from the environment variable value.
      *
-     * @param string $name
-     * @param string $value
+     * @param string      $name
+     * @param string|null $value
      *
      * @throws \Dotenv\Exception\InvalidFileException
      *
@@ -286,8 +294,12 @@ class Loader
      */
     protected function sanitiseVariableValue($name, $value)
     {
+        if ($value === null) {
+            return [$name, $value];
+        }
+
         $value = trim($value);
-        if (!$value) {
+        if ($value === '') {
             return [$name, $value];
         }
 
@@ -396,30 +408,18 @@ class Loader
      */
     public function getEnvironmentVariable($name)
     {
-        switch (true) {
-            case array_key_exists($name, $_ENV):
-                return $_ENV[$name];
-            case array_key_exists($name, $_SERVER):
-                return $_SERVER[$name];
-            default:
-                $value = getenv($name);
-
-                return $value === false ? null : $value; // switch getenv default to null
-        }
+        return $this->envVariables->get($name);
     }
 
     /**
      * Set an environment variable.
      *
-     * This is done using:
-     * - putenv,
-     * - $_ENV,
-     * - $_SERVER.
-     *
      * The environment variable value is stripped of single and double quotes.
      *
      * @param string      $name
      * @param string|null $value
+     *
+     * @throws \Dotenv\Exception\InvalidFileException
      *
      * @return void
      */
@@ -429,53 +429,30 @@ class Loader
 
         $this->variableNames[] = $name;
 
-        // Don't overwrite existing environment variables if we're immutable
-        // Ruby's dotenv does this with `ENV[key] ||= value`.
-        if ($this->immutable && $this->getEnvironmentVariable($name) !== null) {
-            return;
-        }
-
-        // If PHP is running as an Apache module and an existing
-        // Apache environment variable exists, overwrite it
-        if (function_exists('apache_getenv') && function_exists('apache_setenv') && apache_getenv($name) !== false) {
-            apache_setenv($name, $value);
-        }
-
-        if (function_exists('putenv')) {
-            putenv("$name=$value");
-        }
-
-        $_ENV[$name] = $value;
-        $_SERVER[$name] = $value;
+        $this->envVariables->set($name, $value);
     }
 
     /**
      * Clear an environment variable.
      *
-     * This is not (currently) used by Dotenv but is provided as a utility
-     * method for 3rd party code.
-     *
-     * This is done using:
-     * - putenv,
-     * - unset($_ENV, $_SERVER).
+     * This method only expects names in normal form.
      *
      * @param string $name
-     *
-     * @see setEnvironmentVariable()
      *
      * @return void
      */
     public function clearEnvironmentVariable($name)
     {
-        // Don't clear anything if we're immutable.
-        if ($this->immutable) {
-            return;
-        }
+        $this->envVariables->clear($name);
+    }
 
-        if (function_exists('putenv')) {
-            putenv($name);
-        }
-
-        unset($_ENV[$name], $_SERVER[$name]);
+    /**
+     * Get the list of environment variables names.
+     *
+     * @return string[]
+     */
+    public function getEnvironmentVariableNames()
+    {
+        return $this->variableNames;
     }
 }

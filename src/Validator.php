@@ -15,7 +15,7 @@ class Validator
     /**
      * The variables to validate.
      *
-     * @var array
+     * @var string[]
      */
     protected $variables;
 
@@ -29,8 +29,10 @@ class Validator
     /**
      * Create a new validator instance.
      *
-     * @param array          $variables
+     * @param string[]       $variables
      * @param \Dotenv\Loader $loader
+     *
+     * @throws \Dotenv\Exception\ValidationException
      *
      * @return void
      */
@@ -50,6 +52,8 @@ class Validator
     /**
      * Assert that each variable is not empty.
      *
+     * @throws \Dotenv\Exception\ValidationException
+     *
      * @return \Dotenv\Validator
      */
     public function notEmpty()
@@ -65,6 +69,8 @@ class Validator
     /**
      * Assert that each specified variable is an integer.
      *
+     * @throws \Dotenv\Exception\ValidationException
+     *
      * @return \Dotenv\Validator
      */
     public function isInteger()
@@ -79,6 +85,8 @@ class Validator
 
     /**
      * Assert that each specified variable is a boolean.
+     *
+     * @throws \Dotenv\Exception\ValidationException
      *
      * @return \Dotenv\Validator
      */
@@ -100,6 +108,8 @@ class Validator
      * Assert that each variable is amongst the given choices.
      *
      * @param string[] $choices
+     *
+     * @throws \Dotenv\Exception\ValidationException
      *
      * @return \Dotenv\Validator
      */

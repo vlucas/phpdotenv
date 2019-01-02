@@ -54,7 +54,7 @@ class ValidatorBooleanTest extends TestCase
      */
     public function testCanValidateBooleans($boolean)
     {
-        $dotenv = new Dotenv($this->fixturesFolder, 'booleans.env');
+        $dotenv = Dotenv::create($this->fixturesFolder, 'booleans.env');
         $dotenv->load();
 
         $dotenv->required($boolean)->isBoolean();
@@ -88,7 +88,7 @@ class ValidatorBooleanTest extends TestCase
      */
     public function testCanInvalidateNonBooleans($boolean)
     {
-        $dotenv = new Dotenv($this->fixturesFolder, 'booleans.env');
+        $dotenv = Dotenv::create($this->fixturesFolder, 'booleans.env');
         $dotenv->load();
 
         $dotenv->required($boolean)->isBoolean();
