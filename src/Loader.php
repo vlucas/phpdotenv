@@ -4,9 +4,10 @@ namespace Dotenv;
 
 use Dotenv\Environment\FactoryInterface;
 use Dotenv\Exception\InvalidPathException;
+use PhpOption\Option;
 
 /**
- * This is the loaded class.
+ * This is the loader class.
  *
  * It's responsible for loading variables by reading a file from disk and:
  * - stripping comments beginning with a `#`,
@@ -17,11 +18,11 @@ use Dotenv\Exception\InvalidPathException;
 class Loader
 {
     /**
-     * The file path.
+     * The file paths.
      *
-     * @var string
+     * @var string[]
      */
-    protected $filePath;
+    protected $filePaths;
 
     /**
      * The environment factory instance.
@@ -47,15 +48,15 @@ class Loader
     /**
      * Create a new loader instance.
      *
-     * @param string                               $filePath
+     * @param string[]                             $filePaths
      * @param \Dotenv\Environment\FactoryInterface $envFactory
      * @param bool                                 $immutable
      *
      * @return void
      */
-    public function __construct($filePath, FactoryInterface $envFactory, $immutable = false)
+    public function __construct(array $filePaths, FactoryInterface $envFactory, $immutable = false)
     {
-        $this->filePath = $filePath;
+        $this->filePaths = $filePaths;
         $this->envFactory = $envFactory;
         $this->setImmutable($immutable);
     }
@@ -86,33 +87,52 @@ class Loader
     public function load()
     {
         return $this->processEntries(
-            Lines::process(self::readLinesFromFile($this->filePath))
+            Lines::process(self::readLines($this->filePaths))
         );
     }
 
     /**
-     * Read lines from the file, auto detecting line endings.
+     * Attempt to read the lines from the files in order.
      *
-     * @param string $filePath
+     * @param string[] $filePaths
      *
      * @throws \Dotenv\Exception\InvalidPathException
      *
      * @return string[]
      */
-    private static function readLinesFromFile($filePath)
+    private static function readLines(array $filePaths)
+    {
+        if ($filePaths === []) {
+            throw new InvalidPathException('At least one environment file path must be provided.');
+        }
+
+        foreach ($filePaths as $filePath) {
+            $lines = self::readFromFile($filePath);
+            if ($lines->isDefined()) {
+                return $lines->get();
+            }
+        }
+
+        throw new InvalidPathException(
+            sprintf('Unable to read any of the environment file(s) at [%s].', implode(', ', $filePaths))
+        );
+    }
+
+    /**
+     * Read from the file, auto detecting line endings.
+     *
+     * @param string $filePath
+     *
+     * @return \PhpOption\Option
+     */
+    private static function readFromFile($filePath)
     {
         $autodetect = ini_get('auto_detect_line_endings');
         ini_set('auto_detect_line_endings', '1');
         $lines = @file($filePath, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
         ini_set('auto_detect_line_endings', $autodetect);
 
-        if ($lines === false) {
-            throw new InvalidPathException(
-                sprintf('Unable to read the environment file at %s.', $filePath)
-            );
-        }
-
-        return $lines;
+        return Option::fromValue($lines, false);
     }
 
     /**
