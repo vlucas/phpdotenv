@@ -260,12 +260,12 @@ class DotenvTest extends TestCase
         $dotenv->load();
         $this->assertSame('val1', getenv('ASSERTVAR1'));
         $this->assertEmpty(getenv('ASSERTVAR2'));
-        $this->assertEmpty(getenv('ASSERTVAR3'));
+        $this->assertSame('val3   ', getenv('ASSERTVAR3'));
         $this->assertSame('0', getenv('ASSERTVAR4'));
         $this->assertSame('#foo', getenv('ASSERTVAR5'));
         $this->assertSame("val1\nval2", getenv('ASSERTVAR6'));
-        $this->assertSame("val3", getenv('ASSERTVAR7'));
-        $this->assertSame("val3", getenv('ASSERTVAR8'));
+        $this->assertSame("\nval3", getenv('ASSERTVAR7'));
+        $this->assertSame("val3\n", getenv('ASSERTVAR8'));
 
         $dotenv->required([
             'ASSERTVAR1',
@@ -281,6 +281,7 @@ class DotenvTest extends TestCase
 
         $dotenv->required([
             'ASSERTVAR1',
+            'ASSERTVAR3',
             'ASSERTVAR4',
             'ASSERTVAR5',
             'ASSERTVAR6',
@@ -292,9 +293,7 @@ class DotenvTest extends TestCase
             'ASSERTVAR1',
             'ASSERTVAR4',
             'ASSERTVAR5',
-            'ASSERTVAR7',
-            'ASSERTVAR8',
-        ])->notEmpty()->allowedValues(['0', 'val1', 'val3', '#foo']);
+        ])->notEmpty()->allowedValues(['0', 'val1', '#foo']);
 
         $this->assertTrue(true); // anything wrong an an exception will be thrown
     }
@@ -314,26 +313,13 @@ class DotenvTest extends TestCase
 
     /**
      * @expectedException \Dotenv\Exception\ValidationException
-     * @expectedExceptionMessage One or more environment variables failed assertions: ASSERTVAR3 is empty.
+     * @expectedExceptionMessage One or more environment variables failed assertions: ASSERTVAR9 is empty.
      */
     public function testDotenvStringOfSpacesConsideredEmpty()
     {
         $dotenv = Dotenv::create($this->fixturesFolder, 'assertions.env');
         $dotenv->load();
-        $this->assertEmpty(getenv('ASSERTVAR3'));
-
-        $dotenv->required('ASSERTVAR3')->notEmpty();
-    }
-
-    /**
-     * @expectedException \Dotenv\Exception\ValidationException
-     * @expectedExceptionMessage One or more environment variables failed assertions: ASSERTVAR3 is empty.
-     */
-    public function testDotenvHitsLastChain()
-    {
-        $dotenv = Dotenv::create($this->fixturesFolder, 'assertions.env');
-        $dotenv->load();
-        $dotenv->required('ASSERTVAR3')->notEmpty();
+        $dotenv->required('ASSERTVAR9')->notEmpty();
     }
 
     /**
