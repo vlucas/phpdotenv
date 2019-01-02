@@ -15,37 +15,37 @@ class ValidatorBooleanTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * List of valid boolean values in fixtures/env/booleans.env
+     * List of valid boolean values in fixtures/env/booleans.env.
      *
      * @return array
      */
     public function validBooleanValuesDataProvider()
     {
-        return array(
-            array('VALID_EXPLICIT_LOWERCASE_TRUE'),
-            array('VALID_EXPLICIT_LOWERCASE_FALSE'),
-            array('VALID_EXPLICIT_UPPERCASE_TRUE'),
-            array('VALID_EXPLICIT_UPPERCASE_FALSE'),
-            array('VALID_EXPLICIT_MIXEDCASE_TRUE'),
-            array('VALID_EXPLICIT_MIXEDCASE_FALSE'),
+        return [
+            ['VALID_EXPLICIT_LOWERCASE_TRUE'],
+            ['VALID_EXPLICIT_LOWERCASE_FALSE'],
+            ['VALID_EXPLICIT_UPPERCASE_TRUE'],
+            ['VALID_EXPLICIT_UPPERCASE_FALSE'],
+            ['VALID_EXPLICIT_MIXEDCASE_TRUE'],
+            ['VALID_EXPLICIT_MIXEDCASE_FALSE'],
 
-            array('VALID_NUMBER_TRUE'),
-            array('VALID_NUMBER_FALSE'),
+            ['VALID_NUMBER_TRUE'],
+            ['VALID_NUMBER_FALSE'],
 
-            array('VALID_ONOFF_LOWERCASE_TRUE'),
-            array('VALID_ONOFF_LOWERCASE_FALSE'),
-            array('VALID_ONOFF_UPPERCASE_TRUE'),
-            array('VALID_ONOFF_UPPERCASE_FALSE'),
-            array('VALID_ONOFF_MIXEDCASE_TRUE'),
-            array('VALID_ONOFF_MIXEDCASE_FALSE'),
+            ['VALID_ONOFF_LOWERCASE_TRUE'],
+            ['VALID_ONOFF_LOWERCASE_FALSE'],
+            ['VALID_ONOFF_UPPERCASE_TRUE'],
+            ['VALID_ONOFF_UPPERCASE_FALSE'],
+            ['VALID_ONOFF_MIXEDCASE_TRUE'],
+            ['VALID_ONOFF_MIXEDCASE_FALSE'],
 
-            array('VALID_YESNO_LOWERCASE_TRUE'),
-            array('VALID_YESNO_LOWERCASE_FALSE'),
-            array('VALID_YESNO_UPPERCASE_TRUE'),
-            array('VALID_YESNO_UPPERCASE_FALSE'),
-            array('VALID_YESNO_MIXEDCASE_TRUE'),
-            array('VALID_YESNO_MIXEDCASE_FALSE'),
-        );
+            ['VALID_YESNO_LOWERCASE_TRUE'],
+            ['VALID_YESNO_LOWERCASE_FALSE'],
+            ['VALID_YESNO_UPPERCASE_TRUE'],
+            ['VALID_YESNO_UPPERCASE_FALSE'],
+            ['VALID_YESNO_MIXEDCASE_TRUE'],
+            ['VALID_YESNO_MIXEDCASE_FALSE'],
+        ];
     }
 
     /**
@@ -62,23 +62,23 @@ class ValidatorBooleanTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * List of non-boolean values in fixtures/env/booleans.env
+     * List of non-boolean values in fixtures/env/booleans.env.
      *
      * @return array
      */
     public function invalidBooleanValuesDataProvider()
     {
-        return array(
-            array('INVALID_SOMETHING'),
-            array('INVALID_EMPTY'),
-            array('INVALID_EMPTY_STRING'),
-            array('INVALID_NULL'),
-            array('INVALID_NUMBER_POSITIVE'),
-            array('INVALID_NUMBER_NEGATIVE'),
-            array('INVALID_MINUS'),
-            array('INVALID_TILDA'),
-            array('INVALID_EXCLAMATION'),
-        );
+        return [
+            ['INVALID_SOMETHING'],
+            ['INVALID_EMPTY'],
+            ['INVALID_EMPTY_STRING'],
+            ['INVALID_NULL'],
+            ['INVALID_NUMBER_POSITIVE'],
+            ['INVALID_NUMBER_NEGATIVE'],
+            ['INVALID_MINUS'],
+            ['INVALID_TILDA'],
+            ['INVALID_EXCLAMATION'],
+        ];
     }
 
     /**

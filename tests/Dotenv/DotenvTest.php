@@ -129,7 +129,7 @@ class DotenvTest extends TestCase
     {
         $dotenv = new Dotenv($this->fixturesFolder);
         $dotenv->load();
-        $dotenv->required(array('FOO', 'BAR'));
+        $dotenv->required(['FOO', 'BAR']);
         $this->assertTrue(true); // anything wrong an exception will be thrown
     }
 
@@ -153,7 +153,7 @@ class DotenvTest extends TestCase
     {
         $dotenv = new Dotenv($this->fixturesFolder);
         $dotenv->load();
-        $dotenv->required('FOO')->allowedValues(array('bar', 'baz'));
+        $dotenv->required('FOO')->allowedValues(['bar', 'baz']);
         $this->assertTrue(true); // anything wrong an exception will be thrown
     }
 
@@ -169,7 +169,7 @@ class DotenvTest extends TestCase
     {
         $dotenv = new Dotenv($this->fixturesFolder);
         $dotenv->load();
-        $dotenv->required('FOO')->allowedValues(array('buzz'));
+        $dotenv->required('FOO')->allowedValues(['buzz']);
     }
 
     /**
@@ -182,7 +182,7 @@ class DotenvTest extends TestCase
         $dotenv->load();
         $this->assertFalse(getenv('FOOX'));
         $this->assertFalse(getenv('NOPE'));
-        $dotenv->required(array('FOOX', 'NOPE'));
+        $dotenv->required(['FOOX', 'NOPE']);
     }
 
     public function testDotenvNullFileArgumentUsesDefault()
@@ -264,25 +264,25 @@ class DotenvTest extends TestCase
         $this->assertSame('0', getenv('ASSERTVAR4'));
         $this->assertSame('#foo', getenv('ASSERTVAR5'));
 
-        $dotenv->required(array(
+        $dotenv->required([
             'ASSERTVAR1',
             'ASSERTVAR2',
             'ASSERTVAR3',
             'ASSERTVAR4',
             'ASSERTVAR5',
-        ));
+        ]);
 
-        $dotenv->required(array(
+        $dotenv->required([
             'ASSERTVAR1',
             'ASSERTVAR4',
             'ASSERTVAR5',
-        ))->notEmpty();
+        ])->notEmpty();
 
-        $dotenv->required(array(
+        $dotenv->required([
             'ASSERTVAR1',
             'ASSERTVAR4',
             'ASSERTVAR5',
-        ))->notEmpty()->allowedValues(array('0', 'val1', '#foo'));
+        ])->notEmpty()->allowedValues(['0', 'val1', '#foo']);
 
         $this->assertTrue(true); // anything wrong an an exception will be thrown
     }
@@ -347,6 +347,6 @@ class DotenvTest extends TestCase
         $dotenv = new Dotenv($this->fixturesFolder);
         $dotenv->load();
         $this->assertTrue(is_array($dotenv->getEnvironmentVariableNames()));
-        $this->assertSame(array('FOO', 'BAR', 'SPACED', 'NULL'), $dotenv->getEnvironmentVariableNames());
+        $this->assertSame(['FOO', 'BAR', 'SPACED', 'NULL'], $dotenv->getEnvironmentVariableNames());
     }
 }

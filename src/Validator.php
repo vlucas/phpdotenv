@@ -90,7 +90,7 @@ class Validator
                     return false;
                 }
 
-                return (filter_var($value, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) !== NULL);
+                return filter_var($value, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) !== null;
             },
             'is not a boolean'
         );
@@ -129,7 +129,7 @@ class Validator
             throw new InvalidCallbackException('The provided callback must be callable.');
         }
 
-        $variablesFailingAssertion = array();
+        $variablesFailingAssertion = [];
         foreach ($this->variables as $variableName) {
             $variableValue = $this->loader->getEnvironmentVariable($variableName);
             if (call_user_func($callback, $variableValue) === false) {
