@@ -263,6 +263,9 @@ class DotenvTest extends TestCase
         $this->assertEmpty(getenv('ASSERTVAR3'));
         $this->assertSame('0', getenv('ASSERTVAR4'));
         $this->assertSame('#foo', getenv('ASSERTVAR5'));
+        $this->assertSame("val1\nval2", getenv('ASSERTVAR6'));
+        $this->assertSame("val3", getenv('ASSERTVAR7'));
+        $this->assertSame("val3", getenv('ASSERTVAR8'));
 
         $dotenv->required([
             'ASSERTVAR1',
@@ -270,19 +273,28 @@ class DotenvTest extends TestCase
             'ASSERTVAR3',
             'ASSERTVAR4',
             'ASSERTVAR5',
+            'ASSERTVAR6',
+            'ASSERTVAR7',
+            'ASSERTVAR8',
+            'ASSERTVAR9',
         ]);
 
         $dotenv->required([
             'ASSERTVAR1',
             'ASSERTVAR4',
             'ASSERTVAR5',
+            'ASSERTVAR6',
+            'ASSERTVAR7',
+            'ASSERTVAR8',
         ])->notEmpty();
 
         $dotenv->required([
             'ASSERTVAR1',
             'ASSERTVAR4',
             'ASSERTVAR5',
-        ])->notEmpty()->allowedValues(['0', 'val1', '#foo']);
+            'ASSERTVAR7',
+            'ASSERTVAR8',
+        ])->notEmpty()->allowedValues(['0', 'val1', 'val3', '#foo']);
 
         $this->assertTrue(true); // anything wrong an an exception will be thrown
     }
