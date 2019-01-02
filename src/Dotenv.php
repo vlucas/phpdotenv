@@ -50,7 +50,7 @@ class Dotenv
             true
         );
 
-        return new Dotenv($loader);
+        return new self($loader);
     }
 
 
