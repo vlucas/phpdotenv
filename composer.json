@@ -11,7 +11,7 @@
         }
     ],
     "require": {
-        "php": ">=5.3.9"
+        "php": "^5.4 || ^7.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^4.8.35 || ^5.0"
@@ -23,7 +23,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "2.5-dev"
+            "dev-master": "3.0-dev"
         }
     }
 }
