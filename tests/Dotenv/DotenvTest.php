@@ -34,7 +34,10 @@ class DotenvTest extends TestCase
     public function testDotenvLoadsEnvironmentVars()
     {
         $dotenv = Dotenv::create($this->fixturesFolder);
-        $dotenv->load();
+        $this->assertSame(
+            ['FOO' => 'bar', 'BAR' => 'baz', 'SPACED' => 'with spaces', 'NULL' => ''],
+            $dotenv->load()
+        );
         $this->assertSame('bar', getenv('FOO'));
         $this->assertSame('baz', getenv('BAR'));
         $this->assertSame('with spaces', getenv('SPACED'));
