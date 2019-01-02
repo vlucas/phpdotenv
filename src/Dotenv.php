@@ -10,7 +10,7 @@ use Dotenv\Exception\InvalidPathException;
  * This is the dotenv class.
  *
  * It's responsible for loading a `.env` file in the given directory and
- * setting the environment vars.
+ * setting the environment variables.
  */
 class Dotenv
 {
@@ -53,7 +53,6 @@ class Dotenv
         return new self($loader);
     }
 
-
     /**
      * Returns the full path to the file.
      *
@@ -76,7 +75,7 @@ class Dotenv
      *
      * @throws \Dotenv\Exception\InvalidPathException|\Dotenv\Exception\InvalidFileException
      *
-     * @return array
+     * @return string[]
      */
     public function load()
     {
@@ -84,9 +83,11 @@ class Dotenv
     }
 
     /**
-     * Load environment file in given directory, suppress InvalidPathException.
+     * Load environment file in given directory, silently failing if it doesn't exist.
      *
-     * @return array
+     * @throws \Dotenv\Exception\InvalidFileException
+     *
+     * @return string[]
      */
     public function safeLoad()
     {
@@ -103,7 +104,7 @@ class Dotenv
      *
      * @throws \Dotenv\Exception\InvalidPathException|\Dotenv\Exception\InvalidFileException
      *
-     * @return array
+     * @return string[]
      */
     public function overload()
     {
@@ -117,7 +118,7 @@ class Dotenv
      *
      * @throws \Dotenv\Exception\InvalidPathException|\Dotenv\Exception\InvalidFileException
      *
-     * @return array
+     * @return string[]
      */
     protected function loadData($overload = false)
     {
