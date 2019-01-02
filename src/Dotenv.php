@@ -2,6 +2,8 @@
 
 namespace Dotenv;
 
+use Dotenv\Environment\DotenvFactory;
+use Dotenv\Environment\FactoryInterface;
 use Dotenv\Exception\InvalidPathException;
 
 /**
@@ -13,35 +15,68 @@ use Dotenv\Exception\InvalidPathException;
 class Dotenv
 {
     /**
-     * The file path.
-     *
-     * @var string
-     */
-    protected $filePath;
-
-    /**
      * The loader instance.
      *
-     * @var \Dotenv\Loader|null
+     * @var \Dotenv\Loader
      */
     protected $loader;
 
     /**
      * Create a new dotenv instance.
      *
-     * @param string $path
-     * @param string $file
+     * @param \Dotenv\Loader $loader
      *
      * @return void
      */
-    public function __construct($path, $file = '.env')
+    public function __construct(Loader $loader)
     {
-        $this->filePath = $this->getFilePath($path, $file);
-        $this->loader = new Loader($this->filePath, true);
+        $this->loader = $loader;
+    }
+
+    /**
+     * Create a new dotenv instance.
+     *
+     * @param string                                    $path
+     * @param string|null                               $file
+     * @param \Dotenv\Environment\FactoryInterface|null $envFactory
+     *
+     * @return \Dotenv\Dotenv
+     */
+    public static function create($path, $file = null, FactoryInterface $envFactory = null)
+    {
+        $loader = new Loader(
+            self::getFilePath($path, $file),
+            $envFactory ?: new DotenvFactory(),
+            true
+        );
+
+        return new Dotenv($loader);
+    }
+
+
+    /**
+     * Returns the full path to the file.
+     *
+     * @param string      $path
+     * @param string|null $file
+     *
+     * @return string
+     */
+    private static function getFilePath($path, $file)
+    {
+        if (!is_string($file)) {
+            $file = '.env';
+        }
+
+        $filePath = rtrim($path, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR.$file;
+
+        return $filePath;
     }
 
     /**
      * Load environment file in given directory.
+     *
+     * @throws \Dotenv\Exception\InvalidPathException|\Dotenv\Exception\InvalidFileException
      *
      * @return array
      */
@@ -68,6 +103,8 @@ class Dotenv
     /**
      * Load environment file in given directory.
      *
+     * @throws \Dotenv\Exception\InvalidPathException|\Dotenv\Exception\InvalidFileException
+     *
      * @return array
      */
     public function overload()
@@ -76,28 +113,11 @@ class Dotenv
     }
 
     /**
-     * Returns the full path to the file.
-     *
-     * @param string $path
-     * @param string $file
-     *
-     * @return string
-     */
-    protected function getFilePath($path, $file)
-    {
-        if (!is_string($file)) {
-            $file = '.env';
-        }
-
-        $filePath = rtrim($path, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR.$file;
-
-        return $filePath;
-    }
-
-    /**
      * Actually load the data.
      *
      * @param bool $overload
+     *
+     * @throws \Dotenv\Exception\InvalidPathException|\Dotenv\Exception\InvalidFileException
      *
      * @return array
      */
@@ -121,10 +141,10 @@ class Dotenv
     /**
      * Get the list of environment variables declared inside the 'env' file.
      *
-     * @return array
+     * @return string[]
      */
     public function getEnvironmentVariableNames()
     {
-        return $this->loader->variableNames;
+        return $this->loader->getEnvironmentVariableNames();
     }
 }
