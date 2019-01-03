@@ -86,16 +86,6 @@ class DotenvTest extends TestCase
         $this->assertSame('test some escaped characters like a quote (") or maybe a backslash (\\)', getenv('QESCAPED'));
     }
 
-    /**
-     * @expectedException \Dotenv\Exception\InvalidFileException
-     * @expectedExceptionMessage Dotenv values containing spaces must be surrounded by quotes.
-     */
-    public function testSpacedValuesWithoutQuotesThrowsException()
-    {
-        $dotenv = Dotenv::create(dirname(__DIR__).'/fixtures/env-wrong', 'spaced-wrong.env');
-        $dotenv->load();
-    }
-
     public function testExportedDotenvLoadsEnvironmentVars()
     {
         $dotenv = Dotenv::create($this->fixturesFolder, 'exported.env');

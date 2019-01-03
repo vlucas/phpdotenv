@@ -19,4 +19,31 @@ class ParserTest extends TestCase
     {
         $this->assertSame(['FOO', 'bar baz'], Parser::parse('export FOO="bar baz"'));
     }
+
+    /**
+     * @expectedException \Dotenv\Exception\InvalidFileException
+     * @expectedExceptionMessage Failed to parse dotenv file due to an unexpected space. Failed at [bar baz].
+     */
+    public function testParseInvalidSpaces()
+    {
+        Parser::parse('FOO=bar baz');
+    }
+
+    /**
+     * @expectedException \Dotenv\Exception\InvalidFileException
+     * @expectedExceptionMessage Failed to parse dotenv file due to an unexpected equals. Failed at [=].
+     */
+    public function testParseStrayEquals()
+    {
+        Parser::parse('=');
+    }
+
+    /**
+     * @expectedException \Dotenv\Exception\InvalidFileException
+     * @expectedExceptionMessage Failed to parse dotenv file due to an invalid name. Failed at [FOO_ASD!].
+     */
+    public function testParseInvalidName()
+    {
+        Parser::parse('FOO_ASD!=BAZ');
+    }
 }
