@@ -182,13 +182,13 @@ class DotenvTest extends TestCase
      * @depends testDotenvLoadsServerGlobals
      *
      * @expectedException \Dotenv\Exception\ValidationException
-     * @expectedExceptionMessage One or more environment variables failed assertions: FOO is not an allowed value.
+     * @expectedExceptionMessage One or more environment variables failed assertions: FOO is not one of [buzz, buz].
      */
     public function testDotenvProhibitedValues()
     {
         $dotenv = Dotenv::create($this->fixturesFolder);
         $dotenv->load();
-        $dotenv->required('FOO')->allowedValues(['buzz']);
+        $dotenv->required('FOO')->allowedValues(['buzz', 'buz']);
     }
 
     /**
