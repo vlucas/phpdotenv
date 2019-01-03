@@ -17,7 +17,7 @@ class DotenvTest extends TestCase
 
     /**
      * @expectedException \Dotenv\Exception\InvalidPathException
-     * @expectedExceptionMessage Unable to read the environment file at
+     * @expectedExceptionMessage Unable to read any of the environment file(s) at
      */
     public function testDotenvThrowsExceptionIfUnableToLoadFile()
     {
@@ -25,10 +25,26 @@ class DotenvTest extends TestCase
         $dotenv->load();
     }
 
+    /**
+     * @expectedException \Dotenv\Exception\InvalidPathException
+     * @expectedExceptionMessage Unable to read any of the environment file(s) at
+     */
+    public function testDotenvThrowsExceptionIfUnableToLoadFiles()
+    {
+        $dotenv = Dotenv::create([__DIR__, __DIR__.'/foo/bar']);
+        $dotenv->load();
+    }
+
+    public function testDotenvTriesPathsToLoad()
+    {
+        $dotenv = Dotenv::create([__DIR__, $this->fixturesFolder]);
+        $this->assertCount(4, $dotenv->load());
+    }
+
     public function testDotenvSkipsLoadingIfFileIsMissing()
     {
         $dotenv = Dotenv::create(__DIR__);
-        $this->assertEmpty($dotenv->safeLoad());
+        $this->assertSame([], $dotenv->safeLoad());
     }
 
     public function testDotenvLoadsEnvironmentVars()

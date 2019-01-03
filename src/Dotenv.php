@@ -36,16 +36,16 @@ class Dotenv
     /**
      * Create a new dotenv instance.
      *
-     * @param string                                    $path
+     * @param string|string[]                           $paths
      * @param string|null                               $file
      * @param \Dotenv\Environment\FactoryInterface|null $envFactory
      *
      * @return \Dotenv\Dotenv
      */
-    public static function create($path, $file = null, FactoryInterface $envFactory = null)
+    public static function create($paths, $file = null, FactoryInterface $envFactory = null)
     {
         $loader = new Loader(
-            self::getFilePath($path, $file),
+            self::getFilePaths((array) $paths, $file ?: '.env'),
             $envFactory ?: new DotenvFactory(),
             true
         );
@@ -54,20 +54,18 @@ class Dotenv
     }
 
     /**
-     * Returns the full path to the file.
+     * Returns the full paths to the files.
      *
-     * @param string      $path
-     * @param string|null $file
+     * @param string[] $paths
+     * @param string   $file
      *
      * @return string
      */
-    private static function getFilePath($path, $file)
+    private static function getFilePaths(array $paths, $file)
     {
-        if (!is_string($file)) {
-            $file = '.env';
-        }
-
-        return rtrim($path, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR.$file;
+        return array_map(function ($path) use ($file) {
+            return rtrim($path, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR.$file;
+        }, $paths);
     }
 
     /**

@@ -14,7 +14,7 @@ class EnvironmentVariablesTest extends TestCase
     protected function setUp()
     {
         $this->envFactory = new DotenvFactory();
-        (new Loader(dirname(__DIR__).'/fixtures/env/.env', $this->envFactory))->load();
+        (new Loader([dirname(__DIR__).'/fixtures/env/.env'], $this->envFactory))->load();
     }
 
     public function testCheckingWhetherVariableExists()

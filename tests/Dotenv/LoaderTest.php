@@ -7,18 +7,20 @@ use PHPUnit\Framework\TestCase;
 class LoaderTest extends TestCase
 {
     /**
-     * @var \Dotenv\Loader
+     * @var string
      */
-    private $loader;
+    protected $folder;
+
+    /**
+     * @var string|null
+     */
+    protected $keyVal;
 
     public function setUp()
     {
-        $folder = dirname(__DIR__).'/fixtures/env';
+        $this->folder = dirname(__DIR__).'/fixtures/env';
         $this->keyVal(true);
-        $this->loader = new Loader($folder, new DotenvFactory(), false);
     }
-
-    protected $keyVal;
 
     /**
      * Generates a new key/value pair or returns the previous one.
@@ -66,31 +68,60 @@ class LoaderTest extends TestCase
 
     public function testMutableLoaderClearsEnvironmentVars()
     {
+        $loader = new Loader(["{$this->folder}/.env"], new DotenvFactory(), false);
+
         // Set an environment variable.
-        $this->loader->setEnvironmentVariable($this->key(), $this->value());
+        $loader->setEnvironmentVariable($this->key(), $this->value());
 
         // Clear the set environment variable.
-        $this->loader->clearEnvironmentVariable($this->key());
-        $this->assertSame(null, $this->loader->getEnvironmentVariable($this->key()));
+        $loader->clearEnvironmentVariable($this->key());
+        $this->assertSame(null, $loader->getEnvironmentVariable($this->key()));
         $this->assertSame(false, getenv($this->key()));
         $this->assertSame(false, isset($_ENV[$this->key()]));
         $this->assertSame(false, isset($_SERVER[$this->key()]));
-        $this->assertSame([$this->key()], $this->loader->getEnvironmentVariableNames());
+        $this->assertSame([$this->key()], $loader->getEnvironmentVariableNames());
     }
 
     public function testImmutableLoaderCannotClearEnvironmentVars()
     {
-        $this->loader->setImmutable(true);
+        $loader = new Loader(["{$this->folder}/.env"], new DotenvFactory(), false);
+
+        $loader->setImmutable(true);
 
         // Set an environment variable.
-        $this->loader->setEnvironmentVariable($this->key(), $this->value());
+        $loader->setEnvironmentVariable($this->key(), $this->value());
 
         // Attempt to clear the environment variable, check that it fails.
-        $this->loader->clearEnvironmentVariable($this->key());
-        $this->assertSame($this->value(), $this->loader->getEnvironmentVariable($this->key()));
+        $loader->clearEnvironmentVariable($this->key());
+        $this->assertSame($this->value(), $loader->getEnvironmentVariable($this->key()));
         $this->assertSame($this->value(), getenv($this->key()));
         $this->assertSame(true, isset($_ENV[$this->key()]));
         $this->assertSame(true, isset($_SERVER[$this->key()]));
-        $this->assertSame([$this->key()], $this->loader->getEnvironmentVariableNames());
+        $this->assertSame([$this->key()], $loader->getEnvironmentVariableNames());
+    }
+
+    /**
+     * @expectedException \Dotenv\Exception\InvalidPathException
+     * @expectedExceptionMessage At least one environment file path must be provided.
+     */
+    public function testLoaderWithNoPaths()
+    {
+        (new Loader([], new DotenvFactory(), false))->load();
+    }
+
+    /**
+     * @expectedException \Dotenv\Exception\InvalidPathException
+     * @expectedExceptionMessage Unable to read any of the environment file(s) at
+     */
+    public function testLoaderWithBadPaths()
+    {
+        (new Loader(["{$this->folder}/BAD1", "{$this->folder}/BAD2"], new DotenvFactory(), false))->load();
+    }
+
+    public function testLoaderWithOneGoodPath()
+    {
+        $loader = (new Loader(["{$this->folder}/BAD1", "{$this->folder}/.env"], new DotenvFactory(), false));
+
+        $this->assertCount(4, $loader->load());
     }
 }
