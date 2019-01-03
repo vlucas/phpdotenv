@@ -34,6 +34,8 @@ class Parser
      *
      * @param string $line
      *
+     * @throws \Dotenv\Exception\InvalidFileException
+     *
      * @return array
      */
     private static function splitStringIntoParts($line)
@@ -58,6 +60,8 @@ class Parser
      * Strips quotes and the optional leading "export " from the variable name.
      *
      * @param string $name
+     *
+     * @throws \Dotenv\Exception\InvalidFileException
      *
      * @return string
      */
