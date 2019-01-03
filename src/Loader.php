@@ -181,6 +181,13 @@ class Loader
         );
     }
 
+    /**
+     * Resolve the matched variable to its value, if possible.
+     *
+     * @param string[] $matches
+     *
+     * @return string
+     */
     private function nestedVariableResolver(array $matches)
     {
         $nested = $this->getEnvironmentVariable($matches[1]);
