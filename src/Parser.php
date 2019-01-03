@@ -154,9 +154,50 @@ class Parser
             $quote
         );
 
-        $value = (string) preg_replace($pattern, '$1', $value);
+        $value = self::pregReplace($pattern, '$1', $value);
 
         return str_replace('\\\\', '\\', str_replace("\\$quote", $quote, $value));
+    }
+
+
+    /**
+     * Perform a preg replace, failing with an exception.
+     *
+     * @param string $pattern
+     * @param string $repalcement
+     * @param string $subject
+     *
+     * @throws \Dotenv\Exception\InvalidFileException
+     *
+     * @return string
+     */
+    private static function pregReplace($pattern, $replacement, $subject)
+    {
+        $result = (string) @preg_replace($pattern, $replacement, $subject);
+
+        if (($e = preg_last_error()) !== PREG_NO_ERROR) {
+            throw new InvalidFileException(
+                self::getErrorMessage(sprintf('a quote parsing error (%s)', self::lookupError($e)), $subject)
+            );
+        }
+
+        return $result;
+    }
+
+    /**
+     * Lookup the preg error code.
+     *
+     * @param int $code
+     *
+     * @return string
+     */
+    private static function lookupError($code)
+    {
+        $errors = array_filter(get_defined_constants(true)['pcre'], function ($msg) {
+            return substr($msg, -6) === '_ERROR';
+        }, ARRAY_FILTER_USE_KEY);
+
+        return array_search($code, $errors, true);
     }
 
     /**
