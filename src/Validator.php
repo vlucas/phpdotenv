@@ -117,9 +117,9 @@ class Validator
     {
         return $this->assertCallback(
             function ($value) use ($choices) {
-                return in_array($value, $choices);
+                return in_array($value, $choices, true);
             },
-            'is not an allowed value'
+            sprintf('is not one of [%s]', implode(', ', $choices))
         );
     }
 
