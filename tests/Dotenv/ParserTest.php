@@ -54,7 +54,7 @@ class ParserTest extends TestCase
 
     /**
      * @expectedException \Dotenv\Exception\InvalidFileException
-     * @expectedExceptionMessage Failed to parse dotenv file due to a quote parsing error (PREG_BACKTRACK_LIMIT_ERROR). Failed at ["iiiiviiiixiiiiviiii\n"].
+     * @expectedExceptionMessage Failed to parse dotenv file due to a quote parsing error (PREG_
      */
     public function testParserFailsWithException()
     {
