@@ -193,11 +193,17 @@ class Parser
      */
     private static function lookupError($code)
     {
-        $errors = array_filter(get_defined_constants(true)['pcre'], function ($msg) {
-            return substr($msg, -6) === '_ERROR';
-        }, ARRAY_FILTER_USE_KEY);
+        $errors = [
+            PREG_NO_ERROR => 'Ok',
+            PREG_INTERNAL_ERROR => 'Failed internally',
+            PREG_BACKTRACK_LIMIT_ERROR => 'Backtrace limit reached, see pcre.backtrack_limit',
+            PREG_RECURSION_LIMIT_ERROR => 'Recursion limit reached, see pcre.recursion_limit',
+            PREG_BAD_UTF8_ERROR => 'Invalid Utf8 Encoding',
+            PREG_BAD_UTF8_OFFSET_ERROR => 'Invalid Utf8 Offset',
+            defined('PREG_JIT_STACKLIMIT_ERROR') ? PREG_JIT_STACKLIMIT_ERROR : 6 => 'JIT stack limit reached, see pcre.jit',
+        ];
 
-        return array_search($code, $errors, true);
+        return isset($errors[$code]) ? $errors[$code] : "Undefined";
     }
 
     /**
