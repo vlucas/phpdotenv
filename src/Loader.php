@@ -82,7 +82,7 @@ class Loader
      *
      * @throws \Dotenv\Exception\InvalidPathException|\Dotenv\Exception\InvalidFileException
      *
-     * @return string[]
+     * @return array<string|null>
      */
     public function load()
     {
@@ -143,7 +143,7 @@ class Loader
      *
      * @param string[] $entries
      *
-     * @return string[]
+     * @return array<string|null>
      */
     private function processEntries(array $entries)
     {

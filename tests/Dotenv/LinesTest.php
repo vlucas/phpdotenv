@@ -6,7 +6,7 @@ use PHPUnit\Framework\TestCase;
 class LinesTest extends TestCase
 {
     /**
-     * @var string
+     * @var string|false
      */
     protected $autodetect;
 

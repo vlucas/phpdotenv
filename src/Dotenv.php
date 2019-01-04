@@ -59,7 +59,7 @@ class Dotenv
      * @param string[] $paths
      * @param string   $file
      *
-     * @return string
+     * @return string[]
      */
     private static function getFilePaths(array $paths, $file)
     {
@@ -73,7 +73,7 @@ class Dotenv
      *
      * @throws \Dotenv\Exception\InvalidPathException|\Dotenv\Exception\InvalidFileException
      *
-     * @return string[]
+     * @return array<string|null>
      */
     public function load()
     {
@@ -85,7 +85,7 @@ class Dotenv
      *
      * @throws \Dotenv\Exception\InvalidFileException
      *
-     * @return string[]
+     * @return array<string|null>
      */
     public function safeLoad()
     {
@@ -102,7 +102,7 @@ class Dotenv
      *
      * @throws \Dotenv\Exception\InvalidPathException|\Dotenv\Exception\InvalidFileException
      *
-     * @return string[]
+     * @return array<string|null>
      */
     public function overload()
     {
@@ -116,7 +116,7 @@ class Dotenv
      *
      * @throws \Dotenv\Exception\InvalidPathException|\Dotenv\Exception\InvalidFileException
      *
-     * @return string[]
+     * @return array<string|null>
      */
     protected function loadData($overload = false)
     {
@@ -126,13 +126,13 @@ class Dotenv
     /**
      * Required ensures that the specified variables exist, and returns a new validator object.
      *
-     * @param string|string[] $variable
+     * @param string|string[] $variables
      *
      * @return \Dotenv\Validator
      */
-    public function required($variable)
+    public function required($variables)
     {
-        return new Validator((array) $variable, $this->loader);
+        return new Validator((array) $variables, $this->loader);
     }
 
     /**
