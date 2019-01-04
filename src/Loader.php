@@ -185,7 +185,7 @@ class Loader
                     $str
                 )->success();
             })
-            ->getOrElse($value);        
+            ->getOrElse($value);
     }
 
     /**
