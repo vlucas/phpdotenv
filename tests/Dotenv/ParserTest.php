@@ -46,4 +46,18 @@ class ParserTest extends TestCase
     {
         Parser::parse('FOO_ASD!=BAZ');
     }
+
+    /**
+     * @expectedException \Dotenv\Exception\InvalidFileException
+     * @expectedExceptionMessageRegExp /Failed to parse dotenv file due to a quote parsing error.+/
+     */
+    public function testParserFailsWithException()
+    {
+        $default = 1000000;
+        $limit = (int) ini_get('pcre.backtrack_limit');
+        if($limit != $default) {
+            $this->markTestIncomplete();
+        }
+        Parser::parse('FOO_BAD="iiiiviiiixiiiiviiii\\n"');
+    }
 }
