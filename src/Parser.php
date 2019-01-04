@@ -155,7 +155,7 @@ class Parser
             $quote
         );
 
-        return Regex::pregReplace($pattern, '$1', $value)
+        return Regex::replace($pattern, '$1', $value)
             ->mapSuccess(function ($str) use ($quote) {
                 return str_replace('\\\\', '\\', str_replace("\\$quote", $quote, $str));
             })
