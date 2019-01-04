@@ -46,7 +46,7 @@ class ApacheAdapter implements AdapterInterface
     public function set($name, $value = null)
     {
         if (apache_getenv($name) !== false) {
-            apache_setenv($name, $value);
+            apache_setenv($name, (string) $value);
         }
     }
 
