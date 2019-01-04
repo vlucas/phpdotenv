@@ -3,6 +3,7 @@
 namespace Dotenv;
 
 use Dotenv\Exception\InvalidFileException;
+use Dotenv\Regex\Regex;
 
 class Parser
 {
@@ -154,9 +155,16 @@ class Parser
             $quote
         );
 
-        $value = (string) preg_replace($pattern, '$1', $value);
-
-        return str_replace('\\\\', '\\', str_replace("\\$quote", $quote, $value));
+        return Regex::pregReplace($pattern, '$1', $value)
+            ->mapSuccess(function ($str) use ($quote) {
+                return str_replace('\\\\', '\\', str_replace("\\$quote", $quote, $str));
+            })
+            ->mapError(function ($err) use ($value) {
+                throw new InvalidFileException(
+                    self::getErrorMessage(sprintf('a quote parsing error (%s)', $err), $value)
+                );
+            })
+            ->getSuccess();
     }
 
     /**

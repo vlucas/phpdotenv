@@ -15,6 +15,11 @@ class ParserTest extends TestCase
         $this->assertSame(['FOO', "BAR  \n"], Parser::parse("FOO=\"BAR  \n\""));
     }
 
+    public function testWhitespaceParse()
+    {
+        $this->assertSame(['FOO', "\n"], Parser::parse("FOO=\"\n\""));
+    }
+
     public function testExportParse()
     {
         $this->assertSame(['FOO', 'bar baz'], Parser::parse('export FOO="bar baz"'));
@@ -45,5 +50,20 @@ class ParserTest extends TestCase
     public function testParseInvalidName()
     {
         Parser::parse('FOO_ASD!=BAZ');
+    }
+
+    /**
+     * @expectedException \Dotenv\Exception\InvalidFileException
+     * @expectedExceptionMessage Failed to parse dotenv file due to a quote parsing error (PREG_
+     */
+    public function testParserFailsWithException()
+    {
+        $limit = (int) ini_get('pcre.backtrack_limit');
+
+        if ($limit > 1000000) {
+            $this->markTestSkipped('System pcre.backtrack_limit too large.');
+        }
+
+        Parser::parse('FOO_BAD="iiiiviiiixiiiiviiii\\n"');
     }
 }
