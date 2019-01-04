@@ -2,7 +2,6 @@
 
 namespace Dotenv;
 
-use Dotenv\Exception\InvalidCallbackException;
 use Dotenv\Exception\ValidationException;
 
 /**
@@ -129,28 +128,24 @@ class Validator
      * @param callable $callback
      * @param string   $message
      *
-     * @throws \Dotenv\Exception\InvalidCallbackException|\Dotenv\Exception\ValidationException
+     * @throws \Dotenv\Exception\ValidationException
      *
      * @return \Dotenv\Validator
      */
-    protected function assertCallback($callback, $message = 'failed callback assertion')
+    protected function assertCallback(callable $callback, $message = 'failed callback assertion')
     {
-        if (!is_callable($callback)) {
-            throw new InvalidCallbackException('The provided callback must be callable.');
-        }
+        $failing = [];
 
-        $variablesFailingAssertion = [];
-        foreach ($this->variables as $variableName) {
-            $variableValue = $this->loader->getEnvironmentVariable($variableName);
-            if (call_user_func($callback, $variableValue) === false) {
-                $variablesFailingAssertion[] = $variableName." $message";
+        foreach ($this->variables as $variable) {
+            if ($callback($this->loader->getEnvironmentVariable($variable)) === false) {
+                $failing[] = sprintf('%s %s', $variable, $message);
             }
         }
 
-        if (count($variablesFailingAssertion) > 0) {
+        if (count($failing) > 0) {
             throw new ValidationException(sprintf(
                 'One or more environment variables failed assertions: %s.',
-                implode(', ', $variablesFailingAssertion)
+                implode(', ', $failing)
             ));
         }
 

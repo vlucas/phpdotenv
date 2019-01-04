@@ -37,7 +37,7 @@ class Lines
      * @param string   $line
      * @param string[] $buffer
      *
-     * @return string[]
+     * @return array
      */
     private static function multilineProcess($multiline, $line, array $buffer)
     {

@@ -12,7 +12,7 @@ class LoaderTest extends TestCase
     protected $folder;
 
     /**
-     * @var string|null
+     * @var string[]|null
      */
     protected $keyVal;
 

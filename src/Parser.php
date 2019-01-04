@@ -154,7 +154,7 @@ class Parser
             $quote
         );
 
-        $value = preg_replace($pattern, '$1', $value);
+        $value = (string) preg_replace($pattern, '$1', $value);
 
         return str_replace('\\\\', '\\', str_replace("\\$quote", $quote, $value));
     }
