@@ -4,6 +4,7 @@ namespace Dotenv;
 
 use Dotenv\Environment\FactoryInterface;
 use Dotenv\Exception\InvalidPathException;
+use Dotenv\Regex\Regex;
 use PhpOption\Option;
 
 /**
@@ -170,29 +171,21 @@ class Loader
      */
     private function resolveNestedVariables($value = null)
     {
-        if ($value === null || strpos($value, '$') === false) {
-            return $value;
-        }
-
-        return preg_replace_callback(
-            '/\${([a-zA-Z0-9_.]+)}/',
-            [$this, 'nestedVariableResolver'],
-            $value
-        );
-    }
-
-    /**
-     * Resolve the matched variable to its value, if possible.
-     *
-     * @param string[] $matches
-     *
-     * @return string
-     */
-    private function nestedVariableResolver(array $matches)
-    {
-        $nested = $this->getEnvironmentVariable($matches[1]);
-
-        return $nested === null ? $matches[0] : $nested;
+        return Option::fromValue($value)
+            ->filter(function ($str) {
+                return strpos($str, '$') !== false;
+            })
+            ->flatMap(function ($str) {
+                return Regex::replaceCallback(
+                    '/\${([a-zA-Z0-9_.]+)}/',
+                    function (array $matches) {
+                        return Option::fromValue($this->getEnvironmentVariable($matches[1]))
+                            ->getOrElse($matches[0]);
+                    },
+                    $str
+                )->success();
+            })
+            ->getOrElse($value);        
     }
 
     /**
