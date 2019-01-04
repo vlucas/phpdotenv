@@ -84,7 +84,7 @@ class ValidatorBooleanTest extends TestCase
 
     /**
      * @dataProvider invalidBooleanValuesDataProvider
-     * @expectedException Dotenv\Exception\ValidationException
+     * @expectedException \Dotenv\Exception\ValidationException
      * @expectedExceptionMessage One or more environment variables failed assertions: INVALID_
      */
     public function testCanInvalidateNonBooleans($boolean)
