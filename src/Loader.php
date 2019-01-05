@@ -144,6 +144,8 @@ class Loader
      *
      * @param string[] $entries
      *
+     * @throws \Dotenv\Exception\InvalidFileException
+     *
      * @return array<string|null>
      */
     private function processEntries(array $entries)
