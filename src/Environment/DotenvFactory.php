@@ -31,7 +31,7 @@ class DotenvFactory implements FactoryInterface
      */
     public function __construct(array $adapters = null)
     {
-        $this->adapters = array_filter($adapters ?: [new ApacheAdapter(), new EnvConstAdapter(), new ServerConstAdapter(), new PutenvAdapter()], function (AdapterInterface $adapter) {
+        $this->adapters = array_filter($adapters === null ? [new ApacheAdapter(), new EnvConstAdapter(), new ServerConstAdapter(), new PutenvAdapter()] : $adapters, function (AdapterInterface $adapter) {
             return $adapter->isSupported();
         });
     }
