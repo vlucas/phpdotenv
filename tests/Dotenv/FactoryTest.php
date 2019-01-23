@@ -2,7 +2,6 @@
 
 use Dotenv\Environment\Adapter\EnvConstAdapter;
 use Dotenv\Environment\DotenvFactory;
-use Dotenv\Environment\FactoryInterface;
 use PHPUnit\Framework\TestCase;
 
 class FactoryTest extends TestCase
@@ -20,7 +19,7 @@ class FactoryTest extends TestCase
     {
         $f = new DotenvFactory();
 
-        $this->assertInstanceOf(FactoryInterface::class, $f);
+        $this->assertInstanceOf('Dotenv\Environment\FactoryInterface', $f);
         $this->assertCount(3, self::getAdapters($f->create()));
         $this->assertCount(3, self::getAdapters($f->createImmutable()));
     }
@@ -29,7 +28,7 @@ class FactoryTest extends TestCase
     {
         $f = new DotenvFactory([new EnvConstAdapter()]);
 
-        $this->assertInstanceOf(FactoryInterface::class, $f);
+        $this->assertInstanceOf('Dotenv\Environment\FactoryInterface', $f);
         $this->assertCount(1, self::getAdapters($f->create()));
         $this->assertCount(1, self::getAdapters($f->createImmutable()));
     }
@@ -38,7 +37,7 @@ class FactoryTest extends TestCase
     {
         $f = new DotenvFactory([]);
 
-        $this->assertInstanceOf(FactoryInterface::class, $f);
+        $this->assertInstanceOf('Dotenv\Environment\FactoryInterface', $f);
         $this->assertCount(0, self::getAdapters($f->create()));
         $this->assertCount(0, self::getAdapters($f->createImmutable()));
     }
