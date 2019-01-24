@@ -79,21 +79,37 @@ class Loader
     }
 
     /**
-     * Load `.env` file in given directory.
+     * Load the environment file from disk.
      *
-     * @throws \Dotenv\Exception\InvalidPathException|\Dotenv\Exception\InvalidFileException
+     * @throws \Dotenv\Exception\InvalidFileException
      *
      * @return array<string|null>
      */
     public function load()
     {
-        return $this->processEntries(
-            Lines::process(self::readLines($this->filePaths))
+        return $this->loadDirect(
+            self::findAndRead($this->filePaths)
         );
     }
 
     /**
-     * Attempt to read the lines from the files in order.
+     * Directly load the given string.
+     *
+     * @param string $content
+     *
+     * @throws \Dotenv\Exception\InvalidPathException|\Dotenv\Exception\InvalidFileException
+     *
+     * @return array<string|null>
+     */
+    public function loadDirect($content)
+    {
+        return $this->processEntries(
+            Lines::process(preg_split("/(\r\n|\n|\r)/", $content))
+        );
+    }
+
+    /**
+     * Attempt to read the files in order.
      *
      * @param string[] $filePaths
      *
@@ -101,7 +117,7 @@ class Loader
      *
      * @return string[]
      */
-    private static function readLines(array $filePaths)
+    private static function findAndRead(array $filePaths)
     {
         if ($filePaths === []) {
             throw new InvalidPathException('At least one environment file path must be provided.');
@@ -120,7 +136,7 @@ class Loader
     }
 
     /**
-     * Read from the file, auto detecting line endings.
+     * Read the given file.
      *
      * @param string $filePath
      *
@@ -128,12 +144,9 @@ class Loader
      */
     private static function readFromFile($filePath)
     {
-        $autodetect = ini_get('auto_detect_line_endings');
-        ini_set('auto_detect_line_endings', '1');
-        $lines = @file($filePath, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
-        ini_set('auto_detect_line_endings', $autodetect);
+        $content = @file_get_contents($filePath);
 
-        return Option::fromValue($lines, false);
+        return Option::fromValue($content, false);
     }
 
     /**
