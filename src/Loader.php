@@ -81,7 +81,7 @@ class Loader
     /**
      * Load the environment file from disk.
      *
-     * @throws \Dotenv\Exception\InvalidFileException
+     * @throws \Dotenv\Exception\InvalidPathException|\Dotenv\Exception\InvalidFileException
      *
      * @return array<string|null>
      */
@@ -97,7 +97,7 @@ class Loader
      *
      * @param string $content
      *
-     * @throws \Dotenv\Exception\InvalidPathException|\Dotenv\Exception\InvalidFileException
+     * @throws \Dotenv\Exception\InvalidFileException
      *
      * @return array<string|null>
      */
