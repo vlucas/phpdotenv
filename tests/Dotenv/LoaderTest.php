@@ -1,5 +1,6 @@
 <?php
 
+use Dotenv\Environment\Adapter\ArrayAdapter;
 use Dotenv\Environment\DotenvFactory;
 use Dotenv\Loader;
 use PHPUnit\Framework\TestCase;
@@ -123,5 +124,25 @@ class LoaderTest extends TestCase
         $loader = (new Loader(["{$this->folder}/BAD1", "{$this->folder}/.env"], new DotenvFactory(), false));
 
         $this->assertCount(4, $loader->load());
+    }
+
+    public function testLoaderWithNoAdapters()
+    {
+        $loader = (new Loader([], new DotenvFactory([])));
+
+        $content = "NVAR1=\"Hello\"\nNVAR2=\"World!\"\nNVAR3=\"{\$NVAR1} {\$NVAR2}\"\nNVAR4=\"\${NVAR1} \${NVAR2}\"";
+        $expected = ['NVAR1' => 'Hello', 'NVAR2' => 'World!', 'NVAR3' => '{$NVAR1} {$NVAR2}', 'NVAR4' => '${NVAR1} ${NVAR2}'];
+
+        $this->assertSame($expected, $loader->loadDirect($content));
+    }
+
+    public function testLoaderWithArrayAdapter()
+    {
+        $loader = (new Loader([], new DotenvFactory([new ArrayAdapter()])));
+
+        $content = "NVAR1=\"Hello\"\nNVAR2=\"World!\"\nNVAR3=\"{\$NVAR1} {\$NVAR2}\"\nNVAR4=\"\${NVAR1} \${NVAR2}\"";
+        $expected = ['NVAR1' => 'Hello', 'NVAR2' => 'World!', 'NVAR3' => '{$NVAR1} {$NVAR2}', 'NVAR4' => 'Hello World!'];
+
+        $this->assertSame($expected, $loader->loadDirect($content));
     }
 }
