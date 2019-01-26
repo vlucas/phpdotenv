@@ -22,7 +22,7 @@ class Lines
         foreach ($lines as $line) {
             list($multiline, $line, $multilineBuffer) = self::multilineProcess($multiline, $line, $multilineBuffer);
 
-            if (!$multiline && !self::isComment($line) && self::looksLikeSetter($line)) {
+            if (!$multiline && !self::isComment($line) && self::isSetter($line)) {
                 $output[] = $line;
             }
         }
@@ -68,7 +68,11 @@ class Lines
      */
     private static function looksLikeMultilineStart($line)
     {
-        return strpos($line, '="') !== false && substr_count($line, '"') === 1;
+        if (strpos($line, '="') === false) {
+            return false;
+        }
+
+        return self::looksLikeMultilineStop($line) === false;
     }
 
     /**
@@ -80,7 +84,31 @@ class Lines
      */
     private static function looksLikeMultilineStop($line)
     {
-        return strpos($line, '"') !== false && substr_count($line, '="') === 0;
+        if ($line === '"') {
+            return true;
+        }
+
+        foreach (self::getCharPairs(str_replace('\\\\', '', $line)) as $pair) {
+            if ($pair[0] !== '\\' && $pair[0] !== '=' && $pair[1] === '"') {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Get all pairs of adjacent characters within the line.
+     *
+     * @param string $line
+     *
+     * @return bool
+     */
+    private static function getCharPairs($line)
+    {
+        $chars = str_split($line);
+
+        return array_map(null, $chars, array_slice($chars, 1));
     }
 
     /**
@@ -104,7 +132,7 @@ class Lines
      *
      * @return bool
      */
-    private static function looksLikeSetter($line)
+    private static function isSetter($line)
     {
         return strpos($line, '=') !== false;
     }
