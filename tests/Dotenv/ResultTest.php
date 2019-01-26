@@ -1,7 +1,7 @@
 <?php
 
-use DotEnv\Regex\Error;
-use DotEnv\Regex\Success;
+use Dotenv\Regex\Error;
+use Dotenv\Regex\Success;
 use PHPUnit\Framework\TestCase;
 
 class ResultTest extends TestCase
