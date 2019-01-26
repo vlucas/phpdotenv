@@ -3,17 +3,18 @@
 namespace Dotenv;
 
 use Dotenv\Exception\InvalidFileException;
-use Dotenv\Regex\Regex;
 
 class Parser
 {
+    const INITIAL_STATE = 0;
+    const UNQUOTED_STATE = 1;
+    const QUOTED_STATE = 2;
+    const ESCAPE_STATE = 3;
+    const WHITESPACE_STATE = 4;
+    const COMMENT_STATE = 5;
+
     /**
      * Parse the given environment variable entry into a name and value.
-     *
-     * Takes value as passed in by developer and:
-     * - breaks up the line into a name and value,
-     * - cleaning the value of quotes,
-     * - cleaning the name of quotes.
      *
      * @param string $entry
      *
@@ -25,13 +26,11 @@ class Parser
     {
         list($name, $value) = self::splitStringIntoParts($entry);
 
-        return [self::sanitiseName($name), self::sanitiseValue($value)];
+        return [self::parseName($name), self::parseValue($value)];
     }
 
     /**
      * Split the compound string into parts.
-     *
-     * If the `$line` contains an `=` sign, then we split it into 2 parts.
      *
      * @param string $line
      *
@@ -66,7 +65,7 @@ class Parser
      *
      * @return string
      */
-    private static function sanitiseName($name)
+    private static function parseName($name)
     {
         $name = trim(str_replace(['export ', '\'', '"'], '', $name));
 
@@ -100,71 +99,60 @@ class Parser
      *
      * @return string|null
      */
-    private static function sanitiseValue($value)
+    private static function parseValue($value)
     {
         if ($value === null || trim($value) === '') {
             return $value;
         }
 
-        if (self::beginsWithAQuote($value)) {
-            return self::processQuotedValue($value);
-        }
-
-        // Strip comments from the left
-        $value = explode(' #', $value, 2)[0];
-
-        // Unquoted values cannot contain whitespace
-        if (preg_match('/\s+/', $value) > 0) {
-            // Check if value is a comment (usually triggered when empty value with comment)
-            if (preg_match('/^#/', $value) > 0) {
-                $value = '';
-            } else {
-                throw new InvalidFileException(
-                    self::getErrorMessage('an unexpected space', $value)
-                );
+        return array_reduce(str_split($value), function ($data, $char) use ($value) {
+            switch ($data[1]) {
+                case self::INITIAL_STATE:
+                    if ($char === '"') {
+                        return [$data[0], self::QUOTED_STATE];
+                    } elseif ($char === '#') {
+                        return [$data[0], self::COMMENT_STATE];
+                    } else {
+                        return [$data[0].$char, self::UNQUOTED_STATE];
+                    }
+                case self::UNQUOTED_STATE:
+                    if ($char === '#') {
+                        return [$data[0], self::COMMENT_STATE];
+                    } elseif (ctype_space($char)) {
+                        return [$data[0], self::WHITESPACE_STATE];
+                    } else {
+                        return [$data[0].$char, self::UNQUOTED_STATE];
+                    }
+                case self::QUOTED_STATE:
+                    if ($char === '"') {
+                        return [$data[0], self::WHITESPACE_STATE];
+                    } elseif ($char === '\\') {
+                        return [$data[0], self::ESCAPE_STATE];
+                    } else {
+                        return [$data[0].$char, self::QUOTED_STATE];
+                    }
+                case self::ESCAPE_STATE:
+                    if ($char === '"' || $char === '\\') {
+                        return [$data[0].$char, self::QUOTED_STATE];
+                    } else {
+                        throw new InvalidFileException(
+                            self::getErrorMessage('an unexpected escape sequence', $value)
+                        );
+                    }
+                case self::WHITESPACE_STATE:
+                    if ($char === '#') {
+                        return [$data[0], self::COMMENT_STATE];
+                    } elseif (!ctype_space($char)) {
+                        throw new InvalidFileException(
+                            self::getErrorMessage('unexpected whitespace', $value)
+                        );
+                    } else {
+                        return [$data[0], self::WHITESPACE_STATE];
+                    }
+                case self::COMMENT_STATE:
+                    return [$data[0], self::COMMENT_STATE];
             }
-        }
-
-        return $value;
-    }
-
-    /**
-     * Strips quotes from the environment variable value.
-     *
-     * @param string $value
-     *
-     * @return string
-     */
-    private static function processQuotedValue($value)
-    {
-        $quote = $value[0];
-
-        $pattern = sprintf(
-            '/^
-            %1$s           # match a quote at the start of the value
-            (              # capturing sub-pattern used
-             (?:           # we do not need to capture this
-              [^%1$s\\\\]+ # any character other than a quote or backslash
-              |\\\\\\\\    # or two backslashes together
-              |\\\\%1$s    # or an escaped quote e.g \"
-             )*            # as many characters that match the previous rules
-            )              # end of the capturing sub-pattern
-            %1$s           # and the closing quote
-            .*$            # and discard any string after the closing quote
-            /mx',
-            $quote
-        );
-
-        return Regex::replace($pattern, '$1', $value)
-            ->mapSuccess(function ($str) use ($quote) {
-                return str_replace('\\\\', '\\', str_replace("\\$quote", $quote, $str));
-            })
-            ->mapError(function ($err) use ($value) {
-                throw new InvalidFileException(
-                    self::getErrorMessage(sprintf('a quote parsing error (%s)', $err), $value)
-                );
-            })
-            ->getSuccess();
+        }, ['', self::INITIAL_STATE])[0];
     }
 
     /**
@@ -182,17 +170,5 @@ class Parser
             $cause,
             strtok($subject, "\n")
         );
-    }
-
-    /**
-     * Determine if the given string begins with a quote.
-     *
-     * @param string $value
-     *
-     * @return bool
-     */
-    private static function beginsWithAQuote($value)
-    {
-        return isset($value[0]) && ($value[0] === '"' || $value[0] === '\'');
     }
 }

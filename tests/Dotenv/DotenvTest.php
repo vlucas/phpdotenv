@@ -72,6 +72,8 @@ class DotenvTest extends TestCase
         $this->assertSame('a value with a # character & a quote " character inside quotes', getenv('CQUOTESWITHQUOTE'));
         $this->assertEmpty(getenv('CNULL'));
         $this->assertEmpty(getenv('EMPTY'));
+        $this->assertEmpty(getenv('EMPTY2'));
+        $this->assertSame('foo', getenv('FOOO'));
     }
 
     public function testQuotedDotenvLoadsEnvironmentVars()
@@ -264,6 +266,13 @@ class DotenvTest extends TestCase
         $this->assertSame('jdgEB4{QgEC]HL))&GcXxokB+wqoN+j>xkV7K?m$r', getenv('SPVAR3'));
         $this->assertSame('22222:22#2^{', getenv('SPVAR4'));
         $this->assertSame('test some escaped characters like a quote " or maybe a backslash \\', getenv('SPVAR5'));
+    }
+
+    public function testMutlilineLoading()
+    {
+        $dotenv = Dotenv::create($this->fixturesFolder, 'multiline.env');
+        $dotenv->load();
+        $this->assertSame("test\n     test\"test\"\n     test", getenv('TEST'));
     }
 
     public function testDotenvAssertions()

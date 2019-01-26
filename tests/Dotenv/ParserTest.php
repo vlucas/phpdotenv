@@ -25,9 +25,17 @@ class ParserTest extends TestCase
         $this->assertSame(['FOO', 'bar baz'], Parser::parse('export FOO="bar baz"'));
     }
 
+    public function testClosingSlashParse()
+    {
+        $content = 'SPVAR5="test some escaped characters like a quote \\" or maybe a backslash \\\\" # not escaped';
+        $expected = ['SPVAR5', 'test some escaped characters like a quote " or maybe a backslash \\'];
+
+        $this->assertSame($expected, Parser::parse($content));
+    }
+
     /**
      * @expectedException \Dotenv\Exception\InvalidFileException
-     * @expectedExceptionMessage Failed to parse dotenv file due to an unexpected space. Failed at [bar baz].
+     * @expectedExceptionMessage Failed to parse dotenv file due to unexpected whitespace. Failed at [bar baz].
      */
     public function testParseInvalidSpaces()
     {
@@ -54,16 +62,10 @@ class ParserTest extends TestCase
 
     /**
      * @expectedException \Dotenv\Exception\InvalidFileException
-     * @expectedExceptionMessage Failed to parse dotenv file due to a quote parsing error (PREG_
+     * @expectedExceptionMessage Failed to parse dotenv file due to an unexpected escape sequence. Failed at ["iiiiviiiixiiiiviiii\n"].
      */
-    public function testParserFailsWithException()
+    public function testParserEscaping()
     {
-        $limit = (int) ini_get('pcre.backtrack_limit');
-
-        if ($limit > 1000000) {
-            $this->markTestSkipped('System pcre.backtrack_limit too large.');
-        }
-
         Parser::parse('FOO_BAD="iiiiviiiixiiiiviiii\\n"');
     }
 }
