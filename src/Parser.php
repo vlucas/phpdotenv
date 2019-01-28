@@ -38,50 +38,50 @@ class Parser
     {
         $data = array_reduce(str_split($value), function ($data, $char) use ($value) {
             switch ($data[1]) {
-                case self::INITIAL_STATE:
+                case Parser::INITIAL_STATE:
                     if ($char === '"') {
-                        return array($data[0], self::QUOTED_STATE);
+                        return array($data[0], Parser::QUOTED_STATE);
                     } else {
-                        return array($data[0].$char, self::UNQUOTED_STATE);
+                        return array($data[0].$char, Parser::UNQUOTED_STATE);
                     }
-                case self::UNQUOTED_STATE:
+                case Parser::UNQUOTED_STATE:
                     if ($char === '#') {
-                        return array($data[0], self::COMMENT_STATE);
+                        return array($data[0], Parser::COMMENT_STATE);
                     } elseif (ctype_space($char)) {
-                        return array($data[0], self::WHITESPACE_STATE);
+                        return array($data[0], Parser::WHITESPACE_STATE);
                     } else {
-                        return array($data[0].$char, self::UNQUOTED_STATE);
+                        return array($data[0].$char, Parser::UNQUOTED_STATE);
                     }
-                case self::QUOTED_STATE:
+                case Parser::QUOTED_STATE:
                     if ($char === '"') {
-                        return array($data[0], self::WHITESPACE_STATE);
+                        return array($data[0], Parser::WHITESPACE_STATE);
                     } elseif ($char === '\\') {
-                        return array($data[0], self::ESCAPE_STATE);
+                        return array($data[0], Parser::ESCAPE_STATE);
                     } else {
-                        return array($data[0].$char, self::QUOTED_STATE);
+                        return array($data[0].$char, Parser::QUOTED_STATE);
                     }
-                case self::ESCAPE_STATE:
+                case Parser::ESCAPE_STATE:
                     if ($char === '"' || $char === '\\') {
-                        return array($data[0].$char, self::QUOTED_STATE);
+                        return array($data[0].$char, Parser::QUOTED_STATE);
                     } else {
-                        return array($data[0].'\\'.$char, self::QUOTED_STATE);
+                        return array($data[0].'\\'.$char, Parser::QUOTED_STATE);
                     }
-                case self::WHITESPACE_STATE:
+                case Parser::WHITESPACE_STATE:
                     if ($char === '#') {
-                        return array($data[0], self::COMMENT_STATE);
+                        return array($data[0], Parser::COMMENT_STATE);
                     } elseif (!ctype_space($char)) {
                         if ($data[0] !== '' && $data[0][0] === '#') {
-                            return array('', self::COMMENT_STATE);
+                            return array('', Parser::COMMENT_STATE);
                         } else {
                             throw new InvalidFileException('Dotenv values containing spaces must be surrounded by quotes.');
                         }
                     } else {
-                        return array($data[0], self::WHITESPACE_STATE);
+                        return array($data[0], Parser::WHITESPACE_STATE);
                     }
-                case self::COMMENT_STATE:
-                    return array($data[0], self::COMMENT_STATE);
+                case Parser::COMMENT_STATE:
+                    return array($data[0], Parser::COMMENT_STATE);
             }
-        }, array('', self::INITIAL_STATE));
+        }, array('', Parser::INITIAL_STATE));
 
         return trim($data[0]);
     }
