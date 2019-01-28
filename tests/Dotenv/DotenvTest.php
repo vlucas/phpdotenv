@@ -65,6 +65,8 @@ class DotenvTest extends TestCase
         $this->assertEmpty(getenv('QNULL'));
         $this->assertSame('pgsql:host=localhost;dbname=test', getenv('QEQUALS'));
         $this->assertSame('test some escaped characters like a quote (") or maybe a backslash (\\)', getenv('QESCAPED'));
+        $this->assertSame('iiiiviiiixiiiiviiii\\n', getenv('QSLASH1'));
+        $this->assertSame('iiiiviiiixiiiiviiii\\n', getenv('QSLASH2'));
     }
 
     public function testLargeDotenvLoadsEnvironmentVars()
