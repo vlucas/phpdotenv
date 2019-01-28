@@ -75,6 +75,8 @@ class Loader
     /**
      * Load `.env` file in given directory.
      *
+     * @throws \Dotenv\Exception\InvalidPathException|\Dotenv\Exception\InvalidFileException
+     *
      * @return array
      */
     public function load()
@@ -118,6 +120,8 @@ class Loader
      * @param string $name
      * @param string $value
      *
+     * @throws \Dotenv\Exception\InvalidFileException
+     *
      * @return array
      */
     protected function normaliseEnvironmentVariable($name, $value)
@@ -136,6 +140,8 @@ class Loader
      *
      * @param string $name
      * @param string $value
+     *
+     * @throws \Dotenv\Exception\InvalidFileException
      *
      * @return array
      */
@@ -357,6 +363,8 @@ class Loader
      *
      * @param string      $name
      * @param string|null $value
+     *
+     * @throws \Dotenv\Exception\InvalidFileException
      *
      * @return void
      */
