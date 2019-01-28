@@ -2,7 +2,6 @@
 
 namespace Dotenv;
 
-use Dotenv\Exception\InvalidFileException;
 use Dotenv\Exception\InvalidPathException;
 
 /**
@@ -235,42 +234,7 @@ class Loader
             return array($name, $value);
         }
 
-        if ($this->beginsWithAQuote($value)) { // value starts with a quote
-            $quote = $value[0];
-            $regexPattern = sprintf(
-                '/^
-                %1$s           # match a quote at the start of the value
-                (              # capturing sub-pattern used
-                 (?:           # we do not need to capture this
-                  [^%1$s\\\\]* # any character other than a quote or backslash
-                  |\\\\\\\\    # or two backslashes together
-                  |\\\\%1$s    # or an escaped quote e.g \"
-                 )*            # as many characters that match the previous rules
-                )              # end of the capturing sub-pattern
-                %1$s           # and the closing quote
-                .*$            # and discard any string after the closing quote
-                /mx',
-                $quote
-            );
-            $value = preg_replace($regexPattern, '$1', $value);
-            $value = str_replace("\\$quote", $quote, $value);
-            $value = str_replace('\\\\', '\\', $value);
-        } else {
-            $parts = explode(' #', $value, 2);
-            $value = trim($parts[0]);
-
-            // Unquoted values cannot contain whitespace
-            if (preg_match('/\s+/', $value) > 0) {
-                // Check if value is a comment (usually triggered when empty value with comment)
-                if (preg_match('/^#/', $value) > 0) {
-                    $value = '';
-                } else {
-                    throw new InvalidFileException('Dotenv values containing spaces must be surrounded by quotes.');
-                }
-            }
-        }
-
-        return array($name, trim($value));
+        return array($name, Parser::parseValue($value));
     }
 
     /**
@@ -314,21 +278,7 @@ class Loader
      */
     protected function sanitiseVariableName($name, $value)
     {
-        $name = trim(str_replace(array('export ', '\'', '"'), '', $name));
-
-        return array($name, $value);
-    }
-
-    /**
-     * Determine if the given string begins with a quote.
-     *
-     * @param string $value
-     *
-     * @return bool
-     */
-    protected function beginsWithAQuote($value)
-    {
-        return isset($value[0]) && ($value[0] === '"' || $value[0] === '\'');
+        return array(Parser::parseName($name), $value);
     }
 
     /**

@@ -11,7 +11,8 @@
         }
     ],
     "require": {
-        "php": ">=5.3.9"
+        "php": ">=5.3.9",
+        "symfony/polyfill-ctype": "^1.9"
     },
     "require-dev": {
         "phpunit/phpunit": "^4.8.35 || ^5.0"
