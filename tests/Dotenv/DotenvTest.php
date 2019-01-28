@@ -89,6 +89,13 @@ class DotenvTest extends TestCase
         $this->assertSame('iiiiviiiixiiiiviiii\\n', getenv('QSLASH'));
     }
 
+    public function testLargeDotenvLoadsEnvironmentVars()
+    {
+        $dotenv = Dotenv::create($this->fixturesFolder, 'large.env');
+        $dotenv->load();
+        $this->assertNotEmpty(getenv('LARGE'));
+    }
+
     public function testExportedDotenvLoadsEnvironmentVars()
     {
         $dotenv = Dotenv::create($this->fixturesFolder, 'exported.env');
