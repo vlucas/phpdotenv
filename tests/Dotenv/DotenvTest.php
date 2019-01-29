@@ -64,9 +64,14 @@ class DotenvTest extends TestCase
         $this->assertSame('with spaces', getenv('QSPACED'));
         $this->assertEmpty(getenv('QNULL'));
         $this->assertSame('pgsql:host=localhost;dbname=test', getenv('QEQUALS'));
+
         $this->assertSame('test some escaped characters like a quote (") or maybe a backslash (\\)', getenv('QESCAPED'));
         $this->assertSame('iiiiviiiixiiiiviiii\\n', getenv('QSLASH1'));
         $this->assertSame('iiiiviiiixiiiiviiii\\n', getenv('QSLASH2'));
+
+        $this->assertSame('test some escaped characters like a quote (\') or maybe a backslash (\\)', getenv('SQESCAPED'));
+        $this->assertSame('iiiiviiiixiiiiviiii\\n', getenv('SQSLASH1'));
+        $this->assertSame('iiiiviiiixiiiiviiii\\n', getenv('SQSLASH2'));
     }
 
     public function testLargeDotenvLoadsEnvironmentVars()
@@ -261,6 +266,9 @@ class DotenvTest extends TestCase
         $this->assertSame('jdgEB4{QgEC]HL))&GcXxokB+wqoN+j>xkV7K?m$r', getenv('SPVAR3'));
         $this->assertSame('22222:22#2^{', getenv('SPVAR4'));
         $this->assertSame('test some escaped characters like a quote " or maybe a backslash \\', getenv('SPVAR5'));
+        $this->assertSame('secret!@#', getenv('SPVAR6'));
+        $this->assertSame('secret!@#', getenv('SPVAR7'));
+        $this->assertSame('secret!@#', getenv('SPVAR8'));
     }
 
     public function testDotenvAssertions()
