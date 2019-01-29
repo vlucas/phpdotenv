@@ -7,3 +7,4 @@
 /.travis.yml export-ignore
 /phpunit.xml.dist export-ignore
 /README.md export-ignore
+/UPGRADING.md export-ignore

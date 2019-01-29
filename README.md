@@ -18,16 +18,16 @@ New in Version 3 is first-class support for multiline variables
 flexibility in terms of which parts of the environment we try to read and
 modify ([#300](https://github.com/vlucas/phpdotenv/pull/300)). Consequently,
 you will need to replace any occurrences of `new Dotenv(...)` with
-`Dotenv::create(...)`, since our new native constructor takes loader instance
-now, so that it can be truly customized if required. Finally, one should note
-the loader will no longer be trimming values
+`Dotenv::create(...)`, since our new native constructor takes a `Loader`
+instance now, so that it can be truly customized if required. Finally, one
+should note that the loader will no longer be trimming values
 ([#302](https://github.com/vlucas/phpdotenv/pull/302)), moreover
 `Loader::load()` and its callers now return an associative array of the
 variables loaded with their values, rather than an array of raw lines from the
 environment file ([#306](https://github.com/vlucas/phpdotenv/pull/306)).
 
 For more details, please see the
-[release notes](https://github.com/vlucas/phpdotenv/releases/tag/v3.0.0).
+[release notes](https://github.com/vlucas/phpdotenv/releases/tag/v3.0.0) and the [upgrading guide](UPGRADING.md).
 
 
 Why .env?
