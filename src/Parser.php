@@ -108,7 +108,7 @@ class Parser
         return array_reduce(str_split($value), function ($data, $char) use ($value) {
             switch ($data[1]) {
                 case self::INITIAL_STATE:
-                    if ($char === '"') {
+                    if ($char === '"' || $char === '\'') {
                         return [$data[0], self::QUOTED_STATE];
                     } elseif ($char === '#') {
                         return [$data[0], self::COMMENT_STATE];
@@ -124,7 +124,7 @@ class Parser
                         return [$data[0].$char, self::UNQUOTED_STATE];
                     }
                 case self::QUOTED_STATE:
-                    if ($char === '"') {
+                    if ($char === $value[0]) {
                         return [$data[0], self::WHITESPACE_STATE];
                     } elseif ($char === '\\') {
                         return [$data[0], self::ESCAPE_STATE];
@@ -132,7 +132,7 @@ class Parser
                         return [$data[0].$char, self::QUOTED_STATE];
                     }
                 case self::ESCAPE_STATE:
-                    if ($char === '"' || $char === '\\') {
+                    if ($char === $value[0] || $char === '\\') {
                         return [$data[0].$char, self::QUOTED_STATE];
                     } else {
                         throw new InvalidFileException(
