@@ -7,11 +7,10 @@ use Dotenv\Exception\InvalidFileException;
 class Parser
 {
     const INITIAL_STATE = 0;
-    const UNQUOTED_STATE = 1;
-    const QUOTED_STATE = 2;
-    const ESCAPE_STATE = 3;
-    const WHITESPACE_STATE = 4;
-    const COMMENT_STATE = 5;
+    const QUOTED_STATE = 1;
+    const ESCAPE_STATE = 2;
+    const WHITESPACE_STATE = 3;
+    const COMMENT_STATE = 4;
 
     /**
      * Parse the given variable name.
@@ -29,31 +28,45 @@ class Parser
      * Parse the given variable value.
      *
      * @param string $value
-      *
+     *
      * @throws \Dotenv\Exception\InvalidFileException
      *
      * @return string
      */
     public static function parseValue($value)
     {
+        if ($value === '') {
+            return '';
+        } elseif ($value[0] === '"' || $value[0] === '\'') {
+            return Parser::parseQuotedValue($value);
+        } else {
+            return Parser::parseUnquotedValue($value);
+        }
+    }
+
+    /**
+     * Parse the given quoted value.
+     *
+     * @param string $value
+     *
+     * @throws \Dotenv\Exception\InvalidFileException
+     *
+     * @return string
+     */
+    public static function parseQuotedValue($value)
+    {
         $data = array_reduce(str_split($value), function ($data, $char) use ($value) {
             switch ($data[1]) {
                 case Parser::INITIAL_STATE:
-                    if ($char === '"') {
+                    if ($char === '"' || $char === '\'') {
                         return array($data[0], Parser::QUOTED_STATE);
                     } else {
-                        return array($data[0].$char, Parser::UNQUOTED_STATE);
-                    }
-                case Parser::UNQUOTED_STATE:
-                    if ($char === '#') {
-                        return array($data[0], Parser::COMMENT_STATE);
-                    } elseif (ctype_space($char)) {
-                        return array($data[0], Parser::WHITESPACE_STATE);
-                    } else {
-                        return array($data[0].$char, Parser::UNQUOTED_STATE);
+                        throw new InvalidFileException(
+                            'Expected the value to start with a quote.'
+                        );
                     }
                 case Parser::QUOTED_STATE:
-                    if ($char === '"') {
+                    if ($char === $value[0]) {
                         return array($data[0], Parser::WHITESPACE_STATE);
                     } elseif ($char === '\\') {
                         return array($data[0], Parser::ESCAPE_STATE);
@@ -61,7 +74,7 @@ class Parser
                         return array($data[0].$char, Parser::QUOTED_STATE);
                     }
                 case Parser::ESCAPE_STATE:
-                    if ($char === '"' || $char === '\\') {
+                    if ($char === $value[0] || $char === '\\') {
                         return array($data[0].$char, Parser::QUOTED_STATE);
                     } else {
                         return array($data[0].'\\'.$char, Parser::QUOTED_STATE);
@@ -70,11 +83,9 @@ class Parser
                     if ($char === '#') {
                         return array($data[0], Parser::COMMENT_STATE);
                     } elseif (!ctype_space($char)) {
-                        if ($data[0] !== '' && $data[0][0] === '#') {
-                            return array('', Parser::COMMENT_STATE);
-                        } else {
-                            throw new InvalidFileException('Dotenv values containing spaces must be surrounded by quotes.');
-                        }
+                        throw new InvalidFileException(
+                            'Dotenv values containing spaces must be surrounded by quotes.'
+                        );
                     } else {
                         return array($data[0], Parser::WHITESPACE_STATE);
                     }
@@ -84,5 +95,32 @@ class Parser
         }, array('', Parser::INITIAL_STATE));
 
         return trim($data[0]);
+    }
+
+    /**
+     * Parse the given unquoted value.
+     *
+     * @param string $value
+     *
+     * @throws \Dotenv\Exception\InvalidFileException
+     *
+     * @return string
+     */
+    public static function parseUnquotedValue($value)
+    {
+        $parts = explode(' #', $value, 2);
+        $value = trim($parts[0]);
+
+        // Unquoted values cannot contain whitespace
+        if (preg_match('/\s+/', $value) > 0) {
+            // Check if value is a comment (usually triggered when empty value with comment)
+            if (preg_match('/^#/', $value) > 0) {
+                $value = '';
+            } else {
+                throw new InvalidFileException('Dotenv values containing spaces must be surrounded by quotes.');
+            }
+        }
+
+        return trim($value);
     }
 }
