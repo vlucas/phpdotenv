@@ -42,14 +42,14 @@ class Lines
     private static function multilineProcess($multiline, $line, array $buffer)
     {
         // check if $line can be multiline variable
-        if (self::looksLikeMultilineStart($line)) {
+        if ($started = self::looksLikeMultilineStart($line)) {
             $multiline = true;
         }
 
         if ($multiline) {
             array_push($buffer, $line);
 
-            if (self::looksLikeMultilineStop($line)) {
+            if (self::looksLikeMultilineStop($line, $started)) {
                 $multiline = false;
                 $line = implode("\n", $buffer);
                 $buffer = [];
@@ -72,29 +72,32 @@ class Lines
             return false;
         }
 
-        return self::looksLikeMultilineStop($line) === false;
+        return self::looksLikeMultilineStop($line, true) === false;
     }
 
     /**
      * Determine if the given line can be the start of a multiline variable.
      *
      * @param string $line
+     * @param bool   $started
      *
      * @return bool
      */
-    private static function looksLikeMultilineStop($line)
+    private static function looksLikeMultilineStop($line, $started)
     {
         if ($line === '"') {
             return true;
         }
 
+        $seen = $started ? 0 : 1;
+
         foreach (self::getCharPairs(str_replace('\\\\', '', $line)) as $pair) {
-            if ($pair[0] !== '\\' && $pair[0] !== '=' && $pair[1] === '"') {
-                return true;
+            if ($pair[0] !== '\\' && $pair[1] === '"') {
+                $seen++;
             }
         }
 
-        return false;
+        return $seen > 1;
     }
 
     /**

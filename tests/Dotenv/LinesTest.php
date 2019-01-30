@@ -30,6 +30,8 @@ class LinesTest extends TestCase
 
         $expected = [
             "TEST=\"test\n     test\\\"test\\\"\n     test\"",
+            'TEST_EQD="https://vision.googleapis.com/v1/images:annotate?key="',
+            'TEST_EQS=\'https://vision.googleapis.com/v1/images:annotate?key=\'',
         ];
 
         $this->assertSame($expected, Lines::process(preg_split("/(\r\n|\n|\r)/", $content)));
