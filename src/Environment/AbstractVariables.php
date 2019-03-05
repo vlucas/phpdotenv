@@ -47,7 +47,7 @@ abstract class AbstractVariables implements VariablesInterface
      */
     public function has($name)
     {
-        return $this->get($name) !== null;
+        return is_string($name) && $this->get($name) !== null;
     }
 
     /**
