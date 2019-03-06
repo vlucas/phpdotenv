@@ -25,11 +25,30 @@ class EnvironmentVariablesTest extends TestCase
         $this->assertFalse($envVars->has('NON_EXISTING_VARIABLE'));
     }
 
+    public function testCheckingHasWithBadType()
+    {
+        $envVars = $this->envFactory->create();
+
+        $this->assertFalse($envVars->has(123));
+        $this->assertFalse($envVars->has(null));
+    }
+
     public function testGettingVariableByName()
     {
         $envVars = $this->envFactory->create();
 
         $this->assertSame('bar', $envVars->get('FOO'));
+    }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     * @expectedExceptionMessage Expected name to be a string.
+     */
+    public function testGettingBadVariable()
+    {
+        $envVars = $this->envFactory->create();
+
+        $envVars->get(null);
     }
 
     public function testSettingVariable()
@@ -43,6 +62,17 @@ class EnvironmentVariablesTest extends TestCase
         $this->assertSame('new', $envVars->get('FOO'));
     }
 
+    /**
+     * @expectedException \InvalidArgumentException
+     * @expectedExceptionMessage Expected name to be a string.
+     */
+    public function testSettingBadVariable()
+    {
+        $envVars = $this->envFactory->create();
+
+        $envVars->set(null, 'foo');
+    }
+
     public function testClearingVariable()
     {
         $envVars = $this->envFactory->create();
@@ -50,6 +80,17 @@ class EnvironmentVariablesTest extends TestCase
         $envVars->clear('FOO');
 
         $this->assertFalse($envVars->has('FOO'));
+    }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     * @expectedExceptionMessage Expected name to be a string.
+     */
+    public function testClearingBadVariable()
+    {
+        $envVars = $this->envFactory->create();
+
+        $envVars->clear(null);
     }
 
     public function testCannotSetVariableOnImmutableInstance()
