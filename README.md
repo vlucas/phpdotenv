@@ -278,13 +278,6 @@ When a new developer clones your codebase, they will have an additional
 **one-time step** to manually copy the `.env.example` file to `.env` and fill-in
 their own values (or get any sensitive values from a project co-worker).
 
-phpdotenv is made for development environments, and generally should not be
-used in production. In production, the actual environment variables should be
-set so that there is no overhead of loading the `.env` file on each request.
-This can be achieved via an automated deployment process with tools like
-Vagrant, chef, or Puppet, or can be set manually with cloud hosts like
-Pagodabox and Heroku.
-
 ### Command Line Scripts
 
 If you need to use environment variables that you have set in your `.env` file
