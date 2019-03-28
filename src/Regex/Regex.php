@@ -72,7 +72,8 @@ class Regex
             })
             ->map(function (array $consts) {
                 return array_filter($consts['pcre'], function ($msg) {
-                    return substr($msg, -6) === '_ERROR';
+                    $errorText = '_ERROR';
+                    return substr($msg, strlen($errorText) * -1) === $errorText;
                 }, ARRAY_FILTER_USE_KEY);
             })
             ->flatMap(function (array $errors) use ($code) {
