@@ -100,6 +100,14 @@ class DotenvTest extends TestCase
         $this->assertNotEmpty(getenv('LARGE'));
     }
 
+    public function testMultipleDotenvLoadsEnvironmentVars()
+    {
+        $dotenv = Dotenv::create($this->fixturesFolder, 'multiple.env');
+        $dotenv->load();
+        $this->assertSame('bar', getenv('MULTI1'));
+        $this->assertSame('foo', getenv('MULTI2'));
+    }
+
     public function testExportedDotenvLoadsEnvironmentVars()
     {
         $dotenv = Dotenv::create($this->fixturesFolder, 'exported.env');
