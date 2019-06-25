@@ -27,11 +27,13 @@ variables loaded with their values, rather than an array of raw lines from the
 environment file ([#306](https://github.com/vlucas/phpdotenv/pull/306)).
 
 For more details, please see the
-[release notes](https://github.com/vlucas/phpdotenv/releases/tag/v3.0.0) and the [upgrading guide](UPGRADING.md).
+[release notes](https://github.com/vlucas/phpdotenv/releases/tag/v3.0.0) and
+the [upgrading guide](UPGRADING.md).
 
 
 Why .env?
 ---------
+
 **You should never store sensitive credentials in your code**. Storing
 [configuration in the environment](http://www.12factor.net/config) is one of
 the tenets of a [twelve-factor app](http://www.12factor.net/). Anything that is
@@ -57,15 +59,9 @@ Installation with Composer
 --------------------------
 
 ```shell
-curl -s http://getcomposer.org/installer | php
-php composer.phar require vlucas/phpdotenv
-```
-
-Or on Existing projects
-
-```shell
 composer require vlucas/phpdotenv
 ```
+
 Usage
 -----
 The `.env` file is generally kept out of version control since it can contain
@@ -288,14 +284,14 @@ it into your local shell session:
 source .env
 ```
 
-Contributing
-------------
 
-1. Fork it
-2. Create your feature branch (`git checkout -b my-new-feature`)
-3. Make your changes
-4. Run the tests, adding new ones for your own code if necessary (`phpunit`)
-5. Commit your changes (`git commit -am 'Added some feature'`)
-6. Push to the branch (`git push origin my-new-feature`)
-7. Create new Pull Request
+Security
+--------
 
+If you discover a security vulnerability within this package, please send an email to Graham Campbell at graham@alt-three.com. All security vulnerabilities will be promptly addressed. You may view our full security policy [here](https://github.com/vlucas/phpdotenv/security/policy).
+
+
+License
+-------
+
+PHP dotenv is licensed under [The BSD 3-Clause License](LICENSE).
