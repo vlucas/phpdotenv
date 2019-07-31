@@ -30,6 +30,8 @@ class LinesTest extends TestCase
 
         $expected = [
             "TEST=\"test\n     test\\\"test\\\"\n     test\"",
+            "TEST_ND=\"test\\ntest\"",
+            'TEST_NS=\'test\\ntest\'',
             'TEST_EQD="https://vision.googleapis.com/v1/images:annotate?key="',
             'TEST_EQS=\'https://vision.googleapis.com/v1/images:annotate?key=\'',
         ];
