@@ -62,19 +62,19 @@ class ParserTest extends TestCase
 
     /**
      * @expectedException \Dotenv\Exception\InvalidFileException
-     * @expectedExceptionMessage Failed to parse dotenv file due to an unexpected escape sequence. Failed at ["iiiiviiiixiiiiviiii\n"].
+     * @expectedExceptionMessage Failed to parse dotenv file due to an unexpected escape sequence. Failed at ["iiiiviiiixiiiiviiii\a"].
      */
     public function testParserEscapingDouble()
     {
-        Parser::parse('FOO_BAD="iiiiviiiixiiiiviiii\\n"');
+        Parser::parse('FOO_BAD="iiiiviiiixiiiiviiii\\a"');
     }
 
     /**
      * @expectedException \Dotenv\Exception\InvalidFileException
-     * @expectedExceptionMessage Failed to parse dotenv file due to an unexpected escape sequence. Failed at ['iiiiviiiixiiiiviiii\n'].
+     * @expectedExceptionMessage Failed to parse dotenv file due to an unexpected escape sequence. Failed at ['iiiiviiiixiiiiviiii\a'].
      */
     public function testParserEscapingSingle()
     {
-        Parser::parse('FOO_BAD=\'iiiiviiiixiiiiviiii\\n\'');
+        Parser::parse('FOO_BAD=\'iiiiviiiixiiiiviiii\\a\'');
     }
 }
