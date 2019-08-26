@@ -1,18 +1,40 @@
-language: php
-dist: trusty
-sudo: false
-
-php:
-  - 5.4
-  - 5.5
-  - 5.5.9
-  - 5.6
-  - 7.0
-  - 7.1
-  - 7.2
-  - 7.3
-  - hhvm-3.18
-
-install: travis_retry composer install --no-interaction --prefer-source
-
-script: vendor/bin/phpunit
+matrix:
+  include:
+    - dist: trusty
+      language: php
+      php: hhvm-3.18
+      install: travis_retry composer install --no-suggest --prefer-dist -n -o
+      script: vendor/bin/phpunit
+    - dist: trusty
+      language: php
+      php: 5.4
+      install: travis_retry composer install --no-suggest --prefer-dist -n -o
+      script: vendor/bin/phpunit
+    - dist: trusty
+      language: php
+      php: 5.5.9
+      install: travis_retry composer install --no-suggest --prefer-dist -n -o
+      script: vendor/bin/phpunit
+    - dist: trusty
+      language: php
+      php: 5.5
+      install: travis_retry composer install --no-suggest --prefer-dist -n -o
+      script: vendor/bin/phpunit
+    - dist: xenial
+      install: travis_retry docker run -it -w /data -v ${PWD}:/data:delegated --entrypoint composer registry.gitlab.com/grahamcampbell/php:5.6 install --no-suggest --prefer-dist -n -o
+      script: docker run -it -w /data -v ${PWD}:/data:delegated --entrypoint vendor/bin/phpunit registry.gitlab.com/grahamcampbell/php:5.6
+    - dist: xenial
+      install: travis_retry docker run -it -w /data -v ${PWD}:/data:delegated --entrypoint composer registry.gitlab.com/grahamcampbell/php:7.0 install --no-suggest --prefer-dist -n -o
+      script: docker run -it -w /data -v ${PWD}:/data:delegated --entrypoint vendor/bin/phpunit registry.gitlab.com/grahamcampbell/php:7.0
+    - dist: xenial
+      install: travis_retry docker run -it -w /data -v ${PWD}:/data:delegated --entrypoint composer registry.gitlab.com/grahamcampbell/php:7.1 install --no-suggest --prefer-dist -n -o
+      script: docker run -it -w /data -v ${PWD}:/data:delegated --entrypoint vendor/bin/phpunit registry.gitlab.com/grahamcampbell/php:7.1
+    - dist: xenial
+      install: travis_retry docker run -it -w /data -v ${PWD}:/data:delegated --entrypoint composer registry.gitlab.com/grahamcampbell/php:7.2 install --no-suggest --prefer-dist -n -o
+      script: docker run -it -w /data -v ${PWD}:/data:delegated --entrypoint vendor/bin/phpunit registry.gitlab.com/grahamcampbell/php:7.2
+    - dist: xenial
+      install: travis_retry docker run -it -w /data -v ${PWD}:/data:delegated --entrypoint composer registry.gitlab.com/grahamcampbell/php:7.3 install --no-suggest --prefer-dist -n -o
+      script: docker run -it -w /data -v ${PWD}:/data:delegated --entrypoint vendor/bin/phpunit registry.gitlab.com/grahamcampbell/php:7.3
+    - dist: xenial
+      install: travis_retry docker run -it -w /data -v ${PWD}:/data:delegated --entrypoint composer registry.gitlab.com/grahamcampbell/php:7.4 install --no-suggest --prefer-dist -n -o
+      script: docker run -it -w /data -v ${PWD}:/data:delegated --entrypoint vendor/bin/phpunit registry.gitlab.com/grahamcampbell/php:7.4
