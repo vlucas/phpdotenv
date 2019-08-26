@@ -59,7 +59,7 @@ class Validator
     {
         return $this->assertCallback(
             function ($value) {
-                return strlen(trim($value)) > 0;
+                return $value !== null && strlen(trim($value)) > 0;
             },
             'is empty'
         );
@@ -76,7 +76,7 @@ class Validator
     {
         return $this->assertCallback(
             function ($value) {
-                return ctype_digit($value);
+                return $value !== null && ctype_digit($value);
             },
             'is not an integer'
         );
@@ -93,7 +93,7 @@ class Validator
     {
         return $this->assertCallback(
             function ($value) {
-                if ($value === '') {
+                if ($value === null || $value === '') {
                     return false;
                 }
 
