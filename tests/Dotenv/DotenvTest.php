@@ -138,32 +138,6 @@ class DotenvTest extends TestCase
         $this->assertEmpty($_ENV['NULL']);
     }
 
-    /**
-     * @depends testDotenvLoadsEnvironmentVars
-     * @depends testDotenvLoadsEnvGlobals
-     * @depends testDotenvLoadsServerGlobals
-     */
-    public function testDotenvRequiredStringEnvironmentVars()
-    {
-        $dotenv = Dotenv::create($this->fixturesFolder);
-        $dotenv->load();
-        $dotenv->required('FOO');
-        $this->assertTrue(true); // anything wrong an exception will be thrown
-    }
-
-    /**
-     * @depends testDotenvLoadsEnvironmentVars
-     * @depends testDotenvLoadsEnvGlobals
-     * @depends testDotenvLoadsServerGlobals
-     */
-    public function testDotenvRequiredArrayEnvironmentVars()
-    {
-        $dotenv = Dotenv::create($this->fixturesFolder);
-        $dotenv->load();
-        $dotenv->required(['FOO', 'BAR']);
-        $this->assertTrue(true); // anything wrong an exception will be thrown
-    }
-
     public function testDotenvNestedEnvironmentVars()
     {
         $dotenv = Dotenv::create($this->fixturesFolder, 'nested.env');
@@ -176,47 +150,6 @@ class DotenvTest extends TestCase
         $this->assertSame('', $_ENV['NVAR8']);
         $this->assertSame('', $_ENV['NVAR9']);  // nested variable is empty string
         $this->assertSame('${NVAR888}', $_ENV['NVAR10']);  // nested variable is not set
-    }
-
-    /**
-     * @depends testDotenvLoadsEnvironmentVars
-     * @depends testDotenvLoadsEnvGlobals
-     * @depends testDotenvLoadsServerGlobals
-     */
-    public function testDotenvAllowedValues()
-    {
-        $dotenv = Dotenv::create($this->fixturesFolder);
-        $dotenv->load();
-        $dotenv->required('FOO')->allowedValues(['bar', 'baz']);
-        $this->assertTrue(true); // anything wrong an exception will be thrown
-    }
-
-    /**
-     * @depends testDotenvLoadsEnvironmentVars
-     * @depends testDotenvLoadsEnvGlobals
-     * @depends testDotenvLoadsServerGlobals
-     *
-     * @expectedException \Dotenv\Exception\ValidationException
-     * @expectedExceptionMessage One or more environment variables failed assertions: FOO is not one of [buzz, buz].
-     */
-    public function testDotenvProhibitedValues()
-    {
-        $dotenv = Dotenv::create($this->fixturesFolder);
-        $dotenv->load();
-        $dotenv->required('FOO')->allowedValues(['buzz', 'buz']);
-    }
-
-    /**
-     * @expectedException \Dotenv\Exception\ValidationException
-     * @expectedExceptionMessage One or more environment variables failed assertions: FOOX is missing, NOPE is missing.
-     */
-    public function testDotenvRequiredThrowsRuntimeException()
-    {
-        $dotenv = Dotenv::create($this->fixturesFolder);
-        $dotenv->load();
-        $this->assertFalse(getenv('FOOX'));
-        $this->assertFalse(getenv('NOPE'));
-        $dotenv->required(['FOOX', 'NOPE']);
     }
 
     public function testDotenvNullFileArgumentUsesDefault()
@@ -298,92 +231,6 @@ class DotenvTest extends TestCase
         $this->assertSame("test\n     test\"test\"\n     test", getenv('TEST'));
         $this->assertSame('https://vision.googleapis.com/v1/images:annotate?key=', getenv('TEST_EQD'));
         $this->assertSame('https://vision.googleapis.com/v1/images:annotate?key=', getenv('TEST_EQS'));
-    }
-
-    public function testDotenvAssertions()
-    {
-        $dotenv = Dotenv::create($this->fixturesFolder, 'assertions.env');
-        $dotenv->load();
-        $this->assertSame('val1', getenv('ASSERTVAR1'));
-        $this->assertEmpty(getenv('ASSERTVAR2'));
-        $this->assertSame('val3   ', getenv('ASSERTVAR3'));
-        $this->assertSame('0', getenv('ASSERTVAR4'));
-        $this->assertSame('#foo', getenv('ASSERTVAR5'));
-        $this->assertSame("val1\nval2", getenv('ASSERTVAR6'));
-        $this->assertSame("\nval3", getenv('ASSERTVAR7'));
-        $this->assertSame("val3\n", getenv('ASSERTVAR8'));
-
-        $dotenv->required([
-            'ASSERTVAR1',
-            'ASSERTVAR2',
-            'ASSERTVAR3',
-            'ASSERTVAR4',
-            'ASSERTVAR5',
-            'ASSERTVAR6',
-            'ASSERTVAR7',
-            'ASSERTVAR8',
-            'ASSERTVAR9',
-        ]);
-
-        $dotenv->required([
-            'ASSERTVAR1',
-            'ASSERTVAR3',
-            'ASSERTVAR4',
-            'ASSERTVAR5',
-            'ASSERTVAR6',
-            'ASSERTVAR7',
-            'ASSERTVAR8',
-        ])->notEmpty();
-
-        $dotenv->required([
-            'ASSERTVAR1',
-            'ASSERTVAR4',
-            'ASSERTVAR5',
-        ])->notEmpty()->allowedValues(['0', 'val1', '#foo']);
-
-        $this->assertTrue(true); // anything wrong an an exception will be thrown
-    }
-
-    /**
-     * @expectedException \Dotenv\Exception\ValidationException
-     * @expectedExceptionMessage One or more environment variables failed assertions: ASSERTVAR2 is empty.
-     */
-    public function testDotenvEmptyThrowsRuntimeException()
-    {
-        $dotenv = Dotenv::create($this->fixturesFolder, 'assertions.env');
-        $dotenv->load();
-        $this->assertEmpty(getenv('ASSERTVAR2'));
-
-        $dotenv->required('ASSERTVAR2')->notEmpty();
-    }
-
-    /**
-     * @expectedException \Dotenv\Exception\ValidationException
-     * @expectedExceptionMessage One or more environment variables failed assertions: ASSERTVAR9 is empty.
-     */
-    public function testDotenvStringOfSpacesConsideredEmpty()
-    {
-        $dotenv = Dotenv::create($this->fixturesFolder, 'assertions.env');
-        $dotenv->load();
-        $dotenv->required('ASSERTVAR9')->notEmpty();
-    }
-
-    /**
-     * @expectedException \Dotenv\Exception\ValidationException
-     * @expectedExceptionMessage One or more environment variables failed assertions: foo is missing.
-     */
-    public function testDotenvValidateRequiredWithoutLoading()
-    {
-        $dotenv = Dotenv::create($this->fixturesFolder, 'assertions.env');
-        $dotenv->required('foo');
-    }
-
-    public function testDotenvRequiredCanBeUsedWithoutLoadingFile()
-    {
-        putenv('REQUIRED_VAR=1');
-        $dotenv = Dotenv::create($this->fixturesFolder);
-        $dotenv->required('REQUIRED_VAR')->notEmpty();
-        $this->assertTrue(true);
     }
 
     public function testGetEnvironmentVariablesList()
