@@ -15,6 +15,35 @@ class ParserTest extends TestCase
         $this->assertSame(['FOO', "BAR  \n"], Parser::parse("FOO=\"BAR  \n\""));
     }
 
+    public function testNewlineParse()
+    {
+        $this->assertSame(['FOO', "\n"], Parser::parse('FOO="\n"'));
+    }
+
+    public function testTabParse()
+    {
+        $this->assertSame(['FOO', "\t"], Parser::parse('FOO=\'\t\''));
+    }
+
+    public function testNonEscapeParse1()
+    {
+        $this->assertSame(['FOO', '\n\v'], Parser::parse('FOO=\n\v'));
+    }
+
+    public function testNonEscapeParse2()
+    {
+        $this->assertSame(['FOO', '\q'], Parser::parse('FOO=\q'));
+    }
+
+    /**
+     * @expectedException \Dotenv\Exception\InvalidFileException
+     * @expectedExceptionMessage Failed to parse dotenv file due to an unexpected escape sequence. Failed at ["\q"].
+     */
+    public function testBadEscapeParse()
+    {
+        Parser::parse('FOO="\q"');
+    }
+
     public function testWhitespaceParse()
     {
         $this->assertSame(['FOO', "\n"], Parser::parse("FOO=\"\n\""));
@@ -62,19 +91,19 @@ class ParserTest extends TestCase
 
     /**
      * @expectedException \Dotenv\Exception\InvalidFileException
-     * @expectedExceptionMessage Failed to parse dotenv file due to an unexpected escape sequence. Failed at ["iiiiviiiixiiiiviiii\n"].
+     * @expectedExceptionMessage Failed to parse dotenv file due to an unexpected escape sequence. Failed at ["iiiiviiiixiiiiviiii\a"].
      */
     public function testParserEscapingDouble()
     {
-        Parser::parse('FOO_BAD="iiiiviiiixiiiiviiii\\n"');
+        Parser::parse('FOO_BAD="iiiiviiiixiiiiviiii\\a"');
     }
 
     /**
      * @expectedException \Dotenv\Exception\InvalidFileException
-     * @expectedExceptionMessage Failed to parse dotenv file due to an unexpected escape sequence. Failed at ['iiiiviiiixiiiiviiii\n'].
+     * @expectedExceptionMessage Failed to parse dotenv file due to an unexpected escape sequence. Failed at ['iiiiviiiixiiiiviiii\a'].
      */
     public function testParserEscapingSingle()
     {
-        Parser::parse('FOO_BAD=\'iiiiviiiixiiiiviiii\\n\'');
+        Parser::parse('FOO_BAD=\'iiiiviiiixiiiiviiii\\a\'');
     }
 }
