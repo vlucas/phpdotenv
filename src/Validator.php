@@ -30,22 +30,26 @@ class Validator
      *
      * @param string[]       $variables
      * @param \Dotenv\Loader $loader
+     * @param bool           $required
      *
      * @throws \Dotenv\Exception\ValidationException
      *
      * @return void
      */
-    public function __construct(array $variables, Loader $loader)
+    public function __construct(array $variables, Loader $loader, $required = true)
     {
         $this->variables = $variables;
         $this->loader = $loader;
 
-        $this->assertCallback(
-            function ($value) {
-                return $value !== null;
-            },
-            'is missing'
-        );
+        if ($required) {
+            $this->assertCallback(
+                function ($value) {
+                    return $value !== null;
+                },
+                'is missing'
+            );
+        }
+
     }
 
     /**
@@ -59,7 +63,11 @@ class Validator
     {
         return $this->assertCallback(
             function ($value) {
-                return $value !== null && strlen(trim($value)) > 0;
+                if ($value === null) {
+                    return true;
+                }
+
+                return strlen(trim($value)) > 0;
             },
             'is empty'
         );
@@ -76,7 +84,11 @@ class Validator
     {
         return $this->assertCallback(
             function ($value) {
-                return $value !== null && ctype_digit($value);
+                if ($value === null) {
+                    return true;
+                }
+
+                return ctype_digit($value);
             },
             'is not an integer'
         );
@@ -93,7 +105,11 @@ class Validator
     {
         return $this->assertCallback(
             function ($value) {
-                if ($value === null || $value === '') {
+                if ($value === null) {
+                    return true;
+                }
+
+                if ($value === '') {
                     return false;
                 }
 

@@ -136,6 +136,18 @@ class Dotenv
     }
 
     /**
+     * Returns a new validator object that won't check if the specified variables exist.
+     *
+     * @param string|string[] $variables
+     *
+     * @return \Dotenv\Validator
+     */
+    public function ifPresent($variables)
+    {
+        return new Validator((array) $variables, $this->loader, false);
+    }
+
+    /**
      * Get the list of environment variables declared inside the 'env' file.
      *
      * @return string[]
