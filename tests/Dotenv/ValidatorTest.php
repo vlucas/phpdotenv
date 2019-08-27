@@ -31,6 +31,14 @@ class ValidatorTest extends TestCase
         $this->assertTrue(true);
     }
 
+    public function testDotenvAllowedValuesIfPresent()
+    {
+        $dotenv = Dotenv::create($this->fixturesFolder);
+        $dotenv->load();
+        $dotenv->ifPresent('FOO')->allowedValues(['bar', 'baz']);
+        $this->assertTrue(true);
+    }
+
     /**
      * @expectedException \Dotenv\Exception\ValidationException
      * @expectedExceptionMessage One or more environment variables failed assertions: FOO is not one of [buzz, buz].
@@ -40,6 +48,17 @@ class ValidatorTest extends TestCase
         $dotenv = Dotenv::create($this->fixturesFolder);
         $dotenv->load();
         $dotenv->required('FOO')->allowedValues(['buzz', 'buz']);
+    }
+
+    /**
+     * @expectedException \Dotenv\Exception\ValidationException
+     * @expectedExceptionMessage One or more environment variables failed assertions: FOO is not one of [buzz, buz].
+     */
+    public function testDotenvProhibitedValuesIfPresent()
+    {
+        $dotenv = Dotenv::create($this->fixturesFolder);
+        $dotenv->load();
+        $dotenv->ifPresent('FOO')->allowedValues(['buzz', 'buz']);
     }
 
     /**
@@ -118,6 +137,15 @@ class ValidatorTest extends TestCase
         $dotenv->required('ASSERTVAR2')->notEmpty();
     }
 
+    public function testDotenvEmptyWhenNotPresent()
+    {
+        $dotenv = Dotenv::create($this->fixturesFolder, 'assertions.env');
+        $dotenv->load();
+
+        $dotenv->ifPresent('ASSERTVAR2_NO_SUCH_VARIABLE')->notEmpty();
+        $this->assertTrue(true);
+    }
+
     /**
      * @expectedException \Dotenv\Exception\ValidationException
      * @expectedExceptionMessage One or more environment variables failed assertions: ASSERTVAR9 is empty.
@@ -190,8 +218,19 @@ class ValidatorTest extends TestCase
         $dotenv->load();
 
         $dotenv->required($boolean)->isBoolean();
+        $this->assertTrue(true);
+    }
 
-        $this->assertTrue(true); // anything wrong - an exception will be thrown
+    /**
+     * @dataProvider validBooleanValuesDataProvider
+     */
+    public function testCanValidateBooleansIfPresent($boolean)
+    {
+        $dotenv = Dotenv::create($this->fixturesFolder, 'booleans.env');
+        $dotenv->load();
+
+        $dotenv->ifPresent($boolean)->isBoolean();
+        $this->assertTrue(true);
     }
 
     /**
@@ -228,6 +267,19 @@ class ValidatorTest extends TestCase
     }
 
     /**
+     * @dataProvider invalidBooleanValuesDataProvider
+     * @expectedException \Dotenv\Exception\ValidationException
+     * @expectedExceptionMessage One or more environment variables failed assertions: INVALID_
+     */
+    public function testCanInvalidateNonBooleansIfPresent($boolean)
+    {
+        $dotenv = Dotenv::create($this->fixturesFolder, 'booleans.env');
+        $dotenv->load();
+
+        $dotenv->ifPresent($boolean)->isBoolean();
+    }
+
+    /**
      * @expectedException \Dotenv\Exception\ValidationException
      * @expectedExceptionMessage One or more environment variables failed assertions: VAR_DOES_NOT_EXIST_234782462764
      */
@@ -237,6 +289,15 @@ class ValidatorTest extends TestCase
         $dotenv->load();
 
         $dotenv->required(['VAR_DOES_NOT_EXIST_234782462764'])->isBoolean();
+    }
+
+    public function testIfPresentBooleanNonExist()
+    {
+        $dotenv = Dotenv::create($this->fixturesFolder, 'booleans.env');
+        $dotenv->load();
+
+        $dotenv->ifPresent(['VAR_DOES_NOT_EXIST_234782462764'])->isBoolean();
+        $this->assertTrue(true);
     }
 
     /**
@@ -265,8 +326,19 @@ class ValidatorTest extends TestCase
         $dotenv->load();
 
         $dotenv->required($integer)->isInteger();
+        $this->assertTrue(true);
+    }
 
-        $this->assertTrue(true); // anything wrong - an exception will be thrown
+    /**
+     * @dataProvider validIntegerValuesDataProvider
+     */
+    public function testCanValidateIntegersIfPresent($integer)
+    {
+        $dotenv = Dotenv::create($this->fixturesFolder, 'integers.env');
+        $dotenv->load();
+
+        $dotenv->ifPresent($integer)->isInteger();
+        $this->assertTrue(true);
     }
 
     /**
@@ -304,6 +376,19 @@ class ValidatorTest extends TestCase
     }
 
     /**
+     * @dataProvider invalidIntegerValuesDataProvider
+     * @expectedException \Dotenv\Exception\ValidationException
+     * @expectedExceptionMessage One or more environment variables failed assertions: INVALID_
+     */
+    public function testCanInvalidateNonIntegersIfExist($integer)
+    {
+        $dotenv = Dotenv::create($this->fixturesFolder, 'integers.env');
+        $dotenv->load();
+
+        $dotenv->ifPresent($integer)->isInteger();
+    }
+
+    /**
      * @expectedException \Dotenv\Exception\ValidationException
      * @expectedExceptionMessage One or more environment variables failed assertions: VAR_DOES_NOT_EXIST_234782462764
      */
@@ -313,5 +398,14 @@ class ValidatorTest extends TestCase
         $dotenv->load();
 
         $dotenv->required(['VAR_DOES_NOT_EXIST_234782462764'])->isInteger();
+    }
+
+    public function testIfPresentIntegerNonExist()
+    {
+        $dotenv = Dotenv::create($this->fixturesFolder, 'integers.env');
+        $dotenv->load();
+
+        $dotenv->ifPresent(['VAR_DOES_NOT_EXIST_234782462764'])->isInteger();
+        $this->assertTrue(true);
     }
 }
