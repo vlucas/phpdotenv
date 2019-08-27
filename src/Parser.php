@@ -134,7 +134,7 @@ class Parser
                 case self::ESCAPE_STATE:
                     if ($char === $value[0] || $char === '\\') {
                         return [$data[0].$char, self::QUOTED_STATE];
-                    } elseif (in_array($char, ['n', 'r'], true)) {
+                    } elseif (in_array($char, ['f', 'n', 'r', 't', 'v'], true)) {
                         return [$data[0].stripcslashes('\\' . $char), self::QUOTED_STATE];
                     } else {
                         throw new InvalidFileException(
