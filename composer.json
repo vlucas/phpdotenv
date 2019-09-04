@@ -21,7 +21,7 @@
         "symfony/polyfill-ctype": "^1.9"
     },
     "require-dev": {
-        "phpunit/phpunit": "^4.8.35 || ^5.0 || ^6.0"
+        "phpunit/phpunit": "^4.8.35 || ^5.0 || ^6.0 || ^7.0"
     },
     "autoload": {
         "psr-4": {
