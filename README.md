@@ -257,6 +257,11 @@ One or more environment variables failed assertions: SESSION_STORE is not an
 allowed value
 ```
 
+It is also possible to define a regex that your environment variable should be.
+```php
+$dotenv->required('FOO')->allowedRegexValues('([[:lower:]]{3})');
+```
+
 ### Comments
 
 You can comment your `.env` file using the `#` character. E.g.

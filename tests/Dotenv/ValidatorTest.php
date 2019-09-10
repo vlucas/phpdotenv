@@ -408,4 +408,42 @@ class ValidatorTest extends TestCase
         $dotenv->ifPresent(['VAR_DOES_NOT_EXIST_234782462764'])->isInteger();
         $this->assertTrue(true);
     }
+
+    public function testDotenvRegexMatchPass()
+    {
+        $dotenv = Dotenv::create($this->fixturesFolder);
+        $dotenv->load();
+        $dotenv->required('FOO')->allowedRegexValues('([[:lower:]]{3})');
+        $this->assertTrue(true);
+    }
+
+    /**
+     * @expectedException \Dotenv\Exception\ValidationException
+     * @expectedExceptionMessage One or more environment variables failed assertions: FOO does not match "/^([[:lower:]]{1})$/".
+     */
+    public function testDotenvRegexMatchFail()
+    {
+        $dotenv = Dotenv::create($this->fixturesFolder);
+        $dotenv->load();
+        $dotenv->required('FOO')->allowedRegexValues('/^([[:lower:]]{1})$/');
+    }
+
+    /**
+     * @expectedException \Dotenv\Exception\ValidationException
+     * @expectedExceptionMessage One or more environment variables failed assertions: FOO does not match "/([[:lower:]{1{".
+     */
+    public function testDotenvRegexMatchError()
+    {
+        $dotenv = Dotenv::create($this->fixturesFolder);
+        $dotenv->load();
+        $dotenv->required('FOO')->allowedRegexValues('/([[:lower:]{1{');
+    }
+
+    public function testDotenvRegexMatchNotPresent()
+    {
+        $dotenv = Dotenv::create($this->fixturesFolder);
+        $dotenv->load();
+        $dotenv->ifPresent('FOOOOOOOOOOO')->allowedRegexValues('([[:lower:]]{3})');
+        $this->assertTrue(true);
+    }
 }
