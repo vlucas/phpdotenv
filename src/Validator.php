@@ -3,6 +3,7 @@
 namespace Dotenv;
 
 use Dotenv\Exception\ValidationException;
+use Dotenv\Regex\Regex;
 
 /**
  * This is the validator class.
@@ -152,9 +153,13 @@ class Validator
         return $this->assertCallback(
             function ($value) use ($regex)
             {
-                return preg_match($regex, $value) == 1 ;
+                if ($value === null) {
+                    return true;
+                }
+
+                return Regex::match($regex, $value)->success()->getOrElse(0) === 1;
             },
-            sprintf('does not match given regex %s' , $regex)
+            sprintf('does not match "%s"' , $regex)
         );
     }
 
