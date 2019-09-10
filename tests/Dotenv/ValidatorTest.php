@@ -31,6 +31,14 @@ class ValidatorTest extends TestCase
         $this->assertTrue(true);
     }
 
+    public function testDotenvallowedRegexValues()
+    {
+        $dotenv = Dotenv::create($this->fixturesFolder);
+        $dotenv->load();
+        $dotenv->required('FOO')->allowedRegexValues('([[:lower:]]{3})');
+        $this->assertTrue(true);
+    }
+
     public function testDotenvAllowedValuesIfPresent()
     {
         $dotenv = Dotenv::create($this->fixturesFolder);
