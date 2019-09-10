@@ -140,7 +140,7 @@ class Validator
     }
 
     /**
-     * Assert that each variable matches the given regular expression
+     * Assert that each variable matches the given regular expression.
      *
      * @param string $regex
      *
