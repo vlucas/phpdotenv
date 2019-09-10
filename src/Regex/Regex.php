@@ -7,6 +7,21 @@ use PhpOption\Option;
 class Regex
 {
     /**
+     * Perform a preg match, wrapping up the result.
+     *
+     * @param string $pattern
+     * @param string $subject
+     *
+     * @return \Dotenv\Regex\Result
+     */
+    public static function match($pattern, $subject)
+    {
+        return self::pregAndWrap(function ($subject) use ($pattern) {
+            return (int) @preg_match($pattern, $subject);
+        }, $subject);
+    }
+
+    /**
      * Perform a preg replace, wrapping up the result.
      *
      * @param string $pattern
@@ -18,7 +33,7 @@ class Regex
     public static function replace($pattern, $replacement, $subject)
     {
         return self::pregAndWrap(function ($subject) use ($pattern, $replacement) {
-            return preg_replace($pattern, $replacement, $subject);
+            return (string) @preg_replace($pattern, $replacement, $subject);
         }, $subject);
     }
 
@@ -34,7 +49,7 @@ class Regex
     public static function replaceCallback($pattern, callable $callback, $subject)
     {
         return self::pregAndWrap(function ($subject) use ($pattern, $callback) {
-            return preg_replace_callback($pattern, $callback, $subject);
+            return (string) @preg_replace_callback($pattern, $callback, $subject);
         }, $subject);
     }
 
@@ -48,7 +63,7 @@ class Regex
      */
     private static function pregAndWrap(callable $operation, $subject)
     {
-        $result = (string) @$operation($subject);
+        $result = $operation($subject);
 
         if (($e = preg_last_error()) !== PREG_NO_ERROR) {
             return Error::create(self::lookupError($e));

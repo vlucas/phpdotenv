@@ -8,14 +8,14 @@ use PhpOption\Some;
 class Success extends Result
 {
     /**
-     * @var string
+     * @var string|int
      */
     private $value;
 
     /**
      * Internal constructor for a success value.
      *
-     * @param string $value
+     * @param string|int $value
      *
      * @return void
      */
@@ -27,7 +27,7 @@ class Success extends Result
     /**
      * Create a new success value.
      *
-     * @param string $value
+     * @param string|int $value
      *
      * @return \Dotenv\Regex\Result
      */
