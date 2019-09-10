@@ -152,7 +152,7 @@ class Validator
         return $this->assertCallback(
             function ($value) use ($regex)
             {
-                return preg_match($regex, $value) >= 1 ;
+                return preg_match($regex, $value) == 1 ;
             },
             sprintf('does not match given regex %s' , $regex)
         );
