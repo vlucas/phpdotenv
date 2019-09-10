@@ -139,6 +139,26 @@ class Validator
     }
 
     /**
+     * Assert that each variable matches the given regular expression
+     *
+     * @param string $regex
+     *
+     * @throws \Dotenv\Exception\ValidationException
+     *
+     * @return \Dotenv\Validator
+     */
+    public function allowedRegexValues($regex)
+    {
+        return $this->assertCallback(
+            function ($value) use ($regex)
+            {
+                return preg_match($regex, $value) >= 1 ;
+            },
+            sprintf('does not match given regex %s' , $regex)
+        );
+    }
+
+    /**
      * Assert that the callback returns true for each variable.
      *
      * @param callable $callback
