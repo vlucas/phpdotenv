@@ -84,7 +84,7 @@ checked-in the code**
 
 ```shell
 S3_BUCKET="dotenv"
-SECRET_KEY="souper_seekret_key"
+SECRET_KEY="super_secret_key"
 ```
 
 Now create a file named `.env.example` and check this into the project. This
