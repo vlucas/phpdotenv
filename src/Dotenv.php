@@ -124,6 +124,32 @@ class Dotenv
     }
 
     /**
+     * Read environment file in given directory.
+     *
+     * @throws \Dotenv\Exception\InvalidPathException|\Dotenv\Exception\InvalidFileException
+     *
+     * @return array<string|null>
+     */
+    public function read()
+    {
+        return $this->readData();
+    }
+
+    /**
+     * Actually read the data.
+     *
+     * @param bool $overload
+     *
+     * @throws \Dotenv\Exception\InvalidPathException|\Dotenv\Exception\InvalidFileException
+     *
+     * @return array<string|null>
+     */
+    protected function readData($overload = false)
+    {
+        return $this->loader->setImmutable(!$overload)->read();
+    }
+
+    /**
      * Required ensures that the specified variables exist, and returns a new validator object.
      *
      * @param string|string[] $variables

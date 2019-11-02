@@ -126,6 +126,13 @@ class LoaderTest extends TestCase
         $this->assertCount(4, $loader->load());
     }
 
+    public function testLoaderWithMoreThanOneGoodPath()
+    {
+        $loader = (new Loader(["{$this->folder}/multifile/.env", "{$this->folder}/multifilecopy/.env"], new DotenvFactory(), false));
+
+        $this->assertCount(9, $loader->load());
+    }
+
     public function testLoaderWithNoAdapters()
     {
         $loader = (new Loader([], new DotenvFactory([])));

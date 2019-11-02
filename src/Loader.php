@@ -79,6 +79,18 @@ class Loader
     }
 
     /**
+     * Read the environment file from disk.
+     *
+     * @return array<string|null>
+     */
+    public function read()
+    {
+        return $this->loadDirect(
+            self::findAndRead($this->filePaths), false
+        );
+    }
+
+    /**
      * Load the environment file from disk.
      *
      * @throws \Dotenv\Exception\InvalidPathException|\Dotenv\Exception\InvalidFileException
@@ -95,16 +107,15 @@ class Loader
     /**
      * Directly load the given string.
      *
-     * @param string $content
+     * @param  string $content
      *
-     * @throws \Dotenv\Exception\InvalidFileException
-     *
+     * @param  bool $set
      * @return array<string|null>
      */
-    public function loadDirect($content)
+    public function loadDirect($content, $set = true)
     {
         return $this->processEntries(
-            Lines::process(preg_split("/(\r\n|\n|\r)/", $content))
+            Lines::process(preg_split("/(\r\n|\n|\r)/", $content)), $set
         );
     }
 
@@ -123,11 +134,17 @@ class Loader
             throw new InvalidPathException('At least one environment file path must be provided.');
         }
 
+        $contents = [];
+
         foreach ($filePaths as $filePath) {
             $lines = self::readFromFile($filePath);
             if ($lines->isDefined()) {
-                return $lines->get();
+                $contents[] = $lines->get();
             }
+        }
+
+        if (!empty($contents)) {
+            return implode(PHP_EOL, $contents);
         }
 
         throw new InvalidPathException(
@@ -155,20 +172,21 @@ class Loader
      * We'll fill out any nested variables, and acually set the variable using
      * the underlying environment variables instance.
      *
-     * @param string[] $entries
+     * @param  string[] $entries
      *
-     * @throws \Dotenv\Exception\InvalidFileException
-     *
+     * @param  bool $set
      * @return array<string|null>
      */
-    private function processEntries(array $entries)
+    private function processEntries(array $entries, $set = true)
     {
         $vars = [];
 
         foreach ($entries as $entry) {
             list($name, $value) = Parser::parse($entry);
             $vars[$name] = $this->resolveNestedVariables($value);
-            $this->setEnvironmentVariable($name, $vars[$name]);
+            if ($set) {
+                $this->setEnvironmentVariable($name, $vars[$name]);
+            }
         }
 
         return $vars;

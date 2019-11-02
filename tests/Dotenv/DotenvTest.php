@@ -60,6 +60,24 @@ class DotenvTest extends TestCase
         $this->assertEmpty(getenv('NULL'));
     }
 
+    public function testDotenvLoadsEnvironmentVarsFromMultipleFiles()
+    {
+        $dotenv = Dotenv::create([
+            $this->fixturesFolder.'/multifile',
+            $this->fixturesFolder.'/multifilecopy'
+        ]);
+        $dotenv->load();
+        $this->assertSame('log', getenv('BROADCAST_DRIVER'));
+        $this->assertSame('redis', getenv('CACHE_DRIVER'));
+        $this->assertSame('sync', getenv('QUEUE_CONNECTION'));
+        $this->assertSame('redis', getenv('SESSION_DRIVER'));
+        $this->assertSame('150', getenv('SESSION_LIFETIME'));
+        $this->assertSame('false', getenv('SESSION_SECURE_COOKIE'));
+        $this->assertSame('127.0.0.1', getenv('REDIS_HOST'));
+        $this->assertSame('null', getenv('REDIS_PASSWORD'));
+        $this->assertSame('6379', getenv('REDIS_PORT'));
+    }
+
     public function testCommentedDotenvLoadsEnvironmentVars()
     {
         $dotenv = Dotenv::create($this->fixturesFolder, 'commented.env');
@@ -241,5 +259,27 @@ class DotenvTest extends TestCase
         $dotenv = Dotenv::create($this->fixturesFolder);
         $dotenv->load();
         $this->assertSame(['FOO', 'BAR', 'SPACED', 'NULL'], $dotenv->getEnvironmentVariableNames());
+    }
+
+    public function testGetEnvironmentVariablesListAsArrayWithoutLoading()
+    {
+        putenv('FOO');
+        putenv('BAR');
+        putenv('SPACED');
+        putenv('NULL');
+
+        $dotenv = Dotenv::create($this->fixturesFolder);
+
+        $this->assertEquals([
+            'FOO' => 'bar',
+            'BAR' => 'baz',
+            'SPACED' => 'with spaces',
+            'NULL' => '',
+        ], $dotenv->read());
+
+        $this->assertFalse(getenv('FOO'));
+        $this->assertFalse(getenv('BAR'));
+        $this->assertFalse(getenv('SPACED'));
+        $this->assertFalse(getenv('NULL'));
     }
 }
