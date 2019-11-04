@@ -9,7 +9,7 @@ class ParserTest extends TestCase
     {
         $output = Parser::parse('FOO=BAR');
 
-        $this->assertIsArray($output);
+        $this->assertInternalType('array', $output);
         $this->assertCount(2, $output);
         $this->assertSame('FOO', $output[0]);
         $this->assertSame('BAR', $output[1]->getChars());
@@ -20,7 +20,7 @@ class ParserTest extends TestCase
     {
         $output = Parser::parse("FOO=\"BAR  \n\"");
 
-        $this->assertIsArray($output);
+        $this->assertInternalType('array', $output);
         $this->assertCount(2, $output);
         $this->assertSame('FOO', $output[0]);
         $this->assertSame("BAR  \n", $output[1]->getChars());
@@ -31,7 +31,7 @@ class ParserTest extends TestCase
     {
         $output = Parser::parse('FOO="\n"');
 
-        $this->assertIsArray($output);
+        $this->assertInternalType('array', $output);
         $this->assertCount(2, $output);
         $this->assertSame('FOO', $output[0]);
         $this->assertSame("\n", $output[1]->getChars());
@@ -42,7 +42,7 @@ class ParserTest extends TestCase
     {
         $output = Parser::parse('FOO="\t"');
 
-        $this->assertIsArray($output);
+        $this->assertInternalType('array', $output);
         $this->assertCount(2, $output);
         $this->assertSame('FOO', $output[0]);
         $this->assertSame("\t", $output[1]->getChars());
@@ -53,7 +53,7 @@ class ParserTest extends TestCase
     {
         $output = Parser::parse('FOO=\'\t\'');
 
-        $this->assertIsArray($output);
+        $this->assertInternalType('array', $output);
         $this->assertCount(2, $output);
         $this->assertSame('FOO', $output[0]);
         $this->assertSame('\t', $output[1]->getChars());
@@ -64,7 +64,7 @@ class ParserTest extends TestCase
     {
         $output = Parser::parse('FOO=\n\v');
 
-        $this->assertIsArray($output);
+        $this->assertInternalType('array', $output);
         $this->assertCount(2, $output);
         $this->assertSame('FOO', $output[0]);
         $this->assertSame('\n\v', $output[1]->getChars());
@@ -75,7 +75,7 @@ class ParserTest extends TestCase
     {
         $output = Parser::parse('FOO=\q');
 
-        $this->assertIsArray($output);
+        $this->assertInternalType('array', $output);
         $this->assertCount(2, $output);
         $this->assertSame('FOO', $output[0]);
         $this->assertSame('\q', $output[1]->getChars());
@@ -95,7 +95,7 @@ class ParserTest extends TestCase
     {
         $output = Parser::parse('FOO=$BAR');
 
-        $this->assertIsArray($output);
+        $this->assertInternalType('array', $output);
         $this->assertCount(2, $output);
         $this->assertSame('FOO', $output[0]);
         $this->assertSame('$BAR', $output[1]->getChars());
@@ -106,7 +106,7 @@ class ParserTest extends TestCase
     {
         $output = Parser::parse('FOO="TEST $BAR $$BAZ"');
 
-        $this->assertIsArray($output);
+        $this->assertInternalType('array', $output);
         $this->assertCount(2, $output);
         $this->assertSame('FOO', $output[0]);
         $this->assertSame('TEST $BAR $$BAZ', $output[1]->getChars());
@@ -117,7 +117,7 @@ class ParserTest extends TestCase
     {
         $output = Parser::parse('FOO=\'TEST $BAR $$BAZ\'');
 
-        $this->assertIsArray($output);
+        $this->assertInternalType('array', $output);
         $this->assertCount(2, $output);
         $this->assertSame('FOO', $output[0]);
         $this->assertSame('TEST $BAR $$BAZ', $output[1]->getChars());
@@ -128,7 +128,7 @@ class ParserTest extends TestCase
     {
         $output = Parser::parse("FOO=\"\n\"");
 
-        $this->assertIsArray($output);
+        $this->assertInternalType('array', $output);
         $this->assertCount(2, $output);
         $this->assertSame('FOO', $output[0]);
         $this->assertSame("\n", $output[1]->getChars());
@@ -139,7 +139,7 @@ class ParserTest extends TestCase
     {
         $output = Parser::parse('export FOO="bar baz"');
 
-        $this->assertIsArray($output);
+        $this->assertInternalType('array', $output);
         $this->assertCount(2, $output);
         $this->assertSame('FOO', $output[0]);
         $this->assertSame('bar baz', $output[1]->getChars());
@@ -150,7 +150,7 @@ class ParserTest extends TestCase
     {
         $output = Parser::parse('SPVAR5="test some escaped characters like a quote \\" or maybe a backslash \\\\" # not escaped');
 
-        $this->assertIsArray($output);
+        $this->assertInternalType('array', $output);
         $this->assertCount(2, $output);
         $this->assertSame('SPVAR5', $output[0]);
         $this->assertSame('test some escaped characters like a quote " or maybe a backslash \\', $output[1]->getChars());
@@ -197,7 +197,7 @@ class ParserTest extends TestCase
     {
         $output = Parser::parse('FOO_BAD=\'iiiiviiiixiiiiviiii\\a\'');
 
-        $this->assertIsArray($output);
+        $this->assertInternalType('array', $output);
         $this->assertCount(2, $output);
         $this->assertSame('FOO_BAD', $output[0]);
         $this->assertSame('iiiiviiiixiiiiviiii\\a', $output[1]->getChars());
