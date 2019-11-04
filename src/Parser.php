@@ -109,7 +109,7 @@ class Parser
         }
 
         if (trim($value) === '') {
-            return Value::empty();
+            return Value::blank();
         }
 
         return array_reduce(str_split($value), function ($data, $char) use ($value) {
@@ -120,7 +120,7 @@ class Parser
             })->mapSuccess(function ($val) use ($data) {
                 return [$data[0]->append($val[0], $val[1]), $val[2]];
             })->getSuccess();
-        }, [Value::empty(), self::INITIAL_STATE])[0];
+        }, [Value::blank(), self::INITIAL_STATE])[0];
     }
 
     /**

@@ -37,7 +37,7 @@ class Value
      *
      * @return \Dotenv\Value
      */
-    public static function empty()
+    public static function blank()
     {
         return new Value('', []);
     }
