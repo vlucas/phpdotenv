@@ -1,6 +1,6 @@
 <?php
 
-namespace Dotenv\Regex;
+namespace Dotenv\Result;
 
 use PhpOption\None;
 use PhpOption\Some;
@@ -8,14 +8,14 @@ use PhpOption\Some;
 class Error extends Result
 {
     /**
-     * @var string
+     * @var mixed
      */
     private $value;
 
     /**
      * Internal constructor for an error value.
      *
-     * @param string $value
+     * @param mixed $value
      *
      * @return void
      */
@@ -27,9 +27,9 @@ class Error extends Result
     /**
      * Create a new error value.
      *
-     * @param string $value
+     * @param mixed $value
      *
-     * @return \Dotenv\Regex\Result
+     * @return \Dotenv\Result\Result
      */
     public static function create($value)
     {
@@ -51,7 +51,7 @@ class Error extends Result
      *
      * @param callable $f
      *
-     * @return \Dotenv\Regex\Result
+     * @return \Dotenv\Result\Result
      */
     public function mapSuccess(callable $f)
     {
@@ -73,7 +73,7 @@ class Error extends Result
      *
      * @param callable $f
      *
-     * @return \Dotenv\Regex\Result
+     * @return \Dotenv\Result\Result
      */
     public function mapError(callable $f)
     {

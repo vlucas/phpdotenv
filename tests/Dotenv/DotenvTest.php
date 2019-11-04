@@ -88,9 +88,7 @@ class DotenvTest extends TestCase
         $this->assertSame('pgsql:host=localhost;dbname=test', getenv('QEQUALS'));
         $this->assertSame('test some escaped characters like a quote (") or maybe a backslash (\\)', getenv('QESCAPED'));
         $this->assertSame('iiiiviiiixiiiiviiii\\n', getenv('QSLASH'));
-
-        $this->assertSame('test some escaped characters like a quote (\') or maybe a backslash (\\)', getenv('SQESCAPED'));
-        $this->assertSame('iiiiviiiixiiiiviiii\\n', getenv('SQSLASH'));
+        $this->assertSame('iiiiviiiixiiiiviiii\\\\n', getenv('SQSLASH'));
     }
 
     public function testLargeDotenvLoadsEnvironmentVars()
@@ -147,9 +145,14 @@ class DotenvTest extends TestCase
         $this->assertSame('$NVAR1 {NVAR2}', $_ENV['NVAR5']); // not resolved
         $this->assertSame('Special Value', $_ENV['N.VAR6']); // new '.' (dot) in var name
         $this->assertSame('Special Value', $_ENV['NVAR7']);  // nested '.' (dot) variable
-        $this->assertSame('', $_ENV['NVAR8']);
-        $this->assertSame('', $_ENV['NVAR9']);  // nested variable is empty string
-        $this->assertSame('${NVAR888}', $_ENV['NVAR10']);  // nested variable is not set
+        $this->assertSame('', $_ENV['NVAR8']); // nested variable is empty string
+        $this->assertSame('', $_ENV['NVAR9']); // nested variable is empty string
+        $this->assertSame('${NVAR888}', $_ENV['NVAR10']); // nested variable is not set
+        $this->assertSame('NVAR1', $_ENV['NVAR11']);
+        $this->assertSame('Hello', $_ENV['NVAR12']);
+        $this->assertSame('${${NVAR11}}', $_ENV['NVAR13']); // single quotes
+        $this->assertSame('${NVAR1} ${NVAR2}', $_ENV['NVAR14']); // single quotes
+        $this->assertSame('${NVAR1} ${NVAR2}', $_ENV['NVAR15']); // escaped
     }
 
     public function testDotenvNullFileArgumentUsesDefault()
@@ -230,7 +233,7 @@ class DotenvTest extends TestCase
         $dotenv->load();
         $this->assertSame("test\n     test\"test\"\n     test", getenv('TEST'));
         $this->assertSame("test\ntest", getenv('TEST_ND'));
-        $this->assertSame("test\ntest", getenv('TEST_NS'));
+        $this->assertSame("test\\ntest", getenv('TEST_NS'));
 
         $this->assertSame('https://vision.googleapis.com/v1/images:annotate?key=', getenv('TEST_EQD'));
         $this->assertSame('https://vision.googleapis.com/v1/images:annotate?key=', getenv('TEST_EQS'));
