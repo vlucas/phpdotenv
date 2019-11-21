@@ -20,6 +20,9 @@
         "phpoption/phpoption": "^1.5",
         "symfony/polyfill-ctype": "^1.9"
     },
+    "require-dev": {
+        "phpunit/phpunit": "dev-master"
+    },
     "autoload": {
         "psr-4": {
             "Dotenv\\": "src/"
