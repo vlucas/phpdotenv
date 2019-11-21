@@ -38,3 +38,13 @@ matrix:
     - dist: xenial
       install: travis_retry docker run -it -w /data -v ${PWD}:/data:delegated --entrypoint composer registry.gitlab.com/grahamcampbell/php:7.4 install --no-suggest --prefer-dist -n -o
       script: docker run -it -w /data -v ${PWD}:/data:delegated --entrypoint vendor/bin/phpunit registry.gitlab.com/grahamcampbell/php:7.4
+    - dist: xenial
+      language: php
+      php:
+        - nightly
+      install: travis_retry composer install --no-suggest --prefer-dist -n -o
+      script: vendor/bin/phpunit
+       
+jobs:
+  allow_failures:
+  - php: nightly
