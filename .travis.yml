@@ -10,7 +10,7 @@ matrix:
 
 env:
   global:
-    - DEFAULT_COMPOSER_FLAGS="--no-interaction --no-ansi --no-progress --no-suggest"
+    - DEFAULT_COMPOSER_FLAGS="--no-interaction --no-ansi --ignore-platform-reqs --no-progress --no-suggest"
 
 install:
   - composer install --no-interaction --no-ansi --no-progress --no-suggest
