@@ -42,8 +42,10 @@ matrix:
       language: php
       php:
         - nightly
-      install: travis_retry composer install --no-suggest --prefer-dist -n -o
-      script: vendor/bin/phpunit
+      install: travis_retry composer install --no-suggest --no-dev --prefer-dist -n -o
+      script:
+        - wget https://phar.phpunit.de/phpunit.phar
+        - ./phpunit.phar
        
 jobs:
   allow_failures:
