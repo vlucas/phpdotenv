@@ -16,4 +16,4 @@ script:
   - composer install --no-dev
   # tests
   - wget https://phar.phpunit.de/phpunit.phar
-  - ./phpunit.phar
+  - php phpunit.phar
