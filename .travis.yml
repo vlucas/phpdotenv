@@ -3,17 +3,28 @@ language: php
 php:
   - nightly
 
-jobs:
+matrix:
   allow_failures:
-  - php: nightly
+    - php: nightly
+  fast_finish: true
+
+env:
+  matrix:
+    - DEPENDENCIES="high"
+    - DEPENDENCIES="low"
+  global:
+    - DEFAULT_COMPOSER_FLAGS="--no-interaction --no-ansi --no-progress --no-suggest"
+
+before_install:
+  - ./tools/composer clear-cache
+
+install:
+  - if [[ "$DEPENDENCIES" = 'high' ]]; then travis_retry ./tools/composer update $DEFAULT_COMPOSER_FLAGS; fi
+  - if [[ "$DEPENDENCIES" = 'low' ]]; then travis_retry ./tools/composer update $DEFAULT_COMPOSER_FLAGS --prefer-lowest; fi
+
+before_script:
+  - echo 'zend.assertions=1' >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
+  - echo 'assert.exception=On' >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
 
 script:
-  # For faster installing
-  - composer global require hirak/prestissimo
-  # Validate composer.json file.
-  - composer validate
-  # Install
-  - composer install --no-dev
-  # tests
-  - wget https://phar.phpunit.de/phpunit.phar
-  - php phpunit.phar
+  - vendor/bin/phpunit
