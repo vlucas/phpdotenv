@@ -40,7 +40,6 @@ matrix:
       script: docker run -it -w /data -v ${PWD}:/data:delegated --entrypoint vendor/bin/phpunit registry.gitlab.com/grahamcampbell/php:7.4
     - dist: xenial
       language: php
-      php:
-        - nightly
+      php: nightly
       install: composer install --no-interaction --no-ansi --ignore-platform-reqs --no-progress --no-suggest
       script: vendor/bin/phpunit
