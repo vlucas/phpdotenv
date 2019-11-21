@@ -8,12 +8,8 @@ matrix:
     - php: nightly
   fast_finish: true
 
-env:
-  global:
-    - DEFAULT_COMPOSER_FLAGS="--no-interaction --no-ansi --ignore-platform-reqs --no-progress --no-suggest"
-
 install:
-  - composer install --no-interaction --no-ansi --no-progress --no-suggest
+  - composer install --no-interaction --no-ansi --ignore-platform-reqs --no-progress --no-suggest
 
 before_script:
   - echo 'zend.assertions=1' >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
