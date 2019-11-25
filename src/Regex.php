@@ -1,7 +1,10 @@
 <?php
 
-namespace Dotenv\Regex;
+namespace Dotenv;
 
+use Dotenv\Result\Error;
+use Dotenv\Result\Result;
+use Dotenv\Result\Success;
 use PhpOption\Option;
 
 class Regex
@@ -12,7 +15,7 @@ class Regex
      * @param string $pattern
      * @param string $subject
      *
-     * @return \Dotenv\Regex\Result
+     * @return \Dotenv\Result\Result
      */
     public static function match($pattern, $subject)
     {
@@ -24,16 +27,17 @@ class Regex
     /**
      * Perform a preg replace, wrapping up the result.
      *
-     * @param string $pattern
-     * @param string $replacement
-     * @param string $subject
+     * @param string   $pattern
+     * @param string   $replacement
+     * @param string   $subject
+     * @param int|null $limit
      *
-     * @return \Dotenv\Regex\Result
+     * @return \Dotenv\Result\Result
      */
-    public static function replace($pattern, $replacement, $subject)
+    public static function replace($pattern, $replacement, $subject, $limit = null)
     {
-        return self::pregAndWrap(function ($subject) use ($pattern, $replacement) {
-            return (string) @preg_replace($pattern, $replacement, $subject);
+        return self::pregAndWrap(function ($subject) use ($pattern, $replacement, $limit) {
+            return (string) @preg_replace($pattern, $replacement, $subject, $limit === null ? -1 : $limit);
         }, $subject);
     }
 
@@ -43,13 +47,14 @@ class Regex
      * @param string   $pattern
      * @param callable $callback
      * @param string   $subject
+     * @param int|null $limit
      *
-     * @return \Dotenv\Regex\Result
+     * @return \Dotenv\Result\Result
      */
-    public static function replaceCallback($pattern, callable $callback, $subject)
+    public static function replaceCallback($pattern, callable $callback, $subject, $limit = null)
     {
         return self::pregAndWrap(function ($subject) use ($pattern, $callback) {
-            return (string) @preg_replace_callback($pattern, $callback, $subject);
+            return (string) @preg_replace_callback($pattern, $callback, $subject, $limit === null ? -1 : $limit);
         }, $subject);
     }
 
@@ -59,7 +64,7 @@ class Regex
      * @param callable $operation
      * @param string   $subject
      *
-     * @return \Dotenv\Regex\Result
+     * @return \Dotenv\Result\Result
      */
     private static function pregAndWrap(callable $operation, $subject)
     {

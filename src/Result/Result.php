@@ -1,6 +1,6 @@
 <?php
 
-namespace Dotenv\Regex;
+namespace Dotenv\Result;
 
 abstract class Result
 {
@@ -12,9 +12,9 @@ abstract class Result
     abstract public function success();
 
     /**
-     * Get the error value, if possible.
+     * Get the success value, if possible.
      *
-     * @return string|int
+     * @return mixed
      */
     public function getSuccess()
     {
@@ -26,7 +26,7 @@ abstract class Result
      *
      * @param callable $f
      *
-     * @return \Dotenv\Regex\Result
+     * @return \Dotenv\Result\Result
      */
     abstract public function mapSuccess(callable $f);
 
@@ -40,7 +40,7 @@ abstract class Result
     /**
      * Get the error value, if possible.
      *
-     * @return string
+     * @return mixed
      */
     public function getError()
     {
@@ -52,7 +52,7 @@ abstract class Result
      *
      * @param callable $f
      *
-     * @return \Dotenv\Regex\Result
+     * @return \Dotenv\Result\Result
      */
     abstract public function mapError(callable $f);
 }

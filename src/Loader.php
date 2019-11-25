@@ -4,7 +4,6 @@ namespace Dotenv;
 
 use Dotenv\Environment\FactoryInterface;
 use Dotenv\Exception\InvalidPathException;
-use Dotenv\Regex\Regex;
 use PhpOption\Option;
 
 /**
@@ -180,27 +179,39 @@ class Loader
      * Look for ${varname} patterns in the variable value and replace with an
      * existing environment variable.
      *
-     * @param string|null $value
+     * @param \Dotenv\Value|null $value
      *
      * @return string|null
      */
-    private function resolveNestedVariables($value = null)
+    private function resolveNestedVariables(Value $value = null)
     {
         return Option::fromValue($value)
-            ->filter(function ($str) {
-                return strpos($str, '$') !== false;
+            ->map(function ($v) {
+                return array_reduce($v->getVars(), function ($s, $i) {
+                    return substr($s, 0, $i).$this->resolveNestedVariable(substr($s, $i));
+                }, $v->getChars());
             })
-            ->flatMap(function ($str) {
-                return Regex::replaceCallback(
-                    '/\${([a-zA-Z0-9_.]+)}/',
-                    function (array $matches) {
-                        return Option::fromValue($this->getEnvironmentVariable($matches[1]))
-                            ->getOrElse($matches[0]);
-                    },
-                    $str
-                )->success();
-            })
-            ->getOrElse($value);
+            ->getOrElse(null);
+    }
+
+    /**
+     * Resolve a single nested variable.
+     *
+     * @param string $str
+     *
+     * @return string
+     */
+    private function resolveNestedVariable($str)
+    {
+        return Regex::replaceCallback(
+            '/\A\${([a-zA-Z0-9_.]+)}/',
+            function (array $matches) {
+                return Option::fromValue($this->getEnvironmentVariable($matches[1]))
+                    ->getOrElse($matches[0]);
+            },
+            $str,
+            1
+        )->success()->getOrElse($str);
     }
 
     /**

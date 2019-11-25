@@ -3,15 +3,18 @@
 namespace Dotenv;
 
 use Dotenv\Exception\InvalidFileException;
+use Dotenv\Result\Error;
+use Dotenv\Result\Success;
 
 class Parser
 {
     const INITIAL_STATE = 0;
     const UNQUOTED_STATE = 1;
-    const QUOTED_STATE = 2;
-    const ESCAPE_STATE = 3;
-    const WHITESPACE_STATE = 4;
-    const COMMENT_STATE = 5;
+    const SINGLE_QUOTED_STATE = 2;
+    const DOUBLE_QUOTED_STATE = 3;
+    const ESCAPE_SEQUENCE_STATE = 4;
+    const WHITESPACE_STATE = 5;
+    const COMMENT_STATE = 6;
 
     /**
      * Parse the given environment variable entry into a name and value.
@@ -97,64 +100,99 @@ class Parser
      *
      * @throws \Dotenv\Exception\InvalidFileException
      *
-     * @return string|null
+     * @return \Dotenv\Value|null
      */
     private static function parseValue($value)
     {
-        if ($value === null || trim($value) === '') {
-            return $value;
+        if ($value === null) {
+            return null;
+        }
+
+        if (trim($value) === '') {
+            return Value::blank();
         }
 
         return array_reduce(str_split($value), function ($data, $char) use ($value) {
-            switch ($data[1]) {
-                case self::INITIAL_STATE:
-                    if ($char === '"' || $char === '\'') {
-                        return [$data[0], self::QUOTED_STATE];
-                    } elseif ($char === '#') {
-                        return [$data[0], self::COMMENT_STATE];
-                    } else {
-                        return [$data[0].$char, self::UNQUOTED_STATE];
-                    }
-                case self::UNQUOTED_STATE:
-                    if ($char === '#') {
-                        return [$data[0], self::COMMENT_STATE];
-                    } elseif (ctype_space($char)) {
-                        return [$data[0], self::WHITESPACE_STATE];
-                    } else {
-                        return [$data[0].$char, self::UNQUOTED_STATE];
-                    }
-                case self::QUOTED_STATE:
-                    if ($char === $value[0]) {
-                        return [$data[0], self::WHITESPACE_STATE];
-                    } elseif ($char === '\\') {
-                        return [$data[0], self::ESCAPE_STATE];
-                    } else {
-                        return [$data[0].$char, self::QUOTED_STATE];
-                    }
-                case self::ESCAPE_STATE:
-                    if ($char === $value[0] || $char === '\\') {
-                        return [$data[0].$char, self::QUOTED_STATE];
-                    } elseif (in_array($char, ['f', 'n', 'r', 't', 'v'], true)) {
-                        return [$data[0].stripcslashes('\\' . $char), self::QUOTED_STATE];
-                    } else {
-                        throw new InvalidFileException(
-                            self::getErrorMessage('an unexpected escape sequence', $value)
-                        );
-                    }
-                case self::WHITESPACE_STATE:
-                    if ($char === '#') {
-                        return [$data[0], self::COMMENT_STATE];
-                    } elseif (!ctype_space($char)) {
-                        throw new InvalidFileException(
-                            self::getErrorMessage('unexpected whitespace', $value)
-                        );
-                    } else {
-                        return [$data[0], self::WHITESPACE_STATE];
-                    }
-                case self::COMMENT_STATE:
-                    return [$data[0], self::COMMENT_STATE];
-            }
-        }, ['', self::INITIAL_STATE])[0];
+            return self::processChar($data[1], $char)->mapError(function ($err) use ($value) {
+                throw new InvalidFileException(
+                    self::getErrorMessage($err, $value)
+                );
+            })->mapSuccess(function ($val) use ($data) {
+                return [$data[0]->append($val[0], $val[1]), $val[2]];
+            })->getSuccess();
+        }, [Value::blank(), self::INITIAL_STATE])[0];
+    }
+
+    /**
+     * Process the given character.
+     *
+     * @param int    $state
+     * @param string $char
+     *
+     * @return array
+     */
+    private static function processChar($state, $char)
+    {
+        switch ($state) {
+            case self::INITIAL_STATE:
+                if ($char === '\'') {
+                    return Success::create(['', false, self::SINGLE_QUOTED_STATE]);
+                } elseif ($char === '"') {
+                    return Success::create(['', false, self::DOUBLE_QUOTED_STATE]);
+                } elseif ($char === '#') {
+                    return Success::create(['', false, self::COMMENT_STATE]);
+                 } elseif ($char === '$') {
+                    return Success::create([$char, true, self::UNQUOTED_STATE]);
+                } else {
+                    return Success::create([$char, false, self::UNQUOTED_STATE]);
+                }
+            case self::UNQUOTED_STATE:
+                if ($char === '#') {
+                    return Success::create(['', false, self::COMMENT_STATE]);
+                } elseif (ctype_space($char)) {
+                    return Success::create(['', false, self::WHITESPACE_STATE]);
+                 } elseif ($char === '$') {
+                    return Success::create([$char, true, self::UNQUOTED_STATE]);
+                } else {
+                    return Success::create([$char, false, self::UNQUOTED_STATE]);
+                }
+            case self::SINGLE_QUOTED_STATE:
+                if ($char === '\'') {
+                    return Success::create(['', false, self::WHITESPACE_STATE]);
+                } else {
+                    return Success::create([$char, false, self::SINGLE_QUOTED_STATE]);
+                }
+            case self::DOUBLE_QUOTED_STATE:
+                if ($char === '"') {
+                    return Success::create(['', false, self::WHITESPACE_STATE]);
+                } elseif ($char === '\\') {
+                    return Success::create(['', false, self::ESCAPE_SEQUENCE_STATE]);
+                } elseif ($char === '$') {
+                    return Success::create([$char, true, self::DOUBLE_QUOTED_STATE]);
+                } else {
+                    return Success::create([$char, false, self::DOUBLE_QUOTED_STATE]);
+                }
+            case self::ESCAPE_SEQUENCE_STATE:
+                if ($char === '"' || $char === '\\') {
+                    return Success::create([$char, false, self::DOUBLE_QUOTED_STATE]);
+                } elseif ($char === '$') {
+                    return Success::create([$char, false, self::DOUBLE_QUOTED_STATE]);
+                } elseif (in_array($char, ['f', 'n', 'r', 't', 'v'], true)) {
+                    return Success::create([stripcslashes('\\' . $char), false, self::DOUBLE_QUOTED_STATE]);
+                } else {
+                    return Error::create('an unexpected escape sequence');
+                }
+            case self::WHITESPACE_STATE:
+                if ($char === '#') {
+                    return Success::create(['', false, self::COMMENT_STATE]);
+                } elseif (!ctype_space($char)) {
+                    return Error::create('unexpected whitespace');
+                } else {
+                    return Success::create(['', false, self::WHITESPACE_STATE]);
+                }
+            case self::COMMENT_STATE:
+                return Success::create(['', false, self::COMMENT_STATE]);
+        }
     }
 
     /**

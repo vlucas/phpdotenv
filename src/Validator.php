@@ -3,7 +3,6 @@
 namespace Dotenv;
 
 use Dotenv\Exception\ValidationException;
-use Dotenv\Regex\Regex;
 
 /**
  * This is the validator class.
