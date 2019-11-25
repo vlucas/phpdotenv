@@ -2,21 +2,6 @@ matrix:
   include:
     - dist: trusty
       language: php
-      php: hhvm-3.18
-      install: travis_retry composer install --no-suggest --prefer-dist -n -o
-      script: vendor/bin/phpunit
-    - dist: trusty
-      language: php
-      php: hhvm-3.30
-      install: travis_retry composer install --no-suggest --prefer-dist -n -o
-      script: vendor/bin/phpunit
-    - dist: trusty
-      language: php
-      php: 5.4
-      install: travis_retry composer install --no-suggest --prefer-dist -n -o
-      script: vendor/bin/phpunit
-    - dist: trusty
-      language: php
       php: 5.5.9
       install: travis_retry composer install --no-suggest --prefer-dist -n -o
       script: vendor/bin/phpunit
