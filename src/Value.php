@@ -22,7 +22,7 @@ class Value
      * Internal constructor for a value.
      *
      * @param string $chars
-     * @param array  $vars
+     * @param int[]  $vars
      *
      * @return void
      */
