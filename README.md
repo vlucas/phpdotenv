@@ -13,7 +13,7 @@ dotenv](https://github.com/bkeepers/dotenv).
 UPGRADING FROM V3
 -----------------
 
-Version 4 seems some refactoring, and support for escaping dollars in values
+Version 4 sees some refactoring, and support for escaping dollars in values
 (https://github.com/vlucas/phpdotenv/pull/380). It is no longer possible to
 change immutability on the fly, and the `Loader` no longer is responsible for
 tracking immutability. It is now the responsibility of "repositories" to track
