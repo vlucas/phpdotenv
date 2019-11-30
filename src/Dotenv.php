@@ -2,11 +2,11 @@
 
 namespace Dotenv;
 
+use Dotenv\Exception\InvalidPathException;
 use Dotenv\Loader\Loader;
 use Dotenv\Loader\LoaderInterface;
 use Dotenv\Repository\RepositoryBuilder;
 use Dotenv\Repository\RepositoryInterface;
-use Dotenv\Exception\InvalidPathException;
 use PhpOption\Option;
 
 class Dotenv

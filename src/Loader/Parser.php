@@ -105,7 +105,7 @@ class Parser
     private static function parseValue($value)
     {
         if ($value === null) {
-            return null;
+            return;
         }
 
         if (trim($value) === '') {
@@ -141,7 +141,7 @@ class Parser
                     return Success::create(['', false, self::DOUBLE_QUOTED_STATE]);
                 } elseif ($char === '#') {
                     return Success::create(['', false, self::COMMENT_STATE]);
-                 } elseif ($char === '$') {
+                } elseif ($char === '$') {
                     return Success::create([$char, true, self::UNQUOTED_STATE]);
                 } else {
                     return Success::create([$char, false, self::UNQUOTED_STATE]);
@@ -151,7 +151,7 @@ class Parser
                     return Success::create(['', false, self::COMMENT_STATE]);
                 } elseif (ctype_space($char)) {
                     return Success::create(['', false, self::WHITESPACE_STATE]);
-                 } elseif ($char === '$') {
+                } elseif ($char === '$') {
                     return Success::create([$char, true, self::UNQUOTED_STATE]);
                 } else {
                     return Success::create([$char, false, self::UNQUOTED_STATE]);
@@ -178,7 +178,7 @@ class Parser
                 } elseif ($char === '$') {
                     return Success::create([$char, false, self::DOUBLE_QUOTED_STATE]);
                 } elseif (in_array($char, ['f', 'n', 'r', 't', 'v'], true)) {
-                    return Success::create([stripcslashes('\\' . $char), false, self::DOUBLE_QUOTED_STATE]);
+                    return Success::create([stripcslashes('\\'.$char), false, self::DOUBLE_QUOTED_STATE]);
                 } else {
                     return Error::create('an unexpected escape sequence');
                 }

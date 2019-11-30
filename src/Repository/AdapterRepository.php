@@ -23,7 +23,7 @@ class AdapterRepository extends AbstractRepository
      *
      * @param \Dotenv\Repository\Adapter\ReaderInterface[] $readers
      * @param \Dotenv\Repository\Adapter\WriterInterface[] $writers
-     * @param bool                                          $immutable
+     * @param bool                                         $immutable
      *
      * @return void
      */

@@ -1,10 +1,10 @@
 <?php
 
+use Dotenv\Loader\Loader;
 use Dotenv\Repository\Adapter\ArrayAdapter;
 use Dotenv\Repository\Adapter\EnvConstAdapter;
 use Dotenv\Repository\Adapter\ServerConstAdapter;
 use Dotenv\Repository\RepositoryBuilder;
-use Dotenv\Loader\Loader;
 use PHPUnit\Framework\TestCase;
 
 class LoaderTest extends TestCase

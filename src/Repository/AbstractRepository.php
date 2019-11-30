@@ -59,7 +59,7 @@ abstract class AbstractRepository implements RepositoryInterface
      *
      * @return string|null
      */
-    protected abstract function getInternal($name);
+    abstract protected function getInternal($name);
 
     /**
      * Set an environment variable.
@@ -95,7 +95,7 @@ abstract class AbstractRepository implements RepositoryInterface
      *
      * @return void
      */
-    protected abstract function setInternal($name, $value = null);
+    abstract protected function setInternal($name, $value = null);
 
     /**
      * Clear an environment variable.
@@ -127,7 +127,7 @@ abstract class AbstractRepository implements RepositoryInterface
      *
      * @return void
      */
-    protected abstract function clearInternal($name);
+    abstract protected function clearInternal($name);
 
     /**
      * Tells whether environment variable has been defined.
