@@ -2,8 +2,8 @@
     "name": "vlucas/phpdotenv",
     "description": "Loads environment variables from `.env` to `getenv()`, `$_ENV` and `$_SERVER` automagically.",
     "keywords": ["env", "dotenv", "environment"],
-    "license" : "BSD-3-Clause",
-    "authors" : [
+    "license": "BSD-3-Clause",
+    "authors": [
         {
             "name": "Graham Campbell",
             "email": "graham@alt-three.com",
@@ -17,7 +17,7 @@
     ],
     "require": {
         "php": "^5.5.9 || ^7.0",
-        "phpoption/phpoption": "^1.5",
+        "phpoption/phpoption": "^1.6",
         "symfony/polyfill-ctype": "^1.9"
     },
     "require-dev": {
