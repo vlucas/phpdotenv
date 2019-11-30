@@ -184,7 +184,7 @@ $repository = Dotenv\Repository\RepositoryBuilder::create()
         new Dotenv\Repository\Adapter\PutenvAdapter(),
     ])
     ->immutable()
-    ->get();
+    ->make();
 
 $dotenv = Dotenv\Dotenv::create($repository, __DIR__);
 $dotenv->load();

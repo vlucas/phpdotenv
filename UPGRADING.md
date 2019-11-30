@@ -36,7 +36,7 @@ $repository = RepositoryBuilder::create()
     ->withReaders($adapters)
     ->withWriters($adapters)
     ->immutable()
-    ->get();
+    ->make();
 
 Dotenv::create($repository, $path, null)->load();
 ```
@@ -55,7 +55,7 @@ $adapters = [new ArrayAdapter()];
 $repository = RepositoryBuilder::create()
     ->withReaders($adapters)
     ->withWriters($adapters)
-    ->get();
+    ->make();
 
 $variables = (new Loader())->load($repository, $content);
 ```
