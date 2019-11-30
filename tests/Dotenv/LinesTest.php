@@ -1,6 +1,6 @@
 <?php
 
-use Dotenv\Lines;
+use Dotenv\Loader\Lines;
 use PHPUnit\Framework\TestCase;
 
 class LinesTest extends TestCase

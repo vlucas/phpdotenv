@@ -1,11 +1,11 @@
 <?php
 
-namespace Dotenv\Environment\Adapter;
+namespace Dotenv\Repository\Adapter;
 
 use PhpOption\None;
 use PhpOption\Some;
 
-class EnvConstAdapter implements AdapterInterface
+class ServerConstAdapter implements AvailabilityInterface, ReaderInterface, WriterInterface
 {
     /**
      * Determines if the adapter is supported.
@@ -26,8 +26,8 @@ class EnvConstAdapter implements AdapterInterface
      */
     public function get($name)
     {
-        if (array_key_exists($name, $_ENV)) {
-            return Some::create($_ENV[$name]);
+        if (array_key_exists($name, $_SERVER)) {
+            return Some::create($_SERVER[$name]);
         }
 
         return None::create();
@@ -43,7 +43,7 @@ class EnvConstAdapter implements AdapterInterface
      */
     public function set($name, $value = null)
     {
-        $_ENV[$name] = $value;
+        $_SERVER[$name] = $value;
     }
 
     /**
@@ -55,6 +55,6 @@ class EnvConstAdapter implements AdapterInterface
      */
     public function clear($name)
     {
-        unset($_ENV[$name]);
+        unset($_SERVER[$name]);
     }
 }

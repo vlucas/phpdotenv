@@ -1,6 +1,6 @@
 <?php
 
-namespace Dotenv;
+namespace Dotenv\Loader;
 
 class Value
 {
@@ -35,7 +35,7 @@ class Value
     /**
      * Create an empty value instance.
      *
-     * @return \Dotenv\Value
+     * @return \Dotenv\Loader\Value
      */
     public static function blank()
     {
@@ -48,7 +48,7 @@ class Value
      * @param string $char
      * @param bool   $var
      *
-     * @return \Dotenv\Value
+     * @return \Dotenv\Loader\Value
      */
     public function append($char, $var)
     {

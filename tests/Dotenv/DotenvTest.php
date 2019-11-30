@@ -8,11 +8,11 @@ class DotenvTest extends TestCase
     /**
      * @var string
      */
-    private $fixturesFolder;
+    private $folder;
 
     public function setUp()
     {
-        $this->fixturesFolder = dirname(__DIR__).'/fixtures/env';
+        $this->folder = dirname(__DIR__).'/fixtures/env';
     }
 
     /**
@@ -21,7 +21,7 @@ class DotenvTest extends TestCase
      */
     public function testDotenvThrowsExceptionIfUnableToLoadFile()
     {
-        $dotenv = Dotenv::create(__DIR__);
+        $dotenv = Dotenv::createImmutable(__DIR__);
         $dotenv->load();
     }
 
@@ -31,25 +31,36 @@ class DotenvTest extends TestCase
      */
     public function testDotenvThrowsExceptionIfUnableToLoadFiles()
     {
-        $dotenv = Dotenv::create([__DIR__, __DIR__.'/foo/bar']);
+        $dotenv = Dotenv::createImmutable([__DIR__, __DIR__.'/foo/bar']);
+        $dotenv->load();
+    }
+
+    /**
+     * @expectedException \Dotenv\Exception\InvalidPathException
+     * @expectedExceptionMessage At least one environment file path must be provided.
+     */
+    public function testDotenvThrowsExceptionWhenNoFiles()
+    {
+        $dotenv = Dotenv::createImmutable([]);
         $dotenv->load();
     }
 
     public function testDotenvTriesPathsToLoad()
     {
-        $dotenv = Dotenv::create([__DIR__, $this->fixturesFolder]);
+        $dotenv = Dotenv::createImmutable([__DIR__, $this->folder]);
         $this->assertCount(4, $dotenv->load());
     }
 
+
     public function testDotenvSkipsLoadingIfFileIsMissing()
     {
-        $dotenv = Dotenv::create(__DIR__);
+        $dotenv = Dotenv::createImmutable(__DIR__);
         $this->assertSame([], $dotenv->safeLoad());
     }
 
     public function testDotenvLoadsEnvironmentVars()
     {
-        $dotenv = Dotenv::create($this->fixturesFolder);
+        $dotenv = Dotenv::createImmutable($this->folder);
         $this->assertSame(
             ['FOO' => 'bar', 'BAR' => 'baz', 'SPACED' => 'with spaces', 'NULL' => ''],
             $dotenv->load()
@@ -62,7 +73,7 @@ class DotenvTest extends TestCase
 
     public function testCommentedDotenvLoadsEnvironmentVars()
     {
-        $dotenv = Dotenv::create($this->fixturesFolder, 'commented.env');
+        $dotenv = Dotenv::createImmutable($this->folder, 'commented.env');
         $dotenv->load();
         $this->assertSame('bar', getenv('CFOO'));
         $this->assertFalse(getenv('CBAR'));
@@ -78,7 +89,7 @@ class DotenvTest extends TestCase
 
     public function testQuotedDotenvLoadsEnvironmentVars()
     {
-        $dotenv = Dotenv::create($this->fixturesFolder, 'quoted.env');
+        $dotenv = Dotenv::createImmutable($this->folder, 'quoted.env');
         $dotenv->load();
         $this->assertSame('bar', getenv('QFOO'));
         $this->assertSame('baz', getenv('QBAR'));
@@ -93,14 +104,14 @@ class DotenvTest extends TestCase
 
     public function testLargeDotenvLoadsEnvironmentVars()
     {
-        $dotenv = Dotenv::create($this->fixturesFolder, 'large.env');
+        $dotenv = Dotenv::createImmutable($this->folder, 'large.env');
         $dotenv->load();
         $this->assertNotEmpty(getenv('LARGE'));
     }
 
     public function testMultipleDotenvLoadsEnvironmentVars()
     {
-        $dotenv = Dotenv::create($this->fixturesFolder, 'multiple.env');
+        $dotenv = Dotenv::createImmutable($this->folder, 'multiple.env');
         $dotenv->load();
         $this->assertSame('bar', getenv('MULTI1'));
         $this->assertSame('foo', getenv('MULTI2'));
@@ -108,7 +119,7 @@ class DotenvTest extends TestCase
 
     public function testExportedDotenvLoadsEnvironmentVars()
     {
-        $dotenv = Dotenv::create($this->fixturesFolder, 'exported.env');
+        $dotenv = Dotenv::createImmutable($this->folder, 'exported.env');
         $dotenv->load();
         $this->assertSame('bar', getenv('EFOO'));
         $this->assertSame('baz', getenv('EBAR'));
@@ -118,7 +129,7 @@ class DotenvTest extends TestCase
 
     public function testDotenvLoadsEnvGlobals()
     {
-        $dotenv = Dotenv::create($this->fixturesFolder);
+        $dotenv = Dotenv::createImmutable($this->folder);
         $dotenv->load();
         $this->assertSame('bar', $_SERVER['FOO']);
         $this->assertSame('baz', $_SERVER['BAR']);
@@ -128,7 +139,7 @@ class DotenvTest extends TestCase
 
     public function testDotenvLoadsServerGlobals()
     {
-        $dotenv = Dotenv::create($this->fixturesFolder);
+        $dotenv = Dotenv::createImmutable($this->folder);
         $dotenv->load();
         $this->assertSame('bar', $_ENV['FOO']);
         $this->assertSame('baz', $_ENV['BAR']);
@@ -138,7 +149,7 @@ class DotenvTest extends TestCase
 
     public function testDotenvNestedEnvironmentVars()
     {
-        $dotenv = Dotenv::create($this->fixturesFolder, 'nested.env');
+        $dotenv = Dotenv::createImmutable($this->folder, 'nested.env');
         $dotenv->load();
         $this->assertSame('{$NVAR1} {$NVAR2}', $_ENV['NVAR3']); // not resolved
         $this->assertSame('Hello World!', $_ENV['NVAR4']);
@@ -157,7 +168,7 @@ class DotenvTest extends TestCase
 
     public function testDotenvNullFileArgumentUsesDefault()
     {
-        $dotenv = Dotenv::create($this->fixturesFolder, null);
+        $dotenv = Dotenv::createImmutable($this->folder, null);
         $dotenv->load();
         $this->assertSame('bar', getenv('FOO'));
     }
@@ -169,7 +180,7 @@ class DotenvTest extends TestCase
      */
     public function testDotenvTrimmedKeys()
     {
-        $dotenv = Dotenv::create($this->fixturesFolder, 'quoted.env');
+        $dotenv = Dotenv::createImmutable($this->folder, 'quoted.env');
         $dotenv->load();
         $this->assertSame('no space', getenv('QWHITESPACE'));
     }
@@ -177,7 +188,7 @@ class DotenvTest extends TestCase
     public function testDotenvLoadDoesNotOverwriteEnv()
     {
         putenv('IMMUTABLE=true');
-        $dotenv = Dotenv::create($this->fixturesFolder, 'immutable.env');
+        $dotenv = Dotenv::createImmutable($this->folder, 'immutable.env');
         $dotenv->load();
         $this->assertSame('true', getenv('IMMUTABLE'));
     }
@@ -185,37 +196,29 @@ class DotenvTest extends TestCase
     public function testDotenvLoadAfterOverload()
     {
         putenv('IMMUTABLE=true');
-        $dotenv = Dotenv::create($this->fixturesFolder, 'immutable.env');
-        $dotenv->overload();
-        $this->assertSame('false', getenv('IMMUTABLE'));
-
-        putenv('IMMUTABLE=true');
+        $dotenv = Dotenv::createMutable($this->folder, 'immutable.env');
         $dotenv->load();
-        $this->assertSame('true', getenv('IMMUTABLE'));
+        $this->assertSame('false', getenv('IMMUTABLE'));
     }
 
     public function testDotenvOverloadAfterLoad()
     {
         putenv('IMMUTABLE=true');
-        $dotenv = Dotenv::create($this->fixturesFolder, 'immutable.env');
+        $dotenv = Dotenv::createImmutable($this->folder, 'immutable.env');
         $dotenv->load();
         $this->assertSame('true', getenv('IMMUTABLE'));
-
-        putenv('IMMUTABLE=true');
-        $dotenv->overload();
-        $this->assertSame('false', getenv('IMMUTABLE'));
     }
 
     public function testDotenvOverloadDoesOverwriteEnv()
     {
-        $dotenv = Dotenv::create($this->fixturesFolder, 'mutable.env');
-        $dotenv->overload();
+        $dotenv = Dotenv::createMutable($this->folder, 'mutable.env');
+        $dotenv->load();
         $this->assertSame('true', getenv('MUTABLE'));
     }
 
     public function testDotenvAllowsSpecialCharacters()
     {
-        $dotenv = Dotenv::create($this->fixturesFolder, 'specialchars.env');
+        $dotenv = Dotenv::createImmutable($this->folder, 'specialchars.env');
         $dotenv->load();
         $this->assertSame('$a6^C7k%zs+e^.jvjXk', getenv('SPVAR1'));
         $this->assertSame('?BUty3koaV3%GA*hMAwH}B', getenv('SPVAR2'));
@@ -229,7 +232,7 @@ class DotenvTest extends TestCase
 
     public function testMutlilineLoading()
     {
-        $dotenv = Dotenv::create($this->fixturesFolder, 'multiline.env');
+        $dotenv = Dotenv::createImmutable($this->folder, 'multiline.env');
         $dotenv->load();
         $this->assertSame("test\n     test\"test\"\n     test", getenv('TEST'));
         $this->assertSame("test\ntest", getenv('TEST_ND'));
@@ -241,8 +244,8 @@ class DotenvTest extends TestCase
 
     public function testGetEnvironmentVariablesList()
     {
-        $dotenv = Dotenv::create($this->fixturesFolder);
-        $dotenv->load();
-        $this->assertSame(['FOO', 'BAR', 'SPACED', 'NULL'], $dotenv->getEnvironmentVariableNames());
+        $dotenv = Dotenv::createImmutable($this->folder);
+        $names = array_keys($dotenv->load());
+        $this->assertSame(['FOO', 'BAR', 'SPACED', 'NULL'], $names);
     }
 }

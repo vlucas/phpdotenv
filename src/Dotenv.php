@@ -2,55 +2,147 @@
 
 namespace Dotenv;
 
-use Dotenv\Environment\DotenvFactory;
-use Dotenv\Environment\FactoryInterface;
+use Dotenv\Loader\Loader;
+use Dotenv\Loader\LoaderInterface;
+use Dotenv\Repository\RepositoryBuilder;
+use Dotenv\Repository\RepositoryInterface;
 use Dotenv\Exception\InvalidPathException;
+use PhpOption\Option;
 
-/**
- * This is the dotenv class.
- *
- * It's responsible for loading a `.env` file in the given directory and
- * setting the environment variables.
- */
 class Dotenv
 {
     /**
      * The loader instance.
      *
-     * @var \Dotenv\Loader
+     * @var \Dotenv\Loader\LoaderInterface
      */
     protected $loader;
 
     /**
+     * The repository instance.
+     *
+     * @var \Dotenv\Repository\RepositoryInterface
+     */
+    protected $repository;
+
+    /**
+     * The file paths.
+     *
+     * @var string[]
+     */
+    protected $filePaths;
+
+    /**
      * Create a new dotenv instance.
      *
-     * @param \Dotenv\Loader $loader
+     * @param \Dotenv\Loader\LoaderInterface         $loader
+     * @param \Dotenv\Repository\RepositoryInterface $repository
+     * @param string[]                               $filePaths
      *
      * @return void
      */
-    public function __construct(Loader $loader)
+    public function __construct(LoaderInterface $loader, RepositoryInterface $repository, array $filePaths)
     {
         $this->loader = $loader;
+        $this->repository = $repository;
+        $this->filePaths = $filePaths;
     }
 
     /**
      * Create a new dotenv instance.
      *
-     * @param string|string[]                           $paths
-     * @param string|null                               $file
-     * @param \Dotenv\Environment\FactoryInterface|null $envFactory
+     * @param \Dotenv\Repository\RepositoryInterface $repository
+     * @param string|string[]                        $paths
+     * @param string|null                            $file
      *
      * @return \Dotenv\Dotenv
      */
-    public static function create($paths, $file = null, FactoryInterface $envFactory = null)
+    public static function create(RepositoryInterface $repository, $paths, $file = null)
     {
-        $loader = new Loader(
-            self::getFilePaths((array) $paths, $file ?: '.env'),
-            $envFactory ?: new DotenvFactory(),
-            true
-        );
+        return new self(new Loader(), $repository, self::getFilePaths((array) $paths, $file ?: '.env'));
+    }
 
-        return new self($loader);
+    /**
+     * Create a new mutable dotenv instance with default repository.
+     *
+     * @param string|string[] $paths
+     * @param string|null     $file
+     *
+     * @return \Dotenv\Dotenv
+     */
+    public static function createMutable($paths, $file = null)
+    {
+        $repository = RepositoryBuilder::create()->make();
+
+        return self::create($repository, $paths, $file);
+    }
+
+    /**
+     * Create a new mutable dotenv instance with default repository.
+     *
+     * @param string|string[] $paths
+     * @param string|null     $file
+     *
+     * @return \Dotenv\Dotenv
+     */
+    public static function createImmutable($paths, $file = null)
+    {
+        $repository = RepositoryBuilder::create()->immutable()->make();
+
+        return self::create($repository, $paths, $file);
+    }
+
+    /**
+     * Load environment file in given directory.
+     *
+     * @throws \Dotenv\Exception\InvalidPathException|\Dotenv\Exception\InvalidFileException
+     *
+     * @return array<string|null>
+     */
+    public function load()
+    {
+        return $this->loader->load($this->repository, self::findAndRead($this->filePaths));
+    }
+
+    /**
+     * Load environment file in given directory, silently failing if it doesn't exist.
+     *
+     * @throws \Dotenv\Exception\InvalidFileException
+     *
+     * @return array<string|null>
+     */
+    public function safeLoad()
+    {
+        try {
+            return $this->load();
+        } catch (InvalidPathException $e) {
+            // suppressing exception
+            return [];
+        }
+    }
+
+    /**
+     * Required ensures that the specified variables exist, and returns a new validator object.
+     *
+     * @param string|string[] $variables
+     *
+     * @return \Dotenv\Validator
+     */
+    public function required($variables)
+    {
+        return new Validator($this->repository, (array) $variables);
+    }
+
+    /**
+     * Returns a new validator object that won't check if the specified variables exist.
+     *
+     * @param string|string[] $variables
+     *
+     * @return \Dotenv\Validator
+     */
+    public function ifPresent($variables)
+    {
+        return new Validator($this->repository, (array) $variables, false);
     }
 
     /**
@@ -69,91 +161,43 @@ class Dotenv
     }
 
     /**
-     * Load environment file in given directory.
+     * Attempt to read the files in order.
      *
-     * @throws \Dotenv\Exception\InvalidPathException|\Dotenv\Exception\InvalidFileException
+     * @param string[] $filePaths
      *
-     * @return array<string|null>
-     */
-    public function load()
-    {
-        return $this->loadData();
-    }
-
-    /**
-     * Load environment file in given directory, silently failing if it doesn't exist.
-     *
-     * @throws \Dotenv\Exception\InvalidFileException
-     *
-     * @return array<string|null>
-     */
-    public function safeLoad()
-    {
-        try {
-            return $this->loadData();
-        } catch (InvalidPathException $e) {
-            // suppressing exception
-            return [];
-        }
-    }
-
-    /**
-     * Load environment file in given directory.
-     *
-     * @throws \Dotenv\Exception\InvalidPathException|\Dotenv\Exception\InvalidFileException
-     *
-     * @return array<string|null>
-     */
-    public function overload()
-    {
-        return $this->loadData(true);
-    }
-
-    /**
-     * Actually load the data.
-     *
-     * @param bool $overload
-     *
-     * @throws \Dotenv\Exception\InvalidPathException|\Dotenv\Exception\InvalidFileException
-     *
-     * @return array<string|null>
-     */
-    protected function loadData($overload = false)
-    {
-        return $this->loader->setImmutable(!$overload)->load();
-    }
-
-    /**
-     * Required ensures that the specified variables exist, and returns a new validator object.
-     *
-     * @param string|string[] $variables
-     *
-     * @return \Dotenv\Validator
-     */
-    public function required($variables)
-    {
-        return new Validator((array) $variables, $this->loader);
-    }
-
-    /**
-     * Returns a new validator object that won't check if the specified variables exist.
-     *
-     * @param string|string[] $variables
-     *
-     * @return \Dotenv\Validator
-     */
-    public function ifPresent($variables)
-    {
-        return new Validator((array) $variables, $this->loader, false);
-    }
-
-    /**
-     * Get the list of environment variables declared inside the 'env' file.
+     * @throws \Dotenv\Exception\InvalidPathException
      *
      * @return string[]
      */
-    public function getEnvironmentVariableNames()
+    private static function findAndRead(array $filePaths)
     {
-        return $this->loader->getEnvironmentVariableNames();
+        if ($filePaths === []) {
+            throw new InvalidPathException('At least one environment file path must be provided.');
+        }
+
+        foreach ($filePaths as $filePath) {
+            $lines = self::readFromFile($filePath);
+            if ($lines->isDefined()) {
+                return $lines->get();
+            }
+        }
+
+        throw new InvalidPathException(
+            sprintf('Unable to read any of the environment file(s) at [%s].', implode(', ', $filePaths))
+        );
+    }
+
+    /**
+     * Read the given file.
+     *
+     * @param string $filePath
+     *
+     * @return \PhpOption\Option
+     */
+    private static function readFromFile($filePath)
+    {
+        $content = @file_get_contents($filePath);
+
+        return Option::fromValue($content, false);
     }
 }

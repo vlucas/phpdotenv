@@ -1,6 +1,6 @@
 <?php
 
-use Dotenv\Parser;
+use Dotenv\Loader\Parser;
 use PHPUnit\Framework\TestCase;
 
 class ParserTest extends TestCase
@@ -14,6 +14,16 @@ class ParserTest extends TestCase
         $this->assertSame('FOO', $output[0]);
         $this->assertSame('BAR', $output[1]->getChars());
         $this->assertSame([], $output[1]->getVars());
+    }
+
+    public function testNullParse()
+    {
+        $output = Parser::parse('FOO');
+
+        $this->assertInternalType('array', $output);
+        $this->assertCount(2, $output);
+        $this->assertSame('FOO', $output[0]);
+        $this->assertNull($output[1]);
     }
 
     public function testQuotesParse()
@@ -100,6 +110,17 @@ class ParserTest extends TestCase
         $this->assertSame('FOO', $output[0]);
         $this->assertSame('$BAR', $output[1]->getChars());
         $this->assertSame([0], $output[1]->getVars());
+    }
+
+    public function testInlineVariableOffset()
+    {
+        $output = Parser::parse('FOO=AAA$BAR');
+
+        $this->assertInternalType('array', $output);
+        $this->assertCount(2, $output);
+        $this->assertSame('FOO', $output[0]);
+        $this->assertSame('AAA$BAR', $output[1]->getChars());
+        $this->assertSame([3], $output[1]->getVars());
     }
 
     public function testInlineVariables()

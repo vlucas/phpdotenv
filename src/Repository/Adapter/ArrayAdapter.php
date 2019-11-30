@@ -1,28 +1,31 @@
 <?php
 
-namespace Dotenv\Environment\Adapter;
+namespace Dotenv\Repository\Adapter;
 
 use PhpOption\None;
+use PhpOption\Some;
 
-class ApacheAdapter implements AdapterInterface
+class ArrayAdapter implements AvailabilityInterface, ReaderInterface, WriterInterface
 {
     /**
-     * Determines if the adapter is supported.
+     * The variables and their values.
      *
-     * This happens if PHP is running as an Apache module.
+     * @return array<string|null>
+     */
+    private $variables = [];
+
+    /**
+     * Determines if the adapter is supported.
      *
      * @return bool
      */
     public function isSupported()
     {
-        return function_exists('apache_getenv') && function_exists('apache_setenv');
+        return true;
     }
 
     /**
      * Get an environment variable, if it exists.
-     *
-     * This is intentionally not implemented, since this adapter exists only as
-     * a means to overwrite existing apache environment variables.
      *
      * @param string $name
      *
@@ -30,13 +33,15 @@ class ApacheAdapter implements AdapterInterface
      */
     public function get($name)
     {
+        if (array_key_exists($name, $this->variables)) {
+            return Some::create($this->variables[$name]);
+        }
+
         return None::create();
     }
 
     /**
      * Set an environment variable.
-     *
-     * Only if an existing apache variable exists do we overwrite it.
      *
      * @param string      $name
      * @param string|null $value
@@ -45,9 +50,7 @@ class ApacheAdapter implements AdapterInterface
      */
     public function set($name, $value = null)
     {
-        if (apache_getenv($name) !== false) {
-            apache_setenv($name, (string) $value);
-        }
+        $this->variables[$name] = $value;
     }
 
     /**
@@ -59,6 +62,6 @@ class ApacheAdapter implements AdapterInterface
      */
     public function clear($name)
     {
-        // Nothing to do here.
+        unset($this->variables[$name]);
     }
 }

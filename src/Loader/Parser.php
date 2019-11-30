@@ -1,6 +1,6 @@
 <?php
 
-namespace Dotenv;
+namespace Dotenv\Loader;
 
 use Dotenv\Exception\InvalidFileException;
 use Dotenv\Result\Error;
@@ -100,7 +100,7 @@ class Parser
      *
      * @throws \Dotenv\Exception\InvalidFileException
      *
-     * @return \Dotenv\Value|null
+     * @return \Dotenv\Loader\Value|null
      */
     private static function parseValue($value)
     {

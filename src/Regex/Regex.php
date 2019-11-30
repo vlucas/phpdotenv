@@ -1,6 +1,6 @@
 <?php
 
-namespace Dotenv;
+namespace Dotenv\Regex;
 
 use Dotenv\Result\Error;
 use Dotenv\Result\Result;

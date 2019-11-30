@@ -1,6 +1,6 @@
 <?php
 
-namespace Dotenv;
+namespace Dotenv\Loader;
 
 class Lines
 {
