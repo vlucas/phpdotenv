@@ -51,7 +51,6 @@ class DotenvTest extends TestCase
         $this->assertCount(4, $dotenv->load());
     }
 
-
     public function testDotenvSkipsLoadingIfFileIsMissing()
     {
         $dotenv = Dotenv::createImmutable(__DIR__);
@@ -236,7 +235,7 @@ class DotenvTest extends TestCase
         $dotenv->load();
         $this->assertSame("test\n     test\"test\"\n     test", getenv('TEST'));
         $this->assertSame("test\ntest", getenv('TEST_ND'));
-        $this->assertSame("test\\ntest", getenv('TEST_NS'));
+        $this->assertSame('test\\ntest', getenv('TEST_NS'));
 
         $this->assertSame('https://vision.googleapis.com/v1/images:annotate?key=', getenv('TEST_EQD'));
         $this->assertSame('https://vision.googleapis.com/v1/images:annotate?key=', getenv('TEST_EQS'));

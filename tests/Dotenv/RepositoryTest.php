@@ -2,7 +2,6 @@
 <?php
 
 use Dotenv\Dotenv;
-use Dotenv\Loader\Loader;
 use Dotenv\Repository\Adapter\ArrayAdapter;
 use Dotenv\Repository\RepositoryBuilder;
 use PHPUnit\Framework\TestCase;

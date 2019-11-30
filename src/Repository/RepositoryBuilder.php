@@ -2,10 +2,8 @@
 
 namespace Dotenv\Repository;
 
-use Dotenv\Repository\Adapter\AvailabilityInterface;
-use Dotenv\Repository\Adapter\ReaderInterface;
-use Dotenv\Repository\Adapter\WriterInterface;
 use Dotenv\Repository\Adapter\ApacheAdapter;
+use Dotenv\Repository\Adapter\AvailabilityInterface;
 use Dotenv\Repository\Adapter\EnvConstAdapter;
 use Dotenv\Repository\Adapter\PutenvAdapter;
 use Dotenv\Repository\Adapter\ServerConstAdapter;
@@ -56,7 +54,7 @@ class RepositoryBuilder
      */
     public static function create()
     {
-        return new RepositoryBuilder();
+        return new self();
     }
 
     /**
@@ -70,7 +68,7 @@ class RepositoryBuilder
     {
         $readers = $readers === null ? null : self::filterByAvailability($readers);
 
-        return new RepositoryBuilder($readers, $this->writers, $this->immutable);
+        return new self($readers, $this->writers, $this->immutable);
     }
 
     /**
@@ -84,7 +82,7 @@ class RepositoryBuilder
     {
         $writers = $writers === null ? null : self::filterByAvailability($writers);
 
-        return new RepositoryBuilder($this->readers, $writers, $this->immutable);
+        return new self($this->readers, $writers, $this->immutable);
     }
 
     /**
@@ -94,7 +92,7 @@ class RepositoryBuilder
      */
     public function immutable()
     {
-        return new RepositoryBuilder($this->readers, $this->writers, true);
+        return new self($this->readers, $this->writers, true);
     }
 
     /**

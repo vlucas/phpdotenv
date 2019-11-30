@@ -39,7 +39,7 @@ class Value
      */
     public static function blank()
     {
-        return new Value('', []);
+        return new self('', []);
     }
 
     /**
@@ -52,7 +52,7 @@ class Value
      */
     public function append($char, $var)
     {
-        return new Value(
+        return new self(
             $this->chars.$char,
             $var ? array_merge($this->vars, [strlen($this->chars)]) : $this->vars
         );
