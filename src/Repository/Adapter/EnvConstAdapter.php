@@ -1,19 +1,12 @@
 <?php
 
-namespace Dotenv\Environment\Adapter;
+namespace Dotenv\Repository\Adapter;
 
 use PhpOption\None;
 use PhpOption\Some;
 
-class ArrayAdapter implements AdapterInterface
+class EnvConstAdapter implements AvailabilityInterface, ReaderInterface, WriterInterface
 {
-    /**
-     * The variables and their values.
-     *
-     * @return array<string|null>
-     */
-    private $variables = [];
-
     /**
      * Determines if the adapter is supported.
      *
@@ -33,8 +26,8 @@ class ArrayAdapter implements AdapterInterface
      */
     public function get($name)
     {
-        if (array_key_exists($name, $this->variables)) {
-            return Some::create($this->variables[$name]);
+        if (array_key_exists($name, $_ENV)) {
+            return Some::create($_ENV[$name]);
         }
 
         return None::create();
@@ -50,7 +43,7 @@ class ArrayAdapter implements AdapterInterface
      */
     public function set($name, $value = null)
     {
-        $this->variables[$name] = $value;
+        $_ENV[$name] = $value;
     }
 
     /**
@@ -62,6 +55,6 @@ class ArrayAdapter implements AdapterInterface
      */
     public function clear($name)
     {
-        unset($this->variables[$name]);
+        unset($_ENV[$name]);
     }
 }

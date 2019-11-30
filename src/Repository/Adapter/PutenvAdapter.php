@@ -1,11 +1,10 @@
 <?php
 
-namespace Dotenv\Environment\Adapter;
+namespace Dotenv\Repository\Adapter;
 
-use PhpOption\None;
-use PhpOption\Some;
+use PhpOption\Option;
 
-class ServerConstAdapter implements AdapterInterface
+class PutenvAdapter implements AvailabilityInterface, ReaderInterface, WriterInterface
 {
     /**
      * Determines if the adapter is supported.
@@ -14,7 +13,7 @@ class ServerConstAdapter implements AdapterInterface
      */
     public function isSupported()
     {
-        return true;
+        return function_exists('getenv') && function_exists('putenv');
     }
 
     /**
@@ -26,11 +25,7 @@ class ServerConstAdapter implements AdapterInterface
      */
     public function get($name)
     {
-        if (array_key_exists($name, $_SERVER)) {
-            return Some::create($_SERVER[$name]);
-        }
-
-        return None::create();
+        return Option::fromValue(getenv($name), false);
     }
 
     /**
@@ -43,7 +38,7 @@ class ServerConstAdapter implements AdapterInterface
      */
     public function set($name, $value = null)
     {
-        $_SERVER[$name] = $value;
+        putenv("$name=$value");
     }
 
     /**
@@ -55,6 +50,6 @@ class ServerConstAdapter implements AdapterInterface
      */
     public function clear($name)
     {
-        unset($_SERVER[$name]);
+        putenv($name);
     }
 }

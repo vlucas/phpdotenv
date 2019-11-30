@@ -1,23 +1,28 @@
 <?php
 
-namespace Dotenv\Environment\Adapter;
+namespace Dotenv\Repository\Adapter;
 
-use PhpOption\Option;
+use PhpOption\None;
 
-class PutenvAdapter implements AdapterInterface
+class ApacheAdapter implements AvailabilityInterface, ReaderInterface, WriterInterface
 {
     /**
      * Determines if the adapter is supported.
+     *
+     * This happens if PHP is running as an Apache module.
      *
      * @return bool
      */
     public function isSupported()
     {
-        return function_exists('putenv');
+        return function_exists('apache_getenv') && function_exists('apache_setenv');
     }
 
     /**
      * Get an environment variable, if it exists.
+     *
+     * This is intentionally not implemented, since this adapter exists only as
+     * a means to overwrite existing apache environment variables.
      *
      * @param string $name
      *
@@ -25,11 +30,13 @@ class PutenvAdapter implements AdapterInterface
      */
     public function get($name)
     {
-        return Option::fromValue(getenv($name), false);
+        return None::create();
     }
 
     /**
      * Set an environment variable.
+     *
+     * Only if an existing apache variable exists do we overwrite it.
      *
      * @param string      $name
      * @param string|null $value
@@ -38,7 +45,9 @@ class PutenvAdapter implements AdapterInterface
      */
     public function set($name, $value = null)
     {
-        putenv("$name=$value");
+        if (apache_getenv($name) !== false) {
+            apache_setenv($name, (string) $value);
+        }
     }
 
     /**
@@ -50,6 +59,6 @@ class PutenvAdapter implements AdapterInterface
      */
     public function clear($name)
     {
-        putenv($name);
+        // Nothing to do here.
     }
 }

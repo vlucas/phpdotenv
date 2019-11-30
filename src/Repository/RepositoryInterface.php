@@ -1,22 +1,28 @@
 <?php
 
-namespace Dotenv\Environment\Adapter;
+namespace Dotenv\Repository;
 
-interface AdapterInterface
+use ArrayAccess;
+
+interface RepositoryInterface extends ArrayAccess
 {
     /**
-     * Determines if the adapter is supported.
-     *
-     * @return bool
-     */
-    public function isSupported();
-
-    /**
-     * Get an environment variable, if it exists.
+     * Tells whether environment variable has been defined.
      *
      * @param string $name
      *
-     * @return \PhpOption\Option
+     * @return bool
+     */
+    public function has($name);
+
+    /**
+     * Get an environment variable.
+     *
+     * @param string $name
+     *
+     * @throws \InvalidArgumentException
+     *
+     * @return string|null
      */
     public function get($name);
 
@@ -26,6 +32,8 @@ interface AdapterInterface
      * @param string      $name
      * @param string|null $value
      *
+     * @throws \InvalidArgumentException
+     *
      * @return void
      */
     public function set($name, $value = null);
@@ -34,6 +42,8 @@ interface AdapterInterface
      * Clear an environment variable.
      *
      * @param string $name
+     *
+     * @throws \InvalidArgumentException
      *
      * @return void
      */

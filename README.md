@@ -10,6 +10,21 @@ dotenv](https://github.com/bkeepers/dotenv).
 [![Build Status](https://travis-ci.org/vlucas/phpdotenv.svg?branch=master)](https://travis-ci.org/vlucas/phpdotenv)
 
 
+UPGRADING FROM V3
+-----------------
+
+Version 4 seems some refactoring, and support for escaping dollars in values
+(https://github.com/vlucas/phpdotenv/pull/380). It is no longer possible to
+change immutability on the fly, and the `Loader` no longer is responsible for
+tracking immutability. It is now the responsibility of "repositories" to track
+this. One must explicitly decide if they want (im)mutability when constructing
+an instance of `Dotenv\Dotenv`.
+
+For more details, please see the
+[release notes](https://github.com/vlucas/phpdotenv/releases/tag/v4.0.0) and
+the [upgrading guide](UPGRADING.md).
+
+
 UPGRADING FROM V2
 -----------------
 
@@ -100,14 +115,14 @@ SECRET_KEY="abc123"
 You can then load `.env` in your application with:
 
 ```php
-$dotenv = Dotenv\Dotenv::create(__DIR__);
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
 $dotenv->load();
 ```
 
 Optionally you can pass in a filename as the second parameter, if you would like to use something other than `.env`
 
 ```php
-$dotenv = Dotenv\Dotenv::create(__DIR__, 'myconfig');
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__, 'myconfig');
 $dotenv->load();
 ```
 
@@ -143,33 +158,41 @@ CACHE_DIR="${BASE_DIR}/cache"
 TMP_DIR="${BASE_DIR}/tmp"
 ```
 
-### Immutability
+### Immutability and Repository Customization
 
-By default, Dotenv will NOT overwrite existing environment variables that are
-already set in the environment.
-
-If you want Dotenv to overwrite existing environment variables, use `overload`
-instead of `load`:
+Immutability refers to if Dotenv is allowed to overwrite existing environment
+variables. If you want Dotenv to overwrite existing environment variables,
+use `createMutable` instead of `createImmutable`:
 
 ```php
-$dotenv = Dotenv\Dotenv::create(__DIR__);
-$dotenv->overload();
+$dotenv = Dotenv\Dotenv::createMutable(__DIR__);
+$dotenv->load();
 ```
 
-### Loader Customization
-
-Need us to not set `$_ENV` but not `$_SERVER`, or have other custom requirements? No problem! Simply pass a custom implementation of `Dotenv\Environment\FactoryInterface` to `Dotenv\Loader` on construction. In practice, you may not even need a custom implementation, since our default implementation allows you provide an array of `Dotenv\Environment\Adapter\AdapterInterface` for proxing the underlying calls to.
-
-For example, if you want us to only ever fiddle with `$_ENV` and `putenv`, then you can setup Dotenv as follows:
+Behind the scenes, this is instructing the "repository" to allow immutability
+or not. By default, the repository is configured to allow overwriting existing
+values by default, which is relevent if one is calling the "create" method
+using the `RepositoryBuilder` to construct a more custom repository:
 
 ```php
-$factory = new Dotenv\Environment\DotenvFactory([
-    new Dotenv\Environment\Adapter\EnvConstAdapter(),
-    new Dotenv\Environment\Adapter\PutenvAdapter(),
-]);
+$repository = Dotenv\Repository\RepositoryBuilder::create()
+    ->withReaders([
+        new Dotenv\Repository\Adapter\EnvConstAdapter(),
+    ])
+    ->withWriters([
+        new Dotenv\Repository\Adapter\EnvConstAdapter(),
+        new Dotenv\Repository\Adapter\PutenvAdapter(),
+    ])
+    ->immutable()
+    ->get();
 
-$dotenv = Dotenv\Dotenv::create(__DIR__, null, $factory);
+$dotenv = Dotenv\Dotenv::create($repository, __DIR__);
+$dotenv->load();
 ```
+
+The above example will write loaded values to `$_ENV` and `putenv`, but when
+interpolating environment variables, we'll only read from `$_ENV`. Moreover, it
+will never replace any variables already set before loading the file.
 
 
 Requiring Variables to be Set
@@ -305,11 +328,11 @@ PHP dotenv is licensed under [The BSD 3-Clause License](LICENSE).
 ---
 
 <div align="center">
-	<b>
-		<a href="https://tidelift.com/subscription/pkg/packagist-vlucas-phpdotenv?utm_source=packagist-vlucas-phpdotenv&utm_medium=referral&utm_campaign=readme">Get professional support for PHP dotenv with a Tidelift subscription</a>
-	</b>
-	<br>
-	<sub>
-		Tidelift helps make open source sustainable for maintainers while giving companies<br>assurances about security, maintenance, and licensing for their dependencies.
-	</sub>
+    <b>
+        <a href="https://tidelift.com/subscription/pkg/packagist-vlucas-phpdotenv?utm_source=packagist-vlucas-phpdotenv&utm_medium=referral&utm_campaign=readme">Get professional support for PHP dotenv with a Tidelift subscription</a>
+    </b>
+    <br>
+    <sub>
+        Tidelift helps make open source sustainable for maintainers while giving companies<br>assurances about security, maintenance, and licensing for their dependencies.
+    </sub>
 </div>

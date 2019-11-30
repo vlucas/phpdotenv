@@ -1,16 +1,11 @@
 <?php
 
-namespace Dotenv\Environment;
+namespace Dotenv\Repository;
 
-use Dotenv\Environment\Adapter\ArrayAdapter;
+use Dotenv\Repository\Adapter\ArrayAdapter;
 use InvalidArgumentException;
 
-/**
- * This is the abstract variables implementation.
- *
- * Extend this as required, implementing "get", "set", and "clear".
- */
-abstract class AbstractVariables implements VariablesInterface
+abstract class AbstractRepository implements RepositoryInterface
 {
     /**
      * Are we immutable?
@@ -22,7 +17,7 @@ abstract class AbstractVariables implements VariablesInterface
     /**
      * The record of loaded variables.
      *
-     * @var \Dotenv\Environment\Adapter\ArrayAdapter
+     * @var \Dotenv\Repository\Adapter\ArrayAdapter
      */
     private $loaded;
 
@@ -84,7 +79,7 @@ abstract class AbstractVariables implements VariablesInterface
 
         // Don't overwrite existing environment variables if we're immutable
         // Ruby's dotenv does this with `ENV[key] ||= value`.
-        if ($this->isImmutable() && $this->get($name) !== null && $this->loaded->get($name)->isEmpty()) {
+        if ($this->immutable && $this->get($name) !== null && $this->loaded->get($name)->isEmpty()) {
             return;
         }
 
@@ -118,7 +113,7 @@ abstract class AbstractVariables implements VariablesInterface
         }
 
         // Don't clear anything if we're immutable.
-        if ($this->isImmutable()) {
+        if ($this->immutable) {
             return;
         }
 
@@ -133,16 +128,6 @@ abstract class AbstractVariables implements VariablesInterface
      * @return void
      */
     protected abstract function clearInternal($name);
-
-    /**
-     * Determine if the environment is immutable.
-     *
-     * @return bool
-     */
-    public function isImmutable()
-    {
-        return $this->immutable;
-    }
 
     /**
      * Tells whether environment variable has been defined.
