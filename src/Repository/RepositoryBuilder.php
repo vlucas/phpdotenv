@@ -50,7 +50,7 @@ class RepositoryBuilder
     /**
      * Create a new repository builder instance.
      *
-     * @return void
+     * @return \Dotenv\Repository\RepositoryBuilder
      */
     public static function create()
     {
