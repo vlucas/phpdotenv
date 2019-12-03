@@ -2,7 +2,7 @@
 
 ## V3 to V4
 
-V4 has again changed the way you initialize the `Dotenv` class. If you want immutable loading of environment variables, then replace `Dotenv::create` with `Dotenv::createImmutable`, and if you want mutable loading, replace `Dotenv::create` with `Dotenv::createMmutable` and `->overload()` with `->load()`. The `overload` method has been removed in faviour of specifying mutability at object construction.
+V4 has again changed the way you initialize the `Dotenv` class. If you want immutable loading of environment variables, then replace `Dotenv::create` with `Dotenv::createImmutable`, and if you want mutable loading, replace `Dotenv::create` with `Dotenv::createMutable` and `->overload()` with `->load()`. The `overload` method has been removed in faviour of specifying mutability at object construction.
 
 The behaviour when parsing single quoted strings has now changed, to mimic the behaviour of bash. It is no longer possible to escape characters in single quoted strings, and everything is treated literally. As soon as the first single quote character is read, after the initial one, then the variable is treated as ending immediately at that point. When parsing unquoted or double quoted strings, it is now possible to escape dollar signs, to forcefully avoid variable interpolation. Escaping dollars is not mandated, in the sense that if a dollar is present, and not following by variable interpolation sytnax, this is allowed, and the dollar will be treated as a literal dollar. Finally, interpolation of variables is now performed right to left, instead of left to right, so it is possible to nest interpolations to allow using the value of a variable as the name of another for further interpolation.
 
