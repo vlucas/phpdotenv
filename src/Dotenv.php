@@ -78,7 +78,7 @@ class Dotenv
     }
 
     /**
-     * Create a new mutable dotenv instance with default repository.
+     * Create a new immutable dotenv instance with default repository.
      *
      * @param string|string[] $paths
      * @param string|null     $file
