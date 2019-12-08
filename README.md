@@ -302,16 +302,6 @@ When a new developer clones your codebase, they will have an additional
 **one-time step** to manually copy the `.env.example` file to `.env` and fill-in
 their own values (or get any sensitive values from a project co-worker).
 
-### Command Line Scripts
-
-If you need to use environment variables that you have set in your `.env` file
-in a command line script that doesn't use the Dotenv library, you can `source`
-it into your local shell session:
-
-```
-source .env
-```
-
 
 Security
 --------
