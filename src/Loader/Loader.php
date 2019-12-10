@@ -16,7 +16,7 @@ class Loader implements LoaderInterface
      *
      * @throws \Dotenv\Exception\InvalidFileException
      *
-     * @return array<string|null>
+     * @return array<string,string|null>
      */
     public function load(RepositoryInterface $repository, $content)
     {
@@ -37,7 +37,7 @@ class Loader implements LoaderInterface
      *
      * @throws \Dotenv\Exception\InvalidFileException
      *
-     * @return array<string|null>
+     * @return array<string.string|null>
      */
     private static function processEntries(RepositoryInterface $repository, array $entries)
     {

@@ -14,7 +14,7 @@ interface LoaderInterface
      *
      * @throws \Dotenv\Exception\InvalidFileException
      *
-     * @return array<string|null>
+     * @return array<string,string|null>
      */
     public function load(RepositoryInterface $repository, $content);
 }

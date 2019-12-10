@@ -10,7 +10,7 @@ class ArrayAdapter implements AvailabilityInterface, ReaderInterface, WriterInte
     /**
      * The variables and their values.
      *
-     * @return array<string|null>
+     * @return array<string,string|null>
      */
     private $variables = [];
 
