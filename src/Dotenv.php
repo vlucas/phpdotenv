@@ -33,19 +33,28 @@ class Dotenv
     protected $filePaths;
 
     /**
+     * Should file loading short circuit?
+     *
+     * @var bool
+     */
+    protected $shortCircuit;
+
+    /**
      * Create a new dotenv instance.
      *
      * @param \Dotenv\Loader\LoaderInterface         $loader
      * @param \Dotenv\Repository\RepositoryInterface $repository
      * @param string[]                               $filePaths
+     * @param bool                                   $shortCircuit
      *
      * @return void
      */
-    public function __construct(LoaderInterface $loader, RepositoryInterface $repository, array $filePaths)
+    public function __construct(LoaderInterface $loader, RepositoryInterface $repository, array $filePaths, $shortCircuit = true)
     {
         $this->loader = $loader;
         $this->repository = $repository;
         $this->filePaths = $filePaths;
+        $this->shortCircuit = $shortCircuit;
     }
 
     /**
@@ -53,43 +62,48 @@ class Dotenv
      *
      * @param \Dotenv\Repository\RepositoryInterface $repository
      * @param string|string[]                        $paths
-     * @param string|null                            $file
+     * @param string|string[]|null                   $names
+     * @param bool                                   $shortCircuit
      *
      * @return \Dotenv\Dotenv
      */
-    public static function create(RepositoryInterface $repository, $paths, $file = null)
+    public static function create(RepositoryInterface $repository, $paths, $names = null, $shortCircuit = true)
     {
-        return new self(new Loader(), $repository, self::getFilePaths((array) $paths, $file ?: '.env'));
+        $files = self::getFilePaths((array) $paths, (array) ($names ?: '.env'));
+
+        return new self(new Loader(), $repository, $files, $shortCircuit);
     }
 
     /**
      * Create a new mutable dotenv instance with default repository.
      *
-     * @param string|string[] $paths
-     * @param string|null     $file
+     * @param string|string[]      $paths
+     * @param string|string[]|null $names
+     * @param bool                 $shortCircuit
      *
      * @return \Dotenv\Dotenv
      */
-    public static function createMutable($paths, $file = null)
+    public static function createMutable($paths, $names = null, $shortCircuit = true)
     {
         $repository = RepositoryBuilder::create()->make();
 
-        return self::create($repository, $paths, $file);
+        return self::create($repository, $paths, $names, $shortCircuit);
     }
 
     /**
      * Create a new immutable dotenv instance with default repository.
      *
-     * @param string|string[] $paths
-     * @param string|null     $file
+     * @param string|string[]      $paths
+     * @param string|string[]|null $names
+     * @param bool                 $shortCircuit
      *
      * @return \Dotenv\Dotenv
      */
-    public static function createImmutable($paths, $file = null)
+    public static function createImmutable($paths, $names = null, $shortCircuit = true)
     {
         $repository = RepositoryBuilder::create()->immutable()->make();
 
-        return self::create($repository, $paths, $file);
+        return self::create($repository, $paths, $names, $shortCircuit);
     }
 
     /**
@@ -101,7 +115,7 @@ class Dotenv
      */
     public function load()
     {
-        return $this->loader->load($this->repository, self::findAndRead($this->filePaths));
+        return $this->loader->load($this->repository, self::findAndRead($this->filePaths, $this->shortCircuit));
     }
 
     /**
@@ -153,38 +167,54 @@ class Dotenv
      *
      * @return string[]
      */
-    private static function getFilePaths(array $paths, $file)
+    private static function getFilePaths(array $paths, $names)
     {
-        return array_map(function ($path) use ($file) {
-            return rtrim($path, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR.$file;
-        }, $paths);
+        $files = [];
+
+        foreach ($paths as $path) {
+            foreach ($names as $name) {
+                $files[] = rtrim($path, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR.$name;
+            }
+        }
+
+        return $files;
     }
 
     /**
      * Attempt to read the files in order.
      *
      * @param string[] $filePaths
+     * @param bool     $shortCircuit
      *
      * @throws \Dotenv\Exception\InvalidPathException
      *
-     * @return string[]
+     * @return string
      */
-    private static function findAndRead(array $filePaths)
+    private static function findAndRead(array $filePaths, $shortCircuit)
     {
         if ($filePaths === []) {
             throw new InvalidPathException('At least one environment file path must be provided.');
         }
 
+        $output = '';
+
         foreach ($filePaths as $filePath) {
-            $lines = self::readFromFile($filePath);
-            if ($lines->isDefined()) {
-                return $lines->get();
+            $content = self::readFromFile($filePath);
+            if ($content->isDefined()) {
+                $output .= $content->get()."\n";
+                if ($shortCircuit) {
+                    break;
+                }
             }
         }
 
-        throw new InvalidPathException(
-            sprintf('Unable to read any of the environment file(s) at [%s].', implode(', ', $filePaths))
-        );
+        if (!$output) {
+            throw new InvalidPathException(
+                sprintf('Unable to read any of the environment file(s) at [%s].', implode(', ', $filePaths))
+            );
+        }
+
+        return $output;
     }
 
     /**
