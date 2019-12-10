@@ -70,6 +70,31 @@ class DotenvTest extends TestCase
         $this->assertEmpty(getenv('NULL'));
     }
 
+    public function testDotenvReadsEnvironmentVarsMultipleNotShortCircuitMode()
+    {
+        $dotenv = Dotenv::createImmutable($this->folder, ['.env', 'example.env']);
+
+        $this->assertSame(
+            [
+                $this->folder.DIRECTORY_SEPARATOR.'.env' => "FOO=bar\nBAR=baz\nSPACED=\"with spaces\"\n\nNULL=\n",
+            ],
+            $dotenv->read()
+        );
+    }
+
+    public function testDotenvReadsEnvironmentVarsMultipleWithShortCircuitMode()
+    {
+        $dotenv = Dotenv::createImmutable($this->folder, ['.env', 'example.env'], false);
+
+        $this->assertSame(
+            [
+                $this->folder.DIRECTORY_SEPARATOR.'.env' => "FOO=bar\nBAR=baz\nSPACED=\"with spaces\"\n\nNULL=\n",
+                $this->folder.DIRECTORY_SEPARATOR.'example.env' => "EG=\"example\"\n",
+            ],
+            $dotenv->read()
+        );
+    }
+
     public function testDotenvLoadsEnvironmentVarsMultipleNotShortCircuitMode()
     {
         $dotenv = Dotenv::createImmutable($this->folder, ['.env', 'example.env']);

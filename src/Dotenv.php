@@ -107,7 +107,33 @@ class Dotenv
     }
 
     /**
-     * Load environment file in given directory.
+     * Read the environment file(s), and return their raw content only.
+     *
+     * We provide the file path as the key, and its content as the value. If
+     * short circuit mode is enabled, then the returned array with have length
+     * at most one. File paths that couldn't be read are omitted entirely.
+     *
+     * @return array<string,string>
+     */
+    public function read()
+    {
+        $output = [];
+
+        foreach ($this->filePaths as $filePath) {
+            $content = self::readFromFile($filePath);
+            if ($content->isDefined()) {
+                $output[$filePath] = $content->get();
+                if ($this->shortCircuit) {
+                    break;
+                }
+            }
+        }
+
+        return $output;
+    }
+
+    /**
+     * Read and load environment file(s).
      *
      * @throws \Dotenv\Exception\InvalidPathException|\Dotenv\Exception\InvalidFileException
      *
@@ -115,11 +141,23 @@ class Dotenv
      */
     public function load()
     {
-        return $this->loader->load($this->repository, self::findAndRead($this->filePaths, $this->shortCircuit));
+        if ($this->filePaths === []) {
+            throw new InvalidPathException('At least one environment file path must be provided.');
+        }
+
+        $content = self::aggregate($this->read());
+
+        if ($content->isDefined()) {
+            return $this->loader->load($this->repository, $content->get());
+        }
+
+        throw new InvalidPathException(
+            sprintf('Unable to read any of the environment file(s) at [%s].', implode(', ', $this->filePaths))
+        );
     }
 
     /**
-     * Load environment file in given directory, silently failing if it doesn't exist.
+     * Read and load environment file(s), silently failing if no files can be read.
      *
      * @throws \Dotenv\Exception\InvalidFileException
      *
@@ -127,12 +165,13 @@ class Dotenv
      */
     public function safeLoad()
     {
-        try {
-            return $this->load();
-        } catch (InvalidPathException $e) {
-            // suppressing exception
-            return [];
+        $content = self::aggregate($this->read());
+
+        if ($content->isDefined()) {
+            return $this->loader->load($this->repository, $content->get());
         }
+
+        return [];
     }
 
     /**
@@ -181,43 +220,6 @@ class Dotenv
     }
 
     /**
-     * Attempt to read the files in order.
-     *
-     * @param string[] $filePaths
-     * @param bool     $shortCircuit
-     *
-     * @throws \Dotenv\Exception\InvalidPathException
-     *
-     * @return string
-     */
-    private static function findAndRead(array $filePaths, $shortCircuit)
-    {
-        if ($filePaths === []) {
-            throw new InvalidPathException('At least one environment file path must be provided.');
-        }
-
-        $output = '';
-
-        foreach ($filePaths as $filePath) {
-            $content = self::readFromFile($filePath);
-            if ($content->isDefined()) {
-                $output .= $content->get()."\n";
-                if ($shortCircuit) {
-                    break;
-                }
-            }
-        }
-
-        if (!$output) {
-            throw new InvalidPathException(
-                sprintf('Unable to read any of the environment file(s) at [%s].', implode(', ', $filePaths))
-            );
-        }
-
-        return $output;
-    }
-
-    /**
      * Read the given file.
      *
      * @param string $filePath
@@ -229,5 +231,23 @@ class Dotenv
         $content = @file_get_contents($filePath);
 
         return Option::fromValue($content, false);
+    }
+
+    /**
+     * Aggregate the given raw file contents.
+     *
+     * @param array<string,string> $contents
+     *
+     * @return \PhpOption\Option
+     */
+    private static function aggregate(array $contents)
+    {
+        $output = '';
+
+        foreach ($contents as $content) {
+            $output .= $content."\n";
+        }
+
+        return Option::fromValue($output, '');
     }
 }
