@@ -3,6 +3,8 @@
 namespace Dotenv;
 
 use Dotenv\Exception\InvalidPathException;
+use Dotenv\File\Paths;
+use Dotenv\File\Reader;
 use Dotenv\Loader\Loader;
 use Dotenv\Loader\LoaderInterface;
 use Dotenv\Repository\RepositoryBuilder;
@@ -69,7 +71,7 @@ class Dotenv
      */
     public static function create(RepositoryInterface $repository, $paths, $names = null, $shortCircuit = true)
     {
-        $files = self::getFilePaths((array) $paths, (array) ($names ?: '.env'));
+        $files = Paths::filePaths((array) $paths, (array) ($names ?: '.env'));
 
         return new self(new Loader(), $repository, $files, $shortCircuit);
     }
@@ -107,32 +109,6 @@ class Dotenv
     }
 
     /**
-     * Read the environment file(s), and return their raw content only.
-     *
-     * We provide the file path as the key, and its content as the value. If
-     * short circuit mode is enabled, then the returned array with have length
-     * at most one. File paths that couldn't be read are omitted entirely.
-     *
-     * @return array<string,string>
-     */
-    public function read()
-    {
-        $output = [];
-
-        foreach ($this->filePaths as $filePath) {
-            $content = self::readFromFile($filePath);
-            if ($content->isDefined()) {
-                $output[$filePath] = $content->get();
-                if ($this->shortCircuit) {
-                    break;
-                }
-            }
-        }
-
-        return $output;
-    }
-
-    /**
      * Read and load environment file(s).
      *
      * @throws \Dotenv\Exception\InvalidPathException|\Dotenv\Exception\InvalidFileException
@@ -145,15 +121,11 @@ class Dotenv
             throw new InvalidPathException('At least one environment file path must be provided.');
         }
 
-        $content = self::aggregate($this->read());
-
-        if ($content->isDefined()) {
-            return $this->loader->load($this->repository, $content->get());
-        }
-
-        throw new InvalidPathException(
-            sprintf('Unable to read any of the environment file(s) at [%s].', implode(', ', $this->filePaths))
-        );
+        return $this->tryLoad()->getOrCall(function () {
+            throw new InvalidPathException(
+                sprintf('Unable to read any of the environment file(s) at [%s].', implode(', ', $this->filePaths))
+            );
+        });
     }
 
     /**
@@ -165,13 +137,7 @@ class Dotenv
      */
     public function safeLoad()
     {
-        $content = self::aggregate($this->read());
-
-        if ($content->isDefined()) {
-            return $this->loader->load($this->repository, $content->get());
-        }
-
-        return [];
+        return $this->tryLoad()->getOrElse([]);
     }
 
     /**
@@ -199,38 +165,17 @@ class Dotenv
     }
 
     /**
-     * Returns the full paths to the files.
+     * Read and load environment file(s), returning an option.
      *
-     * @param string[] $paths
-     * @param string   $file
-     *
-     * @return string[]
-     */
-    private static function getFilePaths(array $paths, $names)
-    {
-        $files = [];
-
-        foreach ($paths as $path) {
-            foreach ($names as $name) {
-                $files[] = rtrim($path, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR.$name;
-            }
-        }
-
-        return $files;
-    }
-
-    /**
-     * Read the given file.
-     *
-     * @param string $filePath
+     * @throws \Dotenv\Exception\InvalidFileException
      *
      * @return \PhpOption\Option
      */
-    private static function readFromFile($filePath)
+    private function tryLoad()
     {
-        $content = @file_get_contents($filePath);
-
-        return Option::fromValue($content, false);
+        return self::aggregate(Reader::read($this->filePaths, $this->shortCircuit))->map(function ($content) {
+            return $this->loader->load($this->repository, $content);
+        });
     }
 
     /**
