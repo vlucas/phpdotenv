@@ -51,6 +51,12 @@ class DotenvTest extends TestCase
         $this->assertCount(4, $dotenv->load());
     }
 
+    public function testDotenvTriesPathsToSafeLoad()
+    {
+        $dotenv = Dotenv::createImmutable([__DIR__, $this->folder]);
+        $this->assertCount(4, $dotenv->safeLoad());
+    }
+
     public function testDotenvSkipsLoadingIfFileIsMissing()
     {
         $dotenv = Dotenv::createImmutable(__DIR__);
@@ -68,6 +74,26 @@ class DotenvTest extends TestCase
         $this->assertSame('baz', getenv('BAR'));
         $this->assertSame('with spaces', getenv('SPACED'));
         $this->assertEmpty(getenv('NULL'));
+    }
+
+    public function testDotenvLoadsEnvironmentVarsMultipleNotShortCircuitMode()
+    {
+        $dotenv = Dotenv::createImmutable($this->folder, ['.env', 'example.env']);
+
+        $this->assertSame(
+            ['FOO' => 'bar', 'BAR' => 'baz', 'SPACED' => 'with spaces', 'NULL' => ''],
+            $dotenv->load()
+        );
+    }
+
+    public function testDotenvLoadsEnvironmentVarsMultipleWithShortCircuitMode()
+    {
+        $dotenv = Dotenv::createImmutable($this->folder, ['.env', 'example.env'], false);
+
+        $this->assertSame(
+            ['FOO' => 'bar', 'BAR' => 'baz', 'SPACED' => 'with spaces', 'NULL' => '', 'EG' => 'example'],
+            $dotenv->load()
+        );
     }
 
     public function testCommentedDotenvLoadsEnvironmentVars()
