@@ -22,7 +22,7 @@ class Loader implements LoaderInterface
     {
         return self::processEntries(
             $repository,
-            Lines::process(preg_split("/(\r\n|\n|\r)/", $content))
+            Lines::process(Regex::split("/(\r\n|\n|\r)/", $content)->getSuccess())
         );
     }
 

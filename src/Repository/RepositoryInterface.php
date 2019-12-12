@@ -4,6 +4,9 @@ namespace Dotenv\Repository;
 
 use ArrayAccess;
 
+/**
+ * @extends \ArrayAccess<string,string|null>
+ */
 interface RepositoryInterface extends ArrayAccess
 {
     /**

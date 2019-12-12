@@ -40,7 +40,7 @@ class Reader
      *
      * @param string $filePath
      *
-     * @return \PhpOption\Option
+     * @return \PhpOption\Option<string>
      */
     private static function readFromFile($filePath)
     {
