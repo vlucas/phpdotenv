@@ -126,10 +126,9 @@ class Dotenv
         try {
             return $this->load();
         } catch (InvalidPathException $e) {
-            //
+            // suppressing exception
+            return [];
         }
-
-        return [];
     }
 
     /**
