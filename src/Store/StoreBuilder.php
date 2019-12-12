@@ -16,7 +16,7 @@ class StoreBuilder
     /**
      * The file names to search for.
      *
-     * @var string[]
+     * @var string[]|null
      */
     private $names;
 
@@ -30,13 +30,13 @@ class StoreBuilder
     /**
      * Create a new store builder instance.
      *
-     * @param string[] $paths
-     * @param string[] $names
-     * @param bool     $shortCircuit
+     * @param string[]      $paths
+     * @param string[]|null $names
+     * @param bool          $shortCircuit
      *
      * @return void
      */
-    private function __construct(array $paths = [], array $names = [], $shortCircuit = false)
+    private function __construct(array $paths = [], array $names = null, $shortCircuit = false)
     {
         $this->paths = $paths;
         $this->names = $names;
@@ -56,25 +56,25 @@ class StoreBuilder
     /**
      * Creates a store builder with the given paths.
      *
-     * @param string[] $paths
+     * @param string|string[] $paths
      *
      * @return \Dotenv\Repository\RepositoryBuilder
      */
-    public function withPaths(array $paths)
+    public function withPaths($paths)
     {
-        return new self($paths, $this->names, $this->shortCircuit);
+        return new self((array) $paths, $this->names, $this->shortCircuit);
     }
 
     /**
      * Creates a store builder with the given names.
      *
-     * @param string[] $names
+     * @param string|string[]|null $names
      *
      * @return \Dotenv\Store\StoreBuilder
      */
-    public function withNames(array $names)
+    public function withNames($names = null)
     {
-        return new self($this->paths, $names, $this->shortCircuit);
+        return new self($this->paths, $names === null ? null : (array) $names, $this->shortCircuit);
     }
 
     /**
@@ -95,7 +95,7 @@ class StoreBuilder
     public function make()
     {
         return new FileStore(
-            Paths::filePaths($this->paths, $this->names),
+            Paths::filePaths($this->paths, $this->names === null ? ['.env'] : $this->names),
             $this->shortCircuit
         );
     }
