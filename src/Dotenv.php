@@ -60,7 +60,7 @@ class Dotenv
      */
     public static function create(RepositoryInterface $repository, $paths, $names = null, $shortCircuit = true)
     {
-        $builder = StoreBuilder::create()->withPaths((array) $paths)->withNames((array) ($names ?: '.env'));
+        $builder = StoreBuilder::create()->withPaths($paths)->withNames($names);
 
         if ($shortCircuit) {
             $builder = $builder->shortCircuit();
