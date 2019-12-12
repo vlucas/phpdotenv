@@ -1,6 +1,9 @@
 <?php
 
 use Dotenv\Dotenv;
+use Dotenv\Loader\Loader;
+use Dotenv\Repository\RepositoryBuilder;
+use Dotenv\Store\StoreBuilder;
 use PHPUnit\Framework\TestCase;
 
 class DotenvTest extends TestCase
@@ -267,10 +270,34 @@ class DotenvTest extends TestCase
         $this->assertSame('https://vision.googleapis.com/v1/images:annotate?key=', getenv('TEST_EQS'));
     }
 
-    public function testGetEnvironmentVariablesList()
+    public function testLegacyConstructor()
     {
-        $dotenv = Dotenv::createImmutable($this->folder);
-        $names = array_keys($dotenv->load());
-        $this->assertSame(['FOO', 'BAR', 'SPACED', 'NULL'], $names);
+        $loader = new Loader();
+        $repository = RepositoryBuilder::create()->immutable()->make();
+
+        $dotenv = new Dotenv($loader, $repository, [$this->folder.DIRECTORY_SEPARATOR.'.env']);
+
+        $this->assertSame([
+            'FOO'    => 'bar',
+            'BAR'    => 'baz',
+            'SPACED' => 'with spaces',
+            'NULL'   => '',
+        ], $dotenv->load());
+    }
+
+    public function testLatestConstructor()
+    {
+        $loader = new Loader();
+        $repository = RepositoryBuilder::create()->immutable()->make();
+        $store = StoreBuilder::create()->withPaths($this->folder)->make();
+
+        $dotenv = new Dotenv($loader, $repository, $store);
+
+        $this->assertSame([
+            'FOO'    => 'bar',
+            'BAR'    => 'baz',
+            'SPACED' => 'with spaces',
+            'NULL'   => '',
+        ], $dotenv->load());
     }
 }

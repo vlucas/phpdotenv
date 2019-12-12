@@ -7,6 +7,7 @@ use Dotenv\Loader\Loader;
 use Dotenv\Loader\LoaderInterface;
 use Dotenv\Repository\RepositoryBuilder;
 use Dotenv\Repository\RepositoryInterface;
+use Dotenv\Store\FileStore;
 use Dotenv\Store\StoreBuilder;
 
 class Dotenv
@@ -45,7 +46,7 @@ class Dotenv
     {
         $this->loader = $loader;
         $this->repository = $repository;
-        $this->store = is_array($store) ? new Store($store, true) : $store;
+        $this->store = is_array($store) ? new FileStore($store, true) : $store;
     }
 
     /**
