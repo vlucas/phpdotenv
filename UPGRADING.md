@@ -1,5 +1,9 @@
 # Upgrading Guide
 
+## V4.0 to V4.1
+
+There are no breaking changes in this release, but the `Dotenv\Dotenv` constructor now expects either an array of file paths as the third parameter, or an instance of `Dotenv\Store\StoreInterface`. Passing an array is deprecated, and will be removed in V5.
+
 ## V3 to V4
 
 V4 has again changed the way you initialize the `Dotenv` class. If you want immutable loading of environment variables, then replace `Dotenv::create` with `Dotenv::createImmutable`, and if you want mutable loading, replace `Dotenv::create` with `Dotenv::createMutable` and `->overload()` with `->load()`. The `overload` method has been removed in faviour of specifying mutability at object construction.

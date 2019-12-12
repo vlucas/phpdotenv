@@ -3,13 +3,11 @@
 namespace Dotenv;
 
 use Dotenv\Exception\InvalidPathException;
-use Dotenv\File\Paths;
-use Dotenv\File\Reader;
 use Dotenv\Loader\Loader;
 use Dotenv\Loader\LoaderInterface;
 use Dotenv\Repository\RepositoryBuilder;
 use Dotenv\Repository\RepositoryInterface;
-use PhpOption\Option;
+use Dotenv\Store\StoreBuilder;
 
 class Dotenv
 {
@@ -28,35 +26,26 @@ class Dotenv
     protected $repository;
 
     /**
-     * The file paths.
+     * The store instance.
      *
-     * @var string[]
+     * @var \Dotenv\Store\StoreInterface
      */
-    protected $filePaths;
-
-    /**
-     * Should file loading short circuit?
-     *
-     * @var bool
-     */
-    protected $shortCircuit;
+    protected $store;
 
     /**
      * Create a new dotenv instance.
      *
      * @param \Dotenv\Loader\LoaderInterface         $loader
      * @param \Dotenv\Repository\RepositoryInterface $repository
-     * @param string[]                               $filePaths
-     * @param bool                                   $shortCircuit
+     * @param \Dotenv\Store\StoreInterface|string[]  $store
      *
      * @return void
      */
-    public function __construct(LoaderInterface $loader, RepositoryInterface $repository, array $filePaths, $shortCircuit = true)
+    public function __construct(LoaderInterface $loader, RepositoryInterface $repository, $store)
     {
         $this->loader = $loader;
         $this->repository = $repository;
-        $this->filePaths = $filePaths;
-        $this->shortCircuit = $shortCircuit;
+        $this->store = is_array($store) ? new Store($store, true) : $store;
     }
 
     /**
@@ -71,9 +60,13 @@ class Dotenv
      */
     public static function create(RepositoryInterface $repository, $paths, $names = null, $shortCircuit = true)
     {
-        $files = Paths::filePaths((array) $paths, (array) ($names ?: '.env'));
+        $builder = StoreBuilder::create()->withPaths((array) $paths)->withNames((array) ($names ?: '.env'));
 
-        return new self(new Loader(), $repository, $files, $shortCircuit);
+        if ($shortCircuit) {
+            $builder = $builder->shortCircuit();
+        }
+
+        return new self(new Loader(), $repository, $builder->make());
     }
 
     /**
@@ -117,15 +110,7 @@ class Dotenv
      */
     public function load()
     {
-        if ($this->filePaths === []) {
-            throw new InvalidPathException('At least one environment file path must be provided.');
-        }
-
-        return $this->tryLoad()->getOrCall(function () {
-            throw new InvalidPathException(
-                sprintf('Unable to read any of the environment file(s) at [%s].', implode(', ', $this->filePaths))
-            );
-        });
+        return $this->loader->load($this->repository, $this->store->read());
     }
 
     /**
@@ -137,7 +122,12 @@ class Dotenv
      */
     public function safeLoad()
     {
-        return $this->tryLoad()->getOrElse([]);
+        try {
+            return $this->load();
+        } catch (InvalidPathException $e) {
+            // suppressing exception
+            return [];
+        }
     }
 
     /**
@@ -162,37 +152,5 @@ class Dotenv
     public function ifPresent($variables)
     {
         return new Validator($this->repository, (array) $variables, false);
-    }
-
-    /**
-     * Read and load environment file(s), returning an option.
-     *
-     * @throws \Dotenv\Exception\InvalidFileException
-     *
-     * @return \PhpOption\Option
-     */
-    private function tryLoad()
-    {
-        return self::aggregate(Reader::read($this->filePaths, $this->shortCircuit))->map(function ($content) {
-            return $this->loader->load($this->repository, $content);
-        });
-    }
-
-    /**
-     * Aggregate the given raw file contents.
-     *
-     * @param array<string,string> $contents
-     *
-     * @return \PhpOption\Option
-     */
-    private static function aggregate(array $contents)
-    {
-        $output = '';
-
-        foreach ($contents as $content) {
-            $output .= $content."\n";
-        }
-
-        return Option::fromValue($output, '');
     }
 }

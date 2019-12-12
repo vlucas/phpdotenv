@@ -1,6 +1,6 @@
 <?php
 
-namespace Dotenv\File;
+namespace Dotenv\Store\File;
 
 use PhpOption\Option;
 

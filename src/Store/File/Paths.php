@@ -1,8 +1,6 @@
 <?php
 
-namespace Dotenv\File;
-
-use PhpOption\Option;
+namespace Dotenv\Store\File;
 
 class Paths
 {
