@@ -53,7 +53,7 @@ class Regex
      */
     public static function replaceCallback($pattern, callable $callback, $subject, $limit = null)
     {
-        return self::pregAndWrap(function ($subject) use ($pattern, $callback) {
+        return self::pregAndWrap(function ($subject) use ($pattern, $callback, $limit) {
             return (string) @preg_replace_callback($pattern, $callback, $subject, $limit === null ? -1 : $limit);
         }, $subject);
     }
