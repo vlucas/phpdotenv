@@ -2,8 +2,6 @@
 
 namespace Dotenv\Store\File;
 
-use PhpOption\Option;
-
 class Paths
 {
     /**

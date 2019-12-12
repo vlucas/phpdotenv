@@ -8,7 +8,6 @@ use Dotenv\Loader\LoaderInterface;
 use Dotenv\Repository\RepositoryBuilder;
 use Dotenv\Repository\RepositoryInterface;
 use Dotenv\Store\StoreBuilder;
-use PhpOption\Option;
 
 class Dotenv
 {

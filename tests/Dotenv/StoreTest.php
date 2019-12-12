@@ -70,7 +70,7 @@ class StoreTest extends TestCase
     {
         $this->assertSame(
             [
-                $this->folder.DIRECTORY_SEPARATOR.'.env' => "FOO=bar\nBAR=baz\nSPACED=\"with spaces\"\n\nNULL=\n",
+                $this->folder.DIRECTORY_SEPARATOR.'.env'        => "FOO=bar\nBAR=baz\nSPACED=\"with spaces\"\n\nNULL=\n",
                 $this->folder.DIRECTORY_SEPARATOR.'example.env' => "EG=\"example\"\n",
             ],
             Reader::read(
