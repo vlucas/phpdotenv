@@ -13,14 +13,14 @@ class RepositoryBuilder
     /**
      * The set of readers to use.
      *
-     * @var \Dotenv\Repository\Adapter\ReadersInterface[]|null
+     * @var \Dotenv\Repository\Adapter\ReaderInterface[]|null
      */
     private $readers;
 
     /**
      * The set of writers to use.
      *
-     * @var \Dotenv\Repository\Adapter\WritersInterface[]|null
+     * @var \Dotenv\Repository\Adapter\WriterInterface[]|null
      */
     private $writers;
 

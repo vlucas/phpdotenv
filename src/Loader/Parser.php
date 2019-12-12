@@ -23,7 +23,7 @@ class Parser
      *
      * @throws \Dotenv\Exception\InvalidFileException
      *
-     * @return array
+     * @return array<string|null>
      */
     public static function parse($entry)
     {
@@ -39,7 +39,7 @@ class Parser
      *
      * @throws \Dotenv\Exception\InvalidFileException
      *
-     * @return array
+     * @return array<string|null>
      */
     private static function splitStringIntoParts($line)
     {
@@ -129,7 +129,7 @@ class Parser
      * @param int    $state
      * @param string $char
      *
-     * @return array
+     * @return \Dotenv\Result\Result
      */
     private static function processChar($state, $char)
     {

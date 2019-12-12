@@ -7,14 +7,14 @@ class AdapterRepository extends AbstractRepository
     /**
      * The set of readers to use.
      *
-     * @var \Dotenv\Repository\Adapter\ReadersInterface[]
+     * @var \Dotenv\Repository\Adapter\ReaderInterface[]
      */
     protected $readers;
 
     /**
      * The set of writers to use.
      *
-     * @var \Dotenv\Repository\Adapter\WritersInterface[]
+     * @var \Dotenv\Repository\Adapter\WriterInterface[]
      */
     protected $writers;
 

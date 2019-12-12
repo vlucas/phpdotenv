@@ -58,11 +58,21 @@ class Value
         );
     }
 
+    /**
+     * Get the string representation of the parsed value.
+     *
+     * @return string
+     */
     public function getChars()
     {
         return $this->chars;
     }
 
+    /**
+     * Get the locations of the variables in the value.
+     *
+     * @return int[]
+     */
     public function getVars()
     {
         $vars = $this->vars;

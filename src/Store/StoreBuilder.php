@@ -58,7 +58,7 @@ class StoreBuilder
      *
      * @param string|string[] $paths
      *
-     * @return \Dotenv\Repository\RepositoryBuilder
+     * @return \Dotenv\Store\StoreBuilder
      */
     public function withPaths($paths)
     {

@@ -105,7 +105,7 @@ class Lines
      *
      * @param string $line
      *
-     * @return bool
+     * @return bool[]
      */
     private static function getCharPairs($line)
     {
