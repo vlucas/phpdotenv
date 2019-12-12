@@ -22,7 +22,7 @@ class EnvConstAdapter implements AvailabilityInterface, ReaderInterface, WriterI
      *
      * @param string $name
      *
-     * @return \PhpOption\Option
+     * @return \PhpOption\Option<string>
      */
     public function get($name)
     {

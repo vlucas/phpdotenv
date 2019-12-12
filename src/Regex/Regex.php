@@ -15,7 +15,7 @@ class Regex
      * @param string $pattern
      * @param string $subject
      *
-     * @return \Dotenv\Result\Result
+     * @return \Dotenv\Result\Result<int,string>
      */
     public static function match($pattern, $subject)
     {
@@ -32,7 +32,7 @@ class Regex
      * @param string   $subject
      * @param int|null $limit
      *
-     * @return \Dotenv\Result\Result
+     * @return \Dotenv\Result\Result<string,string>
      */
     public static function replace($pattern, $replacement, $subject, $limit = null)
     {
@@ -49,7 +49,7 @@ class Regex
      * @param string   $subject
      * @param int|null $limit
      *
-     * @return \Dotenv\Result\Result
+     * @return \Dotenv\Result\Result<string,string>
      */
     public static function replaceCallback($pattern, callable $callback, $subject, $limit = null)
     {
@@ -59,12 +59,29 @@ class Regex
     }
 
     /**
+     * Perform a preg split, wrapping up the result.
+     *
+     * @param string $pattern
+     * @param string $subject
+     *
+     * @return \Dotenv\Result\Result<string[],string>
+     */
+    public static function split($pattern, $subject)
+    {
+        return self::pregAndWrap(function ($subject) use ($pattern) {
+            return (array) @preg_split($pattern, $subject);
+        }, $subject);
+    }
+
+    /**
      * Perform a preg operation, wrapping up the result.
      *
-     * @param callable $operation
-     * @param string   $subject
+     * @template V
      *
-     * @return \Dotenv\Result\Result
+     * @param callable(string): V $operation
+     * @param string              $subject
+     *
+     * @return \Dotenv\Result\Result<V,string>
      */
     private static function pregAndWrap(callable $operation, $subject)
     {

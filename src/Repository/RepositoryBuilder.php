@@ -34,9 +34,9 @@ class RepositoryBuilder
     /**
      * Create a new repository builder instance.
      *
-     * @param \Dotenv\Repository\Adapter\ReaderInterface[]|null
-     * @param \Dotenv\Repository\Adapter\WriterInterface[]|null
-     * @param bool $immutable
+     * @param \Dotenv\Repository\Adapter\ReaderInterface[]|null $readers
+     * @param \Dotenv\Repository\Adapter\WriterInterface[]|null $writers
+     * @param bool                                              $immutable
      *
      * @return void
      */
@@ -60,7 +60,7 @@ class RepositoryBuilder
     /**
      * Creates a repository builder with the given readers.
      *
-     * @param \Dotenv\Repository\Adapter\ReaderInterface[]|null
+     * @param \Dotenv\Repository\Adapter\ReaderInterface[]|null $readers
      *
      * @return \Dotenv\Repository\RepositoryBuilder
      */
@@ -74,7 +74,7 @@ class RepositoryBuilder
     /**
      * Creates a repository builder with the given writers.
      *
-     * @param \Dotenv\Repository\Adapter\WriterInterface[]|null
+     * @param \Dotenv\Repository\Adapter\WriterInterface[]|null $writers
      *
      * @return \Dotenv\Repository\RepositoryBuilder
      */

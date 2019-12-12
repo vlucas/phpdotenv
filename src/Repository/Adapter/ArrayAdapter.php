@@ -10,7 +10,7 @@ class ArrayAdapter implements AvailabilityInterface, ReaderInterface, WriterInte
     /**
      * The variables and their values.
      *
-     * @return array<string,string|null>
+     * @var array<string,string|null>
      */
     private $variables = [];
 
@@ -29,7 +29,7 @@ class ArrayAdapter implements AvailabilityInterface, ReaderInterface, WriterInte
      *
      * @param string $name
      *
-     * @return \PhpOption\Option
+     * @return \PhpOption\Option<string>
      */
     public function get($name)
     {

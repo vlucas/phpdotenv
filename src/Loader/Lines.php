@@ -37,7 +37,7 @@ class Lines
      * @param string   $line
      * @param string[] $buffer
      *
-     * @return array
+     * @return array{bool,string,string[]}
      */
     private static function multilineProcess($multiline, $line, array $buffer)
     {
@@ -105,7 +105,7 @@ class Lines
      *
      * @param string $line
      *
-     * @return bool[]
+     * @return array{array{string,string|null}}
      */
     private static function getCharPairs($line)
     {
