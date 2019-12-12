@@ -22,7 +22,7 @@ abstract class AbstractRepository implements RepositoryInterface
     private $loaded;
 
     /**
-     * Create a new environment variables instance.
+     * Create a new repository instance.
      *
      * @param bool $immutable
      *

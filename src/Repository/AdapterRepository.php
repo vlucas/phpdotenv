@@ -19,7 +19,7 @@ class AdapterRepository extends AbstractRepository
     protected $writers;
 
     /**
-     * Create a new dotenv environment variables instance.
+     * Create a new adapter repository instance.
      *
      * @param \Dotenv\Repository\Adapter\ReaderInterface[] $readers
      * @param \Dotenv\Repository\Adapter\WriterInterface[] $writers
