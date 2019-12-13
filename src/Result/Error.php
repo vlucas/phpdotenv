@@ -32,9 +32,11 @@ class Error extends Result
     /**
      * Create a new error value.
      *
-     * @param E $value
+     * @template F
      *
-     * @return \Dotenv\Result\Result<T,E>
+     * @param F $value
+     *
+     * @return \Dotenv\Result\Result<T,F>
      */
     public static function create($value)
     {
@@ -54,9 +56,11 @@ class Error extends Result
     /**
      * Map over the success value.
      *
-     * @param callable $f
+     * @template S
      *
-     * @return \Dotenv\Result\Result<T,E>
+     * @param callable(T): S $f
+     *
+     * @return \Dotenv\Result\Result<S,E>
      */
     public function mapSuccess(callable $f)
     {
@@ -76,9 +80,11 @@ class Error extends Result
     /**
      * Map over the error value.
      *
-     * @param callable $f
+     * @template F
      *
-     * @return \Dotenv\Result\Result<T,E>
+     * @param callable(E): F $f
+     *
+     * @return \Dotenv\Result\Result<T,F>
      */
     public function mapError(callable $f)
     {
