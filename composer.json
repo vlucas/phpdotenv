@@ -17,7 +17,7 @@
     ],
     "require": {
         "php": "^5.5.9 || ^7.0",
-        "phpoption/phpoption": "^1.6",
+        "phpoption/phpoption": "^1.7",
         "symfony/polyfill-ctype": "^1.9"
     },
     "require-dev": {

@@ -8,3 +8,4 @@ parameters:
     - '/^Parameter \#2 \$writers of class Dotenv\\Repository\\[a-zA-Z]*Repository[a-zA-Z]* constructor expects/'
     - '#Method Dotenv\\Repository\\AbstractRepository::offset[a-zA-Z\(\)\$ ]* typehint specified.#'
     - '#Method Dotenv\\Loader\\Lines::getCharPairs\(\) should return array\(array\(string, string\|null\)\) but returns array\<int, mixed\>.#'
+    - '#Unable to resolve the template type S in call to method PhpOption\\Option<mixed>::flatMap\(\)#'
