@@ -20,6 +20,18 @@ class LoaderTest extends TestCase
         $this->assertSame($expected, $loader->load($repository, $content));
     }
 
+    public function testLoaderWithWhitelist()
+    {
+        $adapter = new ArrayAdapter();
+        $repository = RepositoryBuilder::create()->withReaders([$adapter])->withWriters([$adapter])->make();
+        $loader = new Loader(['FOO']);
+
+        $this->assertSame(['FOO' => 'Hello'], $loader->load($repository, "FOO=\"Hello\"\nBAR=\"World!\"\n"));
+        $this->assertTrue($adapter->get('FOO')->isDefined());
+        $this->assertSame('Hello', $adapter->get('FOO')->get());
+        $this->assertFalse($adapter->get('BAR')->isDefined());
+    }
+
     public function providesAdapters()
     {
         return [

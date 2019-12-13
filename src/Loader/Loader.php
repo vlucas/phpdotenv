@@ -9,6 +9,25 @@ use PhpOption\Option;
 class Loader implements LoaderInterface
 {
     /**
+     * The variable name whitelist.
+     *
+     * @var string[]|null
+     */
+    protected $whitelist;
+
+    /**
+     * Create a new loader instance.
+     *
+     * @param string[]|null $whitelist
+     *
+     * @return void
+     */
+    public function __construct(array $whitelist = null)
+    {
+        $this->whitelist = $whitelist;
+    }
+
+    /**
      * Load the given environment file content into the repository.
      *
      * @param \Dotenv\Repository\RepositoryInterface $repository
@@ -20,7 +39,7 @@ class Loader implements LoaderInterface
      */
     public function load(RepositoryInterface $repository, $content)
     {
-        return self::processEntries(
+        return $this->processEntries(
             $repository,
             Lines::process(Regex::split("/(\r\n|\n|\r)/", $content)->getSuccess())
         );
@@ -39,14 +58,16 @@ class Loader implements LoaderInterface
      *
      * @return array<string,string|null>
      */
-    private static function processEntries(RepositoryInterface $repository, array $entries)
+    private function processEntries(RepositoryInterface $repository, array $entries)
     {
         $vars = [];
 
         foreach ($entries as $entry) {
             list($name, $value) = Parser::parse($entry);
-            $vars[$name] = self::resolveNestedVariables($repository, $value);
-            $repository->set($name, $vars[$name]);
+            if ($this->whitelist === null || in_array($name, $this->whitelist, true)) {
+                $vars[$name] = self::resolveNestedVariables($repository, $value);
+                $repository->set($name, $vars[$name]);
+            }
         }
 
         return $vars;
