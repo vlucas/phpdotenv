@@ -1,5 +1,7 @@
 <?php
 
+namespace Dotenv\Tests;
+
 use Dotenv\Loader\Parser;
 use PHPUnit\Framework\TestCase;
 

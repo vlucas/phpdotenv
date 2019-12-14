@@ -1,5 +1,7 @@
 <?php
 
+namespace Dotenv\Tests;
+
 use Dotenv\Dotenv;
 use PHPUnit\Framework\TestCase;
 

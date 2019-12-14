@@ -1,5 +1,7 @@
 <?php
 
+namespace Dotenv\Tests;
+
 use Dotenv\Dotenv;
 use Dotenv\Loader\Loader;
 use Dotenv\Repository\RepositoryBuilder;

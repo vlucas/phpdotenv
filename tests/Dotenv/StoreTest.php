@@ -1,5 +1,7 @@
 <?php
 
+namespace Dotenv\Tests;
+
 use Dotenv\Store\File\Paths;
 use Dotenv\Store\File\Reader;
 use Dotenv\Store\StoreBuilder;

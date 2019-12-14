@@ -1,5 +1,6 @@
-
 <?php
+
+namespace Dotenv\Tests;
 
 use Dotenv\Dotenv;
 use Dotenv\Repository\Adapter\ArrayAdapter;

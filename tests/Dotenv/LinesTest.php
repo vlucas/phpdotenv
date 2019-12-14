@@ -1,5 +1,7 @@
 <?php
 
+namespace Dotenv\Tests;
+
 use Dotenv\Loader\Lines;
 use PHPUnit\Framework\TestCase;
 

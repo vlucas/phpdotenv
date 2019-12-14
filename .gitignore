@@ -1,4 +1,5 @@
 composer.lock
 phpstan.neon
+phpstan.tests.neon
 phpunit.xml
 vendor

@@ -17,7 +17,7 @@
     ],
     "require": {
         "php": "^5.5.9 || ^7.0",
-        "phpoption/phpoption": "^1.7",
+        "phpoption/phpoption": "^1.7.1",
         "symfony/polyfill-ctype": "^1.9"
     },
     "require-dev": {
@@ -27,6 +27,11 @@
     "autoload": {
         "psr-4": {
             "Dotenv\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Dotenv\\Tests\\": "tests/Dotenv/"
         }
     },
     "extra": {

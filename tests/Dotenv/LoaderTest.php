@@ -1,5 +1,7 @@
 <?php
 
+namespace Dotenv\Tests;
+
 use Dotenv\Loader\Loader;
 use Dotenv\Repository\Adapter\ArrayAdapter;
 use Dotenv\Repository\Adapter\EnvConstAdapter;

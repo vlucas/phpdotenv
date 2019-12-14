@@ -1,5 +1,7 @@
 <?php
 
+namespace Dotenv\Tests;
+
 use Dotenv\Result\Error;
 use Dotenv\Result\Success;
 use PHPUnit\Framework\TestCase;
