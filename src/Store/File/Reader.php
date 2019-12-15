@@ -46,6 +46,7 @@ class Reader
     {
         $content = @file_get_contents($filePath);
 
+        /** @var \PhpOption\Option<string> */
         return Option::fromValue($content, false);
     }
 }

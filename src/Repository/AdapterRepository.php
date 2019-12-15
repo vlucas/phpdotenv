@@ -51,6 +51,8 @@ class AdapterRepository extends AbstractRepository
                 return $result->get();
             }
         }
+
+        return null;
     }
 
     /**

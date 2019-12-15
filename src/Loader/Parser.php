@@ -5,6 +5,7 @@ namespace Dotenv\Loader;
 use Dotenv\Exception\InvalidFileException;
 use Dotenv\Result\Error;
 use Dotenv\Result\Success;
+use RuntimeException;
 
 class Parser
 {
@@ -192,6 +193,8 @@ class Parser
                 }
             case self::COMMENT_STATE:
                 return Success::create(['', false, self::COMMENT_STATE]);
+            default:
+                throw new RuntimeException('Parser entered invalid state.');
         }
     }
 

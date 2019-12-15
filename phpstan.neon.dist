@@ -1,16 +1,11 @@
 parameters:
   level: max
   ignoreErrors:
-    - '#Method Dotenv\\Loader\\Parser::processChar\(\) should return Dotenv\\Result\\Result<array<int, bool\|int\|string>, string> but return statement is missing.#'
-    - '#Method Dotenv\\Repository\\AdapterRepository::getInternal\(\) should return string\|null but return statement is missing.#'
     - '#Variable \$defaults might not be defined.#'
     - '/^Parameter \#1 \$readers of class Dotenv\\Repository\\[a-zA-Z]*Repository[a-zA-Z]* constructor expects/'
     - '/^Parameter \#2 \$writers of class Dotenv\\Repository\\[a-zA-Z]*Repository[a-zA-Z]* constructor expects/'
     - '#Method Dotenv\\Repository\\AbstractRepository::offset[a-zA-Z\(\)\$ ]* typehint specified.#'
-    - '#Method Dotenv\\Loader\\Lines::getCharPairs\(\) should return array\(array\(string, string\|null\)\) but returns array\<int, mixed\>.#'
     - '#Unable to resolve the template type S in call to method PhpOption\\Option<mixed>::flatMap\(\)#'
     - '#Method Dotenv\\Loader\\Parser::processChar\(\) should return Dotenv\\Result\\Result<array<int, bool\|int\|string>, string> but returns Dotenv\\Result\\Result<array<int, [a-z\|\,]+>, mixed>.#'
     - '#Parameter \#1 \$callable of method PhpOption\\Option<Dotenv\\Loader\\Value|null>::map\(\) expects callable\(Dotenv\\Loader\\Value\|null\): mixed, Closure\(Dotenv\\Loader\\Value\): mixed given.#'
     - '#Parameter \#1 \$callable of method PhpOption\\Option<array\|null>::[a-z]+\(\) expects callable\(array\|null\): [a-z]+, Closure\(array\): mixed given.#'                                                                          
-    - '#Method Dotenv\\Repository\\Adapter\\PutenvAdapter::get\(\) should return PhpOption\\Option<string> but returns PhpOption\\Option<bool\|string>.#'
-    - '#Method Dotenv\\Store\\File\\Reader::readFromFile\(\) should return PhpOption\\Option<string> but returns PhpOption\\Option<bool\|string>.#'

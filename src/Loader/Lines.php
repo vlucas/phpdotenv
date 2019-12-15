@@ -111,6 +111,7 @@ class Lines
     {
         $chars = str_split($line);
 
+        /** @var array{array{string,string|null}} */
         return array_map(null, $chars, array_slice($chars, 1));
     }
 
