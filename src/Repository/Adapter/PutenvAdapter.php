@@ -21,10 +21,11 @@ class PutenvAdapter implements AvailabilityInterface, ReaderInterface, WriterInt
      *
      * @param string $name
      *
-     * @return \PhpOption\Option<string>
+     * @return \PhpOption\Option<string|null>
      */
     public function get($name)
     {
+        /** @var \PhpOption\Option<string|null> */
         return Option::fromValue(getenv($name), false);
     }
 

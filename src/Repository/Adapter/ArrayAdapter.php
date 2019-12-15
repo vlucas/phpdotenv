@@ -29,7 +29,7 @@ class ArrayAdapter implements AvailabilityInterface, ReaderInterface, WriterInte
      *
      * @param string $name
      *
-     * @return \PhpOption\Option<string>
+     * @return \PhpOption\Option<string|null>
      */
     public function get($name)
     {

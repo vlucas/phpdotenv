@@ -9,7 +9,7 @@ interface ReaderInterface extends AvailabilityInterface
      *
      * @param string $name
      *
-     * @return \PhpOption\Option<string>
+     * @return \PhpOption\Option<string|null>
      */
     public function get($name);
 }
