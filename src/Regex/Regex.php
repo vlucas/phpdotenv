@@ -78,8 +78,8 @@ class Regex
      *
      * @template V
      *
-     * @param callable(string): V $operation
-     * @param string              $subject
+     * @param callable(string):V $operation
+     * @param string             $subject
      *
      * @return \Dotenv\Result\Result<V,string>
      */

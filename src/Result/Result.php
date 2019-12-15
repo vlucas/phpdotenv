@@ -32,7 +32,7 @@ abstract class Result
      *
      * @template S
      *
-     * @param callable(T): S $f
+     * @param callable(T):S $f
      *
      * @return \Dotenv\Result\Result<S,E>
      */
@@ -62,7 +62,7 @@ abstract class Result
      *
      * @template F
      *
-     * @param callable(E): F $f
+     * @param callable(E):F $f
      *
      * @return \Dotenv\Result\Result<T,F>
      */
