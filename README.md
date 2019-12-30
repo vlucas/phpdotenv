@@ -1,13 +1,55 @@
 PHP dotenv
 ==========
 
-Loads environment variables from `.env` to `getenv()`, `$_ENV` and
-`$_SERVER` automagically.
+Loads environment variables from `.env` to `getenv()`, `$_ENV` and `$_SERVER` automagically.
 
-This is a PHP version of the original [Ruby
+![Banner](https://user-images.githubusercontent.com/2829600/71564012-31105580-2a91-11ea-9ad7-ef1278411b35.png)
+
+<p align="center">
+<a href="https://travis-ci.org/vlucas/phpdotenv"><img src="https://img.shields.io/travis/vlucas/phpdotenv/master.svg?style=flat-square" alt="Build Status"></img></a>
+<a href="LICENSE"><img src="https://img.shields.io/badge/license-BSD%203--Clause-brightgreen.svg?style=flat-square" alt="Software License"></img></a>
+<a href="https://packagist.org/packages/vlucas/phpdotenv"><img src="https://img.shields.io/packagist/dt/vlucas/phpdotenv.svg?style=flat-square" alt="Total Downloads"></img></a>
+<a href="https://github.com/vlucas/phpdotenv/releases"><img src="https://img.shields.io/github/release/vlucas/phpdotenv.svg?style=flat-square" alt="Latest Version"></img></a>
+</p>
+
+
+Why .env?
+---------
+
+**You should never store sensitive credentials in your code**. Storing
+[configuration in the environment](http://www.12factor.net/config) is one of
+the tenets of a [twelve-factor app](http://www.12factor.net/). Anything that is
+likely to change between deployment environments – such as database credentials
+or credentials for 3rd party services – should be extracted from the code into
+environment variables.
+
+Basically, a `.env` file is an easy way to load custom configuration variables
+that your application needs without having to modify .htaccess files or
+Apache/nginx virtual hosts. This means you won't have to edit any files outside
+the project, and all the environment variables are always set no matter how you
+run your project - Apache, Nginx, CLI, and even PHP 5.4's built-in webserver.
+It's WAY easier than all the other ways you know of to set environment
+variables, and you're going to love it!
+
+* NO editing virtual hosts in Apache or Nginx
+* NO adding `php_value` flags to .htaccess files
+* EASY portability and sharing of required ENV values
+* COMPATIBLE with PHP's built-in web server and CLI runner
+
+PHP dotenv is a PHP version of the original [Ruby
 dotenv](https://github.com/bkeepers/dotenv).
 
-[![Build Status](https://travis-ci.org/vlucas/phpdotenv.svg?branch=master)](https://travis-ci.org/vlucas/phpdotenv)
+
+Installation with Composer
+--------------------------
+
+Installation is super-easy via [Composer](https://getcomposer.org/):
+
+```bash
+$ composer require vlucas/phpdotenv
+```
+
+or add it by hand to your `composer.json` file.
 
 
 UPGRADING FROM V3
@@ -45,37 +87,6 @@ For more details, please see the
 [release notes](https://github.com/vlucas/phpdotenv/releases/tag/v3.0.0) and
 the [upgrading guide](UPGRADING.md).
 
-
-Why .env?
----------
-
-**You should never store sensitive credentials in your code**. Storing
-[configuration in the environment](http://www.12factor.net/config) is one of
-the tenets of a [twelve-factor app](http://www.12factor.net/). Anything that is
-likely to change between deployment environments – such as database credentials
-or credentials for 3rd party services – should be extracted from the code into
-environment variables.
-
-Basically, a `.env` file is an easy way to load custom configuration variables
-that your application needs without having to modify .htaccess files or
-Apache/nginx virtual hosts. This means you won't have to edit any files outside
-the project, and all the environment variables are always set no matter how you
-run your project - Apache, Nginx, CLI, and even PHP 5.4's built-in webserver.
-It's WAY easier than all the other ways you know of to set environment
-variables, and you're going to love it!
-
-* NO editing virtual hosts in Apache or Nginx
-* NO adding `php_value` flags to .htaccess files
-* EASY portability and sharing of required ENV values
-* COMPATIBLE with PHP's built-in web server and CLI runner
-
-
-Installation with Composer
---------------------------
-
-```shell
-composer require vlucas/phpdotenv
-```
 
 Usage
 -----
