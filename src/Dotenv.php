@@ -67,7 +67,7 @@ class Dotenv
             $builder = $builder->shortCircuit();
         }
 
-        return new self(new Loader(), $repository, $builder->make());
+        return new static(new Loader(), $repository, $builder->make());
     }
 
     /**
@@ -83,7 +83,7 @@ class Dotenv
     {
         $repository = RepositoryBuilder::create()->make();
 
-        return self::create($repository, $paths, $names, $shortCircuit);
+        return static::create($repository, $paths, $names, $shortCircuit);
     }
 
     /**
@@ -99,7 +99,7 @@ class Dotenv
     {
         $repository = RepositoryBuilder::create()->immutable()->make();
 
-        return self::create($repository, $paths, $names, $shortCircuit);
+        return static::create($repository, $paths, $names, $shortCircuit);
     }
 
     /**
