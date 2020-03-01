@@ -42,5 +42,5 @@ matrix:
         - travis_retry docker run -it -w /data -v ${PWD}:/data:delegated --entrypoint composer registry.gitlab.com/grahamcampbell/php:7.4 install --no-suggest --prefer-dist -n -o
         - travis_retry docker run -it -w /data -v ${PWD}:/data:delegated --entrypoint composer registry.gitlab.com/grahamcampbell/php:7.4 bin phpstan install --no-suggest --prefer-dist -n -o
       script: 
-        - docker run -it -w /data -v ${PWD}:/data:delegated --entrypoint vendor/bin/phpstan registry.gitlab.com/grahamcampbell/php:7.4 analyse src
+        - docker run -it -w /data -v ${PWD}:/data:delegated --entrypoint vendor/bin/phpstan registry.gitlab.com/grahamcampbell/php:7.4 analyse src -c phpstan.src.neon.dist
         - docker run -it -w /data -v ${PWD}:/data:delegated --entrypoint vendor/bin/phpstan registry.gitlab.com/grahamcampbell/php:7.4 analyse tests -c phpstan.tests.neon.dist
