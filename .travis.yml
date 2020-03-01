@@ -1,43 +1,23 @@
+dist: bionic
+
 matrix:
   include:
-    - name: PHP 5.5.9
-      dist: trusty
-      language: php
-      php: 5.5.9
-      install: travis_retry composer install --no-suggest --prefer-dist -n -o
-      script: vendor/bin/phpunit
-    - name: PHP 5.5
-      dist: trusty
-      language: php
-      php: 5.5
-      install: travis_retry composer install --no-suggest --prefer-dist -n -o
-      script: vendor/bin/phpunit
-    - name: PHP 5.6
-      dist: bionic
-      install: travis_retry docker run -it -w /data -v ${PWD}:/data:delegated --entrypoint composer registry.gitlab.com/grahamcampbell/php:5.6 install --no-suggest --prefer-dist -n -o
-      script: docker run -it -w /data -v ${PWD}:/data:delegated --entrypoint vendor/bin/phpunit registry.gitlab.com/grahamcampbell/php:5.6
-    - name: PHP 7.0
-      dist: bionic
-      install: travis_retry docker run -it -w /data -v ${PWD}:/data:delegated --entrypoint composer registry.gitlab.com/grahamcampbell/php:7.0 install --no-suggest --prefer-dist -n -o
-      script: docker run -it -w /data -v ${PWD}:/data:delegated --entrypoint vendor/bin/phpunit registry.gitlab.com/grahamcampbell/php:7.0
     - name: PHP 7.1
-      dist: bionic
       install: travis_retry docker run -it -w /data -v ${PWD}:/data:delegated --entrypoint composer registry.gitlab.com/grahamcampbell/php:7.1 install --no-suggest --prefer-dist -n -o
       script: docker run -it -w /data -v ${PWD}:/data:delegated --entrypoint vendor/bin/phpunit registry.gitlab.com/grahamcampbell/php:7.1
     - name: PHP 7.2
-      dist: bionic
       install: travis_retry docker run -it -w /data -v ${PWD}:/data:delegated --entrypoint composer registry.gitlab.com/grahamcampbell/php:7.2 install --no-suggest --prefer-dist -n -o
       script: docker run -it -w /data -v ${PWD}:/data:delegated --entrypoint vendor/bin/phpunit registry.gitlab.com/grahamcampbell/php:7.2
     - name: PHP 7.3
-      dist: bionic
       install: travis_retry docker run -it -w /data -v ${PWD}:/data:delegated --entrypoint composer registry.gitlab.com/grahamcampbell/php:7.3 install --no-suggest --prefer-dist -n -o
       script: docker run -it -w /data -v ${PWD}:/data:delegated --entrypoint vendor/bin/phpunit registry.gitlab.com/grahamcampbell/php:7.3
     - name: PHP 7.4
-      dist: bionic
       install: travis_retry docker run -it -w /data -v ${PWD}:/data:delegated --entrypoint composer registry.gitlab.com/grahamcampbell/php:7.4 install --no-suggest --prefer-dist -n -o
       script: docker run -it -w /data -v ${PWD}:/data:delegated --entrypoint vendor/bin/phpunit registry.gitlab.com/grahamcampbell/php:7.4
+    - name: PHP 8.0
+      install: travis_retry docker run -it -w /data -v ${PWD}:/data:delegated --entrypoint composer registry.gitlab.com/grahamcampbell/php:8.0 install --no-suggest --prefer-dist --ignore-platform-reqs -n -o
+      script: docker run -it -w /data -v ${PWD}:/data:delegated --entrypoint vendor/bin/phpunit registry.gitlab.com/grahamcampbell/php:8.0
     - name: PHPStan
-      dist: bionic
       install: 
         - travis_retry docker run -it -w /data -v ${PWD}:/data:delegated --entrypoint composer registry.gitlab.com/grahamcampbell/php:7.4 install --no-suggest --prefer-dist -n -o
         - travis_retry docker run -it -w /data -v ${PWD}:/data:delegated --entrypoint composer registry.gitlab.com/grahamcampbell/php:7.4 bin phpstan install --no-suggest --prefer-dist -n -o
