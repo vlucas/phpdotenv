@@ -1,10 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dotenv\Store\File;
 
 use PhpOption\Option;
 
-class Reader
+final class Reader
 {
     /**
      * Read the file(s), and return their raw content.
@@ -18,7 +20,7 @@ class Reader
      *
      * @return array<string,string>
      */
-    public static function read(array $filePaths, $shortCircuit = true)
+    public static function read(array $filePaths, bool $shortCircuit = true)
     {
         $output = [];
 
@@ -42,7 +44,7 @@ class Reader
      *
      * @return \PhpOption\Option<string>
      */
-    private static function readFromFile($filePath)
+    private static function readFromFile(string $filePath)
     {
         $content = @file_get_contents($filePath);
 

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dotenv\Loader;
 
 use Dotenv\Repository\RepositoryInterface;
@@ -16,5 +18,5 @@ interface LoaderInterface
      *
      * @return array<string,string|null>
      */
-    public function load(RepositoryInterface $repository, $content);
+    public function load(RepositoryInterface $repository, string $content);
 }

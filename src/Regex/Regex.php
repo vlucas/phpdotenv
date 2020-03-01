@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dotenv\Regex;
 
 use Dotenv\Result\Error;
@@ -7,7 +9,7 @@ use Dotenv\Result\Result;
 use Dotenv\Result\Success;
 use PhpOption\Option;
 
-class Regex
+final class Regex
 {
     /**
      * Perform a preg match, wrapping up the result.
@@ -17,27 +19,10 @@ class Regex
      *
      * @return \Dotenv\Result\Result<int,string>
      */
-    public static function match($pattern, $subject)
+    public static function match(string $pattern, string $subject)
     {
-        return self::pregAndWrap(function ($subject) use ($pattern) {
+        return self::pregAndWrap(function (string $subject) use ($pattern) {
             return (int) @preg_match($pattern, $subject);
-        }, $subject);
-    }
-
-    /**
-     * Perform a preg replace, wrapping up the result.
-     *
-     * @param string   $pattern
-     * @param string   $replacement
-     * @param string   $subject
-     * @param int|null $limit
-     *
-     * @return \Dotenv\Result\Result<string,string>
-     */
-    public static function replace($pattern, $replacement, $subject, $limit = null)
-    {
-        return self::pregAndWrap(function ($subject) use ($pattern, $replacement, $limit) {
-            return (string) @preg_replace($pattern, $replacement, $subject, $limit === null ? -1 : $limit);
         }, $subject);
     }
 
@@ -51,10 +36,10 @@ class Regex
      *
      * @return \Dotenv\Result\Result<string,string>
      */
-    public static function replaceCallback($pattern, callable $callback, $subject, $limit = null)
+    public static function replaceCallback(string $pattern, callable $callback, string $subject, int $limit = null)
     {
-        return self::pregAndWrap(function ($subject) use ($pattern, $callback, $limit) {
-            return (string) @preg_replace_callback($pattern, $callback, $subject, $limit === null ? -1 : $limit);
+        return self::pregAndWrap(function (string $subject) use ($pattern, $callback, $limit) {
+            return (string) @preg_replace_callback($pattern, $callback, $subject, $limit ?? -1);
         }, $subject);
     }
 
@@ -66,9 +51,9 @@ class Regex
      *
      * @return \Dotenv\Result\Result<string[],string>
      */
-    public static function split($pattern, $subject)
+    public static function split(string $pattern, string $subject)
     {
-        return self::pregAndWrap(function ($subject) use ($pattern) {
+        return self::pregAndWrap(function (string $subject) use ($pattern) {
             return (array) @preg_split($pattern, $subject);
         }, $subject);
     }
@@ -83,7 +68,7 @@ class Regex
      *
      * @return \Dotenv\Result\Result<V,string>
      */
-    private static function pregAndWrap(callable $operation, $subject)
+    private static function pregAndWrap(callable $operation, string $subject)
     {
         $result = $operation($subject);
 
@@ -101,11 +86,11 @@ class Regex
      *
      * @return string
      */
-    private static function lookupError($code)
+    private static function lookupError(int $code)
     {
         return Option::fromValue(get_defined_constants(true))
             ->filter(function (array $consts) {
-                return isset($consts['pcre']) && defined('ARRAY_FILTER_USE_KEY');
+                return isset($consts['pcre']);
             })
             ->map(function (array $consts) {
                 return array_filter($consts['pcre'], function ($msg) {

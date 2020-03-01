@@ -1,8 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dotenv\Repository\Adapter;
 
-interface ReaderInterface extends AvailabilityInterface
+interface ReaderInterface
 {
     /**
      * Get an environment variable, if it exists.
@@ -11,5 +13,5 @@ interface ReaderInterface extends AvailabilityInterface
      *
      * @return \PhpOption\Option<string|null>
      */
-    public function get($name);
+    public function get(string $name);
 }

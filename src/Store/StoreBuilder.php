@@ -1,11 +1,20 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dotenv\Store;
 
 use Dotenv\Store\File\Paths;
 
-class StoreBuilder
+final class StoreBuilder
 {
+    /**
+     * The of default name.
+     *
+     * @var string[]
+     */
+    private const DEFAULT_NAME = '.env';
+
     /**
      * The paths to search within.
      *
@@ -16,7 +25,7 @@ class StoreBuilder
     /**
      * The file names to search for.
      *
-     * @var string[]|null
+     * @var string[]
      */
     private $names;
 
@@ -25,18 +34,18 @@ class StoreBuilder
      *
      * @var bool
      */
-    protected $shortCircuit;
+    private $shortCircuit;
 
     /**
      * Create a new store builder instance.
      *
-     * @param string[]      $paths
-     * @param string[]|null $names
-     * @param bool          $shortCircuit
+     * @param string[] $paths
+     * @param string[] $names
+     * @param bool     $shortCircuit
      *
      * @return void
      */
-    private function __construct(array $paths = [], array $names = null, $shortCircuit = false)
+    private function __construct(array $paths = [], array $names = [], bool $shortCircuit = false)
     {
         $this->paths = $paths;
         $this->names = $names;
@@ -44,37 +53,47 @@ class StoreBuilder
     }
 
     /**
-     * Create a new store builder instance.
+     * Create a new store builder instance with no names.
      *
      * @return \Dotenv\Store\StoreBuilder
      */
-    public static function create()
+    public static function createWithNoNames()
     {
         return new self();
     }
 
     /**
-     * Creates a store builder with the given paths.
-     *
-     * @param string|string[] $paths
+     * Create a new store builder instance with the default name.
      *
      * @return \Dotenv\Store\StoreBuilder
      */
-    public function withPaths($paths)
+    public static function createWithDefaultName()
     {
-        return new self((array) $paths, $this->names, $this->shortCircuit);
+        return new self([], [self::DEFAULT_NAME]);
     }
 
     /**
-     * Creates a store builder with the given names.
+     * Creates a store builder with the given path added.
      *
-     * @param string|string[]|null $names
+     * @param string $path
      *
      * @return \Dotenv\Store\StoreBuilder
      */
-    public function withNames($names = null)
+    public function addPath(string $path)
     {
-        return new self($this->paths, $names === null ? null : (array) $names, $this->shortCircuit);
+        return new self(array_merge($this->paths, [$path]), $this->names, $this->shortCircuit);
+    }
+
+    /**
+     * Creates a store builder with the given name added.
+     *
+     * @param string $name
+     *
+     * @return \Dotenv\Store\StoreBuilder
+     */
+    public function addName(string $name)
+    {
+        return new self($this->paths, array_merge($this->names, [$name]), $this->shortCircuit);
     }
 
     /**
@@ -95,7 +114,7 @@ class StoreBuilder
     public function make()
     {
         return new FileStore(
-            Paths::filePaths($this->paths, $this->names === null ? ['.env'] : $this->names),
+            Paths::filePaths($this->paths, $this->names),
             $this->shortCircuit
         );
     }

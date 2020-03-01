@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dotenv\Result;
 
 use PhpOption\None;
@@ -10,7 +12,7 @@ use PhpOption\Some;
  * @template E
  * @extends \Dotenv\Result\Result<T,E>
  */
-class Error extends Result
+final class Error extends Result
 {
     /**
      * @var E
@@ -62,8 +64,24 @@ class Error extends Result
      *
      * @return \Dotenv\Result\Result<S,E>
      */
-    public function mapSuccess(callable $f)
+    public function map(callable $f)
     {
+        return self::create($this->value);
+    }
+
+    /**
+     * Flat map over the success value.
+     *
+     * @template S
+     * @template F
+     *
+     * @param callable(T):\Dotenv\Result\Result<S,F> $f
+     *
+     * @return \Dotenv\Result\Result<S,F>
+     */
+    public function flatMap(callable $f)
+    {
+        /** @var \Dotenv\Result\Result<S,F> */
         return self::create($this->value);
     }
 

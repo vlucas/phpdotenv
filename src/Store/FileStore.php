@@ -1,25 +1,27 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dotenv\Store;
 
 use Dotenv\Exception\InvalidPathException;
 use Dotenv\Store\File\Reader;
 
-class FileStore implements StoreInterface
+final class FileStore implements StoreInterface
 {
     /**
      * The file paths.
      *
      * @var string[]
      */
-    protected $filePaths;
+    private $filePaths;
 
     /**
      * Should file loading short circuit?
      *
      * @var bool
      */
-    protected $shortCircuit;
+    private $shortCircuit;
 
     /**
      * Create a new file store instance.
@@ -29,7 +31,7 @@ class FileStore implements StoreInterface
      *
      * @return void
      */
-    public function __construct(array $filePaths, $shortCircuit)
+    public function __construct(array $filePaths, bool $shortCircuit)
     {
         $this->filePaths = $filePaths;
         $this->shortCircuit = $shortCircuit;

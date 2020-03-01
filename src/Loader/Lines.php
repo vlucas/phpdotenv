@@ -1,8 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dotenv\Loader;
 
-class Lines
+final class Lines
 {
     /**
      * Process the array of lines of environment variables.
@@ -20,7 +22,7 @@ class Lines
         $multilineBuffer = [];
 
         foreach ($lines as $line) {
-            list($multiline, $line, $multilineBuffer) = self::multilineProcess($multiline, $line, $multilineBuffer);
+            [$multiline, $line, $multilineBuffer] = self::multilineProcess($multiline, $line, $multilineBuffer);
 
             if (!$multiline && !self::isComment($line) && self::isSetter($line)) {
                 $output[] = $line;
@@ -39,7 +41,7 @@ class Lines
      *
      * @return array{bool,string,string[]}
      */
-    private static function multilineProcess($multiline, $line, array $buffer)
+    private static function multilineProcess(bool $multiline, string $line, array $buffer)
     {
         // check if $line can be multiline variable
         if ($started = self::looksLikeMultilineStart($line)) {
@@ -66,7 +68,7 @@ class Lines
      *
      * @return bool
      */
-    private static function looksLikeMultilineStart($line)
+    private static function looksLikeMultilineStart(string $line)
     {
         if (strpos($line, '="') === false) {
             return false;
@@ -83,7 +85,7 @@ class Lines
      *
      * @return bool
      */
-    private static function looksLikeMultilineStop($line, $started)
+    private static function looksLikeMultilineStop(string $line, bool $started)
     {
         if ($line === '"') {
             return true;
@@ -107,7 +109,7 @@ class Lines
      *
      * @return array{array{string,string|null}}
      */
-    private static function getCharPairs($line)
+    private static function getCharPairs(string $line)
     {
         $chars = str_split($line);
 
@@ -122,7 +124,7 @@ class Lines
      *
      * @return bool
      */
-    private static function isComment($line)
+    private static function isComment(string $line)
     {
         $line = ltrim($line);
 
@@ -136,7 +138,7 @@ class Lines
      *
      * @return bool
      */
-    private static function isSetter($line)
+    private static function isSetter(string $line)
     {
         return strpos($line, '=') !== false;
     }

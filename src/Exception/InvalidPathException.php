@@ -1,10 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dotenv\Exception;
 
 use InvalidArgumentException;
 
-class InvalidPathException extends InvalidArgumentException implements ExceptionInterface
+final class InvalidPathException extends InvalidArgumentException implements ExceptionInterface
 {
     //
 }

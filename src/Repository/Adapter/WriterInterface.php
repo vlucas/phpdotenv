@@ -1,8 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dotenv\Repository\Adapter;
 
-interface WriterInterface extends AvailabilityInterface
+interface WriterInterface
 {
     /**
      * Set an environment variable.
@@ -12,7 +14,7 @@ interface WriterInterface extends AvailabilityInterface
      *
      * @return void
      */
-    public function set($name, $value = null);
+    public function set(string $name, string $value = null);
 
     /**
      * Clear an environment variable.
@@ -21,5 +23,5 @@ interface WriterInterface extends AvailabilityInterface
      *
      * @return void
      */
-    public function clear($name);
+    public function clear(string $name);
 }

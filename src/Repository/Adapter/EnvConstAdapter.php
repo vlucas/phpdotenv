@@ -1,20 +1,33 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dotenv\Repository\Adapter;
 
 use PhpOption\None;
 use PhpOption\Some;
 
-class EnvConstAdapter implements AvailabilityInterface, ReaderInterface, WriterInterface
+final class EnvConstAdapter implements AdapterInterface
 {
     /**
-     * Determines if the adapter is supported.
+     * Create a new env const adapter instance.
      *
-     * @return bool
+     * @return void
      */
-    public function isSupported()
+    private function __construct()
     {
-        return true;
+        //
+    }
+
+    /**
+     * Create a new instance of the adapter, if it is available.
+     *
+     * @return \PhpOption\Option<\Dotenv\Repository\Adapter\AdapterInterface>
+     */
+    public static function create()
+    {
+        /** @var \PhpOption\Option<AdapterInterface> */
+        return Some::create(new self());
     }
 
     /**
@@ -24,7 +37,7 @@ class EnvConstAdapter implements AvailabilityInterface, ReaderInterface, WriterI
      *
      * @return \PhpOption\Option<string|null>
      */
-    public function get($name)
+    public function get(string $name)
     {
         if (array_key_exists($name, $_ENV)) {
             return Some::create($_ENV[$name]);
@@ -41,7 +54,7 @@ class EnvConstAdapter implements AvailabilityInterface, ReaderInterface, WriterI
      *
      * @return void
      */
-    public function set($name, $value = null)
+    public function set(string $name, string $value = null)
     {
         $_ENV[$name] = $value;
     }
@@ -53,7 +66,7 @@ class EnvConstAdapter implements AvailabilityInterface, ReaderInterface, WriterI
      *
      * @return void
      */
-    public function clear($name)
+    public function clear(string $name)
     {
         unset($_ENV[$name]);
     }

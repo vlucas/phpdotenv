@@ -1,7 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dotenv\Tests;
 
+use Dotenv\Exception\InvalidFileException;
 use Dotenv\Loader\Loader;
 use Dotenv\Repository\Adapter\ArrayAdapter;
 use Dotenv\Repository\Adapter\EnvConstAdapter;
@@ -13,7 +16,7 @@ class LoaderTest extends TestCase
 {
     public function testLoaderWithNoReaders()
     {
-        $repository = RepositoryBuilder::create()->withReaders([])->make();
+        $repository = RepositoryBuilder::createWithNoAdapters()->addWriter(ArrayAdapter::class)->make();
         $loader = new Loader();
 
         $content = "NVAR1=\"Hello\"\nNVAR2=\"World!\"\nNVAR3=\"{\$NVAR1} {\$NVAR2}\"\nNVAR4=\"\${NVAR1} \${NVAR2}\"";
@@ -24,8 +27,8 @@ class LoaderTest extends TestCase
 
     public function testLoaderWithWhitelist()
     {
-        $adapter = new ArrayAdapter();
-        $repository = RepositoryBuilder::create()->withReaders([$adapter])->withWriters([$adapter])->make();
+        $adapter = ArrayAdapter::create()->get();
+        $repository = RepositoryBuilder::createWithNoAdapters()->addReader($adapter)->addWriter($adapter)->make();
         $loader = new Loader(['FOO']);
 
         $this->assertSame(['FOO' => 'Hello'], $loader->load($repository, "FOO=\"Hello\"\nBAR=\"World!\"\n"));
@@ -34,22 +37,33 @@ class LoaderTest extends TestCase
         $this->assertFalse($adapter->get('BAR')->isDefined());
     }
 
+    public function testLoaderWithGarbage()
+    {
+        $adapter = ArrayAdapter::create()->get();
+        $repository = RepositoryBuilder::createWithNoAdapters()->make();
+        $loader = new Loader();
+
+        $this->expectException(InvalidFileException::class);
+        $this->expectExceptionMessage('Failed to parse dotenv file due to unexpected whitespace. Failed at ["""].');
+
+        $loader->load($repository, "FOO=\"\"\"");
+    }
+
     public function providesAdapters()
     {
         return [
-            [null],
-            [[new ArrayAdapter()]],
-            [[new EnvConstAdapter()]],
-            [[new ServerConstAdapter()]],
+            [ArrayAdapter::create()->get()],
+            [EnvConstAdapter::class],
+            [ServerConstAdapter::class],
         ];
     }
 
     /**
      * @dataProvider providesAdapters
      */
-    public function testLoaderWithSpecificAdapter($adapters)
+    public function testLoaderWithSpecificAdapter($adapter)
     {
-        $repository = RepositoryBuilder::create()->withReaders($adapters)->withWriters($adapters)->make();
+        $repository = RepositoryBuilder::createWithNoAdapters()->addReader($adapter)->addWriter($adapter)->make();
         $loader = new Loader();
 
         $content = "NVAR1=\"Hello\"\nNVAR2=\"World!\"\nNVAR3=\"{\$NVAR1} {\$NVAR2}\"\nNVAR4=\"\${NVAR1} \${NVAR2}\"";

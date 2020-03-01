@@ -1,19 +1,24 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dotenv\Loader;
 
+use Dotenv\Exception\InvalidFileException;
 use Dotenv\Regex\Regex;
+use Dotenv\Result\Result;
+use Dotenv\Result\Success;
 use Dotenv\Repository\RepositoryInterface;
 use PhpOption\Option;
 
-class Loader implements LoaderInterface
+final class Loader implements LoaderInterface
 {
     /**
      * The variable name whitelist.
      *
      * @var string[]|null
      */
-    protected $whitelist;
+    private $whitelist;
 
     /**
      * Create a new loader instance.
@@ -37,12 +42,16 @@ class Loader implements LoaderInterface
      *
      * @return array<string,string|null>
      */
-    public function load(RepositoryInterface $repository, $content)
+    public function load(RepositoryInterface $repository, string $content)
     {
-        return $this->processEntries(
+        $variables = $this->processEntries(
             $repository,
-            Lines::process(Regex::split("/(\r\n|\n|\r)/", $content)->getSuccess())
+            Lines::process(Regex::split("/(\r\n|\n|\r)/", $content)->success()->get())
         );
+
+        return $variables->mapError(function (string $error) {
+            throw new InvalidFileException($error);
+        })->success()->get();
     }
 
     /**
@@ -54,30 +63,33 @@ class Loader implements LoaderInterface
      * @param \Dotenv\Repository\RepositoryInterface $repository
      * @param string[]                               $entries
      *
-     * @throws \Dotenv\Exception\InvalidFileException
-     *
-     * @return array<string,string|null>
+     * @return \Dotenv\Result\Result<array<string,string|null>,string>
      */
     private function processEntries(RepositoryInterface $repository, array $entries)
     {
-        $vars = [];
+        return array_reduce($entries, function (Result $vars, string $entry) use ($repository) {
+            return $vars->flatMap(function (array $vars) use ($repository, $entry) {
+                return Parser::parse($entry)->map(function (array $parsed) use ($repository, $vars) {
+                    [$name, $value] = $parsed;
 
-        foreach ($entries as $entry) {
-            list($name, $value) = Parser::parse($entry);
-            if ($this->whitelist === null || in_array($name, $this->whitelist, true)) {
-                $vars[$name] = self::resolveNestedVariables($repository, $value);
-                $repository->set($name, $vars[$name]);
-            }
-        }
+                    if ($this->whitelist === null || in_array($name, $this->whitelist, true)) {
+                        $value = self::resolveNestedVariables($repository, $value);
+                        $repository->set($name, $value);
 
-        return $vars;
+                        return array_merge($vars, [$name => $value]);
+                    }
+
+                    return $vars;
+                });
+            });
+        }, Success::create([]));
     }
 
     /**
      * Resolve the nested variables.
      *
-     * Look for ${varname} patterns in the variable value and replace with an
-     * existing environment variable.
+     * Replaces ${varname} patterns in the allowed positions in the variable
+     * value and replace with an existing environment variable.
      *
      * @param \Dotenv\Repository\RepositoryInterface $repository
      * @param \Dotenv\Loader\Value|null              $value
@@ -103,7 +115,7 @@ class Loader implements LoaderInterface
      *
      * @return string
      */
-    private static function resolveNestedVariable(RepositoryInterface $repository, $str)
+    private static function resolveNestedVariable(RepositoryInterface $repository, string $str)
     {
         return Regex::replaceCallback(
             '/\A\${([a-zA-Z0-9_.]+)}/',

@@ -1,33 +1,28 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dotenv\Repository;
 
-use ArrayAccess;
-
-/**
- * @extends \ArrayAccess<string,string|null>
- */
-interface RepositoryInterface extends ArrayAccess
+interface RepositoryInterface
 {
     /**
-     * Tells whether environment variable has been defined.
+     * Determine if the given environment variable is defined.
      *
      * @param string $name
      *
      * @return bool
      */
-    public function has($name);
+    public function has(string $name);
 
     /**
      * Get an environment variable.
      *
      * @param string $name
      *
-     * @throws \InvalidArgumentException
-     *
      * @return string|null
      */
-    public function get($name);
+    public function get(string $name);
 
     /**
      * Set an environment variable.
@@ -35,20 +30,16 @@ interface RepositoryInterface extends ArrayAccess
      * @param string      $name
      * @param string|null $value
      *
-     * @throws \InvalidArgumentException
-     *
      * @return void
      */
-    public function set($name, $value = null);
+    public function set(string $name, string $value = null);
 
     /**
      * Clear an environment variable.
      *
      * @param string $name
      *
-     * @throws \InvalidArgumentException
-     *
      * @return void
      */
-    public function clear($name);
+    public function clear(string $name);
 }

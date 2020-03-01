@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dotenv;
 
 use Dotenv\Exception\InvalidPathException;
@@ -9,44 +11,45 @@ use Dotenv\Repository\RepositoryBuilder;
 use Dotenv\Repository\RepositoryInterface;
 use Dotenv\Store\FileStore;
 use Dotenv\Store\StoreBuilder;
+use Dotenv\Store\StoreInterface;
 
-class Dotenv
+final class Dotenv
 {
     /**
      * The loader instance.
      *
      * @var \Dotenv\Loader\LoaderInterface
      */
-    protected $loader;
+    private $loader;
 
     /**
      * The repository instance.
      *
      * @var \Dotenv\Repository\RepositoryInterface
      */
-    protected $repository;
+    private $repository;
 
     /**
      * The store instance.
      *
      * @var \Dotenv\Store\StoreInterface
      */
-    protected $store;
+    private $store;
 
     /**
      * Create a new dotenv instance.
      *
      * @param \Dotenv\Loader\LoaderInterface         $loader
      * @param \Dotenv\Repository\RepositoryInterface $repository
-     * @param \Dotenv\Store\StoreInterface|string[]  $store
+     * @param \Dotenv\Store\StoreInterface           $store
      *
      * @return void
      */
-    public function __construct(LoaderInterface $loader, RepositoryInterface $repository, $store)
+    public function __construct(LoaderInterface $loader, RepositoryInterface $repository, StoreInterface $store)
     {
         $this->loader = $loader;
         $this->repository = $repository;
-        $this->store = is_array($store) ? new FileStore($store, true) : $store;
+        $this->store = $store;
     }
 
     /**
@@ -61,7 +64,15 @@ class Dotenv
      */
     public static function create(RepositoryInterface $repository, $paths, $names = null, $shortCircuit = true)
     {
-        $builder = StoreBuilder::create()->withPaths($paths)->withNames($names);
+        $builder = $names === null ? StoreBuilder::createWithDefaultName() : StoreBuilder::createWithNoNames();
+
+        foreach ((array) $paths as $path) {
+            $builder = $builder->addPath($path);
+        }
+
+        foreach ((array) $names as $name) {
+            $builder = $builder->addName($name);
+        }
 
         if ($shortCircuit) {
             $builder = $builder->shortCircuit();
@@ -81,7 +92,7 @@ class Dotenv
      */
     public static function createMutable($paths, $names = null, $shortCircuit = true)
     {
-        $repository = RepositoryBuilder::create()->make();
+        $repository = RepositoryBuilder::createWithDefaultAdapters()->make();
 
         return self::create($repository, $paths, $names, $shortCircuit);
     }
@@ -97,7 +108,7 @@ class Dotenv
      */
     public static function createImmutable($paths, $names = null, $shortCircuit = true)
     {
-        $repository = RepositoryBuilder::create()->immutable()->make();
+        $repository = RepositoryBuilder::createWithDefaultAdapters()->immutable()->make();
 
         return self::create($repository, $paths, $names, $shortCircuit);
     }

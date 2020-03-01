@@ -1,26 +1,28 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dotenv;
 
 use Dotenv\Exception\ValidationException;
 use Dotenv\Regex\Regex;
 use Dotenv\Repository\RepositoryInterface;
 
-class Validator
+final class Validator
 {
     /**
      * The environment repository instance.
      *
      * @var \Dotenv\Repository\RepositoryInterface
      */
-    protected $repository;
+    private $repository;
 
     /**
      * The variables to validate.
      *
      * @var string[]
      */
-    protected $variables;
+    private $variables;
 
     /**
      * Create a new validator instance.
@@ -33,7 +35,7 @@ class Validator
      *
      * @return void
      */
-    public function __construct(RepositoryInterface $repository, array $variables, $required = true)
+    public function __construct(RepositoryInterface $repository, array $variables, bool $required = true)
     {
         $this->repository = $repository;
         $this->variables = $variables;
@@ -167,7 +169,7 @@ class Validator
      *
      * @return \Dotenv\Validator
      */
-    protected function assertCallback(callable $callback, $message = 'failed callback assertion')
+    private function assertCallback(callable $callback, $message = 'failed callback assertion')
     {
         $failing = [];
 

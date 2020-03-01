@@ -1,8 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dotenv\Store\File;
 
-class Paths
+final class Paths
 {
     /**
      * Returns the full paths to the files.

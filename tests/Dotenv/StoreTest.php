@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dotenv\Tests;
 
 use Dotenv\Store\File\Paths;
@@ -12,30 +14,32 @@ class StoreTest extends TestCase
     /**
      * @var string
      */
-    private $folder;
+    private static $folder;
 
-    public function setUp()
+    /**
+     * @beforeClass
+     */
+    public static function setFolder()
     {
-        $this->folder = dirname(__DIR__).'/fixtures/env';
+        self::$folder = dirname(__DIR__).'/fixtures/env';
     }
 
     public function testBasicReadDirect()
     {
         $this->assertSame(
             [
-                $this->folder.DIRECTORY_SEPARATOR.'.env' => "FOO=bar\nBAR=baz\nSPACED=\"with spaces\"\n\nNULL=\n",
+                self::$folder.DIRECTORY_SEPARATOR.'.env' => "FOO=bar\nBAR=baz\nSPACED=\"with spaces\"\n\nNULL=\n",
             ],
             Reader::read(
-                Paths::filePaths([$this->folder], ['.env'])
+                Paths::filePaths([self::$folder], ['.env'])
             )
         );
     }
 
     public function testBasicRead()
     {
-        $builder = StoreBuilder::create()
-            ->withPaths([$this->folder])
-            ->withNames(['.env']);
+        $builder = StoreBuilder::createWithDefaultName()
+            ->addPath(self::$folder);
 
         $this->assertSame(
             "FOO=bar\nBAR=baz\nSPACED=\"with spaces\"\n\nNULL=\n",
@@ -47,19 +51,20 @@ class StoreTest extends TestCase
     {
         $this->assertSame(
             [
-                $this->folder.DIRECTORY_SEPARATOR.'.env' => "FOO=bar\nBAR=baz\nSPACED=\"with spaces\"\n\nNULL=\n",
+                self::$folder.DIRECTORY_SEPARATOR.'.env' => "FOO=bar\nBAR=baz\nSPACED=\"with spaces\"\n\nNULL=\n",
             ],
             Reader::read(
-                Paths::filePaths([$this->folder], ['.env', 'example.env'])
+                Paths::filePaths([self::$folder], ['.env', 'example.env'])
             )
         );
     }
 
     public function testFileReadMultipleShortCircuitMode()
     {
-        $builder = StoreBuilder::create()
-            ->withPaths([$this->folder])
-            ->withNames(['.env', 'example.env'])
+        $builder = StoreBuilder::createWithNoNames()
+            ->addPath(self::$folder)
+            ->addName('.env')
+            ->addName('example.env')
             ->shortCircuit();
 
         $this->assertSame(
@@ -72,11 +77,11 @@ class StoreTest extends TestCase
     {
         $this->assertSame(
             [
-                $this->folder.DIRECTORY_SEPARATOR.'.env'        => "FOO=bar\nBAR=baz\nSPACED=\"with spaces\"\n\nNULL=\n",
-                $this->folder.DIRECTORY_SEPARATOR.'example.env' => "EG=\"example\"\n",
+                self::$folder.DIRECTORY_SEPARATOR.'.env'        => "FOO=bar\nBAR=baz\nSPACED=\"with spaces\"\n\nNULL=\n",
+                self::$folder.DIRECTORY_SEPARATOR.'example.env' => "EG=\"example\"\n",
             ],
             Reader::read(
-                Paths::filePaths([$this->folder], ['.env', 'example.env']),
+                Paths::filePaths([self::$folder], ['.env', 'example.env']),
                 false
             )
         );
@@ -84,9 +89,9 @@ class StoreTest extends TestCase
 
     public function testFileReadMultipleWithoutShortCircuitMode()
     {
-        $builder = StoreBuilder::create()
-            ->withPaths([$this->folder])
-            ->withNames(['.env', 'example.env']);
+        $builder = StoreBuilder::createWithDefaultName()
+            ->addPath(self::$folder)
+            ->addName('example.env');
 
         $this->assertSame(
             "FOO=bar\nBAR=baz\nSPACED=\"with spaces\"\n\nNULL=\n\nEG=\"example\"\n",

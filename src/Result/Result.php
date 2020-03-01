@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dotenv\Result;
 
 /**
@@ -16,18 +18,6 @@ abstract class Result
     abstract public function success();
 
     /**
-     * Get the success value, if possible.
-     *
-     * @throws \RuntimeException
-     *
-     * @return T
-     */
-    public function getSuccess()
-    {
-        return $this->success()->get();
-    }
-
-    /**
      * Map over the success value.
      *
      * @template S
@@ -36,7 +26,19 @@ abstract class Result
      *
      * @return \Dotenv\Result\Result<S,E>
      */
-    abstract public function mapSuccess(callable $f);
+    abstract public function map(callable $f);
+
+    /**
+     * Flat map over the success value.
+     *
+     * @template S
+     * @template F
+     *
+     * @param callable(T):\Dotenv\Result\Result<S,F> $f
+     *
+     * @return \Dotenv\Result\Result<S,F>
+     */
+    abstract public function flatMap(callable $f);
 
     /**
      * Get the error option value.
@@ -44,18 +46,6 @@ abstract class Result
      * @return \PhpOption\Option<E>
      */
     abstract public function error();
-
-    /**
-     * Get the error value, if possible.
-     *
-     * @throws \RuntimeException
-     *
-     * @return E
-     */
-    public function getError()
-    {
-        return $this->error()->get();
-    }
 
     /**
      * Map over the error value.

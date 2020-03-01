@@ -1,7 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dotenv\Tests;
 
+use Dotenv\Exception\InvalidFileException;
 use Dotenv\Loader\Parser;
 use PHPUnit\Framework\TestCase;
 
@@ -9,9 +12,11 @@ class ParserTest extends TestCase
 {
     public function testBasicParse()
     {
-        $output = Parser::parse('FOO=BAR');
+        $result = Parser::parse('FOO=BAR');
+        $this->assertTrue($result->success()->isDefined());
 
-        $this->assertInternalType('array', $output);
+        $output = $result->success()->get();
+        $this->assertIsArray($output);
         $this->assertCount(2, $output);
         $this->assertSame('FOO', $output[0]);
         $this->assertSame('BAR', $output[1]->getChars());
@@ -20,9 +25,11 @@ class ParserTest extends TestCase
 
     public function testNullParse()
     {
-        $output = Parser::parse('FOO');
+        $result = Parser::parse('FOO');
+        $this->assertTrue($result->success()->isDefined());
 
-        $this->assertInternalType('array', $output);
+        $output = $result->success()->get();
+        $this->assertIsArray($output);
         $this->assertCount(2, $output);
         $this->assertSame('FOO', $output[0]);
         $this->assertNull($output[1]);
@@ -30,9 +37,11 @@ class ParserTest extends TestCase
 
     public function testQuotesParse()
     {
-        $output = Parser::parse("FOO=\"BAR  \n\"");
+        $result = Parser::parse("FOO=\"BAR  \n\"");
+        $this->assertTrue($result->success()->isDefined());
 
-        $this->assertInternalType('array', $output);
+        $output = $result->success()->get();
+        $this->assertIsArray($output);
         $this->assertCount(2, $output);
         $this->assertSame('FOO', $output[0]);
         $this->assertSame("BAR  \n", $output[1]->getChars());
@@ -41,9 +50,11 @@ class ParserTest extends TestCase
 
     public function testNewlineParse()
     {
-        $output = Parser::parse('FOO="\n"');
+        $result = Parser::parse('FOO="\n"');
+        $this->assertTrue($result->success()->isDefined());
 
-        $this->assertInternalType('array', $output);
+        $output = $result->success()->get();
+        $this->assertIsArray($output);
         $this->assertCount(2, $output);
         $this->assertSame('FOO', $output[0]);
         $this->assertSame("\n", $output[1]->getChars());
@@ -52,9 +63,11 @@ class ParserTest extends TestCase
 
     public function testTabParseDouble()
     {
-        $output = Parser::parse('FOO="\t"');
+        $result = Parser::parse('FOO="\t"');
+        $this->assertTrue($result->success()->isDefined());
 
-        $this->assertInternalType('array', $output);
+        $output = $result->success()->get();
+        $this->assertIsArray($output);
         $this->assertCount(2, $output);
         $this->assertSame('FOO', $output[0]);
         $this->assertSame("\t", $output[1]->getChars());
@@ -63,9 +76,11 @@ class ParserTest extends TestCase
 
     public function testTabParseSingle()
     {
-        $output = Parser::parse('FOO=\'\t\'');
+        $result = Parser::parse('FOO=\'\t\'');
+        $this->assertTrue($result->success()->isDefined());
 
-        $this->assertInternalType('array', $output);
+        $output = $result->success()->get();
+        $this->assertIsArray($output);
         $this->assertCount(2, $output);
         $this->assertSame('FOO', $output[0]);
         $this->assertSame('\t', $output[1]->getChars());
@@ -74,9 +89,11 @@ class ParserTest extends TestCase
 
     public function testNonEscapeParse1()
     {
-        $output = Parser::parse('FOO=\n\v');
+        $result = Parser::parse('FOO=\n\v');
+        $this->assertTrue($result->success()->isDefined());
 
-        $this->assertInternalType('array', $output);
+        $output = $result->success()->get();
+        $this->assertIsArray($output);
         $this->assertCount(2, $output);
         $this->assertSame('FOO', $output[0]);
         $this->assertSame('\n\v', $output[1]->getChars());
@@ -85,29 +102,31 @@ class ParserTest extends TestCase
 
     public function testNonEscapeParse2()
     {
-        $output = Parser::parse('FOO=\q');
+        $result = Parser::parse('FOO=\q');
+        $this->assertTrue($result->success()->isDefined());
 
-        $this->assertInternalType('array', $output);
+        $output = $result->success()->get();
+        $this->assertIsArray($output);
         $this->assertCount(2, $output);
         $this->assertSame('FOO', $output[0]);
         $this->assertSame('\q', $output[1]->getChars());
         $this->assertSame([], $output[1]->getVars());
     }
 
-    /**
-     * @expectedException \Dotenv\Exception\InvalidFileException
-     * @expectedExceptionMessage Failed to parse dotenv file due to an unexpected escape sequence. Failed at ["\q"].
-     */
     public function testBadEscapeParse()
     {
-        Parser::parse('FOO="\q"');
+        $result = Parser::parse('FOO="\q"');
+        $this->assertTrue($result->error()->isDefined());
+        $this->assertSame('Failed to parse dotenv file due to an unexpected escape sequence. Failed at ["\q"].', $result->error()->get());
     }
 
     public function testInlineVariable()
     {
-        $output = Parser::parse('FOO=$BAR');
+        $result = Parser::parse('FOO=$BAR');
+        $this->assertTrue($result->success()->isDefined());
 
-        $this->assertInternalType('array', $output);
+        $output = $result->success()->get();
+        $this->assertIsArray($output);
         $this->assertCount(2, $output);
         $this->assertSame('FOO', $output[0]);
         $this->assertSame('$BAR', $output[1]->getChars());
@@ -116,9 +135,11 @@ class ParserTest extends TestCase
 
     public function testInlineVariableOffset()
     {
-        $output = Parser::parse('FOO=AAA$BAR');
+        $result = Parser::parse('FOO=AAA$BAR');
+        $this->assertTrue($result->success()->isDefined());
 
-        $this->assertInternalType('array', $output);
+        $output = $result->success()->get();
+        $this->assertIsArray($output);
         $this->assertCount(2, $output);
         $this->assertSame('FOO', $output[0]);
         $this->assertSame('AAA$BAR', $output[1]->getChars());
@@ -127,9 +148,11 @@ class ParserTest extends TestCase
 
     public function testInlineVariables()
     {
-        $output = Parser::parse('FOO="TEST $BAR $$BAZ"');
+        $result = Parser::parse('FOO="TEST $BAR $$BAZ"');
+        $this->assertTrue($result->success()->isDefined());
 
-        $this->assertInternalType('array', $output);
+        $output = $result->success()->get();
+        $this->assertIsArray($output);
         $this->assertCount(2, $output);
         $this->assertSame('FOO', $output[0]);
         $this->assertSame('TEST $BAR $$BAZ', $output[1]->getChars());
@@ -138,9 +161,11 @@ class ParserTest extends TestCase
 
     public function testNonInlineVariable()
     {
-        $output = Parser::parse('FOO=\'TEST $BAR $$BAZ\'');
+        $result = Parser::parse('FOO=\'TEST $BAR $$BAZ\'');
+        $this->assertTrue($result->success()->isDefined());
 
-        $this->assertInternalType('array', $output);
+        $output = $result->success()->get();
+        $this->assertIsArray($output);
         $this->assertCount(2, $output);
         $this->assertSame('FOO', $output[0]);
         $this->assertSame('TEST $BAR $$BAZ', $output[1]->getChars());
@@ -149,9 +174,11 @@ class ParserTest extends TestCase
 
     public function testWhitespaceParse()
     {
-        $output = Parser::parse("FOO=\"\n\"");
+        $result = Parser::parse("FOO=\"\n\"");
+        $this->assertTrue($result->success()->isDefined());
 
-        $this->assertInternalType('array', $output);
+        $output = $result->success()->get();
+        $this->assertIsArray($output);
         $this->assertCount(2, $output);
         $this->assertSame('FOO', $output[0]);
         $this->assertSame("\n", $output[1]->getChars());
@@ -160,9 +187,11 @@ class ParserTest extends TestCase
 
     public function testExportParse()
     {
-        $output = Parser::parse('export FOO="bar baz"');
+        $result = Parser::parse('export FOO="bar baz"');
+        $this->assertTrue($result->success()->isDefined());
 
-        $this->assertInternalType('array', $output);
+        $output = $result->success()->get();
+        $this->assertIsArray($output);
         $this->assertCount(2, $output);
         $this->assertSame('FOO', $output[0]);
         $this->assertSame('bar baz', $output[1]->getChars());
@@ -171,56 +200,52 @@ class ParserTest extends TestCase
 
     public function testClosingSlashParse()
     {
-        $output = Parser::parse('SPVAR5="test some escaped characters like a quote \\" or maybe a backslash \\\\" # not escaped');
+        $result = Parser::parse('SPVAR5="test some escaped characters like a quote \\" or maybe a backslash \\\\" # not escaped');
+        $this->assertTrue($result->success()->isDefined());
 
-        $this->assertInternalType('array', $output);
+        $output = $result->success()->get();
+        $this->assertIsArray($output);
         $this->assertCount(2, $output);
         $this->assertSame('SPVAR5', $output[0]);
         $this->assertSame('test some escaped characters like a quote " or maybe a backslash \\', $output[1]->getChars());
         $this->assertSame([], $output[1]->getVars());
     }
 
-    /**
-     * @expectedException \Dotenv\Exception\InvalidFileException
-     * @expectedExceptionMessage Failed to parse dotenv file due to unexpected whitespace. Failed at [bar baz].
-     */
     public function testParseInvalidSpaces()
     {
-        Parser::parse('FOO=bar baz');
+        $result = Parser::parse('FOO=bar baz');
+        $this->assertTrue($result->error()->isDefined());
+        $this->assertSame('Failed to parse dotenv file due to unexpected whitespace. Failed at [bar baz].', $result->error()->get());
     }
 
-    /**
-     * @expectedException \Dotenv\Exception\InvalidFileException
-     * @expectedExceptionMessage Failed to parse dotenv file due to an unexpected equals. Failed at [=].
-     */
     public function testParseStrayEquals()
     {
-        Parser::parse('=');
+        $result = Parser::parse('=');
+        $this->assertTrue($result->error()->isDefined());
+        $this->assertSame('Failed to parse dotenv file due to an unexpected equals. Failed at [=].', $result->error()->get());
     }
 
-    /**
-     * @expectedException \Dotenv\Exception\InvalidFileException
-     * @expectedExceptionMessage Failed to parse dotenv file due to an invalid name. Failed at [FOO_ASD!].
-     */
     public function testParseInvalidName()
     {
-        Parser::parse('FOO_ASD!=BAZ');
+        $result = Parser::parse('FOO_ASD!=BAZ');
+        $this->assertTrue($result->error()->isDefined());
+        $this->assertSame('Failed to parse dotenv file due to an invalid name. Failed at [FOO_ASD!].', $result->error()->get());
     }
 
-    /**
-     * @expectedException \Dotenv\Exception\InvalidFileException
-     * @expectedExceptionMessage Failed to parse dotenv file due to an unexpected escape sequence. Failed at ["iiiiviiiixiiiiviiii\a"].
-     */
     public function testParserEscapingDouble()
     {
-        Parser::parse('FOO_BAD="iiiiviiiixiiiiviiii\\a"');
+        $result = Parser::parse('FOO_BAD="iiiiviiiixiiiiviiii\\a"');
+        $this->assertTrue($result->error()->isDefined());
+        $this->assertSame('Failed to parse dotenv file due to an unexpected escape sequence. Failed at ["iiiiviiiixiiiiviiii\a"].', $result->error()->get());
     }
 
     public function testParserEscapingSingle()
     {
-        $output = Parser::parse('FOO_BAD=\'iiiiviiiixiiiiviiii\\a\'');
+        $result = Parser::parse('FOO_BAD=\'iiiiviiiixiiiiviiii\\a\'');
+        $this->assertTrue($result->success()->isDefined());
 
-        $this->assertInternalType('array', $output);
+        $output = $result->success()->get();
+        $this->assertIsArray($output);
         $this->assertCount(2, $output);
         $this->assertSame('FOO_BAD', $output[0]);
         $this->assertSame('iiiiviiiixiiiiviiii\\a', $output[1]->getChars());

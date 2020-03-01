@@ -1,34 +1,34 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dotenv\Tests;
 
 use Dotenv\Dotenv;
 use Dotenv\Repository\Adapter\ArrayAdapter;
 use Dotenv\Repository\RepositoryBuilder;
+use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
+use TypeError;
 
 class RepositoryTest extends TestCase
 {
     /**
-     * @var string
-     */
-    private $folder;
-
-    /**
      * @var string[]|null
      */
-    protected $keyVal;
+    private $keyVal;
 
-    public function setUp()
+    /**
+     * @before
+     */
+    public function refreshKeyVal()
     {
-        $this->folder = dirname(__DIR__).'/fixtures/env';
         $this->keyVal(true);
     }
 
-    protected function load()
+    private function load()
     {
-        $dotenv = Dotenv::createImmutable($this->folder);
-        $dotenv->load();
+        Dotenv::createImmutable(dirname(__DIR__).'/fixtures/env')->load();
     }
 
     /**
@@ -42,7 +42,7 @@ class RepositoryTest extends TestCase
      *
      * @return array
      */
-    protected function keyVal($reset = false)
+    private function keyVal($reset = false)
     {
         if (!isset($this->keyVal) || $reset) {
             $this->keyVal = [uniqid() => uniqid()];
@@ -56,7 +56,7 @@ class RepositoryTest extends TestCase
      *
      * @return string
      */
-    protected function key()
+    private function key()
     {
         $keyVal = $this->keyVal();
 
@@ -68,7 +68,7 @@ class RepositoryTest extends TestCase
      *
      * @return string
      */
-    protected function value()
+    private function value()
     {
         $keyVal = $this->keyVal();
 
@@ -77,7 +77,7 @@ class RepositoryTest extends TestCase
 
     public function testMutableLoaderClearsEnvironmentVars()
     {
-        $repository = RepositoryBuilder::create()->make();
+        $repository = RepositoryBuilder::createWithDefaultAdapters()->make();
 
         // Set an environment variable.
         $repository->set($this->key(), $this->value());
@@ -90,14 +90,14 @@ class RepositoryTest extends TestCase
         $this->assertSame(false, isset($_SERVER[$this->key()]));
     }
 
-    public function testImmutableLoaderCannotClearEnvironmentVars()
+    public function testImmutableLoaderCannotClearExistingEnvironmentVars()
     {
         $this->load();
 
-        $repository = RepositoryBuilder::create()->immutable()->make();
+        $repository = RepositoryBuilder::createWithDefaultAdapters()->immutable()->make();
 
-        // Set an environment variable.
-        $repository->set($this->key(), $this->value());
+        // Pre-set an environment variable.
+        RepositoryBuilder::createWithDefaultAdapters()->make()->set($this->key(), $this->value());
 
         // Attempt to clear the environment variable, check that it fails.
         $repository->clear($this->key());
@@ -107,42 +107,56 @@ class RepositoryTest extends TestCase
         $this->assertSame(true, isset($_SERVER[$this->key()]));
     }
 
+    public function testImmutableLoaderCanClearSetEnvironmentVars()
+    {
+        $this->load();
+
+        $repository = RepositoryBuilder::createWithDefaultAdapters()->immutable()->make();
+
+        // Set an environment variable.
+        $repository->set($this->key(), $this->value());
+
+        // Attempt to clear the environment variable, check that it works.
+        $repository->clear($this->key());
+        $this->assertSame(null, $repository->get($this->key()));
+        $this->assertSame(false, getenv($this->key()));
+        $this->assertSame(false, isset($_ENV[$this->key()]));
+        $this->assertSame(false, isset($_SERVER[$this->key()]));
+    }
+
     public function testCheckingWhetherVariableExists()
     {
         $this->load();
 
-        $repo = RepositoryBuilder::create()->make();
+        $repo = RepositoryBuilder::createWithDefaultAdapters()->make();
 
         $this->assertTrue($repo->has('FOO'));
         $this->assertFalse($repo->has('NON_EXISTING_VARIABLE'));
     }
 
-    public function testCheckingHasWithBadType()
+    public function testHasWithBadVariable()
     {
-        $this->load();
+        $repo = RepositoryBuilder::createWithDefaultAdapters()->make();
 
-        $repo = RepositoryBuilder::create()->make();
+        $this->expectException(TypeError::class);
 
-        $this->assertFalse($repo->has(123));
-        $this->assertFalse($repo->has(null));
+        $repo->has(null);
     }
 
     public function testGettingVariableByName()
     {
         $this->load();
 
-        $repo = RepositoryBuilder::create()->make();
+        $repo = RepositoryBuilder::createWithDefaultAdapters()->make();
 
         $this->assertSame('bar', $repo->get('FOO'));
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Expected name to be a string.
-     */
     public function testGettingBadVariable()
     {
-        $repo = RepositoryBuilder::create()->make();
+        $repo = RepositoryBuilder::createWithDefaultAdapters()->make();
+
+        $this->expectException(TypeError::class);
 
         $repo->get(null);
     }
@@ -151,20 +165,18 @@ class RepositoryTest extends TestCase
     {
         $this->load();
 
-        $repo = RepositoryBuilder::create()->make();
+        $repo = RepositoryBuilder::createWithDefaultAdapters()->make();
 
         $this->assertSame('bar', $repo->get('FOO'));
         $repo->set('FOO', 'new');
         $this->assertSame('new', $repo->get('FOO'));
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Expected name to be a string.
-     */
     public function testSettingBadVariable()
     {
-        $repo = RepositoryBuilder::create()->make();
+        $repo = RepositoryBuilder::createWithDefaultAdapters()->make();
+
+        $this->expectException(TypeError::class);
 
         $repo->set(null, 'foo');
     }
@@ -173,7 +185,7 @@ class RepositoryTest extends TestCase
     {
         $this->load();
 
-        $repo = RepositoryBuilder::create()->make();
+        $repo = RepositoryBuilder::createWithDefaultAdapters()->make();
 
         $this->assertTrue($repo->has('FOO'));
         $repo->clear('FOO');
@@ -182,8 +194,8 @@ class RepositoryTest extends TestCase
 
     public function testClearingVariableWithArrayAdapter()
     {
-        $adapters = [new ArrayAdapter()];
-        $repo = RepositoryBuilder::create()->withReaders($adapters)->withWriters($adapters)->make();
+        $adapter = ArrayAdapter::create()->get();
+        $repo = RepositoryBuilder::createWithNoAdapters()->addReader($adapter)->addWriter($adapter)->make();
 
         $this->assertFalse($repo->has('FOO'));
         $repo->set('FOO', 'BAR');
@@ -192,13 +204,11 @@ class RepositoryTest extends TestCase
         $this->assertFalse($repo->has('FOO'));
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Expected name to be a string.
-     */
     public function testClearingBadVariable()
     {
-        $repo = RepositoryBuilder::create()->make();
+        $repo = RepositoryBuilder::createWithDefaultAdapters()->make();
+
+        $this->expectException(TypeError::class);
 
         $repo->clear(null);
     }
@@ -207,7 +217,7 @@ class RepositoryTest extends TestCase
     {
         $this->load();
 
-        $repo = RepositoryBuilder::create()->immutable()->make();
+        $repo = RepositoryBuilder::createWithDefaultAdapters()->immutable()->make();
 
         $this->assertSame('bar', $repo->get('FOO'));
 
@@ -220,53 +230,26 @@ class RepositoryTest extends TestCase
     {
         $this->load();
 
-        $repo = RepositoryBuilder::create()->immutable()->make();
+        $repo = RepositoryBuilder::createWithDefaultAdapters()->immutable()->make();
 
         $repo->clear('FOO');
 
         $this->assertTrue($repo->has('FOO'));
     }
 
-    public function testCheckingWhetherVariableExistsUsingArrayNotation()
+    public function testBuildWithBadReader()
     {
-        $this->load();
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Expected either an instance of ');
 
-        $repo = RepositoryBuilder::create()->make();
-
-        $this->assertTrue(isset($repo['FOO']));
-        $this->assertFalse(isset($repo['NON_EXISTING_VARIABLE']));
+        RepositoryBuilder::createWithNoAdapters()->addReader('123');
     }
 
-    public function testGettingVariableByNameUsingArrayNotation()
+    public function testBuildWithBadWriter()
     {
-        $this->load();
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Expected either an instance of ');
 
-        $repo = RepositoryBuilder::create()->make();
-
-        $this->assertSame('bar', $repo['FOO']);
-    }
-
-    public function testSettingVariableUsingArrayNotation()
-    {
-        $this->load();
-
-        $repo = RepositoryBuilder::create()->make();
-
-        $this->assertSame('bar', $repo['FOO']);
-
-        $repo['FOO'] = 'new';
-
-        $this->assertSame('new', $repo['FOO']);
-    }
-
-    public function testClearingVariableUsingArrayNotation()
-    {
-        $this->load();
-
-        $repo = RepositoryBuilder::create()->make();
-
-        unset($repo['FOO']);
-
-        $this->assertFalse(isset($repo['FOO']));
+        RepositoryBuilder::createWithNoAdapters()->addWriter('123');
     }
 }

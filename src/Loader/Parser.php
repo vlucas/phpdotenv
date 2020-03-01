@@ -1,36 +1,44 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dotenv\Loader;
 
-use Dotenv\Exception\InvalidFileException;
 use Dotenv\Result\Error;
+use Dotenv\Result\Result;
 use Dotenv\Result\Success;
 use RuntimeException;
 
-class Parser
+final class Parser
 {
-    const INITIAL_STATE = 0;
-    const UNQUOTED_STATE = 1;
-    const SINGLE_QUOTED_STATE = 2;
-    const DOUBLE_QUOTED_STATE = 3;
-    const ESCAPE_SEQUENCE_STATE = 4;
-    const WHITESPACE_STATE = 5;
-    const COMMENT_STATE = 6;
+    private const INITIAL_STATE = 0;
+    private const UNQUOTED_STATE = 1;
+    private const SINGLE_QUOTED_STATE = 2;
+    private const DOUBLE_QUOTED_STATE = 3;
+    private const ESCAPE_SEQUENCE_STATE = 4;
+    private const WHITESPACE_STATE = 5;
+    private const COMMENT_STATE = 6;
 
     /**
      * Parse the given environment variable entry into a name and value.
      *
      * @param string $entry
      *
-     * @throws \Dotenv\Exception\InvalidFileException
-     *
-     * @return array{string,\Dotenv\Loader\Value|null}
+     * @return \Dotenv\Result\Result<array{string,\Dotenv\Loader\Value|null},string>     
      */
-    public static function parse($entry)
+    public static function parse(string $entry)
     {
-        list($name, $value) = self::splitStringIntoParts($entry);
+        return self::splitStringIntoParts($entry)->flatMap(function (array $parts) {
+            [$name, $value] = $parts;
 
-        return [self::parseName($name), self::parseValue($value)];
+            return self::parseName($name)->flatMap(function (string $name) use ($value) {
+                $parsedValue = $value === null ? Success::create(null) : self::parseValue($value);
+
+                return $parsedValue->map(function (?Value $value) use ($name) {
+                    return [$name, $value];
+                });
+            });
+        });
     }
 
     /**
@@ -38,26 +46,23 @@ class Parser
      *
      * @param string $line
      *
-     * @throws \Dotenv\Exception\InvalidFileException
-     *
-     * @return array{string,string|null}
+     * @return \Dotenv\Result\Result<array{string,string|null},string>
      */
-    private static function splitStringIntoParts($line)
+    private static function splitStringIntoParts(string $line)
     {
         $name = $line;
         $value = null;
 
         if (strpos($line, '=') !== false) {
-            list($name, $value) = array_map('trim', explode('=', $line, 2));
+            [$name, $value] = array_map('trim', explode('=', $line, 2));
         }
 
         if ($name === '') {
-            throw new InvalidFileException(
-                self::getErrorMessage('an unexpected equals', $line)
-            );
+            return Error::create(self::getErrorMessage('an unexpected equals', $line));
         }
 
-        return [$name, $value];
+        /** @var \Dotenv\Result\Result<array{string,string|null},string> */
+        return Success::create([$name, $value]);
     }
 
     /**
@@ -65,21 +70,17 @@ class Parser
      *
      * @param string $name
      *
-     * @throws \Dotenv\Exception\InvalidFileException
-     *
-     * @return string
+     * @return \Dotenv\Result\Result<string,string>
      */
-    private static function parseName($name)
+    private static function parseName(string $name)
     {
         $name = trim(str_replace(['export ', '\'', '"'], '', $name));
 
         if (!self::isValidName($name)) {
-            throw new InvalidFileException(
-                self::getErrorMessage('an invalid name', $name)
-            );
+            return Error::create(self::getErrorMessage('an invalid name', $name));
         }
 
-        return $name;
+        return Success::create($name);
     }
 
     /**
@@ -89,7 +90,7 @@ class Parser
      *
      * @return bool
      */
-    private static function isValidName($name)
+    private static function isValidName(string $name)
     {
         return preg_match('~\A[a-zA-Z0-9_.]+\z~', $name) === 1;
     }
@@ -97,31 +98,27 @@ class Parser
     /**
      * Strips quotes and comments from the environment variable value.
      *
-     * @param string|null $value
+     * @param string $value
      *
-     * @throws \Dotenv\Exception\InvalidFileException
-     *
-     * @return \Dotenv\Loader\Value|null
+     * @return \Dotenv\Result\Result<\Dotenv\Loader\Value,string>
      */
-    private static function parseValue($value)
+    private static function parseValue(string $value)
     {
-        if ($value === null) {
-            return null;
-        }
-
         if (trim($value) === '') {
-            return Value::blank();
+            return Success::create(Value::blank());
         }
 
-        return array_reduce(str_split($value), function ($data, $char) use ($value) {
-            return self::processChar($data[1], $char)->mapError(function ($err) use ($value) {
-                throw new InvalidFileException(
-                    self::getErrorMessage($err, $value)
-                );
-            })->mapSuccess(function ($val) use ($data) {
-                return [$data[0]->append($val[0], $val[1]), $val[2]];
-            })->getSuccess();
-        }, [Value::blank(), self::INITIAL_STATE])[0];
+        return array_reduce(str_split($value), function (Result $data, string $char) use ($value) {
+            return $data->flatMap(function (array $data) use ($char, $value) {
+                return self::processChar($data[1], $char)->mapError(function (string $err) use ($value) {
+                    return self::getErrorMessage($err, $value);
+                })->map(function (array $val) use ($data) {
+                    return [$data[0]->append($val[0], $val[1]), $val[2]];
+                });
+            });
+        }, Success::create([Value::blank(), self::INITIAL_STATE]))->map(function (array $data) {
+            return $data[0];
+        });
     }
 
     /**
@@ -132,7 +129,7 @@ class Parser
      *
      * @return \Dotenv\Result\Result<array{string,bool,int},string>
      */
-    private static function processChar($state, $char)
+    private static function processChar(int $state, string $char)
     {
         switch ($state) {
             case self::INITIAL_STATE:
@@ -206,7 +203,7 @@ class Parser
      *
      * @return string
      */
-    private static function getErrorMessage($cause, $subject)
+    private static function getErrorMessage(string $cause, string $subject)
     {
         return sprintf(
             'Failed to parse dotenv file due to %s. Failed at [%s].',

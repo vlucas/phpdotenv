@@ -1,27 +1,40 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dotenv\Repository\Adapter;
 
 use PhpOption\None;
 use PhpOption\Some;
 
-class ArrayAdapter implements AvailabilityInterface, ReaderInterface, WriterInterface
+final class ArrayAdapter implements AdapterInterface
 {
     /**
      * The variables and their values.
      *
      * @var array<string,string|null>
      */
-    private $variables = [];
+    private $variables;
 
     /**
-     * Determines if the adapter is supported.
+     * Create a new array adapter instance.
      *
-     * @return bool
+     * @return void
      */
-    public function isSupported()
+    private function __construct()
     {
-        return true;
+        $this->variables = [];
+    }
+
+    /**
+     * Create a new instance of the adapter, if it is available.
+     *
+     * @return \PhpOption\Option<\Dotenv\Repository\Adapter\AdapterInterface>
+     */
+    public static function create()
+    {
+        /** @var \PhpOption\Option<AdapterInterface> */
+        return Some::create(new self());
     }
 
     /**
@@ -31,7 +44,7 @@ class ArrayAdapter implements AvailabilityInterface, ReaderInterface, WriterInte
      *
      * @return \PhpOption\Option<string|null>
      */
-    public function get($name)
+    public function get(string $name)
     {
         if (array_key_exists($name, $this->variables)) {
             return Some::create($this->variables[$name]);
@@ -48,7 +61,7 @@ class ArrayAdapter implements AvailabilityInterface, ReaderInterface, WriterInte
      *
      * @return void
      */
-    public function set($name, $value = null)
+    public function set(string $name, string $value = null)
     {
         $this->variables[$name] = $value;
     }
@@ -60,7 +73,7 @@ class ArrayAdapter implements AvailabilityInterface, ReaderInterface, WriterInte
      *
      * @return void
      */
-    public function clear($name)
+    public function clear(string $name)
     {
         unset($this->variables[$name]);
     }

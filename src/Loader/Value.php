@@ -1,8 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dotenv\Loader;
 
-class Value
+final class Value
 {
     /**
      * The string representation of the parsed value.

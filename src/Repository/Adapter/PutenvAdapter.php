@@ -1,17 +1,47 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dotenv\Repository\Adapter;
 
+use PhpOption\None;
 use PhpOption\Option;
+use PhpOption\Some;
 
-class PutenvAdapter implements AvailabilityInterface, ReaderInterface, WriterInterface
+
+final class PutenvAdapter implements AdapterInterface
 {
+    /**
+     * Create a new putenv adapter instance.
+     *
+     * @return void
+     */
+    private function __construct()
+    {
+        //
+    }
+
+    /**
+     * Create a new instance of the adapter, if it is available.
+     *
+     * @return \PhpOption\Option<\Dotenv\Repository\Adapter\AdapterInterface>
+     */
+    public static function create()
+    {
+        if (self::isSupported()) {
+            /** @var \PhpOption\Option<AdapterInterface> */
+            return Some::create(new self());
+        }
+
+        return None::create();
+    }
+
     /**
      * Determines if the adapter is supported.
      *
      * @return bool
      */
-    public function isSupported()
+    private static function isSupported()
     {
         return function_exists('getenv') && function_exists('putenv');
     }
@@ -23,7 +53,7 @@ class PutenvAdapter implements AvailabilityInterface, ReaderInterface, WriterInt
      *
      * @return \PhpOption\Option<string|null>
      */
-    public function get($name)
+    public function get(string $name)
     {
         /** @var \PhpOption\Option<string|null> */
         return Option::fromValue(getenv($name), false);
@@ -37,7 +67,7 @@ class PutenvAdapter implements AvailabilityInterface, ReaderInterface, WriterInt
      *
      * @return void
      */
-    public function set($name, $value = null)
+    public function set(string $name, string $value = null)
     {
         putenv("$name=$value");
     }
@@ -49,7 +79,7 @@ class PutenvAdapter implements AvailabilityInterface, ReaderInterface, WriterInt
      *
      * @return void
      */
-    public function clear($name)
+    public function clear(string $name)
     {
         putenv($name);
     }

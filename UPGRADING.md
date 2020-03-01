@@ -1,5 +1,12 @@
 # Upgrading Guide
 
+## V4 to V5
+
+1. The `Dotenv\Dotenv` constructor now expects only an instance of `Dotenv\Store\StoreInterface` to the third parameter.
+2. Scalar typehints have been added to the public interface.
+3. The parser now returns a result type instead of raising an exception. This change is strictly internal, and most users won't notice a differnce. The responsibility for rasising an exception has simply been shifted up to the caller.
+4. Adapters have been refactored again, with changes to the repositories. In particular, the repository builder has been tweaked. It now expects to be explicitly told if you want to use the default adapters or not, and expects individual readers and writers to be added, one by one. Similar changes have been applied to the store factory.
+
 ## V4.0 to V4.1
 
 There are no breaking changes in this release, but the `Dotenv\Dotenv` constructor now expects either an array of file paths as the third parameter, or an instance of `Dotenv\Store\StoreInterface`. Passing an array is deprecated, and will be removed in V5.
