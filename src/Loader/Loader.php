@@ -37,8 +37,9 @@ final class Loader implements LoaderInterface
     /**
      * Process the environment variable entries.
      *
-     * We'll fill out any nested variables, and acually set the variable using
-     * the underlying environment variables instance.
+     * We'll handover each entry to the parser, then substitute any nested
+     * variables, and set each variable on the repository instance, with the
+     * effect of actually mutating the environment.
      *
      * @param \Dotenv\Repository\RepositoryInterface $repository
      * @param string[]                               $entries
