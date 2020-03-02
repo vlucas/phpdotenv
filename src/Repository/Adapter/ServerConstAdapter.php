@@ -52,11 +52,13 @@ final class ServerConstAdapter implements AdapterInterface
      * @param string      $name
      * @param string|null $value
      *
-     * @return void
+     * @return bool
      */
     public function set(string $name, string $value = null)
     {
         $_SERVER[$name] = $value;
+
+        return true;
     }
 
     /**
@@ -64,10 +66,12 @@ final class ServerConstAdapter implements AdapterInterface
      *
      * @param string $name
      *
-     * @return void
+     * @return bool
      */
     public function clear(string $name)
     {
         unset($_SERVER[$name]);
+
+        return true;
     }
 }

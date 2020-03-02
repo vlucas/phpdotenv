@@ -14,25 +14,6 @@ use PhpOption\Option;
 final class Loader implements LoaderInterface
 {
     /**
-     * The variable name whitelist.
-     *
-     * @var string[]|null
-     */
-    private $whitelist;
-
-    /**
-     * Create a new loader instance.
-     *
-     * @param string[]|null $whitelist
-     *
-     * @return void
-     */
-    public function __construct(array $whitelist = null)
-    {
-        $this->whitelist = $whitelist;
-    }
-
-    /**
      * Load the given environment file content into the repository.
      *
      * @param \Dotenv\Repository\RepositoryInterface $repository
@@ -72,11 +53,10 @@ final class Loader implements LoaderInterface
                 return Parser::parse($entry)->map(function (array $parsed) use ($repository, $vars) {
                     [$name, $value] = $parsed;
 
-                    if ($this->whitelist === null || in_array($name, $this->whitelist, true)) {
-                        $value = self::resolveNestedVariables($repository, $value);
-                        $repository->set($name, $value);
-
-                        return array_merge($vars, [$name => $value]);
+                    $resolved = self::resolveNestedVariables($repository, $value);
+                    
+                    if ($repository->set($name, $resolved)) {
+                        return array_merge($vars, [$name => $resolved]);
                     }
 
                     return $vars;

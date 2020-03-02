@@ -52,11 +52,13 @@ final class EnvConstAdapter implements AdapterInterface
      * @param string      $name
      * @param string|null $value
      *
-     * @return void
+     * @return bool
      */
     public function set(string $name, string $value = null)
     {
         $_ENV[$name] = $value;
+
+        return true;
     }
 
     /**
@@ -64,10 +66,12 @@ final class EnvConstAdapter implements AdapterInterface
      *
      * @param string $name
      *
-     * @return void
+     * @return bool
      */
     public function clear(string $name)
     {
         unset($_ENV[$name]);
+
+        return true;
     }
 }

@@ -31,13 +31,17 @@ final class MultiWriter implements WriterInterface
      * @param string      $name
      * @param string|null $value
      *
-     * @return void
+     * @return bool
      */
     public function set(string $name, string $value = null)
     {
         foreach ($this->writers as $writers) {
-            $writers->set($name, $value);
+            if (!$writers->set($name, $value)) {
+                return false;
+            }
         }
+
+        return true;
     }
 
     /**
@@ -45,12 +49,16 @@ final class MultiWriter implements WriterInterface
      *
      * @param string $name
      *
-     * @return void
+     * @return bool
      */
     public function clear(string $name)
     {
         foreach ($this->writers as $writers) {
-            $writers->clear($name);
+            if (!$writers->clear($name)) {
+                return false;
+            }
         }
+
+        return true;
     }
 }

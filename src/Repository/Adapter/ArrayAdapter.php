@@ -59,11 +59,13 @@ final class ArrayAdapter implements AdapterInterface
      * @param string      $name
      * @param string|null $value
      *
-     * @return void
+     * @return bool
      */
     public function set(string $name, string $value = null)
     {
         $this->variables[$name] = $value;
+
+        return true;
     }
 
     /**
@@ -71,10 +73,12 @@ final class ArrayAdapter implements AdapterInterface
      *
      * @param string $name
      *
-     * @return void
+     * @return bool
      */
     public function clear(string $name)
     {
         unset($this->variables[$name]);
+
+        return true;
     }
 }

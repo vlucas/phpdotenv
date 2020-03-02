@@ -64,11 +64,13 @@ final class PutenvAdapter implements AdapterInterface
      * @param string      $name
      * @param string|null $value
      *
-     * @return void
+     * @return bool
      */
     public function set(string $name, string $value = null)
     {
         putenv("$name=$value");
+
+        return true;
     }
 
     /**
@@ -76,10 +78,12 @@ final class PutenvAdapter implements AdapterInterface
      *
      * @param string $name
      *
-     * @return void
+     * @return bool
      */
     public function clear(string $name)
     {
         putenv($name);
+
+        return true;
     }
 }

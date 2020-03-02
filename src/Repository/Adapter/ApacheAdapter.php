@@ -69,13 +69,15 @@ final class ApacheAdapter implements AdapterInterface
      * @param string      $name
      * @param string|null $value
      *
-     * @return void
+     * @return bool
      */
     public function set(string $name, string $value = null)
     {
         if (apache_getenv($name) !== false) {
             apache_setenv($name, (string) $value);
         }
+
+        return true;
     }
 
     /**
@@ -83,10 +85,12 @@ final class ApacheAdapter implements AdapterInterface
      *
      * @param string $name
      *
-     * @return void
+     * @return bool
      */
     public function clear(string $name)
     {
         // Nothing to do here.
+
+        return true;
     }
 }

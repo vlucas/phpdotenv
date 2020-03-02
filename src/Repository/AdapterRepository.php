@@ -67,11 +67,11 @@ final class AdapterRepository implements RepositoryInterface
      * @param string      $name
      * @param string|null $value
      *
-     * @return void
+     * @return bool
      */
     public function set(string $name, string $value = null)
     {
-        $this->writer->set($name, $value);
+        return $this->writer->set($name, $value);
     }
 
     /**
@@ -79,10 +79,10 @@ final class AdapterRepository implements RepositoryInterface
      *
      * @param string $name
      *
-     * @return void
+     * @return bool
      */
     public function clear(string $name)
     {
-        $this->writer->clear($name);
+        return $this->writer->clear($name);
     }
 }

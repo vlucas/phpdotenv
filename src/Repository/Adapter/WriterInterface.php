@@ -12,7 +12,7 @@ interface WriterInterface
      * @param string      $name
      * @param string|null $value
      *
-     * @return void
+     * @return bool
      */
     public function set(string $name, string $value = null);
 
@@ -21,7 +21,7 @@ interface WriterInterface
      *
      * @param string $name
      *
-     * @return void
+     * @return bool
      */
     public function clear(string $name);
 }

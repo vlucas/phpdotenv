@@ -13,6 +13,7 @@ use Dotenv\Repository\Adapter\MultiWriter;
 use Dotenv\Repository\Adapter\PutenvAdapter;
 use Dotenv\Repository\Adapter\ReaderInterface;
 use Dotenv\Repository\Adapter\ServerConstAdapter;
+use Dotenv\Repository\Adapter\WhitelistWriter;
 use Dotenv\Repository\Adapter\WriterInterface;
 use InvalidArgumentException;
 use PhpOption\Some;
@@ -54,19 +55,28 @@ final class RepositoryBuilder
     private $immutable;
 
     /**
+     * The variable name whitelist.
+     *
+     * @var string[]|null
+     */
+    private $whitelist;
+
+    /**
      * Create a new repository builder instance.
      *
      * @param \Dotenv\Repository\Adapter\ReaderInterface[] $readers
      * @param \Dotenv\Repository\Adapter\WriterInterface[] $writers
      * @param bool                                         $immutable
+     * @param string[]|null                                $whitelist
      *
      * @return void
      */
-    private function __construct(array $readers = [], array $writers = [], $immutable = false)
+    private function __construct(array $readers = [], array $writers = [], bool $immutable = false, array $whitelist = null)
     {
         $this->readers = $readers;
         $this->writers = $writers;
         $this->immutable = $immutable;
+        $this->whitelist = $whitelist;
     }
 
     /**
@@ -151,7 +161,7 @@ final class RepositoryBuilder
 
         $readers = array_merge($this->readers, iterator_to_array($optional));
 
-        return new self($readers, $this->writers, $this->immutable);
+        return new self($readers, $this->writers, $this->immutable, $this->whitelist);
     }
 
     /**
@@ -183,7 +193,7 @@ final class RepositoryBuilder
 
         $writers = array_merge($this->writers, iterator_to_array($optional));
 
-        return new self($this->readers, $writers, $this->immutable);
+        return new self($this->readers, $writers, $this->immutable, $this->whitelist);
     }
 
     /**
@@ -193,7 +203,19 @@ final class RepositoryBuilder
      */
     public function immutable()
     {
-        return new self($this->readers, $this->writers, true);
+        return new self($this->readers, $this->writers, true, $this->whitelist);
+    }
+
+    /**
+     * Creates a repository builder with the given whitelist.
+     *
+     * @param string[]|null $whitelist
+     *
+     * @return \Dotenv\Repository\RepositoryBuilder
+     */
+    public function whitelist(array $whitelist = null)
+    {
+        return new self($this->readers, $this->writers, $this->immutable, $whitelist);
     }
 
     /**
@@ -206,9 +228,14 @@ final class RepositoryBuilder
         $reader = new MultiReader($this->readers);
         $writer = new MultiWriter($this->writers);
 
-        return new AdapterRepository(
-            $reader,
-            $this->immutable ? new ImmutableWriter($reader, $writer) : $writer
-        );
+        if ($this->immutable) {
+            $writer = new ImmutableWriter($writer, $reader);
+        }
+
+        if ($this->whitelist !== null) {
+            $writer = new WhitelistWriter($writer, $this->whitelist);
+        }
+
+        return new AdapterRepository($reader, $writer);
     }
 }
