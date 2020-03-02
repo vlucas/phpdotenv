@@ -89,7 +89,7 @@ final class Loader implements LoaderInterface
      * Resolve the nested variables.
      *
      * Replaces ${varname} patterns in the allowed positions in the variable
-     * value and replace with an existing environment variable.
+     * value by an existing environment variable.
      *
      * @param \Dotenv\Repository\RepositoryInterface $repository
      * @param \Dotenv\Loader\Value|null              $value
