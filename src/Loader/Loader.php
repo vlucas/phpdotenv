@@ -9,7 +9,6 @@ use Dotenv\Regex\Regex;
 use Dotenv\Repository\RepositoryInterface;
 use Dotenv\Result\Result;
 use Dotenv\Result\Success;
-use PhpOption\Option;
 
 final class Loader implements LoaderInterface
 {
@@ -53,7 +52,7 @@ final class Loader implements LoaderInterface
                 return Parser::parse($entry)->map(function (array $parsed) use ($repository, $vars) {
                     [$name, $value] = $parsed;
 
-                    $resolved = self::resolveNestedVariables($repository, $value);
+                    $resolved = Resolver::resolve($repository, $value);
                     
                     if ($repository->set($name, $resolved)) {
                         return array_merge($vars, [$name => $resolved]);
@@ -63,48 +62,5 @@ final class Loader implements LoaderInterface
                 });
             });
         }, Success::create([]));
-    }
-
-    /**
-     * Resolve the nested variables.
-     *
-     * Replaces ${varname} patterns in the allowed positions in the variable
-     * value by an existing environment variable.
-     *
-     * @param \Dotenv\Repository\RepositoryInterface $repository
-     * @param \Dotenv\Loader\Value|null              $value
-     *
-     * @return string|null
-     */
-    private static function resolveNestedVariables(RepositoryInterface $repository, Value $value = null)
-    {
-        return Option::fromValue($value)
-            ->map(function (Value $v) use ($repository) {
-                return array_reduce($v->getVars(), function ($s, $i) use ($repository) {
-                    return substr($s, 0, $i).self::resolveNestedVariable($repository, substr($s, $i));
-                }, $v->getChars());
-            })
-            ->getOrElse(null);
-    }
-
-    /**
-     * Resolve a single nested variable.
-     *
-     * @param \Dotenv\Repository\RepositoryInterface $repository
-     * @param string                                 $str
-     *
-     * @return string
-     */
-    private static function resolveNestedVariable(RepositoryInterface $repository, string $str)
-    {
-        return Regex::replaceCallback(
-            '/\A\${([a-zA-Z0-9_.]+)}/',
-            function (array $matches) use ($repository) {
-                return Option::fromValue($repository->get($matches[1]))
-                    ->getOrElse($matches[0]);
-            },
-            $str,
-            1
-        )->success()->getOrElse($str);
     }
 }

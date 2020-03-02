@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Dotenv\Tests;
+namespace Dotenv\Tests\Loader;
 
 use Dotenv\Loader\Lines;
 use PHPUnit\Framework\TestCase;
@@ -11,7 +11,7 @@ class LinesTest extends TestCase
 {
     public function testProcessBasic()
     {
-        $content = file_get_contents(dirname(__DIR__).'/fixtures/env/assertions.env');
+        $content = file_get_contents(dirname(dirname(__DIR__)).'/fixtures/env/assertions.env');
 
         $expected = [
             'ASSERTVAR1=val1',
@@ -30,7 +30,7 @@ class LinesTest extends TestCase
 
     public function testProcessQuotes()
     {
-        $content = file_get_contents(dirname(__DIR__).'/fixtures/env/multiline.env');
+        $content = file_get_contents(dirname(dirname(__DIR__)).'/fixtures/env/multiline.env');
 
         $expected = [
             "TEST=\"test\n     test\\\"test\\\"\n     test\"",

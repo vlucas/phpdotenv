@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Dotenv\Tests;
+namespace Dotenv\Tests\Result;
 
 use Dotenv\Result\Error;
 use Dotenv\Result\Success;

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Dotenv\Tests;
+namespace Dotenv\Tests\Repository;
 
 use Dotenv\Dotenv;
 use Dotenv\Repository\Adapter\ArrayAdapter;
@@ -28,7 +28,7 @@ class RepositoryTest extends TestCase
 
     private function load()
     {
-        Dotenv::createImmutable(dirname(__DIR__).'/fixtures/env')->load();
+        Dotenv::createImmutable(dirname(dirname(__DIR__)).'/fixtures/env')->load();
     }
 
     /**
@@ -42,7 +42,7 @@ class RepositoryTest extends TestCase
      *
      * @return array
      */
-    private function keyVal($reset = false)
+    private function keyVal(bool $reset = false)
     {
         if (!isset($this->keyVal) || $reset) {
             $this->keyVal = [uniqid() => uniqid()];

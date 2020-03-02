@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Dotenv\Tests;
+namespace Dotenv\Tests\Store;
 
 use Dotenv\Store\File\Paths;
 use Dotenv\Store\File\Reader;
@@ -21,7 +21,7 @@ class StoreTest extends TestCase
      */
     public static function setFolder()
     {
-        self::$folder = dirname(__DIR__).'/fixtures/env';
+        self::$folder = dirname(dirname(__DIR__)).'/fixtures/env';
     }
 
     public function testBasicReadDirect()

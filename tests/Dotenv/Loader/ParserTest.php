@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Dotenv\Tests;
+namespace Dotenv\Tests\Loader;
 
 use Dotenv\Loader\Parser;
 use PHPUnit\Framework\TestCase;
