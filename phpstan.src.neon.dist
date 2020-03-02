@@ -4,4 +4,3 @@ parameters:
     - '#Unable to resolve the template type#'
     - '#Method Dotenv\\Loader\\Parser::processChar\(\) should return Dotenv\\Result\\Result<array<int, bool\|int\|string>, string> but returns Dotenv\\Result\\Result<array<int, [a-z\|\,]+>, mixed>.#'
     - '#Parameter \#1 \$callable of method PhpOption\\Option<Dotenv\\Loader\\Value\|null>::map\(\) expects callable\(Dotenv\\Loader\\Value\|null\): mixed, Closure\(Dotenv\\Loader\\Value\): mixed given.#'
-    - '#Parameter \#1 \$callable of method PhpOption\\Option<array\|null>::[a-z]+\(\) expects callable\(array\|null\): [a-z]+, Closure\(array\): mixed given.#'                                                                          
