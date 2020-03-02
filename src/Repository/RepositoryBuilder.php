@@ -6,7 +6,6 @@ namespace Dotenv\Repository;
 
 use Dotenv\Repository\Adapter\AdapterInterface;
 use Dotenv\Repository\Adapter\ApacheAdapter;
-use Dotenv\Repository\Adapter\AvailabilityInterface;
 use Dotenv\Repository\Adapter\EnvConstAdapter;
 use Dotenv\Repository\Adapter\ImmutableWriter;
 use Dotenv\Repository\Adapter\MultiReader;

@@ -24,7 +24,7 @@ final class Parser
      *
      * @param string $entry
      *
-     * @return \Dotenv\Result\Result<array{string,\Dotenv\Loader\Value|null},string>     
+     * @return \Dotenv\Result\Result<array{string,\Dotenv\Loader\Value|null},string>
      */
     public static function parse(string $entry)
     {

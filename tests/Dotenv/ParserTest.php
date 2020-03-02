@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Dotenv\Tests;
 
-use Dotenv\Exception\InvalidFileException;
 use Dotenv\Loader\Parser;
 use PHPUnit\Framework\TestCase;
 

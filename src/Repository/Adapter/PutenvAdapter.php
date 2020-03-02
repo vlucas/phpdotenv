@@ -8,7 +8,6 @@ use PhpOption\None;
 use PhpOption\Option;
 use PhpOption\Some;
 
-
 final class PutenvAdapter implements AdapterInterface
 {
     /**

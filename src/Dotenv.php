@@ -9,7 +9,6 @@ use Dotenv\Loader\Loader;
 use Dotenv\Loader\LoaderInterface;
 use Dotenv\Repository\RepositoryBuilder;
 use Dotenv\Repository\RepositoryInterface;
-use Dotenv\Store\FileStore;
 use Dotenv\Store\StoreBuilder;
 use Dotenv\Store\StoreInterface;
 

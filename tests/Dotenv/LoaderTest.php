@@ -46,7 +46,7 @@ class LoaderTest extends TestCase
         $this->expectException(InvalidFileException::class);
         $this->expectExceptionMessage('Failed to parse dotenv file due to unexpected whitespace. Failed at ["""].');
 
-        $loader->load($repository, "FOO=\"\"\"");
+        $loader->load($repository, 'FOO="""');
     }
 
     public function providesAdapters()
