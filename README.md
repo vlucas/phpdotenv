@@ -52,6 +52,19 @@ $ composer require vlucas/phpdotenv
 or add it by hand to your `composer.json` file.
 
 
+UPGRADING FROM V4
+-----------------
+
+Version 5 bumps to PHP 7.1+, and adds some additional parameter typing. There
+have been some internal changes and refactorings too, but nothing that changes
+the overall feel and usage of the package. The Dotenv class itself is largely
+unchanged from V4.
+
+For more details, please see the
+[release notes](https://github.com/vlucas/phpdotenv/releases/tag/v5.0.0) and
+the [upgrading guide](UPGRADING.md).
+
+
 UPGRADING FROM V3
 -----------------
 
@@ -186,14 +199,10 @@ values by default, which is relevent if one is calling the "create" method
 using the `RepositoryBuilder` to construct a more custom repository:
 
 ```php
-$repository = Dotenv\Repository\RepositoryBuilder::create()
-    ->withReaders([
-        new Dotenv\Repository\Adapter\EnvConstAdapter(),
-    ])
-    ->withWriters([
-        new Dotenv\Repository\Adapter\EnvConstAdapter(),
-        new Dotenv\Repository\Adapter\PutenvAdapter(),
-    ])
+$repository = Dotenv\Repository\RepositoryBuilder::createWithNoAdapters()
+    ->addReader(Dotenv\Repository\Adapter\EnvConstAdapter::class)
+    ->addWriter(Dotenv\Repository\Adapter\EnvConstAdapter::class)
+    ->addWriter(Dotenv\Repository\Adapter\PutenvAdapter::class)
     ->immutable()
     ->make();
 
@@ -204,6 +213,18 @@ $dotenv->load();
 The above example will write loaded values to `$_ENV` and `putenv`, but when
 interpolating environment variables, we'll only read from `$_ENV`. Moreover, it
 will never replace any variables already set before loading the file.
+
+By means of another example, one can also specify a set of variables to be
+whitelisted. That is, only the variables in the whitelist will be loaded:
+
+```php
+$repository = Dotenv\Repository\RepositoryBuilder::createWithDefaultAdapters()
+    ->whitelist(['FOO', 'BAR'])
+    ->make();
+
+$dotenv = Dotenv\Dotenv::create($repository, __DIR__);
+$dotenv->load();
+```
 
 
 Requiring Variables to be Set

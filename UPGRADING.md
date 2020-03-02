@@ -6,6 +6,34 @@
 2. Scalar typehints have been added to the public interface.
 3. The parser now returns a result type instead of raising an exception. This change is strictly internal, and most users won't notice a differnce. The responsibility for rasising an exception has simply been shifted up to the caller.
 4. Adapters have been refactored again, with changes to the repositories. In particular, the repository builder has been tweaked. It now expects to be explicitly told if you want to use the default adapters or not, and expects individual readers and writers to be added, one by one. Similar changes have been applied to the store factory.
+5. Variable whitelisting has moved from the loader to be a responsibility of the repository, implemented via a special adapter.
+6. The loader now only returns the variables that were actually loaded into the repository, and not all the variables from the file.
+
+The changes listed in (4) mean that instead of:
+
+```php
+$repository = Dotenv\Repository\RepositoryBuilder::create()
+    ->withReaders([
+        new Dotenv\Repository\Adapter\EnvConstAdapter(),
+    ])
+    ->withWriters([
+        new Dotenv\Repository\Adapter\EnvConstAdapter(),
+        new Dotenv\Repository\Adapter\PutenvAdapter(),
+    ])
+    ->make();
+```
+
+one would now write:
+
+```php
+$repository = Dotenv\Repository\RepositoryBuilder::createWithNoAdapters()
+    ->addReader(Dotenv\Repository\Adapter\EnvConstAdapter::class)
+    ->addWriter(Dotenv\Repository\Adapter\EnvConstAdapter::class)
+    ->addWriter(Dotenv\Repository\Adapter\PutenvAdapter::class)
+    ->make();
+```
+
+Instead of passing class names, one can also pass actual adapter instances. Note that it is not possible to directly construct any of the adapters. One has to go via their static `create` method which returns an optional. This is to strictly encapsulate the fact that not all adapters are capable of running on all systems, and so those that cannot be run, cannot be created. For example, the apache adapter can only be run within an apache web server context. Passing the class names as in the above example will handle this for you, by adding the adapter only if it can be created (the optional has a value set).
 
 ## V4.0 to V4.1
 
