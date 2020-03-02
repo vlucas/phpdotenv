@@ -66,6 +66,8 @@ final class Parser
     }
 
     /**
+     * Parse the given variable name.
+     *
      * Strips quotes and the optional leading "export " from the variable name.
      *
      * @param string $name
@@ -96,7 +98,11 @@ final class Parser
     }
 
     /**
-     * Strips quotes and comments from the environment variable value.
+     * Parse the given variable value.
+     *
+     * This has the effect of stripping quotes and comments, dealing with
+     * special characters, and locating nested variables. Formally, we run
+     * a finite state automaton with an output tape: a transducer.
      *
      * @param string $value
      *
