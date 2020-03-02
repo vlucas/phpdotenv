@@ -5,9 +5,7 @@ declare(strict_types=1);
 namespace Dotenv\Regex;
 
 use Dotenv\Result\Error;
-use Dotenv\Result\Result;
 use Dotenv\Result\Success;
-use PhpOption\Option;
 
 final class Regex
 {
@@ -72,36 +70,10 @@ final class Regex
     {
         $result = $operation($subject);
 
-        if (($e = preg_last_error()) !== PREG_NO_ERROR) {
-            return Error::create(self::lookupError($e));
+        if (preg_last_error() !== PREG_NO_ERROR) {
+            return Error::create(preg_last_error_msg());
         }
 
         return Success::create($result);
-    }
-
-    /**
-     * Lookup the preg error code.
-     *
-     * @param int $code
-     *
-     * @return string
-     */
-    private static function lookupError(int $code)
-    {
-        return Option::fromValue(get_defined_constants(true))
-            ->filter(function (array $consts) {
-                return isset($consts['pcre']);
-            })
-            ->map(function (array $consts) {
-                return array_filter($consts['pcre'], function ($msg) {
-                    return substr($msg, -6) === '_ERROR';
-                }, ARRAY_FILTER_USE_KEY);
-            })
-            ->flatMap(function (array $errors) use ($code) {
-                return Option::fromValue(
-                    array_search($code, $errors, true)
-                );
-            })
-            ->getOrElse('PREG_ERROR');
     }
 }
