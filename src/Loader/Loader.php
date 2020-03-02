@@ -6,9 +6,9 @@ namespace Dotenv\Loader;
 
 use Dotenv\Exception\InvalidFileException;
 use Dotenv\Regex\Regex;
+use Dotenv\Repository\RepositoryInterface;
 use Dotenv\Result\Result;
 use Dotenv\Result\Success;
-use Dotenv\Repository\RepositoryInterface;
 use PhpOption\Option;
 
 final class Loader implements LoaderInterface
