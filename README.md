@@ -204,8 +204,7 @@ using the `RepositoryBuilder` to construct a more custom repository:
 
 ```php
 $repository = Dotenv\Repository\RepositoryBuilder::createWithNoAdapters()
-    ->addReader(Dotenv\Repository\Adapter\EnvConstAdapter::class)
-    ->addWriter(Dotenv\Repository\Adapter\EnvConstAdapter::class)
+    ->addAdapter(Dotenv\Repository\Adapter\EnvConstAdapter::class)
     ->addWriter(Dotenv\Repository\Adapter\PutenvAdapter::class)
     ->immutable()
     ->make();
