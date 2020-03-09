@@ -6,8 +6,21 @@ namespace Dotenv\Store\File;
 
 use PhpOption\Option;
 
+/**
+ * @internal
+ */
 final class Reader
 {
+    /**
+     * This class is a singleton.
+     *
+     * @return void
+     */
+    private function __construct()
+    {
+        //
+    }
+
     /**
      * Read the file(s), and return their raw content.
      *

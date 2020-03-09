@@ -11,6 +11,16 @@ use PhpOption\Option;
 final class Resolver
 {
     /**
+     * This class is a singleton.
+     *
+     * @return void
+     */
+    private function __construct()
+    {
+        //
+    }
+
+    /**
      * Resolve the nested variables in the given value.
      *
      * Replaces ${varname} patterns in the allowed positions in the variable

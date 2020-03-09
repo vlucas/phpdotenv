@@ -7,6 +7,16 @@ namespace Dotenv\Loader;
 final class Lines
 {
     /**
+     * This class is a singleton.
+     *
+     * @return void
+     */
+    private function __construct()
+    {
+        //
+    }
+
+    /**
      * Process the array of lines of environment variables.
      *
      * This will produce an array of entries, one per variable.

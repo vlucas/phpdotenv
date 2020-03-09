@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Dotenv\Repository\Adapter;
 
 use PhpOption\None;
-use PhpOption\Option;
 use PhpOption\Some;
 
 final class PutenvAdapter implements AdapterInterface
@@ -46,27 +45,26 @@ final class PutenvAdapter implements AdapterInterface
     }
 
     /**
-     * Get an environment variable, if it exists.
+     * Read an environment variable, if it exists.
      *
      * @param string $name
      *
      * @return \PhpOption\Option<string|null>
      */
-    public function get(string $name)
+    public function read(string $name)
     {
-        /** @var \PhpOption\Option<string|null> */
-        return Option::fromValue(getenv($name), false);
+        return ValueLifter::lift(getenv($name));
     }
 
     /**
-     * Set an environment variable.
+     * Write to an environment variable, if possible.
      *
      * @param string      $name
      * @param string|null $value
      *
      * @return bool
      */
-    public function set(string $name, string $value = null)
+    public function write(string $name, string $value = null)
     {
         putenv("$name=$value");
 
@@ -74,13 +72,13 @@ final class PutenvAdapter implements AdapterInterface
     }
 
     /**
-     * Clear an environment variable.
+     * Delete an environment variable, if possible.
      *
      * @param string $name
      *
      * @return bool
      */
-    public function clear(string $name)
+    public function delete(string $name)
     {
         putenv($name);
 

@@ -28,16 +28,16 @@ final class MultiReader implements ReaderInterface
     }
 
     /**
-     * Get an environment variable, if it exists.
+     * Read an environment variable, if it exists.
      *
      * @param string $name
      *
      * @return \PhpOption\Option<string|null>
      */
-    public function get(string $name)
+    public function read(string $name)
     {
         foreach ($this->readers as $reader) {
-            $result = $reader->get($name);
+            $result = $reader->read($name);
             if ($result->isDefined()) {
                 return $result;
             }

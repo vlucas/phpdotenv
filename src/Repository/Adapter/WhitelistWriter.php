@@ -35,14 +35,14 @@ final class WhitelistWriter implements WriterInterface
     }
 
     /**
-     * Set an environment variable.
+     * Write to an environment variable, if possible.
      *
      * @param string      $name
      * @param string|null $value
      *
      * @return bool
      */
-    public function set(string $name, string $value = null)
+    public function write(string $name, string $value = null)
     {
         // Don't set non-whitelisted variables
         if (!$this->isWhitelisted($name)) {
@@ -50,17 +50,17 @@ final class WhitelistWriter implements WriterInterface
         }
 
         // Set the value on the inner writer
-        return $this->writer->set($name, $value);
+        return $this->writer->write($name, $value);
     }
 
     /**
-     * Clear an environment variable.
+     * Delete an environment variable, if possible.
      *
      * @param string $name
      *
      * @return bool
      */
-    public function clear(string $name)
+    public function delete(string $name)
     {
         // Don't clear non-whitelisted variables
         if (!$this->isWhitelisted($name)) {
@@ -68,7 +68,7 @@ final class WhitelistWriter implements WriterInterface
         }
 
         // Set the value on the inner writer
-        return $this->writer->clear($name);
+        return $this->writer->delete($name);
     }
 
     /**

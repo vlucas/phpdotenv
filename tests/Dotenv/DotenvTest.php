@@ -90,10 +90,10 @@ class DotenvTest extends TestCase
             ['FOO' => 'bar', 'BAR' => 'baz', 'SPACED' => 'with spaces', 'NULL' => ''],
             $dotenv->load()
         );
-        $this->assertSame('bar', getenv('FOO'));
-        $this->assertSame('baz', getenv('BAR'));
-        $this->assertSame('with spaces', getenv('SPACED'));
-        $this->assertEmpty(getenv('NULL'));
+        $this->assertSame('bar', $_SERVER['FOO']);
+        $this->assertSame('baz', $_SERVER['BAR']);
+        $this->assertSame('with spaces', $_SERVER['SPACED']);
+        $this->assertEmpty($_SERVER['NULL']);
     }
 
     public function testDotenvLoadsEnvironmentVarsMultipleNotShortCircuitMode()
@@ -120,56 +120,56 @@ class DotenvTest extends TestCase
     {
         $dotenv = Dotenv::createMutable(self::$folder, 'commented.env');
         $dotenv->load();
-        $this->assertSame('bar', getenv('CFOO'));
-        $this->assertFalse(getenv('CBAR'));
-        $this->assertFalse(getenv('CZOO'));
-        $this->assertSame('with spaces', getenv('CSPACED'));
-        $this->assertSame('a value with a # character', getenv('CQUOTES'));
-        $this->assertSame('a value with a # character & a quote " character inside quotes', getenv('CQUOTESWITHQUOTE'));
-        $this->assertEmpty(getenv('CNULL'));
-        $this->assertEmpty(getenv('EMPTY'));
-        $this->assertEmpty(getenv('EMPTY2'));
-        $this->assertSame('foo', getenv('FOOO'));
+        $this->assertSame('bar', $_SERVER['CFOO']);
+        $this->assertFalse(isset($_SERVER['CBAR']));
+        $this->assertFalse(isset($_SERVER['CZOO']));
+        $this->assertSame('with spaces', $_SERVER['CSPACED']);
+        $this->assertSame('a value with a # character', $_SERVER['CQUOTES']);
+        $this->assertSame('a value with a # character & a quote " character inside quotes', $_SERVER['CQUOTESWITHQUOTE']);
+        $this->assertEmpty($_SERVER['CNULL']);
+        $this->assertEmpty($_SERVER['EMPTY']);
+        $this->assertEmpty($_SERVER['EMPTY2']);
+        $this->assertSame('foo', $_SERVER['FOOO']);
     }
 
     public function testQuotedDotenvLoadsEnvironmentVars()
     {
         $dotenv = Dotenv::createMutable(self::$folder, 'quoted.env');
         $dotenv->load();
-        $this->assertSame('bar', getenv('QFOO'));
-        $this->assertSame('baz', getenv('QBAR'));
-        $this->assertSame('with spaces', getenv('QSPACED'));
+        $this->assertSame('bar', $_SERVER['QFOO']);
+        $this->assertSame('baz', $_SERVER['QBAR']);
+        $this->assertSame('with spaces', $_SERVER['QSPACED']);
         $this->assertEmpty(getenv('QNULL'));
 
-        $this->assertSame('pgsql:host=localhost;dbname=test', getenv('QEQUALS'));
-        $this->assertSame('test some escaped characters like a quote (") or maybe a backslash (\\)', getenv('QESCAPED'));
-        $this->assertSame('iiiiviiiixiiiiviiii\\n', getenv('QSLASH'));
-        $this->assertSame('iiiiviiiixiiiiviiii\\\\n', getenv('SQSLASH'));
+        $this->assertSame('pgsql:host=localhost;dbname=test', $_SERVER['QEQUALS']);
+        $this->assertSame('test some escaped characters like a quote (") or maybe a backslash (\\)', $_SERVER['QESCAPED']);
+        $this->assertSame('iiiiviiiixiiiiviiii\\n', $_SERVER['QSLASH']);
+        $this->assertSame('iiiiviiiixiiiiviiii\\\\n', $_SERVER['SQSLASH']);
     }
 
     public function testLargeDotenvLoadsEnvironmentVars()
     {
         $dotenv = Dotenv::createMutable(self::$folder, 'large.env');
         $dotenv->load();
-        $this->assertNotEmpty(getenv('LARGE'));
+        $this->assertNotEmpty($_SERVER['LARGE']);
     }
 
     public function testMultipleDotenvLoadsEnvironmentVars()
     {
         $dotenv = Dotenv::createMutable(self::$folder, 'multiple.env');
         $dotenv->load();
-        $this->assertSame('bar', getenv('MULTI1'));
-        $this->assertSame('foo', getenv('MULTI2'));
+        $this->assertSame('bar', $_SERVER['MULTI1']);
+        $this->assertSame('foo', $_SERVER['MULTI2']);
     }
 
     public function testExportedDotenvLoadsEnvironmentVars()
     {
         $dotenv = Dotenv::createMutable(self::$folder, 'exported.env');
         $dotenv->load();
-        $this->assertSame('bar', getenv('EFOO'));
-        $this->assertSame('baz', getenv('EBAR'));
-        $this->assertSame('with spaces', getenv('ESPACED'));
-        $this->assertEmpty(getenv('ENULL'));
+        $this->assertSame('bar', $_SERVER['EFOO']);
+        $this->assertSame('baz', $_SERVER['EBAR']);
+        $this->assertSame('with spaces', $_SERVER['ESPACED']);
+        $this->assertEmpty($_SERVER['ENULL']);
     }
 
     public function testDotenvLoadsEnvGlobals()
@@ -215,7 +215,7 @@ class DotenvTest extends TestCase
     {
         $dotenv = Dotenv::createMutable(self::$folder, null);
         $dotenv->load();
-        $this->assertSame('bar', getenv('FOO'));
+        $this->assertSame('bar', $_SERVER['FOO']);
     }
 
     /**
@@ -227,7 +227,7 @@ class DotenvTest extends TestCase
     {
         $dotenv = Dotenv::createMutable(self::$folder, 'quoted.env');
         $dotenv->load();
-        $this->assertSame('no space', getenv('QWHITESPACE'));
+        $this->assertSame('no space', $_SERVER['QWHITESPACE']);
     }
 
     public function testDotenvLoadDoesNotOverwriteEnv()
@@ -241,7 +241,7 @@ class DotenvTest extends TestCase
     public function testDotenvLoadAfterOverload()
     {
         putenv('IMMUTABLE=true');
-        $dotenv = Dotenv::createMutable(self::$folder, 'immutable.env');
+        $dotenv = Dotenv::createUnsafeMutable(self::$folder, 'immutable.env');
         $dotenv->load();
         $this->assertSame('false', getenv('IMMUTABLE'));
     }
@@ -249,21 +249,21 @@ class DotenvTest extends TestCase
     public function testDotenvOverloadAfterLoad()
     {
         putenv('IMMUTABLE=true');
-        $dotenv = Dotenv::createImmutable(self::$folder, 'immutable.env');
+        $dotenv = Dotenv::createUnsafeImmutable(self::$folder, 'immutable.env');
         $dotenv->load();
         $this->assertSame('true', getenv('IMMUTABLE'));
     }
 
     public function testDotenvOverloadDoesOverwriteEnv()
     {
-        $dotenv = Dotenv::createMutable(self::$folder, 'mutable.env');
+        $dotenv = Dotenv::createUnsafeMutable(self::$folder, 'mutable.env');
         $dotenv->load();
         $this->assertSame('true', getenv('MUTABLE'));
     }
 
     public function testDotenvAllowsSpecialCharacters()
     {
-        $dotenv = Dotenv::createMutable(self::$folder, 'specialchars.env');
+        $dotenv = Dotenv::createUnsafeMutable(self::$folder, 'specialchars.env');
         $dotenv->load();
         $this->assertSame('$a6^C7k%zs+e^.jvjXk', getenv('SPVAR1'));
         $this->assertSame('?BUty3koaV3%GA*hMAwH}B', getenv('SPVAR2'));
@@ -277,7 +277,7 @@ class DotenvTest extends TestCase
 
     public function testMutlilineLoading()
     {
-        $dotenv = Dotenv::createMutable(self::$folder, 'multiline.env');
+        $dotenv = Dotenv::createUnsafeMutable(self::$folder, 'multiline.env');
         $dotenv->load();
         $this->assertSame("test\n     test\"test\"\n     test", getenv('TEST'));
         $this->assertSame("test\ntest", getenv('TEST_ND'));

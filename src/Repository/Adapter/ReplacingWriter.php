@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace Dotenv\Repository\Adapter;
 
-final class ImmutableWriter implements WriterInterface
+use PhpOption\None;
+use PhpOption\Some;
+
+final class ReplacingWriter implements WriterInterface
 {
     /**
      * The inner writer to use.
@@ -21,14 +24,14 @@ final class ImmutableWriter implements WriterInterface
     private $reader;
 
     /**
-     * The record of loaded variables.
+     * The record of seen variables.
      *
      * @var array<string,string>
      */
-    private $loaded;
+    private $seen;
 
     /**
-     * Create a new immutable writer instance.
+     * Create a new replacement writer instance.
      *
      * @param \Dotenv\Repository\Adapter\WriterInterface $writer
      * @param \Dotenv\Repository\Adapter\ReaderInterface $reader
@@ -39,7 +42,7 @@ final class ImmutableWriter implements WriterInterface
     {
         $this->writer = $writer;
         $this->reader = $reader;
-        $this->loaded = [];
+        $this->seen = [];
     }
 
     /**
@@ -52,20 +55,11 @@ final class ImmutableWriter implements WriterInterface
      */
     public function write(string $name, string $value = null)
     {
-        // Don't overwrite existing environment variables
-        // Ruby's dotenv does this with `ENV[key] ||= value`
-        if ($this->isExternallyDefined($name)) {
-            return false;
+        if ($this->exists($name)) {
+            return $this->writer->write($name, $value);
         }
 
-        // Set the value on the inner writer
-        if (!$this->writer->write($name, $value)) {
-            return false;
-        }
-
-        // Record that we have loaded the variable
-        $this->loaded[$name] = '';
-
+        // succeed if nothing to do
         return true;
     }
 
@@ -78,33 +72,36 @@ final class ImmutableWriter implements WriterInterface
      */
     public function delete(string $name)
     {
-        // Don't clear existing environment variables
-        if ($this->isExternallyDefined($name)) {
-            return false;
+        if ($this->exists($name)) {
+            return $this->writer->delete($name);
         }
 
-        // Clear the value on the inner writer
-        if (!$this->writer->delete($name)) {
-            return false;
-        }
-
-        // Leave the variable as fair game
-        unset($this->loaded[$name]);
-
+        // succeed if nothing to do
         return true;
     }
 
     /**
-     * Determine if the given variable is externally defined.
+     * Does the given environment variable exist.
      *
-     * That is, is it an "existing" variable.
+     * Returns true if it currently exists, or existed at any point in the past
+     * that we are aware of.
      *
      * @param string $name
      *
      * @return bool
      */
-    private function isExternallyDefined(string $name)
+    private function exists(string $name)
     {
-        return $this->reader->read($name)->isDefined() && !isset($this->loaded[$name]);
+        if (isset($this->seen[$name])) {
+            return true;
+        }
+
+        if ($this->reader->read($name)->isDefined()) {
+            $this->seen[$name] = '';
+
+            return true;
+        }
+
+        return false;
     }
 }

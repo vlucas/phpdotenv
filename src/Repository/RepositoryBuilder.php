@@ -5,12 +5,10 @@ declare(strict_types=1);
 namespace Dotenv\Repository;
 
 use Dotenv\Repository\Adapter\AdapterInterface;
-use Dotenv\Repository\Adapter\ApacheAdapter;
 use Dotenv\Repository\Adapter\EnvConstAdapter;
 use Dotenv\Repository\Adapter\ImmutableWriter;
 use Dotenv\Repository\Adapter\MultiReader;
 use Dotenv\Repository\Adapter\MultiWriter;
-use Dotenv\Repository\Adapter\PutenvAdapter;
 use Dotenv\Repository\Adapter\ReaderInterface;
 use Dotenv\Repository\Adapter\ServerConstAdapter;
 use Dotenv\Repository\Adapter\WhitelistWriter;
@@ -27,10 +25,8 @@ final class RepositoryBuilder
      * @var string[]
      */
     private const DEFAULT_ADAPTERS = [
-        ApacheAdapter::class,
         ServerConstAdapter::class,
         EnvConstAdapter::class,
-        PutenvAdapter::class,
     ];
 
     /**
@@ -194,6 +190,40 @@ final class RepositoryBuilder
         $writers = array_merge($this->writers, iterator_to_array($optional));
 
         return new self($this->readers, $writers, $this->immutable, $this->whitelist);
+    }
+
+    /**
+     * Creates a repository builder with the given adapter added.
+     *
+     * Accepts either an adapter instance, or a class-string for an adapter. If
+     * the adapter is not supported, then we silently skip adding it. We will
+     * add the adapter as both a reader and a writer.
+     *
+     * @param \Dotenv\Repository\Adapter\WriterInterface|string $adapter
+     *
+     * @throws \InvalidArgumentException
+     *
+     * @return \Dotenv\Repository\RepositoryBuilder
+     */
+    public function addAdapter($adapter)
+    {
+        if (!(is_string($adapter) && self::isAnAdapterClass($adapter)) && !($adapter instanceof AdapterInterface)) {
+            throw new InvalidArgumentException(
+                sprintf('Expected either an instance of %s or a class-string implementing %s',
+                    WriterInterface::class,
+                    AdapterInterface::class
+                )
+            );
+        }
+
+        $optional = Some::create($adapter)->flatMap(function ($adapter) {
+            return is_string($adapter) ? $adapter::create() : Some::create($adapter);
+        });
+
+        $readers = array_merge($this->readers, iterator_to_array($optional));
+        $writers = array_merge($this->writers, iterator_to_array($optional));
+
+        return new self($readers, $writers, $this->immutable, $this->whitelist);
     }
 
     /**

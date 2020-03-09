@@ -31,30 +31,30 @@ final class EnvConstAdapter implements AdapterInterface
     }
 
     /**
-     * Get an environment variable, if it exists.
+     * Read an environment variable, if it exists.
      *
      * @param string $name
      *
      * @return \PhpOption\Option<string|null>
      */
-    public function get(string $name)
+    public function read(string $name)
     {
         if (array_key_exists($name, $_ENV)) {
-            return Some::create($_ENV[$name]);
+            return ValueLifter::lift($_ENV[$name]);
         }
 
         return None::create();
     }
 
     /**
-     * Set an environment variable.
+     * Write to an environment variable, if possible.
      *
      * @param string      $name
      * @param string|null $value
      *
      * @return bool
      */
-    public function set(string $name, string $value = null)
+    public function write(string $name, string $value = null)
     {
         $_ENV[$name] = $value;
 
@@ -62,13 +62,13 @@ final class EnvConstAdapter implements AdapterInterface
     }
 
     /**
-     * Clear an environment variable.
+     * Delete an environment variable, if possible.
      *
      * @param string $name
      *
      * @return bool
      */
-    public function clear(string $name)
+    public function delete(string $name)
     {
         unset($_ENV[$name]);
 

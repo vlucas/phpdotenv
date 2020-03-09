@@ -47,50 +47,46 @@ final class ApacheAdapter implements AdapterInterface
     }
 
     /**
-     * Get an environment variable, if it exists.
-     *
-     * This is intentionally not implemented, since this adapter exists only as
-     * a means to overwrite existing apache environment variables.
+     * Read an environment variable, if it exists.
      *
      * @param string $name
      *
      * @return \PhpOption\Option<string|null>
      */
-    public function get(string $name)
+    public function read(string $name)
     {
+        $value = apache_getenv($name);
+
+        // apache adapter does not support empty/null values
+        if ($value !== '' && $value !== null) {
+            return ValueLifter::lift($value);
+        }
+
         return None::create();
     }
 
     /**
-     * Set an environment variable.
-     *
-     * Only if an existing apache variable exists do we overwrite it.
+     * Write to an environment variable, if possible.
      *
      * @param string      $name
      * @param string|null $value
      *
      * @return bool
      */
-    public function set(string $name, string $value = null)
+    public function write(string $name, string $value = null)
     {
-        if (apache_getenv($name) !== false) {
-            apache_setenv($name, (string) $value);
-        }
-
-        return true;
+        return apache_setenv($name, (string) $value);
     }
 
     /**
-     * Clear an environment variable.
+     * Delete an environment variable, if possible.
      *
      * @param string $name
      *
      * @return bool
      */
-    public function clear(string $name)
+    public function delete(string $name)
     {
-        // Nothing to do here.
-
-        return true;
+        return apache_setenv($name, '');
     }
 }

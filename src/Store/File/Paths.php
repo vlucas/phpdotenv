@@ -4,8 +4,21 @@ declare(strict_types=1);
 
 namespace Dotenv\Store\File;
 
+/**
+ * @internal
+ */
 final class Paths
 {
+    /**
+     * This class is a singleton.
+     *
+     * @return void
+     */
+    private function __construct()
+    {
+        //
+    }
+
     /**
      * Returns the full paths to the files.
      *

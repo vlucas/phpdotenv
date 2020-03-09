@@ -7,8 +7,21 @@ namespace Dotenv\Regex;
 use Dotenv\Result\Error;
 use Dotenv\Result\Success;
 
+/**
+ * @internal
+ */
 final class Regex
 {
+    /**
+     * This class is a singleton.
+     *
+     * @return void
+     */
+    private function __construct()
+    {
+        //
+    }
+
     /**
      * Perform a preg match, wrapping up the result.
      *

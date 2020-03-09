@@ -7,6 +7,7 @@ namespace Dotenv;
 use Dotenv\Exception\InvalidPathException;
 use Dotenv\Loader\Loader;
 use Dotenv\Loader\LoaderInterface;
+use Dotenv\Repository\Adapter\PutenvAdapter;
 use Dotenv\Repository\RepositoryBuilder;
 use Dotenv\Repository\RepositoryInterface;
 use Dotenv\Store\StoreBuilder;
@@ -97,6 +98,24 @@ final class Dotenv
     }
 
     /**
+     * Create a new mutable dotenv instance with default repository with the putenv adapter.
+     *
+     * @param string|string[]      $paths
+     * @param string|string[]|null $names
+     * @param bool                 $shortCircuit
+     *
+     * @return \Dotenv\Dotenv
+     */
+    public static function createUnsafeMutable($paths, $names = null, $shortCircuit = true)
+    {
+        $repository = RepositoryBuilder::createWithDefaultAdapters()
+            ->addAdapter(PutenvAdapter::class)
+            ->make();
+
+        return self::create($repository, $paths, $names, $shortCircuit);
+    }
+
+    /**
      * Create a new immutable dotenv instance with default repository.
      *
      * @param string|string[]      $paths
@@ -108,6 +127,25 @@ final class Dotenv
     public static function createImmutable($paths, $names = null, $shortCircuit = true)
     {
         $repository = RepositoryBuilder::createWithDefaultAdapters()->immutable()->make();
+
+        return self::create($repository, $paths, $names, $shortCircuit);
+    }
+
+    /**
+     * Create a new immutable dotenv instance with default repository with the putenv adapter.
+     *
+     * @param string|string[]      $paths
+     * @param string|string[]|null $names
+     * @param bool                 $shortCircuit
+     *
+     * @return \Dotenv\Dotenv
+     */
+    public static function createUnsafeImmutable($paths, $names = null, $shortCircuit = true)
+    {
+        $repository = RepositoryBuilder::createWithDefaultAdapters()
+            ->addAdapter(PutenvAdapter::class)
+            ->immutable()
+            ->make();
 
         return self::create($repository, $paths, $names, $shortCircuit);
     }

@@ -46,7 +46,7 @@ final class AdapterRepository implements RepositoryInterface
      */
     public function has(string $name)
     {
-        return $this->reader->get($name)->isDefined();
+        return $this->reader->read($name)->isDefined();
     }
 
     /**
@@ -58,7 +58,7 @@ final class AdapterRepository implements RepositoryInterface
      */
     public function get(string $name)
     {
-        return $this->reader->get($name)->getOrElse(null);
+        return $this->reader->read($name)->getOrElse(null);
     }
 
     /**
@@ -71,7 +71,7 @@ final class AdapterRepository implements RepositoryInterface
      */
     public function set(string $name, string $value = null)
     {
-        return $this->writer->set($name, $value);
+        return $this->writer->write($name, $value);
     }
 
     /**
@@ -83,6 +83,6 @@ final class AdapterRepository implements RepositoryInterface
      */
     public function clear(string $name)
     {
-        return $this->writer->clear($name);
+        return $this->writer->delete($name);
     }
 }

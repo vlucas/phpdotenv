@@ -7,21 +7,21 @@ namespace Dotenv\Repository\Adapter;
 interface WriterInterface
 {
     /**
-     * Set an environment variable.
+     * Write to an environment variable, if possible.
      *
      * @param string      $name
      * @param string|null $value
      *
      * @return bool
      */
-    public function set(string $name, string $value = null);
+    public function write(string $name, string $value = null);
 
     /**
-     * Clear an environment variable.
+     * Delete an environment variable, if possible.
      *
      * @param string $name
      *
      * @return bool
      */
-    public function clear(string $name);
+    public function delete(string $name);
 }

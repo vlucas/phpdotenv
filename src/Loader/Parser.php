@@ -20,6 +20,16 @@ final class Parser
     private const COMMENT_STATE = 6;
 
     /**
+     * This class is a singleton.
+     *
+     * @return void
+     */
+    private function __construct()
+    {
+        //
+    }
+
+    /**
      * Parse the given environment variable entry into a name and value.
      *
      * @param string $entry

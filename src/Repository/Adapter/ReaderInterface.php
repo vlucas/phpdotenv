@@ -7,11 +7,11 @@ namespace Dotenv\Repository\Adapter;
 interface ReaderInterface
 {
     /**
-     * Get an environment variable, if it exists.
+     * Read an environment variable, if it exists.
      *
      * @param string $name
      *
      * @return \PhpOption\Option<string|null>
      */
-    public function get(string $name);
+    public function read(string $name);
 }

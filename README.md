@@ -143,30 +143,34 @@ $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
 $dotenv->load();
 ```
 
-Optionally you can pass in a filename as the second parameter, if you would like to use something other than `.env`
+Optionally you can pass in a filename as the second parameter, if you would
+like to use something other than `.env`:
 
 ```php
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__, 'myconfig');
 $dotenv->load();
 ```
 
-All of the defined variables are now accessible with the `getenv`
-method, and are available in the `$_ENV` and `$_SERVER` super-globals.
+All of the defined variables are now available in the `$_ENV` and `$_SERVER`
+super-globals.
+
+```php
+$s3_bucket = $_ENV['S3_BUCKET'];
+$s3_bucket = $_SERVER['S3_BUCKET'];
+```
+
+### Putenv and Getenv
+
+As of V5, we have disabled writing using `putenv` and reading from `getenv` by
+default, but this can still be used if you would like. Instead of calling
+`Dotenv::createImmutable`, one can call `Dotenv::createUnsafeImmutable`, which
+will add the `PutenvAdapter` behind the scenes. Your environment variables will
+now be available using the `getenv` method, as well as the super-globals:
 
 ```php
 $s3_bucket = getenv('S3_BUCKET');
 $s3_bucket = $_ENV['S3_BUCKET'];
 $s3_bucket = $_SERVER['S3_BUCKET'];
-```
-
-You should also be able to access them using your framework's Request
-class (if you are using a framework).
-
-```php
-$s3_bucket = $request->env('S3_BUCKET');
-$s3_bucket = $request->getEnv('S3_BUCKET');
-$s3_bucket = $request->server->get('S3_BUCKET');
-$s3_bucket = env('S3_BUCKET');
 ```
 
 ### Nesting Variables

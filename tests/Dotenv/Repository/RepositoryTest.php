@@ -102,7 +102,6 @@ class RepositoryTest extends TestCase
         // Attempt to clear the environment variable, check that it fails.
         $repository->clear($this->key());
         $this->assertSame($this->value(), $repository->get($this->key()));
-        $this->assertSame($this->value(), getenv($this->key()));
         $this->assertSame(true, isset($_ENV[$this->key()]));
         $this->assertSame(true, isset($_SERVER[$this->key()]));
     }

@@ -95,7 +95,7 @@ class ValidatorTest extends TestCase
 
     public function testDotenvAssertions()
     {
-        $dotenv = Dotenv::createImmutable(self::$folder, 'assertions.env');
+        $dotenv = Dotenv::createUnsafeImmutable(self::$folder, 'assertions.env');
         $dotenv->load();
 
         $this->assertSame('val1', getenv('ASSERTVAR1'));
@@ -182,7 +182,7 @@ class ValidatorTest extends TestCase
 
     public function testDotenvRequiredCanBeUsedWithoutLoadingFile()
     {
-        putenv('REQUIRED_VAR=1');
+        $_SERVER['REQUIRED_VAR'] = '1';
         $dotenv = Dotenv::createImmutable(self::$folder);
 
         $dotenv->required('REQUIRED_VAR')->notEmpty();
