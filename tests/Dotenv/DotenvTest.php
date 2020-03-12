@@ -290,9 +290,8 @@ class DotenvTest extends TestCase
 
     public function testEmptyLoading()
     {
-        $dotenv = Dotenv::createUnsafeMutable(self::$folder, 'empty.env');
+        $dotenv = Dotenv::createImmutable(self::$folder, 'empty.env');
         $this->assertSame(['EMPTY_VAR' => null], $dotenv->load());
-        $this->assertFalse(getenv('EMPTY_VAR'));
     }
 
     public function testDirectConstructor()
