@@ -236,6 +236,12 @@ class DotenvTest extends TestCase
         $this->assertSame('https://vision.googleapis.com/v1/images:annotate?key=', getenv('TEST_EQS'));
     }
 
+    public function testEmptyLoading()
+    {
+        $dotenv = Dotenv::create($this->fixturesFolder, 'empty.env');
+        $this->assertSame(['EMPTY_VAR' => null], $dotenv->load());
+    }
+
     public function testGetEnvironmentVariablesList()
     {
         $dotenv = Dotenv::create($this->fixturesFolder);
