@@ -7,6 +7,7 @@ namespace Dotenv\Tests;
 use Dotenv\Dotenv;
 use Dotenv\Exception\InvalidPathException;
 use Dotenv\Loader\Loader;
+use Dotenv\Parser\Parser;
 use Dotenv\Repository\RepositoryBuilder;
 use Dotenv\Store\StoreBuilder;
 use PHPUnit\Framework\TestCase;
@@ -287,9 +288,16 @@ class DotenvTest extends TestCase
         $this->assertSame('https://vision.googleapis.com/v1/images:annotate?key=', getenv('TEST_EQS'));
     }
 
+    public function testEmptyLoading()
+    {
+        $dotenv = Dotenv::createUnsafeMutable(self::$folder, 'empty.env');
+        $this->assertSame(['EMPTY_VAR' => null], $dotenv->load());
+        $this->assertFalse(getenv('EMPTY_VAR'));
+    }
+
     public function testDirectConstructor()
     {
-        $loader = new Loader();
+        $loader = new Loader(new Parser());
         $repository = RepositoryBuilder::createWithDefaultAdapters()->make();
         $store = StoreBuilder::createWithDefaultName()->addPath(self::$folder)->make();
 

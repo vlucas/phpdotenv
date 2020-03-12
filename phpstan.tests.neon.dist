@@ -1,8 +1,9 @@
 parameters:
   level: 6
   checkMissingIterableValueType: false
+  checkGenericClassInNonGenericObjectType: false
   ignoreErrors:
     - '#Unable to resolve the template type#'
-    - '#Parameter \#1 \$name of method Dotenv\\Repository\\RepositoryInterface::[a-z]+\(\) expects string, [a-z]+ given.#'
+    - '#Parameter \#1 \$name of method Dotenv\\Repository\\RepositoryInterface::[a-z]+\(\) expects string, null given.#'
     - '#has no return typehint specified#'
     - '#with no typehint#'

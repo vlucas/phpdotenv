@@ -5,6 +5,9 @@ declare(strict_types=1);
 namespace Dotenv\Loader;
 
 use Dotenv\Exception\InvalidFileException;
+use Dotenv\Parser\Entry;
+use Dotenv\Parser\Value;
+use Dotenv\Parser\ParserInterface;
 use Dotenv\Regex\Regex;
 use Dotenv\Repository\RepositoryInterface;
 use Dotenv\Result\Result;
@@ -12,6 +15,25 @@ use Dotenv\Result\Success;
 
 final class Loader implements LoaderInterface
 {
+    /**
+     * The entity parser instance.
+     *
+     * @var \Dotenv\Parser\ParserInterface
+     */
+    private $parser;
+
+    /**
+     * Create a new loader instance.
+     *
+     * @param \Dotenv\Parser\ParserInterface $parser
+     *
+     * @return void
+     */
+    public function __construct(ParserInterface $parser)
+    {
+        $this->parser = $parser;
+    }
+
     /**
      * Load the given environment file content into the repository.
      *
@@ -48,15 +70,24 @@ final class Loader implements LoaderInterface
      */
     private function processEntries(RepositoryInterface $repository, array $entries)
     {
-        return array_reduce($entries, function (Result $vars, string $entry) use ($repository) {
-            return $vars->flatMap(function (array $vars) use ($repository, $entry) {
-                return Parser::parse($entry)->map(function (array $parsed) use ($repository, $vars) {
-                    [$name, $value] = $parsed;
+        return array_reduce($entries, function (Result $vars, string $raw) use ($repository) {
+            return $vars->flatMap(function (array $vars) use ($repository, $raw) {
+                return $this->parser->parse($raw)->map(function (Entry $entry) use ($repository, $vars) {
+                    $name = $entry->getName();
 
-                    $resolved = Resolver::resolve($repository, $value);
-                    
-                    if ($repository->set($name, $resolved)) {
-                        return array_merge($vars, [$name => $resolved]);
+                    $value = $entry->getValue()->map(function (Value $value) use ($repository) {
+                        return Resolver::resolve($repository, $value);
+                    });
+
+                    if ($value->isDefined()) {
+                        $inner = $value->get();
+                        if ($repository->set($name, $inner)) {
+                            return array_merge($vars, [$name => $inner]);
+                        }
+                    } else {
+                        if ($repository->clear($name)) {
+                            return array_merge($vars, [$name => null]);
+                        }
                     }
 
                     return $vars;

@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Dotenv\Loader;
+namespace Dotenv\Parser;
 
 use Dotenv\Result\Error;
 use Dotenv\Result\Result;
 use Dotenv\Result\Success;
 use RuntimeException;
 
-final class Parser
+final class Parser implements ParserInterface
 {
     private const INITIAL_STATE = 0;
     private const UNQUOTED_STATE = 1;
@@ -20,32 +20,35 @@ final class Parser
     private const COMMENT_STATE = 6;
 
     /**
-     * This class is a singleton.
+     * Create a new parser instance.
      *
      * @return void
      */
-    private function __construct()
+    public function __construct()
     {
         //
     }
 
     /**
-     * Parse the given environment variable entry into a name and value.
+     * Parse a raw entry into a proper entry.
+     *
+     * That is, turn a raw environment variable entry into a name and possibly
+     * a value. We wrap the answer in a result type.
      *
      * @param string $entry
      *
-     * @return \Dotenv\Result\Result<array{string,\Dotenv\Loader\Value|null},string>
+     * @return \Dotenv\Result\Result<\Dotenv\Parser\Entry,string>
      */
-    public static function parse(string $entry)
+    public function parse(string $entry)
     {
         return self::splitStringIntoParts($entry)->flatMap(function (array $parts) {
             [$name, $value] = $parts;
 
-            return self::parseName($name)->flatMap(function (string $name) use ($value) {
-                $parsedValue = $value === null ? Success::create(null) : self::parseValue($value);
+            return $this->parseName($name)->flatMap(function (string $name) use ($value) {
+                $parsedValue = $value === null ? Success::create(null) : $this->parseValue($value);
 
                 return $parsedValue->map(function (?Value $value) use ($name) {
-                    return [$name, $value];
+                    return new Entry($name, $value);
                 });
             });
         });
@@ -78,13 +81,14 @@ final class Parser
     /**
      * Parse the given variable name.
      *
-     * Strips quotes and the optional leading "export " from the variable name.
+     * That is, stripe the optional quotes and leading "export " from the
+     * variable name. We wrap the answer in a result type.
      *
      * @param string $name
      *
      * @return \Dotenv\Result\Result<string,string>
      */
-    private static function parseName(string $name)
+    public function parseName(string $name)
     {
         $name = trim(str_replace(['export ', '\'', '"'], '', $name));
 
@@ -111,14 +115,15 @@ final class Parser
      * Parse the given variable value.
      *
      * This has the effect of stripping quotes and comments, dealing with
-     * special characters, and locating nested variables. Formally, we run
-     * a finite state automaton with an output tape: a transducer.
+     * special characters, and locating nested variables, but not resolving
+     * them. Formally, we run a finite state automaton with an output tape: a
+     * transducer. We wrap the answer in a result type.
      *
      * @param string $value
      *
-     * @return \Dotenv\Result\Result<\Dotenv\Loader\Value,string>
+     * @return \Dotenv\Result\Result<\Dotenv\Parser\Value,string>
      */
-    private static function parseValue(string $value)
+    public function parseValue(string $value)
     {
         if (trim($value) === '') {
             return Success::create(Value::blank());

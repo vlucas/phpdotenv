@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Dotenv\Repository\Adapter;
 
 use PhpOption\None;
+use PhpOption\Option;
 use PhpOption\Some;
 
 final class ApacheAdapter implements AdapterInterface
@@ -51,31 +52,27 @@ final class ApacheAdapter implements AdapterInterface
      *
      * @param string $name
      *
-     * @return \PhpOption\Option<string|null>
+     * @return \PhpOption\Option<string>
      */
     public function read(string $name)
     {
-        $value = apache_getenv($name);
-
-        // apache adapter does not support empty/null values
-        if ($value !== '' && $value !== null) {
-            return ValueLifter::lift($value);
-        }
-
-        return None::create();
+        /** @var \PhpOption\Option<string> */
+        return Option::fromValue(apache_getenv($name))->filter(function ($value) {
+            return is_string($value) && $value !== '';
+        });
     }
 
     /**
      * Write to an environment variable, if possible.
      *
-     * @param string      $name
-     * @param string|null $value
+     * @param string $name
+     * @param string $value
      *
      * @return bool
      */
-    public function write(string $name, string $value = null)
+    public function write(string $name, string $value)
     {
-        return apache_setenv($name, (string) $value);
+        return apache_setenv($name, $value);
     }
 
     /**

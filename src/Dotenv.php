@@ -7,13 +7,14 @@ namespace Dotenv;
 use Dotenv\Exception\InvalidPathException;
 use Dotenv\Loader\Loader;
 use Dotenv\Loader\LoaderInterface;
+use Dotenv\Parser\Parser;
 use Dotenv\Repository\Adapter\PutenvAdapter;
 use Dotenv\Repository\RepositoryBuilder;
 use Dotenv\Repository\RepositoryInterface;
 use Dotenv\Store\StoreBuilder;
 use Dotenv\Store\StoreInterface;
 
-final class Dotenv
+class Dotenv
 {
     /**
      * The loader instance.
@@ -78,7 +79,7 @@ final class Dotenv
             $builder = $builder->shortCircuit();
         }
 
-        return new self(new Loader(), $repository, $builder->make());
+        return new self(new Loader(new Parser()), $repository, $builder->make());
     }
 
     /**

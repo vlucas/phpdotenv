@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Dotenv\Repository\Adapter;
 
 use PhpOption\None;
+use PhpOption\Option;
 use PhpOption\Some;
 
 final class ArrayAdapter implements AdapterInterface
@@ -12,7 +13,7 @@ final class ArrayAdapter implements AdapterInterface
     /**
      * The variables and their values.
      *
-     * @var array<string,string|null>
+     * @var array<string,string>
      */
     private $variables;
 
@@ -42,26 +43,22 @@ final class ArrayAdapter implements AdapterInterface
      *
      * @param string $name
      *
-     * @return \PhpOption\Option<string|null>
+     * @return \PhpOption\Option<string>
      */
     public function read(string $name)
     {
-        if (array_key_exists($name, $this->variables)) {
-            return Some::create($this->variables[$name]);
-        }
-
-        return None::create();
+        return Option::fromArraysValue($this->variables, $name);
     }
 
     /**
      * Write to an environment variable, if possible.
      *
-     * @param string      $name
-     * @param string|null $value
+     * @param string $name
+     * @param string $value
      *
      * @return bool
      */
-    public function write(string $name, string $value = null)
+    public function write(string $name, string $value)
     {
         $this->variables[$name] = $value;
 

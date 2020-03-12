@@ -8,6 +8,7 @@
 4. Adapters have been refactored again, with changes to the repositories. In particular, the repository builder has been tweaked. It now expects to be explicitly told if you want to use the default adapters or not, and expects individual readers and writers to be added, one by one. Similar changes have been applied to the store factory. Moreover, the `ApacheAdapter` has been changed so that it behaves much like the other adapters. The old behaviour can be simulated by composing it with the new `ReplacingWriter` (see below). We will no longer include this adapter in our default setup, so that people can enable exactly what they need. Finally, by default, we will no longer be using the `PutenvAdapter`. It can be added, as required.
 5. Variable whitelisting has moved from the loader to be a responsibility of the repository, implemented via a special adapter.
 6. The loader now only returns the variables that were actually loaded into the repository, and not all the variables from the file.
+7. The parser has been moved to its own namespace, and there is now a `ParserInterface`. This change is expected to have no impact when upgrading.
 
 The changes listed in (4) mean that instead of:
 

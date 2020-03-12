@@ -36,12 +36,6 @@ class PutenvAdapterTest extends TestCase
         $this->assertSame('', getenv('CONST_TEST'));
     }
 
-    public function testNullWrite()
-    {
-        $this->assertTrue(self::createAdapter()->write('CONST_TEST', null));
-        $this->assertSame('', getenv('CONST_TEST'));
-    }
-
     public function testGoodDelete()
     {
         $this->assertTrue(self::createAdapter()->delete('CONST_TEST'));

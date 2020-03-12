@@ -7,6 +7,7 @@ namespace Dotenv\Tests\Repository;
 use Dotenv\Dotenv;
 use Dotenv\Repository\Adapter\ArrayAdapter;
 use Dotenv\Repository\RepositoryBuilder;
+use Dotenv\Repository\RepositoryInterface;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 use TypeError;
@@ -73,6 +74,12 @@ class RepositoryTest extends TestCase
         $keyVal = $this->keyVal();
 
         return reset($keyVal);
+    }
+
+    public function testRepositoryInstanceOf()
+    {
+        $this->assertInstanceOf(RepositoryInterface::class, RepositoryBuilder::createWithNoAdapters()->make());
+        $this->assertInstanceOf(RepositoryInterface::class, RepositoryBuilder::createWithDefaultAdapters()->make());
     }
 
     public function testMutableLoaderClearsEnvironmentVars()
@@ -250,5 +257,13 @@ class RepositoryTest extends TestCase
         $this->expectExceptionMessage('Expected either an instance of ');
 
         RepositoryBuilder::createWithNoAdapters()->addWriter('123');
+    }
+
+    public function testBuildWithBadAdapter()
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Expected either an instance of ');
+
+        RepositoryBuilder::createWithNoAdapters()->addAdapter('');
     }
 }

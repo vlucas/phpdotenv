@@ -32,7 +32,7 @@ final class MultiReader implements ReaderInterface
      *
      * @param string $name
      *
-     * @return \PhpOption\Option<string|null>
+     * @return \PhpOption\Option<string>
      */
     public function read(string $name)
     {

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Dotenv\Loader;
 
+use Dotenv\Parser\Value;
 use Dotenv\Regex\Regex;
 use Dotenv\Repository\RepositoryInterface;
 use PhpOption\Option;
@@ -12,6 +13,8 @@ final class Resolver
 {
     /**
      * This class is a singleton.
+     *
+     * @codeCoverageIgnore
      *
      * @return void
      */
@@ -27,19 +30,15 @@ final class Resolver
      * value by an existing environment variable.
      *
      * @param \Dotenv\Repository\RepositoryInterface $repository
-     * @param \Dotenv\Loader\Value|null              $value
+     * @param \Dotenv\Parser\Value                   $value
      *
-     * @return string|null
+     * @return string
      */
-    public static function resolve(RepositoryInterface $repository, Value $value = null)
+    public static function resolve(RepositoryInterface $repository, Value $value)
     {
-        return Option::fromValue($value)
-            ->map(function (Value $v) use ($repository) {
-                return array_reduce($v->getVars(), function ($s, $i) use ($repository) {
-                    return substr($s, 0, $i).self::resolveVariable($repository, substr($s, $i));
-                }, $v->getChars());
-            })
-            ->getOrElse(null);
+        return array_reduce($value->getVars(), function ($s, $i) use ($repository) {
+            return substr($s, 0, $i).self::resolveVariable($repository, substr($s, $i));
+        }, $value->getChars());
     }
 
     /**

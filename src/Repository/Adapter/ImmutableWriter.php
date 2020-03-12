@@ -45,12 +45,12 @@ final class ImmutableWriter implements WriterInterface
     /**
      * Write to an environment variable, if possible.
      *
-     * @param string      $name
-     * @param string|null $value
+     * @param string $name
+     * @param string $value
      *
      * @return bool
      */
-    public function write(string $name, string $value = null)
+    public function write(string $name, string $value)
     {
         // Don't overwrite existing environment variables
         // Ruby's dotenv does this with `ENV[key] ||= value`

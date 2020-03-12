@@ -43,12 +43,6 @@ class ServerConstAdapterTest extends TestCase
         $this->assertSame('', $_SERVER['CONST_TEST']);
     }
 
-    public function testNullWrite()
-    {
-        $this->assertTrue(self::createAdapter()->write('CONST_TEST', null));
-        $this->assertSame(null, $_SERVER['CONST_TEST']);
-    }
-
     public function testGoodDelete()
     {
         $this->assertTrue(self::createAdapter()->delete('CONST_TEST'));

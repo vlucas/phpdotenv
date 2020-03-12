@@ -48,12 +48,12 @@ final class ReplacingWriter implements WriterInterface
     /**
      * Write to an environment variable, if possible.
      *
-     * @param string      $name
-     * @param string|null $value
+     * @param string $name
+     * @param string $value
      *
      * @return bool
      */
-    public function write(string $name, string $value = null)
+    public function write(string $name, string $value)
     {
         if ($this->exists($name)) {
             return $this->writer->write($name, $value);

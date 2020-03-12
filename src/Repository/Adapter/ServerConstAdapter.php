@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Dotenv\Repository\Adapter;
 
 use PhpOption\None;
+use PhpOption\Option;
 use PhpOption\Some;
 
 final class ServerConstAdapter implements AdapterInterface
@@ -35,26 +36,25 @@ final class ServerConstAdapter implements AdapterInterface
      *
      * @param string $name
      *
-     * @return \PhpOption\Option<string|null>
+     * @return \PhpOption\Option<string>
      */
     public function read(string $name)
     {
-        if (array_key_exists($name, $_SERVER)) {
-            return ValueLifter::lift($_SERVER[$name]);
-        }
-
-        return None::create();
+        /** @var \PhpOption\Option<string> */
+        return Option::fromArraysValue($_SERVER, $name)->filter(function ($value) {
+            return is_string($value);
+        });
     }
 
     /**
      * Write to an environment variable, if possible.
      *
-     * @param string      $name
-     * @param string|null $value
+     * @param string $name
+     * @param string $value
      *
      * @return bool
      */
-    public function write(string $name, string $value = null)
+    public function write(string $name, string $value)
     {
         $_SERVER[$name] = $value;
 

@@ -28,12 +28,12 @@ final class MultiWriter implements WriterInterface
     /**
      * Write to an environment variable, if possible.
      *
-     * @param string      $name
-     * @param string|null $value
+     * @param string $name
+     * @param string $value
      *
      * @return bool
      */
-    public function write(string $name, string $value = null)
+    public function write(string $name, string $value)
     {
         foreach ($this->writers as $writers) {
             if (!$writers->write($name, $value)) {

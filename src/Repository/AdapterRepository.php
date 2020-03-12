@@ -64,12 +64,12 @@ final class AdapterRepository implements RepositoryInterface
     /**
      * Set an environment variable.
      *
-     * @param string      $name
-     * @param string|null $value
+     * @param string $name
+     * @param string $value
      *
      * @return bool
      */
-    public function set(string $name, string $value = null)
+    public function set(string $name, string $value)
     {
         return $this->writer->write($name, $value);
     }

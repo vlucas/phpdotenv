@@ -40,13 +40,6 @@ class ArrayAdapterTest extends TestCase
         $this->assertSame('', $adapter->read('CONST_TEST')->get());
     }
 
-    public function testNullWrite()
-    {
-        $adapter = self::createAdapter();
-        $this->assertTrue($adapter->write('CONST_TEST', null));
-        $this->assertSame(null, $adapter->read('CONST_TEST')->get());
-    }
-
     public function testGoodDelete()
     {
         $adapter = self::createAdapter();

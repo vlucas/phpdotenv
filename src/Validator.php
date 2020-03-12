@@ -8,7 +8,7 @@ use Dotenv\Exception\ValidationException;
 use Dotenv\Regex\Regex;
 use Dotenv\Repository\RepositoryInterface;
 
-final class Validator
+class Validator
 {
     /**
      * The environment repository instance.

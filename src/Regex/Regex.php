@@ -15,6 +15,8 @@ final class Regex
     /**
      * This class is a singleton.
      *
+     * @codeCoverageIgnore
+     *
      * @return void
      */
     private function __construct()

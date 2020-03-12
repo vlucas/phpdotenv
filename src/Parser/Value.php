@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Dotenv\Loader;
+namespace Dotenv\Parser;
 
 final class Value
 {
@@ -28,7 +28,7 @@ final class Value
      *
      * @return void
      */
-    private function __construct($chars, array $vars)
+    private function __construct(string $chars, array $vars)
     {
         $this->chars = $chars;
         $this->vars = $vars;
@@ -37,7 +37,7 @@ final class Value
     /**
      * Create an empty value instance.
      *
-     * @return \Dotenv\Loader\Value
+     * @return \Dotenv\Parser\Value
      */
     public static function blank()
     {
@@ -50,9 +50,9 @@ final class Value
      * @param string $char
      * @param bool   $var
      *
-     * @return \Dotenv\Loader\Value
+     * @return \Dotenv\Parser\Value
      */
-    public function append($char, $var)
+    public function append(string $char, bool $var)
     {
         return new self(
             $this->chars.$char,
@@ -78,6 +78,7 @@ final class Value
     public function getVars()
     {
         $vars = $this->vars;
+
         rsort($vars);
 
         return $vars;
