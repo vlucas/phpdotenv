@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Dotenv\Parser;
 
-use Dotenv\Result\Error;
-use Dotenv\Result\Result;
-use Dotenv\Result\Success;
+use GrahamCampbell\ResultType\Error;
+use GrahamCampbell\ResultType\Result;
+use GrahamCampbell\ResultType\Success;
 use RuntimeException;
 
 final class Parser implements ParserInterface
@@ -37,7 +37,7 @@ final class Parser implements ParserInterface
      *
      * @param string $entry
      *
-     * @return \Dotenv\Result\Result<\Dotenv\Parser\Entry,string>
+     * @return \GrahamCampbell\ResultType\Result<\Dotenv\Parser\Entry,string>
      */
     public function parse(string $entry)
     {
@@ -59,7 +59,7 @@ final class Parser implements ParserInterface
      *
      * @param string $line
      *
-     * @return \Dotenv\Result\Result<array{string,string|null},string>
+     * @return \GrahamCampbell\ResultType\Result<array{string,string|null},string>
      */
     private static function splitStringIntoParts(string $line)
     {
@@ -74,7 +74,7 @@ final class Parser implements ParserInterface
             return Error::create(self::getErrorMessage('an unexpected equals', $line));
         }
 
-        /** @var \Dotenv\Result\Result<array{string,string|null},string> */
+        /** @var \GrahamCampbell\ResultType\Result<array{string,string|null},string> */
         return Success::create([$name, $value]);
     }
 
@@ -86,7 +86,7 @@ final class Parser implements ParserInterface
      *
      * @param string $name
      *
-     * @return \Dotenv\Result\Result<string,string>
+     * @return \GrahamCampbell\ResultType\Result<string,string>
      */
     public function parseName(string $name)
     {
@@ -121,7 +121,7 @@ final class Parser implements ParserInterface
      *
      * @param string $value
      *
-     * @return \Dotenv\Result\Result<\Dotenv\Parser\Value,string>
+     * @return \GrahamCampbell\ResultType\Result<\Dotenv\Parser\Value,string>
      */
     public function parseValue(string $value)
     {
@@ -148,7 +148,7 @@ final class Parser implements ParserInterface
      * @param int    $state
      * @param string $char
      *
-     * @return \Dotenv\Result\Result<array{string,bool,int},string>
+     * @return \GrahamCampbell\ResultType\Result<array{string,bool,int},string>
      */
     private static function processChar(int $state, string $char)
     {

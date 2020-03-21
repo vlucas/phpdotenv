@@ -14,7 +14,7 @@ interface ParserInterface
      *
      * @param string $entry
      *
-     * @return \Dotenv\Result\Result<\Dotenv\Parser\Entry,string>
+     * @return \GrahamCampbell\ResultType\Result<\Dotenv\Parser\Entry,string>
      */
     public function parse(string $entry);
 
@@ -26,7 +26,7 @@ interface ParserInterface
      *
      * @param string $name
      *
-     * @return \Dotenv\Result\Result<string,string>
+     * @return \GrahamCampbell\ResultType\Result<string,string>
      */
     public function parseName(string $name);
 
@@ -39,7 +39,7 @@ interface ParserInterface
      *
      * @param string $value
      *
-     * @return \Dotenv\Result\Result<\Dotenv\Parser\Value,string>
+     * @return \GrahamCampbell\ResultType\Result<\Dotenv\Parser\Value,string>
      */
     public function parseValue(string $value);
 }

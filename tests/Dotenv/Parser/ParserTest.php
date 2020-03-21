@@ -8,7 +8,7 @@ use Dotenv\Parser\Entry;
 use Dotenv\Parser\Parser;
 use Dotenv\Parser\ParserInterface;
 use Dotenv\Parser\Value;
-use Dotenv\Result\Result;
+use GrahamCampbell\ResultType\Result;
 use PHPUnit\Framework\TestCase;
 
 class ParserTest extends TestCase

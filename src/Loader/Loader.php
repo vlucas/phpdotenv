@@ -10,8 +10,8 @@ use Dotenv\Parser\Value;
 use Dotenv\Parser\ParserInterface;
 use Dotenv\Regex\Regex;
 use Dotenv\Repository\RepositoryInterface;
-use Dotenv\Result\Result;
-use Dotenv\Result\Success;
+use GrahamCampbell\ResultType\Result;
+use GrahamCampbell\ResultType\Success;
 
 final class Loader implements LoaderInterface
 {
@@ -66,7 +66,7 @@ final class Loader implements LoaderInterface
      * @param \Dotenv\Repository\RepositoryInterface $repository
      * @param string[]                               $entries
      *
-     * @return \Dotenv\Result\Result<array<string,string|null>,string>
+     * @return \GrahamCampbell\ResultType\Result<array<string,string|null>,string>
      */
     private function processEntries(RepositoryInterface $repository, array $entries)
     {

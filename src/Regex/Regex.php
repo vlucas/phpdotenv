@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Dotenv\Regex;
 
-use Dotenv\Result\Error;
-use Dotenv\Result\Success;
+use GrahamCampbell\ResultType\Error;
+use GrahamCampbell\ResultType\Success;
 
 /**
  * @internal
@@ -30,7 +30,7 @@ final class Regex
      * @param string $pattern
      * @param string $subject
      *
-     * @return \Dotenv\Result\Result<int,string>
+     * @return \GrahamCampbell\ResultType\Result<int,string>
      */
     public static function match(string $pattern, string $subject)
     {
@@ -47,7 +47,7 @@ final class Regex
      * @param string   $subject
      * @param int|null $limit
      *
-     * @return \Dotenv\Result\Result<string,string>
+     * @return \GrahamCampbell\ResultType\Result<string,string>
      */
     public static function replaceCallback(string $pattern, callable $callback, string $subject, int $limit = null)
     {
@@ -62,7 +62,7 @@ final class Regex
      * @param string $pattern
      * @param string $subject
      *
-     * @return \Dotenv\Result\Result<string[],string>
+     * @return \GrahamCampbell\ResultType\Result<string[],string>
      */
     public static function split(string $pattern, string $subject)
     {
@@ -79,7 +79,7 @@ final class Regex
      * @param callable(string):V $operation
      * @param string             $subject
      *
-     * @return \Dotenv\Result\Result<V,string>
+     * @return \GrahamCampbell\ResultType\Result<V,string>
      */
     private static function pregAndWrap(callable $operation, string $subject)
     {
