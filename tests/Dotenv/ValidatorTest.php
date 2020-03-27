@@ -41,6 +41,14 @@ class ValidatorTest extends TestCase
         $this->assertTrue(true);
     }
 
+    public function testDotenvAllowedValuesIfNotPresent()
+    {
+        $dotenv = Dotenv::createImmutable($this->fixturesFolder);
+        $dotenv->load();
+        $dotenv->ifPresent('FOOOOOOOO')->allowedValues(['bar', 'baz']);
+        $this->assertTrue(true);
+    }
+
     /**
      * @expectedException \Dotenv\Exception\ValidationException
      * @expectedExceptionMessage One or more environment variables failed assertions: FOO is not one of [buzz, buz].
