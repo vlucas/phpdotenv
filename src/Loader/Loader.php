@@ -6,8 +6,8 @@ namespace Dotenv\Loader;
 
 use Dotenv\Exception\InvalidFileException;
 use Dotenv\Parser\Entry;
-use Dotenv\Parser\Value;
 use Dotenv\Parser\ParserInterface;
+use Dotenv\Parser\Value;
 use Dotenv\Regex\Regex;
 use Dotenv\Repository\RepositoryInterface;
 use GrahamCampbell\ResultType\Result;
