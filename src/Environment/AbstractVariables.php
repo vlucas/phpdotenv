@@ -64,7 +64,7 @@ abstract class AbstractVariables implements VariablesInterface
      *
      * @return string|null
      */
-    protected abstract function getInternal($name);
+    abstract protected function getInternal($name);
 
     /**
      * Set an environment variable.
@@ -100,7 +100,7 @@ abstract class AbstractVariables implements VariablesInterface
      *
      * @return void
      */
-    protected abstract function setInternal($name, $value = null);
+    abstract protected function setInternal($name, $value = null);
 
     /**
      * Clear an environment variable.
@@ -132,7 +132,7 @@ abstract class AbstractVariables implements VariablesInterface
      *
      * @return void
      */
-    protected abstract function clearInternal($name);
+    abstract protected function clearInternal($name);
 
     /**
      * Determine if the environment is immutable.

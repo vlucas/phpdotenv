@@ -50,7 +50,6 @@ class Validator
                 'is missing'
             );
         }
-
     }
 
     /**
@@ -155,15 +154,14 @@ class Validator
     public function allowedRegexValues($regex)
     {
         return $this->assertCallback(
-            function ($value) use ($regex)
-            {
+            function ($value) use ($regex) {
                 if ($value === null) {
                     return true;
                 }
 
                 return Regex::match($regex, $value)->success()->getOrElse(0) === 1;
             },
-            sprintf('does not match "%s"' , $regex)
+            sprintf('does not match "%s"', $regex)
         );
     }
 
