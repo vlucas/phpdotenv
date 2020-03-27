@@ -47,6 +47,14 @@ class ValidatorTest extends TestCase
         $this->assertTrue(true);
     }
 
+    public function testDotenvAllowedValuesIfNotPresent()
+    {
+        $dotenv = Dotenv::createImmutable(self::$folder);
+        $dotenv->load();
+        $dotenv->ifPresent('FOOQWERTYOOOOOO')->allowedValues(['bar', 'baz']);
+        $this->assertTrue(true);
+    }
+
     public function testDotenvProhibitedValues()
     {
         $dotenv = Dotenv::createImmutable(self::$folder);
