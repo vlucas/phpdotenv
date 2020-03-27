@@ -22,6 +22,7 @@
     },
     "require-dev": {
         "ext-filter": "*",
+        "ext-pcre": "*",
         "phpunit/phpunit": "^4.8.35 || ^5.0 || ^6.0 || ^7.0"
     },
     "autoload": {
@@ -30,7 +31,8 @@
         }
     },
     "suggest": {
-        "ext-filter": "Required to use the boolean validator."
+        "ext-filter": "Required to use the boolean validator.",
+        "ext-pcre": "Required to use most of the library."
     },
     "extra": {
         "branch-alias": {
