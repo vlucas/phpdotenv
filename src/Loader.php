@@ -52,6 +52,7 @@ class Loader
      * Set immutable value.
      *
      * @param bool $immutable
+     *
      * @return $this
      */
     public function setImmutable($immutable = false)
@@ -297,6 +298,7 @@ class Loader
                 return $_SERVER[$name];
             default:
                 $value = getenv($name);
+
                 return $value === false ? null : $value; // switch getenv default to null
         }
     }
