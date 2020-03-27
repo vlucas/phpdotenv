@@ -15,7 +15,7 @@ class ValidatorBooleanTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * List of valid boolean values in fixtures/env/booleans.env
+     * List of valid boolean values in fixtures/env/booleans.env.
      *
      * @return array
      */
@@ -62,7 +62,7 @@ class ValidatorBooleanTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * List of non-boolean values in fixtures/env/booleans.env
+     * List of non-boolean values in fixtures/env/booleans.env.
      *
      * @return array
      */
