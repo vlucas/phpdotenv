@@ -11,7 +11,9 @@ php:
   - 7.1
   - 7.2
   - 7.3
-  - hhvm
+  - 7.4
+  - hhvm-3.18
+  - hhvm-3.30
 
 matrix:
   include:
