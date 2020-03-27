@@ -144,7 +144,8 @@ final class RepositoryBuilder
     {
         if (!(is_string($reader) && self::isAnAdapterClass($reader)) && !($reader instanceof ReaderInterface)) {
             throw new InvalidArgumentException(
-                sprintf('Expected either an instance of %s or a class-string implementing %s',
+                sprintf(
+                    'Expected either an instance of %s or a class-string implementing %s',
                     ReaderInterface::class,
                     AdapterInterface::class
                 )
@@ -176,7 +177,8 @@ final class RepositoryBuilder
     {
         if (!(is_string($writer) && self::isAnAdapterClass($writer)) && !($writer instanceof WriterInterface)) {
             throw new InvalidArgumentException(
-                sprintf('Expected either an instance of %s or a class-string implementing %s',
+                sprintf(
+                    'Expected either an instance of %s or a class-string implementing %s',
                     WriterInterface::class,
                     AdapterInterface::class
                 )
@@ -209,7 +211,8 @@ final class RepositoryBuilder
     {
         if (!(is_string($adapter) && self::isAnAdapterClass($adapter)) && !($adapter instanceof AdapterInterface)) {
             throw new InvalidArgumentException(
-                sprintf('Expected either an instance of %s or a class-string implementing %s',
+                sprintf(
+                    'Expected either an instance of %s or a class-string implementing %s',
                     WriterInterface::class,
                     AdapterInterface::class
                 )
