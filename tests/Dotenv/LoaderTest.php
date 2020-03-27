@@ -37,8 +37,6 @@ class LoaderTest extends TestCase
      * key/value pairs.
      *
      * @param bool $reset
-     *                    If true, a new pair will be generated. If false, the last returned pair
-     *                    will be returned.
      *
      * @return array
      */
