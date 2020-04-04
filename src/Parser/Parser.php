@@ -81,7 +81,7 @@ final class Parser implements ParserInterface
     /**
      * Parse the given variable name.
      *
-     * That is, stripe the optional quotes and leading "export " from the
+     * That is, strip the optional quotes and leading "export " from the
      * variable name. We wrap the answer in a result type.
      *
      * @param string $name
