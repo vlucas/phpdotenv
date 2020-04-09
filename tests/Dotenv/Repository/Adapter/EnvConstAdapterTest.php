@@ -7,7 +7,7 @@ namespace Dotenv\Tests\Repository\Adapter;
 use Dotenv\Repository\Adapter\EnvConstAdapter;
 use PHPUnit\Framework\TestCase;
 
-class EnvConstAdapterTest extends TestCase
+final class EnvConstAdapterTest extends TestCase
 {
     public function testGoodRead()
     {

@@ -8,7 +8,7 @@ use Dotenv\Dotenv;
 use Dotenv\Exception\ValidationException;
 use PHPUnit\Framework\TestCase;
 
-class ValidatorTest extends TestCase
+final class ValidatorTest extends TestCase
 {
     /**
      * @var string

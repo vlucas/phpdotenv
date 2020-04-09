@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Dotenv\Tests\Loader;
+namespace Dotenv\Tests\Parser;
 
-use Dotenv\Loader\Lines;
+use Dotenv\Parser\Lines;
 use PHPUnit\Framework\TestCase;
 
-class LinesTest extends TestCase
+final class LinesTest extends TestCase
 {
     public function testProcessBasic()
     {

@@ -8,6 +8,7 @@ use Dotenv\Exception\InvalidPathException;
 use Dotenv\Loader\Loader;
 use Dotenv\Loader\LoaderInterface;
 use Dotenv\Parser\Parser;
+use Dotenv\Parser\ParserInterface;
 use Dotenv\Repository\Adapter\PutenvAdapter;
 use Dotenv\Repository\RepositoryBuilder;
 use Dotenv\Repository\RepositoryInterface;
@@ -16,6 +17,20 @@ use Dotenv\Store\StoreInterface;
 
 class Dotenv
 {
+    /**
+     * The store instance.
+     *
+     * @var \Dotenv\Store\StoreInterface
+     */
+    private $store;
+
+    /**
+     * The parser instance.
+     *
+     * @var \Dotenv\Parser\ParserInterface
+     */
+    private $parser;
+
     /**
      * The loader instance.
      *
@@ -31,26 +46,25 @@ class Dotenv
     private $repository;
 
     /**
-     * The store instance.
-     *
-     * @var \Dotenv\Store\StoreInterface
-     */
-    private $store;
-
-    /**
      * Create a new dotenv instance.
      *
+     * @param \Dotenv\Store\StoreInterface           $store
+     * @param \Dotenv\Parser\ParserInterface         $parser
      * @param \Dotenv\Loader\LoaderInterface         $loader
      * @param \Dotenv\Repository\RepositoryInterface $repository
-     * @param \Dotenv\Store\StoreInterface           $store
      *
      * @return void
      */
-    public function __construct(LoaderInterface $loader, RepositoryInterface $repository, StoreInterface $store)
-    {
+    public function __construct(
+        StoreInterface $store,
+        ParserInterface $parser,
+        LoaderInterface $loader,
+        RepositoryInterface $repository
+    ) {
+        $this->store = $store;
+        $this->parser = $parser;
         $this->loader = $loader;
         $this->repository = $repository;
-        $this->store = $store;
     }
 
     /**
@@ -79,7 +93,7 @@ class Dotenv
             $builder = $builder->shortCircuit();
         }
 
-        return new self(new Loader(new Parser()), $repository, $builder->make());
+        return new self($builder->make(), new Parser(), new Loader(), $repository);
     }
 
     /**
@@ -160,7 +174,9 @@ class Dotenv
      */
     public function load()
     {
-        return $this->loader->load($this->repository, $this->store->read());
+        $entries = $this->parser->parse($this->store->read());
+
+        return $this->loader->load($this->repository, $entries);
     }
 
     /**

@@ -7,7 +7,7 @@ namespace Dotenv\Tests\Repository\Adapter;
 use Dotenv\Repository\Adapter\ServerConstAdapter;
 use PHPUnit\Framework\TestCase;
 
-class ServerConstAdapterTest extends TestCase
+final class ServerConstAdapterTest extends TestCase
 {
     public function testGoodRead()
     {

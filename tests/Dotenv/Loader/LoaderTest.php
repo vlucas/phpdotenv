@@ -14,31 +14,31 @@ use Dotenv\Repository\Adapter\ServerConstAdapter;
 use Dotenv\Repository\RepositoryBuilder;
 use PHPUnit\Framework\TestCase;
 
-class LoaderTest extends TestCase
+final class LoaderTest extends TestCase
 {
     public function testParserInstanceOf()
     {
-        $this->assertInstanceOf(LoaderInterface::class, new Loader(new Parser()));
+        $this->assertInstanceOf(LoaderInterface::class, new Loader());
     }
 
     public function testLoaderWithNoReaders()
     {
         $repository = RepositoryBuilder::createWithNoAdapters()->addWriter(ArrayAdapter::class)->make();
-        $loader = new Loader(new Parser());
+        $loader = new Loader();
 
         $content = "NVAR1=\"Hello\"\nNVAR2=\"World!\"\nNVAR3=\"{\$NVAR1} {\$NVAR2}\"\nNVAR4=\"\${NVAR1} \${NVAR2}\"";
         $expected = ['NVAR1' => 'Hello', 'NVAR2' => 'World!', 'NVAR3' => '{$NVAR1} {$NVAR2}', 'NVAR4' => '${NVAR1} ${NVAR2}'];
 
-        $this->assertSame($expected, $loader->load($repository, $content));
+        $this->assertSame($expected, $loader->load($repository, (new Parser())->parse($content)));
     }
 
     public function testLoaderWithWhitelist()
     {
         $adapter = ArrayAdapter::create()->get();
         $repository = RepositoryBuilder::createWithNoAdapters()->addReader($adapter)->addWriter($adapter)->whitelist(['FOO'])->make();
-        $loader = new Loader(new Parser());
+        $loader = new Loader();
 
-        $this->assertSame(['FOO' => 'Hello'], $loader->load($repository, "FOO=\"Hello\"\nBAR=\"World!\"\n"));
+        $this->assertSame(['FOO' => 'Hello'], $loader->load($repository, (new Parser())->parse("FOO=\"Hello\"\nBAR=\"World!\"\n")));
         $this->assertTrue($adapter->read('FOO')->isDefined());
         $this->assertSame('Hello', $adapter->read('FOO')->get());
         $this->assertFalse($adapter->read('BAR')->isDefined());
@@ -48,12 +48,12 @@ class LoaderTest extends TestCase
     {
         $adapter = ArrayAdapter::create()->get();
         $repository = RepositoryBuilder::createWithNoAdapters()->make();
-        $loader = new Loader(new Parser());
+        $loader = new Loader();
 
         $this->expectException(InvalidFileException::class);
-        $this->expectExceptionMessage('Failed to parse dotenv file due to unexpected whitespace. Failed at ["""].');
+        $this->expectExceptionMessage('Failed to parse dotenv file. Encountered unexpected whitespace at ["""].');
 
-        $loader->load($repository, 'FOO="""');
+        $loader->load($repository, (new Parser())->parse('FOO="""'));
     }
 
     public function providesAdapters()
@@ -71,11 +71,11 @@ class LoaderTest extends TestCase
     public function testLoaderWithSpecificAdapter($adapter)
     {
         $repository = RepositoryBuilder::createWithNoAdapters()->addReader($adapter)->addWriter($adapter)->make();
-        $loader = new Loader(new Parser());
+        $loader = new Loader();
 
         $content = "NVAR1=\"Hello\"\nNVAR2=\"World!\"\nNVAR3=\"{\$NVAR1} {\$NVAR2}\"\nNVAR4=\"\${NVAR1} \${NVAR2}\"";
         $expected = ['NVAR1' => 'Hello', 'NVAR2' => 'World!', 'NVAR3' => '{$NVAR1} {$NVAR2}', 'NVAR4' => 'Hello World!'];
 
-        $this->assertSame($expected, $loader->load($repository, $content));
+        $this->assertSame($expected, $loader->load($repository, (new Parser())->parse($content)));
     }
 }

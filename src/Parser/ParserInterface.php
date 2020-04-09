@@ -7,29 +7,13 @@ namespace Dotenv\Parser;
 interface ParserInterface
 {
     /**
-     * Parse a raw entry into a proper entry.
+     * Parse content into an entry array.
      *
-     * @param string $entry
+     * @param string $content
      *
-     * @return \GrahamCampbell\ResultType\Result<\Dotenv\Parser\Entry,string>
+     * @throws \Dotenv\Exception\InvalidFileException
+     *
+     * @return \Dotenv\Parser\Entry[]
      */
-    public function parse(string $entry);
-
-    /**
-     * Parse the given variable name.
-     *
-     * @param string $name
-     *
-     * @return \GrahamCampbell\ResultType\Result<string,string>
-     */
-    public function parseName(string $name);
-
-    /**
-     * Parse the given variable value.
-     *
-     * @param string $value
-     *
-     * @return \GrahamCampbell\ResultType\Result<\Dotenv\Parser\Value,string>
-     */
-    public function parseValue(string $value);
+    public function parse(string $content);
 }

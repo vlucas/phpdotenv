@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Dotenv\Loader;
+namespace Dotenv\Parser;
 
 final class Lines
 {
@@ -21,7 +21,7 @@ final class Lines
     /**
      * Process the array of lines of environment variables.
      *
-     * This will produce an array of entries, one per variable.
+     * This will produce an array of raw entries, one per variable.
      *
      * @param string[] $lines
      *

@@ -12,7 +12,7 @@ use Dotenv\Repository\RepositoryBuilder;
 use Dotenv\Store\StoreBuilder;
 use PHPUnit\Framework\TestCase;
 
-class DotenvTest extends TestCase
+final class DotenvTest extends TestCase
 {
     /**
      * @var string
@@ -296,11 +296,10 @@ class DotenvTest extends TestCase
 
     public function testDirectConstructor()
     {
-        $loader = new Loader(new Parser());
         $repository = RepositoryBuilder::createWithDefaultAdapters()->make();
         $store = StoreBuilder::createWithDefaultName()->addPath(self::$folder)->make();
 
-        $dotenv = new Dotenv($loader, $repository, $store);
+        $dotenv = new Dotenv($store, new Parser(), new Loader(), $repository);
 
         $this->assertSame([
             'FOO'    => 'bar',

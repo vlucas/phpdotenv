@@ -12,7 +12,7 @@ use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 use TypeError;
 
-class RepositoryTest extends TestCase
+final class RepositoryTest extends TestCase
 {
     /**
      * @var string[]|null

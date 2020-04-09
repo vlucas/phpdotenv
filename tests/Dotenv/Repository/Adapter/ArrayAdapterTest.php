@@ -7,7 +7,7 @@ namespace Dotenv\Tests\Repository\Adapter;
 use Dotenv\Repository\Adapter\ArrayAdapter;
 use PHPUnit\Framework\TestCase;
 
-class ArrayAdapterTest extends TestCase
+final class ArrayAdapterTest extends TestCase
 {
     public function testGoodRead()
     {

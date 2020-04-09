@@ -9,7 +9,7 @@ use Dotenv\Store\File\Reader;
 use Dotenv\Store\StoreBuilder;
 use PHPUnit\Framework\TestCase;
 
-class StoreTest extends TestCase
+final class StoreTest extends TestCase
 {
     /**
      * @var string

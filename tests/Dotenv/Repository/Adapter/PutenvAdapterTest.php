@@ -7,7 +7,7 @@ namespace Dotenv\Tests\Repository\Adapter;
 use Dotenv\Repository\Adapter\PutenvAdapter;
 use PHPUnit\Framework\TestCase;
 
-class PutenvAdapterTest extends TestCase
+final class PutenvAdapterTest extends TestCase
 {
     public function testGoodRead()
     {
