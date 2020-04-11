@@ -6,8 +6,8 @@ namespace Dotenv\Parser;
 
 use Dotenv\Exception\InvalidFileException;
 use Dotenv\Regex\Regex;
-use GrahamCampbell\ResultType\Success;
 use GrahamCampbell\ResultType\Result;
+use GrahamCampbell\ResultType\Success;
 
 final class Parser implements ParserInterface
 {
