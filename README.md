@@ -1,34 +1,16 @@
 PHP dotenv
 ==========
 
-Loads environment variables from `.env` to `getenv()`, `$_ENV` and
-`$_SERVER` automagically.
+Loads environment variables from `.env` to `getenv()`, `$_ENV` and `$_SERVER` automagically.
 
-This is a PHP version of the original [Ruby
-dotenv](https://github.com/bkeepers/dotenv).
+![Banner](https://user-images.githubusercontent.com/2829600/71564012-31105580-2a91-11ea-9ad7-ef1278411b35.png)
 
-[![Build Status](https://travis-ci.org/vlucas/phpdotenv.svg?branch=master)](https://travis-ci.org/vlucas/phpdotenv)
-
-
-UPGRADING FROM V2
------------------
-
-New in Version 3 is first-class support for multiline variables
-([#301](https://github.com/vlucas/phpdotenv/pull/301)) and much more
-flexibility in terms of which parts of the environment we try to read and
-modify ([#300](https://github.com/vlucas/phpdotenv/pull/300)). Consequently,
-you will need to replace any occurrences of `new Dotenv(...)` with
-`Dotenv::create(...)`, since our new native constructor takes a `Loader`
-instance now, so that it can be truly customized if required. Finally, one
-should note that the loader will no longer be trimming values
-([#302](https://github.com/vlucas/phpdotenv/pull/302)), moreover
-`Loader::load()` and its callers now return an associative array of the
-variables loaded with their values, rather than an array of raw lines from the
-environment file ([#306](https://github.com/vlucas/phpdotenv/pull/306)).
-
-For more details, please see the
-[release notes](https://github.com/vlucas/phpdotenv/releases/tag/v3.0.0) and
-the [upgrading guide](UPGRADING.md).
+<p align="center">
+<a href="https://travis-ci.org/vlucas/phpdotenv"><img src="https://img.shields.io/travis/vlucas/phpdotenv/master.svg?style=flat-square" alt="Build Status"></img></a>
+<a href="LICENSE"><img src="https://img.shields.io/badge/license-BSD%203--Clause-brightgreen.svg?style=flat-square" alt="Software License"></img></a>
+<a href="https://packagist.org/packages/vlucas/phpdotenv"><img src="https://img.shields.io/packagist/dt/vlucas/phpdotenv.svg?style=flat-square" alt="Total Downloads"></img></a>
+<a href="https://github.com/vlucas/phpdotenv/releases"><img src="https://img.shields.io/github/release/vlucas/phpdotenv.svg?style=flat-square" alt="Latest Version"></img></a>
+</p>
 
 
 Why .env?
@@ -54,16 +36,46 @@ variables, and you're going to love it!
 * EASY portability and sharing of required ENV values
 * COMPATIBLE with PHP's built-in web server and CLI runner
 
+PHP dotenv is a PHP version of the original [Ruby
+dotenv](https://github.com/bkeepers/dotenv).
+
 
 Installation with Composer
 --------------------------
 
-```shell
-composer require vlucas/phpdotenv
+Installation is super-easy via [Composer](https://getcomposer.org/):
+
+```bash
+$ composer require vlucas/phpdotenv
 ```
+
+or add it by hand to your `composer.json` file.
+
+
+UPGRADING FROM V2
+-----------------
+
+New in Version 3 is first-class support for multiline variables
+([#301](https://github.com/vlucas/phpdotenv/pull/301)) and much more
+flexibility in terms of which parts of the environment we try to read and
+modify ([#300](https://github.com/vlucas/phpdotenv/pull/300)). Consequently,
+you will need to replace any occurrences of `new Dotenv(...)` with
+`Dotenv::create(...)`, since our new native constructor takes a `Loader`
+instance now, so that it can be truly customized if required. Finally, one
+should note that the loader will no longer be trimming values
+([#302](https://github.com/vlucas/phpdotenv/pull/302)), moreover
+`Loader::load()` and its callers now return an associative array of the
+variables loaded with their values, rather than an array of raw lines from the
+environment file ([#306](https://github.com/vlucas/phpdotenv/pull/306)).
+
+For more details, please see the
+[release notes](https://github.com/vlucas/phpdotenv/releases/tag/v3.0.0) and
+the [upgrading guide](UPGRADING.md).
+
 
 Usage
 -----
+
 The `.env` file is generally kept out of version control since it can contain
 sensitive API keys and passwords. A separate `.env.example` file is created
 with all the required environment variables defined except for the sensitive
@@ -302,14 +314,9 @@ License
 PHP dotenv is licensed under [The BSD 3-Clause License](LICENSE).
 
 
----
+For Enterprise
+--------------
 
-<div align="center">
-	<b>
-		<a href="https://tidelift.com/subscription/pkg/packagist-vlucas-phpdotenv?utm_source=packagist-vlucas-phpdotenv&utm_medium=referral&utm_campaign=readme">Get professional support for PHP dotenv with a Tidelift subscription</a>
-	</b>
-	<br>
-	<sub>
-		Tidelift helps make open source sustainable for maintainers while giving companies<br>assurances about security, maintenance, and licensing for their dependencies.
-	</sub>
-</div>
+Available as part of the Tidelift Subscription
+
+The maintainers of `vlucas/phpdotenv` and thousands of other packages are working with Tidelift to deliver commercial support and maintenance for the open source dependencies you use to build your applications. Save time, reduce risk, and improve code health, while paying the maintainers of the exact dependencies you use. [Learn more.](https://tidelift.com/subscription/pkg/packagist-vlucas-phpdotenv?utm_source=packagist-vlucas-phpdotenv&utm_medium=referral&utm_campaign=enterprise&utm_term=repo)
