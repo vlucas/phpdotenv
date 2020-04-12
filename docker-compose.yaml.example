@@ -1,0 +1,18 @@
+version: "3.7"
+services:
+  develop74:
+    build:
+      args:
+        user: ${CURRENT_USER}
+        uid: ${CURRENT_UID}
+      context: ./docker-compose/php74
+    container_name: env-develop74
+    image: env-develop74:1.0.0
+    volumes:
+      - ./:/home/${CURRENT_USER}/app
+    networks:
+      - develop-env
+
+networks:
+  develop-env:
+    driver: bridge

@@ -4,3 +4,5 @@ phpstan.neon
 phpstan.tests.neon
 phpunit.xml
 vendor
+/.idea
+docker-compose.yaml

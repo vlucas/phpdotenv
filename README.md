@@ -350,6 +350,45 @@ License
 PHP dotenv is licensed under [The BSD 3-Clause License](LICENSE).
 
 
+Test with Docker help
+---------------------
+
+You can use Docker images to develop (see `docker-compose.yaml.example`).
+
+First of all, copy `docker-compose.yaml.example` to `docker-compose.yaml`.
+
+To run with your own user/id, run commands with this prefix
+
+`$ CURRENT_USER=$(whoami) CURRENT_UID=$(id -u) docker-compose `
+
+E.g.:
+
+``` bash
+
+$ CURRENT_USER=$(whoami) CURRENT_UID=$(id -u) docker-compose build develop74
+$ CURRENT_USER=$(whoami) CURRENT_UID=$(id -u) docker-compose [other commands]
+```
+
+Or hard-code your data (user and ID). So, you don't need anymore the prefix.
+
+``` bash
+$ docker-compose build develop74
+$ docker-compose up -d develop74
+$ docker-compose exec develop74 rm -r vendor
+$ docker-compose exec develop74 rm composer.lock
+$ docker-compose exec develop74 composer install
+$ docker-compose exec develop74 vendor/bin/phpunit
+$ docker-compose stop
+```
+
+You can also add other PHP version, simply follow same schema in docker-compose and add right Dockerfile
+in `docker-compose\phpXY`.
+
+Change developXY with PHP version you want use.
+
+
+
+
 ---
 
 <div align="center">
