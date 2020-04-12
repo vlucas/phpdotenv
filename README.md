@@ -103,6 +103,7 @@ the [upgrading guide](UPGRADING.md).
 
 Usage
 -----
+
 The `.env` file is generally kept out of version control since it can contain
 sensitive API keys and passwords. A separate `.env.example` file is created
 with all the required environment variables defined except for the sensitive
@@ -350,14 +351,9 @@ License
 PHP dotenv is licensed under [The BSD 3-Clause License](LICENSE).
 
 
----
+For Enterprise
+--------------
 
-<div align="center">
-    <b>
-        <a href="https://tidelift.com/subscription/pkg/packagist-vlucas-phpdotenv?utm_source=packagist-vlucas-phpdotenv&utm_medium=referral&utm_campaign=readme">Get professional support for PHP dotenv with a Tidelift subscription</a>
-    </b>
-    <br>
-    <sub>
-        Tidelift helps make open source sustainable for maintainers while giving companies<br>assurances about security, maintenance, and licensing for their dependencies.
-    </sub>
-</div>
+Available as part of the Tidelift Subscription
+
+The maintainers of `vlucas/phpdotenv` and thousands of other packages are working with Tidelift to deliver commercial support and maintenance for the open source dependencies you use to build your applications. Save time, reduce risk, and improve code health, while paying the maintainers of the exact dependencies you use. [Learn more.](https://tidelift.com/subscription/pkg/packagist-vlucas-phpdotenv?utm_source=packagist-vlucas-phpdotenv&utm_medium=referral&utm_campaign=enterprise&utm_term=repo)
