@@ -2,16 +2,21 @@
     "name": "vlucas/phpdotenv",
     "description": "Loads environment variables from `.env` to `getenv()`, `$_ENV` and `$_SERVER` automagically.",
     "keywords": ["env", "dotenv", "environment"],
-    "license" : "BSD-3-Clause",
-    "authors" : [
+    "license": "BSD-3-Clause",
+    "authors": [
+        {
+            "name": "Graham Campbell",
+            "email": "graham@alt-three.com",
+            "homepage": "https://gjcampbell.co.uk/"
+        },
         {
             "name": "Vance Lucas",
             "email": "vance@vancelucas.com",
-            "homepage": "http://www.vancelucas.com"
+            "homepage": "https://vancelucas.com/"
         }
     ],
     "require": {
-        "php": ">=5.3.9",
+        "php": "^5.3.9 || ^7.0 || ^8.0",
         "symfony/polyfill-ctype": "^1.9"
     },
     "require-dev": {
@@ -27,6 +32,10 @@
     "suggest": {
         "ext-filter": "Required to use the boolean validator.",
         "ext-pcre": "Required to use most of the library."
+    },
+    "config": {
+        "preferred-install": "dist",
+        "platform-check": false
     },
     "extra": {
         "branch-alias": {

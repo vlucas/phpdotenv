@@ -1,25 +1,46 @@
 language: php
-dist: trusty
-sudo: false
 
-php:
-  - 5.4
-  - 5.5
-  - 5.5.9
-  - 5.6
-  - 7.0
-  - 7.1
-  - 7.2
-  - 7.3
-  - 7.4
-  - hhvm-3.18
-  - hhvm-3.30
-
-matrix:
+jobs:
   include:
-    - php: 5.3
+    - name: HHVM 3.18
+      php: hhvm-3.18
+      dist: trusty
+    - name: HHVM 3.30
+      php: hhvm-3.30
+      dist: trusty
+    - name: PHP 5.3
+      php: 5.3
       dist: precise
+    - name: PHP 5.4
+      php: 5.4
+      dist: trusty
+    - name: PHP 5.5
+      php: 5.5
+      dist: trusty
+    - name: PHP 5.6
+      php: 5.6
+      dist: xenial
+    - name: PHP 7.0
+      php: 7.0
+      dist: xenial
+    - name: PHP 7.1
+      php: 7.1
+      dist: bionic
+    - name: PHP 7.2
+      php: 7.2
+      dist: bionic
+    - name: PHP 7.3
+      php: 7.3
+      dist: bionic
+    - name: PHP 7.4
+      php: 7.4
+      dist: bionic
+    - name: PHP 8.0
+      php: nightly
+      dist: bionic
 
-install: travis_retry composer install --no-interaction --prefer-source
+install:
+  - if [ "$TRAVIS_PHP_VERSION" != "nightly" ]; then travis_retry composer update --no-interaction; fi
+  - if [ "$TRAVIS_PHP_VERSION" == "nightly" ]; then travis_retry composer update --no-interaction --ignore-platform-reqs; fi
 
 script: vendor/bin/phpunit
