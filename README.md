@@ -200,7 +200,7 @@ $dotenv->load();
 
 Behind the scenes, this is instructing the "repository" to allow immutability
 or not. By default, the repository is configured to allow overwriting existing
-values by default, which is relevent if one is calling the "create" method
+values by default, which is relevant if one is calling the "create" method
 using the `RepositoryBuilder` to construct a more custom repository:
 
 ```php

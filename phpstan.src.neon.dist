@@ -2,4 +2,4 @@ parameters:
   level: max
   ignoreErrors:
     - '#Unable to resolve the template type#'
-    - '#Method Dotenv\\Parser\\EntryParser::processChar\(\) should return GrahamCampbell\\ResultType\\Result<array<int, bool\|int\|string>, string> but returns GrahamCampbell\\ResultType\\Result<array<int, [a-z\|\,]+>, mixed>.#'
+    - '#Method Dotenv\\Parser\\EntryParser::processChar\(\) should return GrahamCampbell\\ResultType\\Result<array.+, string> but returns GrahamCampbell\\ResultType\\Result<array.+, mixed>.#'
