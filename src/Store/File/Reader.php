@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Dotenv\Store\File;
 
 use Dotenv\Exception\InvalidEncodingException;
+use Dotenv\Util\Str;
 use PhpOption\Option;
 
 /**
@@ -68,14 +69,10 @@ final class Reader
      */
     private static function readFromFile(string $path, string $encoding = null)
     {
-        if ($encoding !== null && !in_array($encoding, mb_list_encodings(), true)) {
-            throw new InvalidEncodingException(
-                sprintf('Illegal character encoding [%s] specified.', $encoding)
-            );
-        }
-
-        return Option::fromValue(@file_get_contents($path), false)->map(function (string $content) use ($encoding) {
-            return $encoding === null ? @mb_convert_encoding($content, 'UTF-8') : @mb_convert_encoding($content, 'UTF-8', $encoding);
+        return Option::fromValue(@file_get_contents($path), false)->flatMap(function (string $content) use ($encoding) {
+            return Str::utf8($content, $encoding)->mapError(function (string $error) {
+                throw new InvalidEncodingException($error);
+            })->success();
         });
     }
 }

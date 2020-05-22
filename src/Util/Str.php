@@ -26,6 +26,27 @@ final class Str
     }
 
     /**
+     * Convert a string to UTF-8 from the given encoding.
+     *
+     * @param string      $input
+     * @param string|null $encoding
+     *
+     * @return \GrahamCampbell\ResultType\Result<string,string>
+     */
+    public static function utf8(string $input, string $encoding = null)
+    {
+        if ($encoding !== null && !in_array($encoding, mb_list_encodings(), true)) {
+            return Error::create(
+                sprintf('Illegal character encoding [%s] specified.', $encoding)
+            );
+        }
+
+        return Success::create(
+            $encoding === null ? @mb_convert_encoding($input, 'UTF-8') : @mb_convert_encoding($input, 'UTF-8', $encoding)
+        );
+    }
+
+    /**
      * Split the given string into an array of characters.
      *
      * @param string $input
