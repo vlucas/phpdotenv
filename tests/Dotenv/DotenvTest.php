@@ -162,6 +162,7 @@ final class DotenvTest extends TestCase
         $dotenv->load();
         $this->assertSame('Ā ā Ă ă Ą ą Ć ć Ĉ ĉ Ċ ċ Č č Ď ď Đ đ Ē ē Ĕ ĕ Ė ė Ę ę Ě ě', $_SERVER['MB1']);
         $this->assertSame('行内支付', $_SERVER['MB2']);
+        $this->assertSame('🚀', $_SERVER['APP_ENV']);
     }
 
     public function testDotenvLoadsMultibyteUTF8Vars()
@@ -170,6 +171,7 @@ final class DotenvTest extends TestCase
         $dotenv->load();
         $this->assertSame('Ā ā Ă ă Ą ą Ć ć Ĉ ĉ Ċ ċ Č č Ď ď Đ đ Ē ē Ĕ ĕ Ė ė Ę ę Ě ě', $_SERVER['MB1']);
         $this->assertSame('行内支付', $_SERVER['MB2']);
+        $this->assertSame('🚀', $_SERVER['APP_ENV']);
     }
 
     public function testDotenvLoadWithInvalidEncoding()
