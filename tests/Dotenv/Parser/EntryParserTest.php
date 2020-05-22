@@ -127,6 +127,12 @@ final class EntryParserTest extends TestCase
         $this->checkErrorResult($result, 'Encountered an invalid name at [FOO_ASD!].');
     }
 
+    public function testParseUnicodeName()
+    {
+        $result = EntryParser::parse('FOOƱ=BAZ');
+        $this->checkErrorResult($result, 'Encountered an invalid name at [FOOƱ].');
+    }
+
     public function testParserEscapingDouble()
     {
         $result = EntryParser::parse('FOO_BAD="iiiiviiiixiiiiviiii\\a"');

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Dotenv\Tests\Store;
 
+use Dotenv\Exception\InvalidEncodingException;
 use Dotenv\Store\File\Paths;
 use Dotenv\Store\File\Reader;
 use Dotenv\Store\StoreBuilder;
@@ -45,6 +46,32 @@ final class StoreTest extends TestCase
             "FOO=bar\nBAR=baz\nSPACED=\"with spaces\"\n\nNULL=\n",
             $builder->make()->read()
         );
+    }
+
+    public function testBasicReadWindowsEncoding()
+    {
+        $builder = StoreBuilder::createWithNoNames()
+            ->addPath(self::$folder)
+            ->addName('windows.env')
+            ->fileEncoding('Windows-1252');
+
+        $this->assertSame(
+            "MBW=\"ñá\"\n",
+            $builder->make()->read()
+        );
+    }
+
+    public function testBasicReadBadEncoding()
+    {
+        $builder = StoreBuilder::createWithNoNames()
+            ->addPath(self::$folder)
+            ->addName('windows.env')
+            ->fileEncoding('Windowss-1252');
+
+        $this->expectException(InvalidEncodingException::class);
+        $this->expectExceptionMessage('Illegal character encoding [Windowss-1252] specified.');
+
+        $builder->make()->read();
     }
 
     public function testFileReadMultipleShortCircuitModeDirect()
