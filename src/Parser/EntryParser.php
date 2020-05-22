@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace Dotenv\Parser;
 
-use Dotenv\Regex\Regex;
+use Dotenv\Util\Regex;
+use Dotenv\Util\Str;
 use GrahamCampbell\ResultType\Error;
 use GrahamCampbell\ResultType\Result;
 use GrahamCampbell\ResultType\Success;
@@ -66,19 +67,17 @@ final class EntryParser
      */
     private static function splitStringIntoParts(string $line)
     {
-        $name = $line;
-        $value = null;
+        /** @var array{string,string|null}*/
+        $result = Str::pos($line, '=')->map(function () use ($line) {
+            return array_map('trim', explode('=', $line, 2));
+        })->getOrElse([$line, null]);
 
-        if (mb_strpos($line, '=') !== false) {
-            [$name, $value] = array_map('trim', explode('=', $line, 2));
-        }
-
-        if ($name === '') {
+        if ($result[0] === '') {
             return Error::create(self::getErrorMessage('an unexpected equals', $line));
         }
 
         /** @var \GrahamCampbell\ResultType\Result<array{string,string|null},string> */
-        return Success::create([$name, $value]);
+        return Success::create($result);
     }
 
     /**
@@ -132,16 +131,18 @@ final class EntryParser
             return Success::create(Value::blank());
         }
 
-        return array_reduce(mb_str_split($value), function (Result $data, string $char) use ($value) {
-            return $data->flatMap(function (array $data) use ($char, $value) {
-                return self::processChar($data[1], $char)->mapError(function (string $err) use ($value) {
-                    return self::getErrorMessage($err, $value);
-                })->map(function (array $val) use ($data) {
-                    return [$data[0]->append($val[0], $val[1]), $val[2]];
+        return Str::split($value)->flatMap(function (array $chars) use ($value) {
+            return array_reduce($chars, function (Result $data, string $char) use ($value) {
+                return $data->flatMap(function (array $data) use ($char, $value) {
+                    return self::processChar($data[1], $char)->mapError(function (string $err) use ($value) {
+                        return self::getErrorMessage($err, $value);
+                    })->map(function (array $val) use ($data) {
+                        return [$data[0]->append($val[0], $val[1]), $val[2]];
+                    });
                 });
+            }, Success::create([Value::blank(), self::INITIAL_STATE]))->map(function (array $data) {
+                return $data[0];
             });
-        }, Success::create([Value::blank(), self::INITIAL_STATE]))->map(function (array $data) {
-            return $data[0];
         });
     }
 

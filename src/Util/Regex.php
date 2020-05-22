@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Dotenv\Regex;
+namespace Dotenv\Util;
 
 use GrahamCampbell\ResultType\Error;
 use GrahamCampbell\ResultType\Success;

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Dotenv\Parser;
 
 use Dotenv\Exception\InvalidFileException;
-use Dotenv\Regex\Regex;
+use Dotenv\Util\Regex;
 use GrahamCampbell\ResultType\Result;
 use GrahamCampbell\ResultType\Success;
 

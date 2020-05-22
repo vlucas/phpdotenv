@@ -5,8 +5,9 @@ declare(strict_types=1);
 namespace Dotenv\Loader;
 
 use Dotenv\Parser\Value;
-use Dotenv\Regex\Regex;
 use Dotenv\Repository\RepositoryInterface;
+use Dotenv\Util\Regex;
+use Dotenv\Util\Str;
 use PhpOption\Option;
 
 final class Resolver
@@ -37,7 +38,7 @@ final class Resolver
     public static function resolve(RepositoryInterface $repository, Value $value)
     {
         return array_reduce($value->getVars(), function ($s, $i) use ($repository) {
-            return mb_substr($s, 0, $i).self::resolveVariable($repository, mb_substr($s, $i));
+            return Str::substr($s, 0, $i).self::resolveVariable($repository, Str::substr($s, $i));
         }, $value->getChars());
     }
 

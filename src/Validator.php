@@ -5,8 +5,9 @@ declare(strict_types=1);
 namespace Dotenv;
 
 use Dotenv\Exception\ValidationException;
-use Dotenv\Regex\Regex;
 use Dotenv\Repository\RepositoryInterface;
+use Dotenv\Util\Regex;
+use Dotenv\Util\Str;
 
 class Validator
 {
@@ -65,7 +66,7 @@ class Validator
                     return true;
                 }
 
-                return mb_strlen(trim($value)) > 0;
+                return Str::len(trim($value)) > 0;
             },
             'is empty'
         );
