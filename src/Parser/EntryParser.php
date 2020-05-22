@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Dotenv\Parser;
 
+use Dotenv\Regex\Regex;
 use GrahamCampbell\ResultType\Error;
 use GrahamCampbell\ResultType\Result;
 use GrahamCampbell\ResultType\Success;
@@ -110,7 +111,7 @@ final class EntryParser
      */
     private static function isValidName(string $name)
     {
-        return preg_match('~\A[a-zA-Z0-9_.]+\z~', $name) === 1;
+        return Regex::match('~\A[a-zA-Z0-9_.]+\z~', $name)->success()->getOrElse(0) === 1;
     }
 
     /**
