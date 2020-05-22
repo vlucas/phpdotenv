@@ -65,7 +65,7 @@ class Validator
                     return true;
                 }
 
-                return strlen(trim($value)) > 0;
+                return mb_strlen(trim($value)) > 0;
             },
             'is empty'
         );
