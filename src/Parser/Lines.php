@@ -82,7 +82,7 @@ final class Lines
      */
     private static function looksLikeMultilineStart(string $line)
     {
-        if (strpos($line, '="') === false) {
+        if (mb_strpos($line, '="') === false) {
             return false;
         }
 
@@ -123,7 +123,7 @@ final class Lines
      */
     private static function getCharPairs(string $line)
     {
-        $chars = str_split($line);
+        $chars = mb_str_split($line);
 
         /** @var array{array{string,string|null}} */
         return array_map(null, $chars, array_slice($chars, 1));

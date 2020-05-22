@@ -56,7 +56,7 @@ final class Value
     {
         return new self(
             $this->chars.$char,
-            $var ? array_merge($this->vars, [strlen($this->chars)]) : $this->vars
+            $var ? array_merge($this->vars, [mb_strlen($this->chars)]) : $this->vars
         );
     }
 

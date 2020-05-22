@@ -69,7 +69,7 @@ final class EntryParser
         $name = $line;
         $value = null;
 
-        if (strpos($line, '=') !== false) {
+        if (mb_strpos($line, '=') !== false) {
             [$name, $value] = array_map('trim', explode('=', $line, 2));
         }
 
@@ -132,7 +132,7 @@ final class EntryParser
             return Success::create(Value::blank());
         }
 
-        return array_reduce(str_split($value), function (Result $data, string $char) use ($value) {
+        return array_reduce(mb_str_split($value), function (Result $data, string $char) use ($value) {
             return $data->flatMap(function (array $data) use ($char, $value) {
                 return self::processChar($data[1], $char)->mapError(function (string $err) use ($value) {
                     return self::getErrorMessage($err, $value);
