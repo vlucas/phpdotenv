@@ -34,7 +34,7 @@ final class Str
      */
     public static function split(string $input)
     {
-        $result = mb_str_split($input);
+        $result = mb_str_split($input, 1, 'UTF-8');
 
         if ($result === false) {
             return Error::create('Multibyte split failed.');
@@ -55,7 +55,7 @@ final class Str
     public static function pos(string $haystack, string $needle)
     {
         /** @var \PhpOption\Option<int> */
-        return Option::fromValue(mb_strpos($haystack, $needle), false);
+        return Option::fromValue(mb_strpos($haystack, $needle, 0, 'UTF-8'), false);
     }
 
     /**
@@ -69,7 +69,7 @@ final class Str
      */
     public static function substr(string $input, int $start, int $length = null)
     {
-        return mb_substr($input, $start, $length);
+        return mb_substr($input, $start, $length, 'UTF-8');
     }
 
     /**
@@ -81,6 +81,6 @@ final class Str
      */
     public static function len(string $input)
     {
-        return mb_strlen($input);
+        return mb_strlen($input, 'UTF-8');
     }
 }

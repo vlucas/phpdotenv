@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Dotenv\Store\File;
 
+use Dotenv\Exception\InvalidEncodingException;
+use GrahamCampbell\ResultType\Error;
+use GrahamCampbell\ResultType\Success;
 use PhpOption\Option;
 
 /**
@@ -30,17 +33,20 @@ final class Reader
      * short circuit mode is enabled, then the returned array with have length
      * at most one. File paths that couldn't be read are omitted entirely.
      *
-     * @param string[] $filePaths
-     * @param bool     $shortCircuit
+     * @param string[]    $filePaths
+     * @param bool        $shortCircuit
+     * @param string|null $fileEncoding
+     *
+     * @throws \Dotenv\Exception\InvalidEncodingException
      *
      * @return array<string,string>
      */
-    public static function read(array $filePaths, bool $shortCircuit = true)
+    public static function read(array $filePaths, bool $shortCircuit = true, string $fileEncoding = null)
     {
         $output = [];
 
         foreach ($filePaths as $filePath) {
-            $content = self::readFromFile($filePath);
+            $content = self::readFromFile($filePath, $fileEncoding);
             if ($content->isDefined()) {
                 $output[$filePath] = $content->get();
                 if ($shortCircuit) {
@@ -55,15 +61,23 @@ final class Reader
     /**
      * Read the given file.
      *
-     * @param string $filePath
+     * @param string      $path
+     * @param string|null $encoding
+     *
+     * @throws \Dotenv\Exception\InvalidEncodingException
      *
      * @return \PhpOption\Option<string>
      */
-    private static function readFromFile(string $filePath)
+    private static function readFromFile(string $path, string $encoding = null)
     {
-        $content = @file_get_contents($filePath);
+        if ($encoding !== null && !in_array($encoding, mb_list_encodings(), true)) {
+            throw new InvalidEncodingException(
+                sprintf('Illegal character encoding [%s] specified.', $encoding)
+            );
+        }
 
-        /** @var \PhpOption\Option<string> */
-        return Option::fromValue($content, false);
+        return Option::fromValue(@file_get_contents($path), false)->map(function (string $content) use ($encoding) {
+            return $encoding === null ? @mb_convert_encoding($content, 'UTF-8') : @mb_convert_encoding($content, 'UTF-8', $encoding);
+        });
     }
 }

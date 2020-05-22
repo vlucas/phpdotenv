@@ -37,19 +37,28 @@ final class StoreBuilder
     private $shortCircuit;
 
     /**
+     * The file encoding.
+     *
+     * @var string|null
+     */
+    private $fileEncoding;
+
+    /**
      * Create a new store builder instance.
      *
-     * @param string[] $paths
-     * @param string[] $names
-     * @param bool     $shortCircuit
+     * @param string[]    $paths
+     * @param string[]    $names
+     * @param bool        $shortCircuit
+     * @param string|null $fileEncoding
      *
      * @return void
      */
-    private function __construct(array $paths = [], array $names = [], bool $shortCircuit = false)
+    private function __construct(array $paths = [], array $names = [], bool $shortCircuit = false, string $fileEncoding = null)
     {
         $this->paths = $paths;
         $this->names = $names;
         $this->shortCircuit = $shortCircuit;
+        $this->fileEncoding = $fileEncoding;
     }
 
     /**
@@ -81,7 +90,7 @@ final class StoreBuilder
      */
     public function addPath(string $path)
     {
-        return new self(array_merge($this->paths, [$path]), $this->names, $this->shortCircuit);
+        return new self(array_merge($this->paths, [$path]), $this->names, $this->shortCircuit, $this->fileEncoding);
     }
 
     /**
@@ -93,7 +102,7 @@ final class StoreBuilder
      */
     public function addName(string $name)
     {
-        return new self($this->paths, array_merge($this->names, [$name]), $this->shortCircuit);
+        return new self($this->paths, array_merge($this->names, [$name]), $this->shortCircuit, $this->fileEncoding);
     }
 
     /**
@@ -103,7 +112,19 @@ final class StoreBuilder
      */
     public function shortCircuit()
     {
-        return new self($this->paths, $this->names, true);
+        return new self($this->paths, $this->names, true, $this->fileEncoding);
+    }
+
+    /**
+     * Creates a store builder with the specified file encoding.
+     *
+     * @param string|null $fileEncoding
+     *
+     * @return \Dotenv\Store\StoreBuilder
+     */
+    public function fileEncoding(string $fileEncoding = null)
+    {
+        return new self($this->paths, $this->names, $this->shortCircuit, $fileEncoding);
     }
 
     /**
@@ -115,7 +136,8 @@ final class StoreBuilder
     {
         return new FileStore(
             Paths::filePaths($this->paths, $this->names),
-            $this->shortCircuit
+            $this->shortCircuit,
+            $this->fileEncoding
         );
     }
 }

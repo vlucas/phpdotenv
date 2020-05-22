@@ -24,23 +24,32 @@ final class FileStore implements StoreInterface
     private $shortCircuit;
 
     /**
+     * The file encoding.
+     *
+     * @var string|null
+     */
+    private $fileEncoding;
+
+    /**
      * Create a new file store instance.
      *
-     * @param string[] $filePaths
-     * @param bool     $shortCircuit
+     * @param string[]    $filePaths
+     * @param bool        $shortCircuit
+     * @param string|null $fileEncoding
      *
      * @return void
      */
-    public function __construct(array $filePaths, bool $shortCircuit)
+    public function __construct(array $filePaths, bool $shortCircuit, string $fileEncoding = null)
     {
         $this->filePaths = $filePaths;
         $this->shortCircuit = $shortCircuit;
+        $this->fileEncoding = $fileEncoding;
     }
 
     /**
      * Read the content of the environment file(s).
      *
-     * @throws \Dotenv\Exception\InvalidPathException
+     * @throws \Dotenv\Exception\InvalidEncodingException|\Dotenv\Exception\InvalidPathException
      *
      * @return string
      */
@@ -50,7 +59,7 @@ final class FileStore implements StoreInterface
             throw new InvalidPathException('At least one environment file path must be provided.');
         }
 
-        $contents = Reader::read($this->filePaths, $this->shortCircuit);
+        $contents = Reader::read($this->filePaths, $this->shortCircuit, $this->fileEncoding);
 
         if ($contents) {
             return implode("\n", $contents);
