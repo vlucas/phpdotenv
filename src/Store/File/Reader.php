@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace Dotenv\Store\File;
 
 use Dotenv\Exception\InvalidEncodingException;
-use GrahamCampbell\ResultType\Error;
-use GrahamCampbell\ResultType\Success;
 use PhpOption\Option;
 
 /**

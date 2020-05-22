@@ -67,7 +67,7 @@ final class EntryParser
      */
     private static function splitStringIntoParts(string $line)
     {
-        /** @var array{string,string|null}*/
+        /** @var array{string,string|null} */
         $result = Str::pos($line, '=')->map(function () use ($line) {
             return array_map('trim', explode('=', $line, 2));
         })->getOrElse([$line, null]);
