@@ -3,6 +3,7 @@
 namespace Dotenv\Loader;
 
 use Dotenv\Exception\InvalidFileException;
+use Dotenv\Regex\Regex;
 use Dotenv\Result\Error;
 use Dotenv\Result\Success;
 use RuntimeException;
@@ -91,7 +92,7 @@ class Parser
      */
     private static function isValidName($name)
     {
-        return preg_match('~\A[a-zA-Z0-9_.]+\z~', $name) === 1;
+        return Regex::match('~\A[a-zA-Z0-9_.]+\z~', $name)->success()->getOrElse(0) === 1;
     }
 
     /**
