@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Dotenv\Tests;
 
 use Dotenv\Dotenv;
+use Dotenv\Exception\InvalidEncodingException;
 use Dotenv\Exception\InvalidPathException;
 use Dotenv\Loader\Loader;
 use Dotenv\Parser\Parser;
@@ -155,6 +156,39 @@ final class DotenvTest extends TestCase
         $this->assertNotEmpty($_SERVER['LARGE']);
     }
 
+    public function testDotenvLoadsMultibyteVars()
+    {
+        $dotenv = Dotenv::createMutable(self::$folder, 'multibyte.env');
+        $dotenv->load();
+        $this->assertSame('Ā ā Ă ă Ą ą Ć ć Ĉ ĉ Ċ ċ Č č Ď ď Đ đ Ē ē Ĕ ĕ Ė ė Ę ę Ě ě', $_SERVER['MB1']);
+        $this->assertSame('行内支付', $_SERVER['MB2']);
+    }
+
+    public function testDotenvLoadsMultibyteUTF8Vars()
+    {
+        $dotenv = Dotenv::createMutable(self::$folder, 'multibyte.env', false, 'UTF-8');
+        $dotenv->load();
+        $this->assertSame('Ā ā Ă ă Ą ą Ć ć Ĉ ĉ Ċ ċ Č č Ď ď Đ đ Ē ē Ĕ ĕ Ė ė Ę ę Ě ě', $_SERVER['MB1']);
+        $this->assertSame('行内支付', $_SERVER['MB2']);
+    }
+
+    public function testDotenvLoadWithInvalidEncoding()
+    {
+        $dotenv = Dotenv::createMutable(self::$folder, 'multibyte.env', false, 'UTF-88');
+
+        $this->expectException(InvalidEncodingException::class);
+        $this->expectExceptionMessage('Illegal character encoding [UTF-88] specified.');
+
+        $dotenv->load();
+    }
+
+    public function testDotenvLoadsMultibyteWindowsVars()
+    {
+        $dotenv = Dotenv::createMutable(self::$folder, 'windows.env', false, 'Windows-1252');
+        $dotenv->load();
+        $this->assertSame('ñá', $_SERVER['MBW']);
+    }
+
     public function testMultipleDotenvLoadsEnvironmentVars()
     {
         $dotenv = Dotenv::createMutable(self::$folder, 'multiple.env');
@@ -198,7 +232,7 @@ final class DotenvTest extends TestCase
         $dotenv = Dotenv::createMutable(self::$folder, 'nested.env');
         $dotenv->load();
         $this->assertSame('{$NVAR1} {$NVAR2}', $_ENV['NVAR3']); // not resolved
-        $this->assertSame('Hello World!', $_ENV['NVAR4']);
+        $this->assertSame('Hellō World!', $_ENV['NVAR4']);
         $this->assertSame('$NVAR1 {NVAR2}', $_ENV['NVAR5']); // not resolved
         $this->assertSame('Special Value', $_ENV['N.VAR6']); // new '.' (dot) in var name
         $this->assertSame('Special Value', $_ENV['NVAR7']);  // nested '.' (dot) variable
@@ -206,7 +240,7 @@ final class DotenvTest extends TestCase
         $this->assertSame('', $_ENV['NVAR9']); // nested variable is empty string
         $this->assertSame('${NVAR888}', $_ENV['NVAR10']); // nested variable is not set
         $this->assertSame('NVAR1', $_ENV['NVAR11']);
-        $this->assertSame('Hello', $_ENV['NVAR12']);
+        $this->assertSame('Hellō', $_ENV['NVAR12']);
         $this->assertSame('${${NVAR11}}', $_ENV['NVAR13']); // single quotes
         $this->assertSame('${NVAR1} ${NVAR2}', $_ENV['NVAR14']); // single quotes
         $this->assertSame('${NVAR1} ${NVAR2}', $_ENV['NVAR15']); // escaped

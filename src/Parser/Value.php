@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Dotenv\Parser;
 
+use Dotenv\Util\Str;
+
 final class Value
 {
     /**
@@ -56,7 +58,7 @@ final class Value
     {
         return new self(
             $this->chars.$char,
-            $var ? array_merge($this->vars, [strlen($this->chars)]) : $this->vars
+            $var ? array_merge($this->vars, [Str::len($this->chars)]) : $this->vars
         );
     }
 

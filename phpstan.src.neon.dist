@@ -3,3 +3,4 @@ parameters:
   ignoreErrors:
     - '#Unable to resolve the template type#'
     - '#Method Dotenv\\Parser\\EntryParser::processChar\(\) should return GrahamCampbell\\ResultType\\Result<array.+, string> but returns GrahamCampbell\\ResultType\\Result<array.+, mixed>.#'
+    - '#Parameter \#1 \$callable of method PhpOption\\Option<bool\|string>::flatMap\(\) expects callable\(bool\|string\): PhpOption\\Option<mixed>, Closure\(string\): mixed given.#'

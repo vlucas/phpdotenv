@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Dotenv\Parser;
 
+use Dotenv\Util\Str;
+
 final class Lines
 {
     /**
@@ -82,11 +84,9 @@ final class Lines
      */
     private static function looksLikeMultilineStart(string $line)
     {
-        if (strpos($line, '="') === false) {
-            return false;
-        }
-
-        return self::looksLikeMultilineStop($line, true) === false;
+        return Str::pos($line, '="')->map(function () use ($line) {
+            return self::looksLikeMultilineStop($line, true) === false;
+        })->getOrElse(false);
     }
 
     /**
@@ -103,15 +103,17 @@ final class Lines
             return true;
         }
 
-        $seen = $started ? 0 : 1;
+        return self::getCharPairs(str_replace('\\\\', '', $line))->map(function (array $pairs) use ($started) {
+            $seen = $started ? 0 : 1;
 
-        foreach (self::getCharPairs(str_replace('\\\\', '', $line)) as $pair) {
-            if ($pair[0] !== '\\' && $pair[1] === '"') {
-                $seen++;
+            foreach ($pairs as $pair) {
+                if ($pair[0] !== '\\' && $pair[1] === '"') {
+                    $seen++;
+                }
             }
-        }
 
-        return $seen > 1;
+            return $seen > 1;
+        })->success()->getOrElse(false);
     }
 
     /**
@@ -119,14 +121,14 @@ final class Lines
      *
      * @param string $line
      *
-     * @return array{array{string,string|null}}
+     * @return \GrahamCampbell\ResultType\Result<array{array{string,string|null}},string>
      */
     private static function getCharPairs(string $line)
     {
-        $chars = str_split($line);
-
-        /** @var array{array{string,string|null}} */
-        return array_map(null, $chars, array_slice($chars, 1));
+        return Str::split($line)->map(function (array $chars) {
+            /** @var array{array{string,string|null}} */
+            return array_map(null, $chars, array_slice($chars, 1));
+        });
     }
 
     /**
