@@ -20,8 +20,9 @@
         "ext-pcre": "*",
         "graham-campbell/result-type": "^1.0",
         "phpoption/phpoption": "^1.7.3",
-        "symfony/polyfill-ctype": "^1.9",
-        "symfony/polyfill-php80": "^1.15"
+        "symfony/polyfill-ctype": "^1.17",
+        "symfony/polyfill-mbstring": "^1.17",
+        "symfony/polyfill-php80": "^1.17"
     },
     "require-dev": {
         "ext-filter": "*",
