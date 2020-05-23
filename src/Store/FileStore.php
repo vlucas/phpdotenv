@@ -61,7 +61,7 @@ final class FileStore implements StoreInterface
 
         $contents = Reader::read($this->filePaths, $this->shortCircuit, $this->fileEncoding);
 
-        if ($contents) {
+        if (count($contents) > 0) {
             return implode("\n", $contents);
         }
 
