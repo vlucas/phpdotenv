@@ -80,6 +80,6 @@ final class WhitelistWriter implements WriterInterface
      */
     private function isWhitelisted(string $name)
     {
-        return in_array($name, $this->whitelist, true);
+        return \in_array($name, $this->whitelist, true);
     }
 }

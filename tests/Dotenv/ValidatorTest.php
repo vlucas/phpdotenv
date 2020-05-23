@@ -22,7 +22,7 @@ final class ValidatorTest extends TestCase
      */
     public static function setFolder()
     {
-        self::$folder = dirname(__DIR__).'/fixtures/env';
+        self::$folder = \dirname(__DIR__).'/fixtures/env';
     }
 
     /**
@@ -92,8 +92,8 @@ final class ValidatorTest extends TestCase
         $dotenv = Dotenv::createImmutable(self::$folder);
         $dotenv->load();
 
-        self::assertFalse(getenv('FOOX'));
-        self::assertFalse(getenv('NOPE'));
+        self::assertFalse(\getenv('FOOX'));
+        self::assertFalse(\getenv('NOPE'));
 
         $this->expectException(ValidationException::class);
         $this->expectExceptionMessage('One or more environment variables failed assertions: FOOX is missing, NOPE is missing.');
@@ -116,14 +116,14 @@ final class ValidatorTest extends TestCase
         $dotenv = Dotenv::createUnsafeImmutable(self::$folder, 'assertions.env');
         $dotenv->load();
 
-        self::assertSame('val1', getenv('ASSERTVAR1'));
-        self::assertEmpty(getenv('ASSERTVAR2'));
-        self::assertSame('val3   ', getenv('ASSERTVAR3'));
-        self::assertSame('0', getenv('ASSERTVAR4'));
-        self::assertSame('#foo', getenv('ASSERTVAR5'));
-        self::assertSame("val1\nval2", getenv('ASSERTVAR6'));
-        self::assertSame("\nval3", getenv('ASSERTVAR7'));
-        self::assertSame("val3\n", getenv('ASSERTVAR8'));
+        self::assertSame('val1', \getenv('ASSERTVAR1'));
+        self::assertEmpty(\getenv('ASSERTVAR2'));
+        self::assertSame('val3   ', \getenv('ASSERTVAR3'));
+        self::assertSame('0', \getenv('ASSERTVAR4'));
+        self::assertSame('#foo', \getenv('ASSERTVAR5'));
+        self::assertSame("val1\nval2", \getenv('ASSERTVAR6'));
+        self::assertSame("\nval3", \getenv('ASSERTVAR7'));
+        self::assertSame("val3\n", \getenv('ASSERTVAR8'));
 
         $dotenv->required([
             'ASSERTVAR1',
@@ -159,7 +159,7 @@ final class ValidatorTest extends TestCase
         $dotenv = Dotenv::createImmutable(self::$folder, 'assertions.env');
         $dotenv->load();
 
-        self::assertEmpty(getenv('ASSERTVAR2'));
+        self::assertEmpty(\getenv('ASSERTVAR2'));
 
         $this->expectException(ValidationException::class);
         $this->expectExceptionMessage('One or more environment variables failed assertions: ASSERTVAR2 is empty.');

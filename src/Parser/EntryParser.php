@@ -69,7 +69,7 @@ final class EntryParser
     {
         /** @var array{string,string|null} */
         $result = Str::pos($line, '=')->map(function () use ($line) {
-            return array_map('trim', explode('=', $line, 2));
+            return \array_map('trim', \explode('=', $line, 2));
         })->getOrElse([$line, null]);
 
         if ($result[0] === '') {
@@ -92,7 +92,7 @@ final class EntryParser
      */
     private static function parseName(string $name)
     {
-        $name = trim(str_replace(['export ', '\'', '"'], '', $name));
+        $name = \trim(\str_replace(['export ', '\'', '"'], '', $name));
 
         if (!self::isValidName($name)) {
             return Error::create(self::getErrorMessage('an invalid name', $name));
@@ -127,12 +127,12 @@ final class EntryParser
      */
     private static function parseValue(string $value)
     {
-        if (trim($value) === '') {
+        if (\trim($value) === '') {
             return Success::create(Value::blank());
         }
 
         return Str::split($value)->flatMap(function (array $chars) use ($value) {
-            return array_reduce($chars, function (Result $data, string $char) use ($value) {
+            return \array_reduce($chars, function (Result $data, string $char) use ($value) {
                 return $data->flatMap(function (array $data) use ($char, $value) {
                     return self::processChar($data[1], $char)->mapError(function (string $err) use ($value) {
                         return self::getErrorMessage($err, $value);
@@ -172,7 +172,7 @@ final class EntryParser
             case self::UNQUOTED_STATE:
                 if ($char === '#') {
                     return Success::create(['', false, self::COMMENT_STATE]);
-                } elseif (ctype_space($char)) {
+                } elseif (\ctype_space($char)) {
                     return Success::create(['', false, self::WHITESPACE_STATE]);
                 } elseif ($char === '$') {
                     return Success::create([$char, true, self::UNQUOTED_STATE]);
@@ -200,15 +200,15 @@ final class EntryParser
                     return Success::create([$char, false, self::DOUBLE_QUOTED_STATE]);
                 } elseif ($char === '$') {
                     return Success::create([$char, false, self::DOUBLE_QUOTED_STATE]);
-                } elseif (in_array($char, ['f', 'n', 'r', 't', 'v'], true)) {
-                    return Success::create([stripcslashes('\\'.$char), false, self::DOUBLE_QUOTED_STATE]);
+                } elseif (\in_array($char, ['f', 'n', 'r', 't', 'v'], true)) {
+                    return Success::create([\stripcslashes('\\'.$char), false, self::DOUBLE_QUOTED_STATE]);
                 } else {
                     return Error::create('an unexpected escape sequence');
                 }
             case self::WHITESPACE_STATE:
                 if ($char === '#') {
                     return Success::create(['', false, self::COMMENT_STATE]);
-                } elseif (!ctype_space($char)) {
+                } elseif (!\ctype_space($char)) {
                     return Error::create('unexpected whitespace');
                 } else {
                     return Success::create(['', false, self::WHITESPACE_STATE]);
@@ -230,10 +230,10 @@ final class EntryParser
      */
     private static function getErrorMessage(string $cause, string $subject)
     {
-        return sprintf(
+        return \sprintf(
             'Encountered %s at [%s].',
             $cause,
-            strtok($subject, "\n")
+            \strtok($subject, "\n")
         );
     }
 }

@@ -44,7 +44,7 @@ final class ApacheAdapter implements AdapterInterface
      */
     private static function isSupported()
     {
-        return function_exists('apache_getenv') && function_exists('apache_setenv');
+        return \function_exists('apache_getenv') && \function_exists('apache_setenv');
     }
 
     /**
@@ -58,7 +58,7 @@ final class ApacheAdapter implements AdapterInterface
     {
         /** @var \PhpOption\Option<string> */
         return Option::fromValue(apache_getenv($name))->filter(function ($value) {
-            return is_string($value) && $value !== '';
+            return \is_string($value) && $value !== '';
         });
     }
 

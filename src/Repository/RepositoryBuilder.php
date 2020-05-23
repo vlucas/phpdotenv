@@ -92,7 +92,7 @@ final class RepositoryBuilder
      */
     public static function createWithDefaultAdapters()
     {
-        $adapters = iterator_to_array(self::defaultAdapters());
+        $adapters = \iterator_to_array(self::defaultAdapters());
 
         return new self($adapters, $adapters);
     }
@@ -121,7 +121,7 @@ final class RepositoryBuilder
      */
     private static function isAnAdapterClass(string $name)
     {
-        if (!class_exists($name)) {
+        if (!\class_exists($name)) {
             return false;
         }
 
@@ -142,9 +142,9 @@ final class RepositoryBuilder
      */
     public function addReader($reader)
     {
-        if (!(is_string($reader) && self::isAnAdapterClass($reader)) && !($reader instanceof ReaderInterface)) {
+        if (!(\is_string($reader) && self::isAnAdapterClass($reader)) && !($reader instanceof ReaderInterface)) {
             throw new InvalidArgumentException(
-                sprintf(
+                \sprintf(
                     'Expected either an instance of %s or a class-string implementing %s',
                     ReaderInterface::class,
                     AdapterInterface::class
@@ -153,10 +153,10 @@ final class RepositoryBuilder
         }
 
         $optional = Some::create($reader)->flatMap(function ($reader) {
-            return is_string($reader) ? $reader::create() : Some::create($reader);
+            return \is_string($reader) ? $reader::create() : Some::create($reader);
         });
 
-        $readers = array_merge($this->readers, iterator_to_array($optional));
+        $readers = \array_merge($this->readers, \iterator_to_array($optional));
 
         return new self($readers, $this->writers, $this->immutable, $this->whitelist);
     }
@@ -175,9 +175,9 @@ final class RepositoryBuilder
      */
     public function addWriter($writer)
     {
-        if (!(is_string($writer) && self::isAnAdapterClass($writer)) && !($writer instanceof WriterInterface)) {
+        if (!(\is_string($writer) && self::isAnAdapterClass($writer)) && !($writer instanceof WriterInterface)) {
             throw new InvalidArgumentException(
-                sprintf(
+                \sprintf(
                     'Expected either an instance of %s or a class-string implementing %s',
                     WriterInterface::class,
                     AdapterInterface::class
@@ -186,10 +186,10 @@ final class RepositoryBuilder
         }
 
         $optional = Some::create($writer)->flatMap(function ($writer) {
-            return is_string($writer) ? $writer::create() : Some::create($writer);
+            return \is_string($writer) ? $writer::create() : Some::create($writer);
         });
 
-        $writers = array_merge($this->writers, iterator_to_array($optional));
+        $writers = \array_merge($this->writers, \iterator_to_array($optional));
 
         return new self($this->readers, $writers, $this->immutable, $this->whitelist);
     }
@@ -209,9 +209,9 @@ final class RepositoryBuilder
      */
     public function addAdapter($adapter)
     {
-        if (!(is_string($adapter) && self::isAnAdapterClass($adapter)) && !($adapter instanceof AdapterInterface)) {
+        if (!(\is_string($adapter) && self::isAnAdapterClass($adapter)) && !($adapter instanceof AdapterInterface)) {
             throw new InvalidArgumentException(
-                sprintf(
+                \sprintf(
                     'Expected either an instance of %s or a class-string implementing %s',
                     WriterInterface::class,
                     AdapterInterface::class
@@ -220,11 +220,11 @@ final class RepositoryBuilder
         }
 
         $optional = Some::create($adapter)->flatMap(function ($adapter) {
-            return is_string($adapter) ? $adapter::create() : Some::create($adapter);
+            return \is_string($adapter) ? $adapter::create() : Some::create($adapter);
         });
 
-        $readers = array_merge($this->readers, iterator_to_array($optional));
-        $writers = array_merge($this->writers, iterator_to_array($optional));
+        $readers = \array_merge($this->readers, \iterator_to_array($optional));
+        $writers = \array_merge($this->writers, \iterator_to_array($optional));
 
         return new self($readers, $writers, $this->immutable, $this->whitelist);
     }

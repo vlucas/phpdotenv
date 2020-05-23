@@ -23,7 +23,7 @@ final class Loader implements LoaderInterface
      */
     public function load(RepositoryInterface $repository, array $entries)
     {
-        return array_reduce($entries, function (array $vars, Entry $entry) use ($repository) {
+        return \array_reduce($entries, function (array $vars, Entry $entry) use ($repository) {
             $name = $entry->getName();
 
             $value = $entry->getValue()->map(function (Value $value) use ($repository) {
@@ -33,11 +33,11 @@ final class Loader implements LoaderInterface
             if ($value->isDefined()) {
                 $inner = $value->get();
                 if ($repository->set($name, $inner)) {
-                    return array_merge($vars, [$name => $inner]);
+                    return \array_merge($vars, [$name => $inner]);
                 }
             } else {
                 if ($repository->clear($name)) {
-                    return array_merge($vars, [$name => null]);
+                    return \array_merge($vars, [$name => null]);
                 }
             }
 

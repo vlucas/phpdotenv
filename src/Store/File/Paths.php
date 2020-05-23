@@ -35,7 +35,7 @@ final class Paths
 
         foreach ($paths as $path) {
             foreach ($names as $name) {
-                $files[] = rtrim($path, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR.$name;
+                $files[] = \rtrim($path, \DIRECTORY_SEPARATOR).\DIRECTORY_SEPARATOR.$name;
             }
         }
 

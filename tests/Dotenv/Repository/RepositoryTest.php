@@ -34,7 +34,7 @@ final class RepositoryTest extends TestCase
      */
     private function load()
     {
-        Dotenv::createImmutable(dirname(dirname(__DIR__)).'/fixtures/env')->load();
+        Dotenv::createImmutable(\dirname(\dirname(__DIR__)).'/fixtures/env')->load();
     }
 
     /**
@@ -51,7 +51,7 @@ final class RepositoryTest extends TestCase
     private function keyVal(bool $reset = false)
     {
         if (!isset($this->keyVal) || $reset) {
-            $this->keyVal = [uniqid() => uniqid()];
+            $this->keyVal = [\uniqid() => \uniqid()];
         }
 
         return $this->keyVal;
@@ -67,7 +67,7 @@ final class RepositoryTest extends TestCase
         $keyVal = $this->keyVal();
 
         /** @var string */
-        return key($keyVal);
+        return \key($keyVal);
     }
 
     /**
@@ -80,7 +80,7 @@ final class RepositoryTest extends TestCase
         $keyVal = $this->keyVal();
 
         /** @var string */
-        return reset($keyVal);
+        return \reset($keyVal);
     }
 
     public function testRepositoryInstanceOf()
@@ -99,7 +99,7 @@ final class RepositoryTest extends TestCase
         // Clear the set environment variable.
         $repository->clear($this->key());
         self::assertNull($repository->get($this->key()));
-        self::assertFalse(getenv($this->key()));
+        self::assertFalse(\getenv($this->key()));
         self::assertFalse(isset($_ENV[$this->key()]));
         self::assertFalse(isset($_SERVER[$this->key()]));
     }
@@ -132,7 +132,7 @@ final class RepositoryTest extends TestCase
         // Attempt to clear the environment variable, check that it works.
         $repository->clear($this->key());
         self::assertNull($repository->get($this->key()));
-        self::assertFalse(getenv($this->key()));
+        self::assertFalse(\getenv($this->key()));
         self::assertFalse(isset($_ENV[$this->key()]));
         self::assertFalse(isset($_SERVER[$this->key()]));
     }

@@ -27,7 +27,7 @@ final class DotenvTest extends TestCase
      */
     public static function setFolder()
     {
-        self::$folder = dirname(__DIR__).'/fixtures/env';
+        self::$folder = \dirname(__DIR__).'/fixtures/env';
     }
 
     public function testDotenvThrowsExceptionIfUnableToLoadFile()
@@ -143,7 +143,7 @@ final class DotenvTest extends TestCase
         self::assertSame('bar', $_SERVER['QFOO']);
         self::assertSame('baz', $_SERVER['QBAR']);
         self::assertSame('with spaces', $_SERVER['QSPACED']);
-        self::assertEmpty(getenv('QNULL'));
+        self::assertEmpty(\getenv('QNULL'));
 
         self::assertSame('pgsql:host=localhost;dbname=test', $_SERVER['QEQUALS']);
         self::assertSame('test some escaped characters like a quote (") or maybe a backslash (\\)', $_SERVER['QESCAPED']);
@@ -271,59 +271,59 @@ final class DotenvTest extends TestCase
 
     public function testDotenvLoadDoesNotOverwriteEnv()
     {
-        putenv('IMMUTABLE=true');
+        \putenv('IMMUTABLE=true');
         $dotenv = Dotenv::createImmutable(self::$folder, 'immutable.env');
         $dotenv->load();
-        self::assertSame('true', getenv('IMMUTABLE'));
+        self::assertSame('true', \getenv('IMMUTABLE'));
     }
 
     public function testDotenvLoadAfterOverload()
     {
-        putenv('IMMUTABLE=true');
+        \putenv('IMMUTABLE=true');
         $dotenv = Dotenv::createUnsafeMutable(self::$folder, 'immutable.env');
         $dotenv->load();
-        self::assertSame('false', getenv('IMMUTABLE'));
+        self::assertSame('false', \getenv('IMMUTABLE'));
     }
 
     public function testDotenvOverloadAfterLoad()
     {
-        putenv('IMMUTABLE=true');
+        \putenv('IMMUTABLE=true');
         $dotenv = Dotenv::createUnsafeImmutable(self::$folder, 'immutable.env');
         $dotenv->load();
-        self::assertSame('true', getenv('IMMUTABLE'));
+        self::assertSame('true', \getenv('IMMUTABLE'));
     }
 
     public function testDotenvOverloadDoesOverwriteEnv()
     {
         $dotenv = Dotenv::createUnsafeMutable(self::$folder, 'mutable.env');
         $dotenv->load();
-        self::assertSame('true', getenv('MUTABLE'));
+        self::assertSame('true', \getenv('MUTABLE'));
     }
 
     public function testDotenvAllowsSpecialCharacters()
     {
         $dotenv = Dotenv::createUnsafeMutable(self::$folder, 'specialchars.env');
         $dotenv->load();
-        self::assertSame('$a6^C7k%zs+e^.jvjXk', getenv('SPVAR1'));
-        self::assertSame('?BUty3koaV3%GA*hMAwH}B', getenv('SPVAR2'));
-        self::assertSame('jdgEB4{QgEC]HL))&GcXxokB+wqoN+j>xkV7K?m$r', getenv('SPVAR3'));
-        self::assertSame('22222:22#2^{', getenv('SPVAR4'));
-        self::assertSame('test some escaped characters like a quote " or maybe a backslash \\', getenv('SPVAR5'));
-        self::assertSame('secret!@', getenv('SPVAR6'));
-        self::assertSame('secret!@#', getenv('SPVAR7'));
-        self::assertSame('secret!@#', getenv('SPVAR8'));
+        self::assertSame('$a6^C7k%zs+e^.jvjXk', \getenv('SPVAR1'));
+        self::assertSame('?BUty3koaV3%GA*hMAwH}B', \getenv('SPVAR2'));
+        self::assertSame('jdgEB4{QgEC]HL))&GcXxokB+wqoN+j>xkV7K?m$r', \getenv('SPVAR3'));
+        self::assertSame('22222:22#2^{', \getenv('SPVAR4'));
+        self::assertSame('test some escaped characters like a quote " or maybe a backslash \\', \getenv('SPVAR5'));
+        self::assertSame('secret!@', \getenv('SPVAR6'));
+        self::assertSame('secret!@#', \getenv('SPVAR7'));
+        self::assertSame('secret!@#', \getenv('SPVAR8'));
     }
 
     public function testMutlilineLoading()
     {
         $dotenv = Dotenv::createUnsafeMutable(self::$folder, 'multiline.env');
         $dotenv->load();
-        self::assertSame("test\n     test\"test\"\n     test", getenv('TEST'));
-        self::assertSame("test\ntest", getenv('TEST_ND'));
-        self::assertSame('test\\ntest', getenv('TEST_NS'));
+        self::assertSame("test\n     test\"test\"\n     test", \getenv('TEST'));
+        self::assertSame("test\ntest", \getenv('TEST_ND'));
+        self::assertSame('test\\ntest', \getenv('TEST_NS'));
 
-        self::assertSame('https://vision.googleapis.com/v1/images:annotate?key=', getenv('TEST_EQD'));
-        self::assertSame('https://vision.googleapis.com/v1/images:annotate?key=', getenv('TEST_EQS'));
+        self::assertSame('https://vision.googleapis.com/v1/images:annotate?key=', \getenv('TEST_EQD'));
+        self::assertSame('https://vision.googleapis.com/v1/images:annotate?key=', \getenv('TEST_EQS'));
     }
 
     public function testEmptyLoading()

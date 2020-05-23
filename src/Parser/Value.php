@@ -58,7 +58,7 @@ final class Value
     {
         return new self(
             $this->chars.$char,
-            $var ? array_merge($this->vars, [Str::len($this->chars)]) : $this->vars
+            $var ? \array_merge($this->vars, [Str::len($this->chars)]) : $this->vars
         );
     }
 
@@ -81,7 +81,7 @@ final class Value
     {
         $vars = $this->vars;
 
-        rsort($vars);
+        \rsort($vars);
 
         return $vars;
     }

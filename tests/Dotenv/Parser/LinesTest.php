@@ -12,7 +12,7 @@ final class LinesTest extends TestCase
 {
     public function testProcessBasic()
     {
-        $content = file_get_contents(dirname(dirname(__DIR__)).'/fixtures/env/assertions.env');
+        $content = \file_get_contents(\dirname(\dirname(__DIR__)).'/fixtures/env/assertions.env');
         self::assertIsString($content);
         $result = Regex::split("/(\r\n|\n|\r)/", $content);
         self::assertTrue($result->success()->isDefined());
@@ -34,7 +34,7 @@ final class LinesTest extends TestCase
 
     public function testProcessQuotes()
     {
-        $content = file_get_contents(dirname(dirname(__DIR__)).'/fixtures/env/multiline.env');
+        $content = \file_get_contents(\dirname(\dirname(__DIR__)).'/fixtures/env/multiline.env');
         self::assertIsString($content);
         $result = Regex::split("/(\r\n|\n|\r)/", $content);
         self::assertTrue($result->success()->isDefined());

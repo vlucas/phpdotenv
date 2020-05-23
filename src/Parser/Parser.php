@@ -27,7 +27,7 @@ final class Parser implements ParserInterface
         })->flatMap(function (array $lines) {
             return self::process(Lines::process($lines));
         })->mapError(function (string $error) {
-            throw new InvalidFileException(sprintf('Failed to parse dotenv file. %s', $error));
+            throw new InvalidFileException(\sprintf('Failed to parse dotenv file. %s', $error));
         })->success()->get();
     }
 
@@ -40,10 +40,10 @@ final class Parser implements ParserInterface
      */
     private function process(array $entries)
     {
-        return array_reduce($entries, function (Result $result, string $raw) {
+        return \array_reduce($entries, function (Result $result, string $raw) {
             return $result->flatMap(function (array $entries) use ($raw) {
                 return EntryParser::parse($raw)->map(function (Entry $entry) use ($entries) {
-                    return array_merge($entries, [$entry]);
+                    return \array_merge($entries, [$entry]);
                 });
             });
         }, Success::create([]));

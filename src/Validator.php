@@ -69,7 +69,7 @@ class Validator
     {
         return $this->assertNullable(
             function (string $value) {
-                return Str::len(trim($value)) > 0;
+                return Str::len(\trim($value)) > 0;
             },
             'is empty'
         );
@@ -86,7 +86,7 @@ class Validator
     {
         return $this->assertNullable(
             function (string $value) {
-                return ctype_digit($value);
+                return \ctype_digit($value);
             },
             'is not an integer'
         );
@@ -107,7 +107,7 @@ class Validator
                     return false;
                 }
 
-                return filter_var($value, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) !== null;
+                return \filter_var($value, \FILTER_VALIDATE_BOOLEAN, \FILTER_NULL_ON_FAILURE) !== null;
             },
             'is not a boolean'
         );
@@ -126,9 +126,9 @@ class Validator
     {
         return $this->assertNullable(
             function (string $value) use ($choices) {
-                return in_array($value, $choices, true);
+                return \in_array($value, $choices, true);
             },
-            sprintf('is not one of [%s]', implode(', ', $choices))
+            \sprintf('is not one of [%s]', \implode(', ', $choices))
         );
     }
 
@@ -147,7 +147,7 @@ class Validator
             function (string $value) use ($regex) {
                 return Regex::match($regex, $value)->success()->getOrElse(0) === 1;
             },
-            sprintf('does not match "%s"', $regex)
+            \sprintf('does not match "%s"', $regex)
         );
     }
 
@@ -167,14 +167,14 @@ class Validator
 
         foreach ($this->variables as $variable) {
             if ($callback($this->repository->get($variable)) === false) {
-                $failing[] = sprintf('%s %s', $variable, $message ?? 'failed callback assertion');
+                $failing[] = \sprintf('%s %s', $variable, $message ?? 'failed callback assertion');
             }
         }
 
-        if (count($failing) > 0) {
-            throw new ValidationException(sprintf(
+        if (\count($failing) > 0) {
+            throw new ValidationException(\sprintf(
                 'One or more environment variables failed assertions: %s.',
-                implode(', ', $failing)
+                \implode(', ', $failing)
             ));
         }
 

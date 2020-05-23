@@ -24,14 +24,14 @@ final class StoreTest extends TestCase
      */
     public static function setFolder()
     {
-        self::$folder = dirname(dirname(__DIR__)).'/fixtures/env';
+        self::$folder = \dirname(\dirname(__DIR__)).'/fixtures/env';
     }
 
     public function testBasicReadDirect()
     {
         self::assertSame(
             [
-                self::$folder.DIRECTORY_SEPARATOR.'.env' => "FOO=bar\nBAR=baz\nSPACED=\"with spaces\"\n\nNULL=\n",
+                self::$folder.\DIRECTORY_SEPARATOR.'.env' => "FOO=bar\nBAR=baz\nSPACED=\"with spaces\"\n\nNULL=\n",
             ],
             Reader::read(
                 Paths::filePaths([self::$folder], ['.env'])
@@ -80,7 +80,7 @@ final class StoreTest extends TestCase
     {
         self::assertSame(
             [
-                self::$folder.DIRECTORY_SEPARATOR.'.env' => "FOO=bar\nBAR=baz\nSPACED=\"with spaces\"\n\nNULL=\n",
+                self::$folder.\DIRECTORY_SEPARATOR.'.env' => "FOO=bar\nBAR=baz\nSPACED=\"with spaces\"\n\nNULL=\n",
             ],
             Reader::read(
                 Paths::filePaths([self::$folder], ['.env', 'example.env'])
@@ -106,8 +106,8 @@ final class StoreTest extends TestCase
     {
         self::assertSame(
             [
-                self::$folder.DIRECTORY_SEPARATOR.'.env'        => "FOO=bar\nBAR=baz\nSPACED=\"with spaces\"\n\nNULL=\n",
-                self::$folder.DIRECTORY_SEPARATOR.'example.env' => "EG=\"example\"\n",
+                self::$folder.\DIRECTORY_SEPARATOR.'.env'        => "FOO=bar\nBAR=baz\nSPACED=\"with spaces\"\n\nNULL=\n",
+                self::$folder.\DIRECTORY_SEPARATOR.'example.env' => "EG=\"example\"\n",
             ],
             Reader::read(
                 Paths::filePaths([self::$folder], ['.env', 'example.env']),

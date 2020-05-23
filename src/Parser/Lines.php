@@ -63,11 +63,11 @@ final class Lines
         }
 
         if ($multiline) {
-            array_push($buffer, $line);
+            \array_push($buffer, $line);
 
             if (self::looksLikeMultilineStop($line, $started)) {
                 $multiline = false;
-                $line = implode("\n", $buffer);
+                $line = \implode("\n", $buffer);
                 $buffer = [];
             }
         }
@@ -103,7 +103,7 @@ final class Lines
             return true;
         }
 
-        return self::getCharPairs(str_replace('\\\\', '', $line))->map(function (array $pairs) use ($started) {
+        return self::getCharPairs(\str_replace('\\\\', '', $line))->map(function (array $pairs) use ($started) {
             $seen = $started ? 0 : 1;
 
             foreach ($pairs as $pair) {
@@ -127,7 +127,7 @@ final class Lines
     {
         return Str::split($line)->map(function (array $chars) {
             /** @var array{array{string,string|null}} */
-            return array_map(null, $chars, array_slice($chars, 1));
+            return \array_map(null, $chars, \array_slice($chars, 1));
         });
     }
 
@@ -140,11 +140,11 @@ final class Lines
      */
     private static function isCommentOrWhitespace(string $line)
     {
-        if (trim($line) === '') {
+        if (\trim($line) === '') {
             return true;
         }
 
-        $line = ltrim($line);
+        $line = \ltrim($line);
 
         return isset($line[0]) && $line[0] === '#';
     }

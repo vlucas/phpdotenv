@@ -41,7 +41,7 @@ final class EnvConstAdapter implements AdapterInterface
     {
         /** @var \PhpOption\Option<string> */
         return Option::fromArraysValue($_ENV, $name)->filter(function ($value) {
-            return is_string($value);
+            return \is_string($value);
         });
     }
 

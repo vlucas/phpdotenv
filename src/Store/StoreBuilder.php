@@ -90,7 +90,7 @@ final class StoreBuilder
      */
     public function addPath(string $path)
     {
-        return new self(array_merge($this->paths, [$path]), $this->names, $this->shortCircuit, $this->fileEncoding);
+        return new self(\array_merge($this->paths, [$path]), $this->names, $this->shortCircuit, $this->fileEncoding);
     }
 
     /**
@@ -102,7 +102,7 @@ final class StoreBuilder
      */
     public function addName(string $name)
     {
-        return new self($this->paths, array_merge($this->names, [$name]), $this->shortCircuit, $this->fileEncoding);
+        return new self($this->paths, \array_merge($this->names, [$name]), $this->shortCircuit, $this->fileEncoding);
     }
 
     /**

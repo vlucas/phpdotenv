@@ -35,14 +35,14 @@ final class Str
      */
     public static function utf8(string $input, string $encoding = null)
     {
-        if ($encoding !== null && !in_array($encoding, mb_list_encodings(), true)) {
+        if ($encoding !== null && !\in_array($encoding, \mb_list_encodings(), true)) {
             return Error::create(
-                sprintf('Illegal character encoding [%s] specified.', $encoding)
+                \sprintf('Illegal character encoding [%s] specified.', $encoding)
             );
         }
 
         return Success::create(
-            $encoding === null ? @mb_convert_encoding($input, 'UTF-8') : @mb_convert_encoding($input, 'UTF-8', $encoding)
+            $encoding === null ? @\mb_convert_encoding($input, 'UTF-8') : @\mb_convert_encoding($input, 'UTF-8', $encoding)
         );
     }
 
@@ -76,7 +76,7 @@ final class Str
     public static function pos(string $haystack, string $needle)
     {
         /** @var \PhpOption\Option<int> */
-        return Option::fromValue(mb_strpos($haystack, $needle, 0, 'UTF-8'), false);
+        return Option::fromValue(\mb_strpos($haystack, $needle, 0, 'UTF-8'), false);
     }
 
     /**
@@ -90,7 +90,7 @@ final class Str
      */
     public static function substr(string $input, int $start, int $length = null)
     {
-        return mb_substr($input, $start, $length, 'UTF-8');
+        return \mb_substr($input, $start, $length, 'UTF-8');
     }
 
     /**
@@ -102,6 +102,6 @@ final class Str
      */
     public static function len(string $input)
     {
-        return mb_strlen($input, 'UTF-8');
+        return \mb_strlen($input, 'UTF-8');
     }
 }

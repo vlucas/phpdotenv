@@ -41,7 +41,7 @@ final class ServerConstAdapter implements AdapterInterface
     {
         /** @var \PhpOption\Option<string> */
         return Option::fromArraysValue($_SERVER, $name)->filter(function ($value) {
-            return is_string($value);
+            return \is_string($value);
         });
     }
 

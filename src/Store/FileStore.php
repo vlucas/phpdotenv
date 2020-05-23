@@ -61,12 +61,12 @@ final class FileStore implements StoreInterface
 
         $contents = Reader::read($this->filePaths, $this->shortCircuit, $this->fileEncoding);
 
-        if (count($contents) > 0) {
-            return implode("\n", $contents);
+        if (\count($contents) > 0) {
+            return \implode("\n", $contents);
         }
 
         throw new InvalidPathException(
-            sprintf('Unable to read any of the environment file(s) at [%s].', implode(', ', $this->filePaths))
+            \sprintf('Unable to read any of the environment file(s) at [%s].', \implode(', ', $this->filePaths))
         );
     }
 }

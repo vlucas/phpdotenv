@@ -42,7 +42,7 @@ final class PutenvAdapter implements AdapterInterface
      */
     private static function isSupported()
     {
-        return function_exists('getenv') && function_exists('putenv');
+        return \function_exists('getenv') && \function_exists('putenv');
     }
 
     /**
@@ -55,8 +55,8 @@ final class PutenvAdapter implements AdapterInterface
     public function read(string $name)
     {
         /** @var \PhpOption\Option<string> */
-        return Option::fromValue(getenv($name), false)->filter(function ($value) {
-            return is_string($value);
+        return Option::fromValue(\getenv($name), false)->filter(function ($value) {
+            return \is_string($value);
         });
     }
 
@@ -70,7 +70,7 @@ final class PutenvAdapter implements AdapterInterface
      */
     public function write(string $name, string $value)
     {
-        putenv("$name=$value");
+        \putenv("$name=$value");
 
         return true;
     }
@@ -84,7 +84,7 @@ final class PutenvAdapter implements AdapterInterface
      */
     public function delete(string $name)
     {
-        putenv($name);
+        \putenv($name);
 
         return true;
     }
