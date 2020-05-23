@@ -210,7 +210,7 @@ class Dotenv
      */
     public function required($variables)
     {
-        return new Validator($this->repository, (array) $variables);
+        return (new Validator($this->repository, (array) $variables))->required();
     }
 
     /**
@@ -222,6 +222,6 @@ class Dotenv
      */
     public function ifPresent($variables)
     {
-        return new Validator($this->repository, (array) $variables, false);
+        return new Validator($this->repository, (array) $variables);
     }
 }
