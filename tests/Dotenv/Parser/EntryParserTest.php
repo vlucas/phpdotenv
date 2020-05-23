@@ -88,7 +88,7 @@ final class EntryParserTest extends TestCase
     {
         $result = EntryParser::parse('FOO=\'TEST $BAR $$BAZ\'');
         $this->checkPositiveResult($result, 'FOO', 'TEST $BAR $$BAZ');
-        $this->assertTrue($result->success()->isDefined());
+        self::assertTrue($result->success()->isDefined());
     }
 
     public function testWhitespaceParse()
@@ -145,34 +145,54 @@ final class EntryParserTest extends TestCase
         $this->checkPositiveResult($result, 'FOO_BAD', 'iiiiviiiixiiiiviiii\\a');
     }
 
+    /**
+     * @param \GrahamCampbell\ResultType\Result<\Dotenv\Parser\Entry,string> $result
+     * @param string                                                         $name
+     * @param string                                                         $chars
+     * @param int[]                                                          $vars
+     *
+     * @return void
+     */
     private function checkPositiveResult(Result $result, string $name, string $chars, array $vars = [])
     {
-        $this->assertTrue($result->success()->isDefined());
+        self::assertTrue($result->success()->isDefined());
 
         $entry = $result->success()->get();
-        $this->assertInstanceOf(Entry::class, $entry);
-        $this->assertSame($name, $entry->getName());
-        $this->assertTrue($entry->getValue()->isDefined());
+        self::assertInstanceOf(Entry::class, $entry);
+        self::assertSame($name, $entry->getName());
+        self::assertTrue($entry->getValue()->isDefined());
 
         $value = $entry->getValue()->get();
-        $this->assertInstanceOf(Value::class, $value);
-        $this->assertSame($chars, $value->getChars());
-        $this->assertSame($vars, $value->getVars());
+        self::assertInstanceOf(Value::class, $value);
+        self::assertSame($chars, $value->getChars());
+        self::assertSame($vars, $value->getVars());
     }
 
+    /**
+     * @param \GrahamCampbell\ResultType\Result<\Dotenv\Parser\Entry,string> $result
+     * @param string                                                         $name
+     *
+     * @return void
+     */
     private function checkEmptyResult(Result $result, string $name)
     {
-        $this->assertTrue($result->success()->isDefined());
+        self::assertTrue($result->success()->isDefined());
 
         $entry = $result->success()->get();
-        $this->assertInstanceOf(Entry::class, $entry);
-        $this->assertSame('FOO', $entry->getName());
-        $this->assertFalse($entry->getValue()->isDefined());
+        self::assertInstanceOf(Entry::class, $entry);
+        self::assertSame('FOO', $entry->getName());
+        self::assertFalse($entry->getValue()->isDefined());
     }
 
+    /**
+     * @param \GrahamCampbell\ResultType\Result<\Dotenv\Parser\Entry,string> $result
+     * @param string                                                         $error
+     *
+     * @return void
+     */
     private function checkErrorResult(Result $result, string $error)
     {
-        $this->assertTrue($result->error()->isDefined());
-        $this->assertSame($error, $result->error()->get());
+        self::assertTrue($result->error()->isDefined());
+        self::assertSame($error, $result->error()->get());
     }
 }

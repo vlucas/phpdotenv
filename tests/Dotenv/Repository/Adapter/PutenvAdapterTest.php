@@ -13,35 +13,38 @@ final class PutenvAdapterTest extends TestCase
     {
         putenv('CONST_TEST=foo bar baz');
         $value = self::createAdapter()->read('CONST_TEST');
-        $this->assertTrue($value->isDefined());
-        $this->assertSame('foo bar baz', $value->get());
+        self::assertTrue($value->isDefined());
+        self::assertSame('foo bar baz', $value->get());
     }
 
     public function testUndefinedRead()
     {
         putenv('CONST_TEST');
         $value = self::createAdapter()->read('CONST_TEST');
-        $this->assertFalse($value->isDefined());
+        self::assertFalse($value->isDefined());
     }
 
     public function testGoodWrite()
     {
-        $this->assertTrue(self::createAdapter()->write('CONST_TEST', 'foo'));
-        $this->assertSame('foo', getenv('CONST_TEST'));
+        self::assertTrue(self::createAdapter()->write('CONST_TEST', 'foo'));
+        self::assertSame('foo', getenv('CONST_TEST'));
     }
 
     public function testEmptyWrite()
     {
-        $this->assertTrue(self::createAdapter()->write('CONST_TEST', ''));
-        $this->assertSame('', getenv('CONST_TEST'));
+        self::assertTrue(self::createAdapter()->write('CONST_TEST', ''));
+        self::assertSame('', getenv('CONST_TEST'));
     }
 
     public function testGoodDelete()
     {
-        $this->assertTrue(self::createAdapter()->delete('CONST_TEST'));
-        $this->assertFalse(getenv('CONST_TEST'));
+        self::assertTrue(self::createAdapter()->delete('CONST_TEST'));
+        self::assertFalse(getenv('CONST_TEST'));
     }
 
+    /**
+     * @return \Dotenv\Repository\Adapter\AdapterInterface
+     */
     private static function createAdapter()
     {
         return PutenvAdapter::create()->get();

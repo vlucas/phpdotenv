@@ -18,7 +18,7 @@ final class LoaderTest extends TestCase
 {
     public function testParserInstanceOf()
     {
-        $this->assertInstanceOf(LoaderInterface::class, new Loader());
+        self::assertInstanceOf(LoaderInterface::class, new Loader());
     }
 
     public function testLoaderWithNoReaders()
@@ -29,7 +29,7 @@ final class LoaderTest extends TestCase
         $content = "NVAR1=\"Hello\"\nNVAR2=\"World!\"\nNVAR3=\"{\$NVAR1} {\$NVAR2}\"\nNVAR4=\"\${NVAR1} \${NVAR2}\"";
         $expected = ['NVAR1' => 'Hello', 'NVAR2' => 'World!', 'NVAR3' => '{$NVAR1} {$NVAR2}', 'NVAR4' => '${NVAR1} ${NVAR2}'];
 
-        $this->assertSame($expected, $loader->load($repository, (new Parser())->parse($content)));
+        self::assertSame($expected, $loader->load($repository, (new Parser())->parse($content)));
     }
 
     public function testLoaderWithWhitelist()
@@ -38,10 +38,10 @@ final class LoaderTest extends TestCase
         $repository = RepositoryBuilder::createWithNoAdapters()->addReader($adapter)->addWriter($adapter)->whitelist(['FOO'])->make();
         $loader = new Loader();
 
-        $this->assertSame(['FOO' => 'Hello'], $loader->load($repository, (new Parser())->parse("FOO=\"Hello\"\nBAR=\"World!\"\n")));
-        $this->assertTrue($adapter->read('FOO')->isDefined());
-        $this->assertSame('Hello', $adapter->read('FOO')->get());
-        $this->assertFalse($adapter->read('BAR')->isDefined());
+        self::assertSame(['FOO' => 'Hello'], $loader->load($repository, (new Parser())->parse("FOO=\"Hello\"\nBAR=\"World!\"\n")));
+        self::assertTrue($adapter->read('FOO')->isDefined());
+        self::assertSame('Hello', $adapter->read('FOO')->get());
+        self::assertFalse($adapter->read('BAR')->isDefined());
     }
 
     public function testLoaderWithGarbage()
@@ -56,6 +56,9 @@ final class LoaderTest extends TestCase
         $loader->load($repository, (new Parser())->parse('FOO="""'));
     }
 
+    /**
+     * @return array<int,\Dotenv\Repository\Adapter\AdapterInterface|string>[]
+     */
     public function providesAdapters()
     {
         return [
@@ -67,6 +70,8 @@ final class LoaderTest extends TestCase
 
     /**
      * @dataProvider providesAdapters
+     *
+     * @param \Dotenv\Repository\Adapter\AdapterInterface|string $adapter
      */
     public function testLoaderWithSpecificAdapter($adapter)
     {
@@ -76,6 +81,6 @@ final class LoaderTest extends TestCase
         $content = "NVAR1=\"Hello\"\nNVAR2=\"World!\"\nNVAR3=\"{\$NVAR1} {\$NVAR2}\"\nNVAR4=\"\${NVAR1} \${NVAR2}\"";
         $expected = ['NVAR1' => 'Hello', 'NVAR2' => 'World!', 'NVAR3' => '{$NVAR1} {$NVAR2}', 'NVAR4' => 'Hello World!'];
 
-        $this->assertSame($expected, $loader->load($repository, (new Parser())->parse($content)));
+        self::assertSame($expected, $loader->load($repository, (new Parser())->parse($content)));
     }
 }

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Dotenv\Tests\Parser;
 
 use Dotenv\Parser\Lines;
+use Dotenv\Util\Regex;
 use PHPUnit\Framework\TestCase;
 
 final class LinesTest extends TestCase
@@ -12,6 +13,9 @@ final class LinesTest extends TestCase
     public function testProcessBasic()
     {
         $content = file_get_contents(dirname(dirname(__DIR__)).'/fixtures/env/assertions.env');
+        self::assertIsString($content);
+        $result = Regex::split("/(\r\n|\n|\r)/", $content);
+        self::assertTrue($result->success()->isDefined());
 
         $expected = [
             'ASSERTVAR1=val1',
@@ -25,12 +29,15 @@ final class LinesTest extends TestCase
             "ASSERTVAR9=\"\n\n\"",
         ];
 
-        $this->assertSame($expected, Lines::process(preg_split("/(\r\n|\n|\r)/", $content)));
+        self::assertSame($expected, Lines::process($result->success()->get()));
     }
 
     public function testProcessQuotes()
     {
         $content = file_get_contents(dirname(dirname(__DIR__)).'/fixtures/env/multiline.env');
+        self::assertIsString($content);
+        $result = Regex::split("/(\r\n|\n|\r)/", $content);
+        self::assertTrue($result->success()->isDefined());
 
         $expected = [
             "TEST=\"test\n     test\\\"test\\\"\n     test\"",
@@ -40,7 +47,7 @@ final class LinesTest extends TestCase
             'TEST_EQS=\'https://vision.googleapis.com/v1/images:annotate?key=\'',
         ];
 
-        $this->assertSame($expected, Lines::process(preg_split("/(\r\n|\n|\r)/", $content)));
+        self::assertSame($expected, Lines::process($result->success()->get()));
     }
 
     public function testProcessClosingSlash()
@@ -53,6 +60,6 @@ final class LinesTest extends TestCase
             'SPVAR5="test some escaped characters like a quote \" or maybe a backslash \\" # not escaped',
         ];
 
-        $this->assertSame($expected, $lines);
+        self::assertSame($expected, $lines);
     }
 }

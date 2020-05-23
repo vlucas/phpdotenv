@@ -17,42 +17,52 @@ final class ValidatorTest extends TestCase
 
     /**
      * @beforeClass
+     *
+     * @return void
      */
     public static function setFolder()
     {
         self::$folder = dirname(__DIR__).'/fixtures/env';
     }
 
+    /**
+     * @doesNotPerformAssertions
+     */
     public function testDotenvRequiredStringEnvironmentVars()
     {
         $dotenv = Dotenv::createImmutable(self::$folder);
         $dotenv->load();
         $dotenv->required('FOO');
-        $this->assertTrue(true);
     }
 
+    /**
+     * @doesNotPerformAssertions
+     */
     public function testDotenvAllowedValues()
     {
         $dotenv = Dotenv::createImmutable(self::$folder);
         $dotenv->load();
         $dotenv->required('FOO')->allowedValues(['bar', 'baz']);
-        $this->assertTrue(true);
     }
 
+    /**
+     * @doesNotPerformAssertions
+     */
     public function testDotenvAllowedValuesIfPresent()
     {
         $dotenv = Dotenv::createImmutable(self::$folder);
         $dotenv->load();
         $dotenv->ifPresent('FOO')->allowedValues(['bar', 'baz']);
-        $this->assertTrue(true);
     }
 
+    /**
+     * @doesNotPerformAssertions
+     */
     public function testDotenvAllowedValuesIfNotPresent()
     {
         $dotenv = Dotenv::createImmutable(self::$folder);
         $dotenv->load();
         $dotenv->ifPresent('FOOQWERTYOOOOOO')->allowedValues(['bar', 'baz']);
-        $this->assertTrue(true);
     }
 
     public function testDotenvProhibitedValues()
@@ -82,8 +92,8 @@ final class ValidatorTest extends TestCase
         $dotenv = Dotenv::createImmutable(self::$folder);
         $dotenv->load();
 
-        $this->assertFalse(getenv('FOOX'));
-        $this->assertFalse(getenv('NOPE'));
+        self::assertFalse(getenv('FOOX'));
+        self::assertFalse(getenv('NOPE'));
 
         $this->expectException(ValidationException::class);
         $this->expectExceptionMessage('One or more environment variables failed assertions: FOOX is missing, NOPE is missing.');
@@ -91,14 +101,14 @@ final class ValidatorTest extends TestCase
         $dotenv->required(['FOOX', 'NOPE']);
     }
 
+    /**
+     * @doesNotPerformAssertions
+     */
     public function testDotenvRequiredArrayEnvironmentVars()
     {
         $dotenv = Dotenv::createImmutable(self::$folder);
         $dotenv->load();
-
         $dotenv->required(['FOO', 'BAR']);
-
-        $this->assertTrue(true);
     }
 
     public function testDotenvAssertions()
@@ -106,14 +116,14 @@ final class ValidatorTest extends TestCase
         $dotenv = Dotenv::createUnsafeImmutable(self::$folder, 'assertions.env');
         $dotenv->load();
 
-        $this->assertSame('val1', getenv('ASSERTVAR1'));
-        $this->assertEmpty(getenv('ASSERTVAR2'));
-        $this->assertSame('val3   ', getenv('ASSERTVAR3'));
-        $this->assertSame('0', getenv('ASSERTVAR4'));
-        $this->assertSame('#foo', getenv('ASSERTVAR5'));
-        $this->assertSame("val1\nval2", getenv('ASSERTVAR6'));
-        $this->assertSame("\nval3", getenv('ASSERTVAR7'));
-        $this->assertSame("val3\n", getenv('ASSERTVAR8'));
+        self::assertSame('val1', getenv('ASSERTVAR1'));
+        self::assertEmpty(getenv('ASSERTVAR2'));
+        self::assertSame('val3   ', getenv('ASSERTVAR3'));
+        self::assertSame('0', getenv('ASSERTVAR4'));
+        self::assertSame('#foo', getenv('ASSERTVAR5'));
+        self::assertSame("val1\nval2", getenv('ASSERTVAR6'));
+        self::assertSame("\nval3", getenv('ASSERTVAR7'));
+        self::assertSame("val3\n", getenv('ASSERTVAR8'));
 
         $dotenv->required([
             'ASSERTVAR1',
@@ -149,7 +159,7 @@ final class ValidatorTest extends TestCase
         $dotenv = Dotenv::createImmutable(self::$folder, 'assertions.env');
         $dotenv->load();
 
-        $this->assertEmpty(getenv('ASSERTVAR2'));
+        self::assertEmpty(getenv('ASSERTVAR2'));
 
         $this->expectException(ValidationException::class);
         $this->expectExceptionMessage('One or more environment variables failed assertions: ASSERTVAR2 is empty.');
@@ -157,14 +167,14 @@ final class ValidatorTest extends TestCase
         $dotenv->required('ASSERTVAR2')->notEmpty();
     }
 
+    /**
+     * @doesNotPerformAssertions
+     */
     public function testDotenvEmptyWhenNotPresent()
     {
         $dotenv = Dotenv::createImmutable(self::$folder, 'assertions.env');
         $dotenv->load();
-
         $dotenv->ifPresent('ASSERTVAR2_NO_SUCH_VARIABLE')->notEmpty();
-
-        $this->assertTrue(true);
     }
 
     public function testDotenvStringOfSpacesConsideredEmpty()
@@ -188,19 +198,20 @@ final class ValidatorTest extends TestCase
         $dotenv->required('foo');
     }
 
+    /**
+     * @doesNotPerformAssertions
+     */
     public function testDotenvRequiredCanBeUsedWithoutLoadingFile()
     {
         $_SERVER['REQUIRED_VAR'] = '1';
         $dotenv = Dotenv::createImmutable(self::$folder);
-
         $dotenv->required('REQUIRED_VAR')->notEmpty();
-        $this->assertTrue(true);
     }
 
     /**
      * List of valid boolean values in fixtures/env/booleans.env.
      *
-     * @return array
+     * @return string[][]
      */
     public function validBooleanValuesDataProvider()
     {
@@ -233,32 +244,30 @@ final class ValidatorTest extends TestCase
 
     /**
      * @dataProvider validBooleanValuesDataProvider
+     * @doesNotPerformAssertions
      */
-    public function testCanValidateBooleans($boolean)
+    public function testCanValidateBooleans(string $boolean)
     {
         $dotenv = Dotenv::createImmutable(self::$folder, 'booleans.env');
         $dotenv->load();
-
         $dotenv->required($boolean)->isBoolean();
-        $this->assertTrue(true);
     }
 
     /**
      * @dataProvider validBooleanValuesDataProvider
+     * @doesNotPerformAssertions
      */
-    public function testCanValidateBooleansIfPresent($boolean)
+    public function testCanValidateBooleansIfPresent(string $boolean)
     {
         $dotenv = Dotenv::createImmutable(self::$folder, 'booleans.env');
         $dotenv->load();
-
         $dotenv->ifPresent($boolean)->isBoolean();
-        $this->assertTrue(true);
     }
 
     /**
      * List of non-boolean values in fixtures/env/booleans.env.
      *
-     * @return array
+     * @return string[][]
      */
     public function invalidBooleanValuesDataProvider()
     {
@@ -278,7 +287,7 @@ final class ValidatorTest extends TestCase
     /**
      * @dataProvider invalidBooleanValuesDataProvider
      */
-    public function testCanInvalidateNonBooleans($boolean)
+    public function testCanInvalidateNonBooleans(string $boolean)
     {
         $dotenv = Dotenv::createImmutable(self::$folder, 'booleans.env');
         $dotenv->load();
@@ -292,7 +301,7 @@ final class ValidatorTest extends TestCase
     /**
      * @dataProvider invalidBooleanValuesDataProvider
      */
-    public function testCanInvalidateNonBooleansIfPresent($boolean)
+    public function testCanInvalidateNonBooleansIfPresent(string $boolean)
     {
         $dotenv = Dotenv::createImmutable(self::$folder, 'booleans.env');
         $dotenv->load();
@@ -314,19 +323,20 @@ final class ValidatorTest extends TestCase
         $dotenv->required(['VAR_DOES_NOT_EXIST_234782462764'])->isBoolean();
     }
 
+    /**
+     * @doesNotPerformAssertions
+     */
     public function testIfPresentBooleanNonExist()
     {
         $dotenv = Dotenv::createImmutable(self::$folder, 'booleans.env');
         $dotenv->load();
-
         $dotenv->ifPresent(['VAR_DOES_NOT_EXIST_234782462764'])->isBoolean();
-        $this->assertTrue(true);
     }
 
     /**
      * List of valid integer values in fixtures/env/integers.env.
      *
-     * @return array<string[]>
+     * @return string[][]
      */
     public function validIntegerValuesDataProvider()
     {
@@ -341,32 +351,30 @@ final class ValidatorTest extends TestCase
 
     /**
      * @dataProvider validIntegerValuesDataProvider
+     * @doesNotPerformAssertions
      */
-    public function testCanValidateIntegers($integer)
+    public function testCanValidateIntegers(string $integer)
     {
         $dotenv = Dotenv::createImmutable(self::$folder, 'integers.env');
         $dotenv->load();
-
         $dotenv->required($integer)->isInteger();
-        $this->assertTrue(true);
     }
 
     /**
      * @dataProvider validIntegerValuesDataProvider
+     * @doesNotPerformAssertions
      */
-    public function testCanValidateIntegersIfPresent($integer)
+    public function testCanValidateIntegersIfPresent(string $integer)
     {
         $dotenv = Dotenv::createImmutable(self::$folder, 'integers.env');
         $dotenv->load();
-
         $dotenv->ifPresent($integer)->isInteger();
-        $this->assertTrue(true);
     }
 
     /**
      * List of non-integer values in fixtures/env/integers.env.
      *
-     * @return array
+     * @return string[][]
      */
     public function invalidIntegerValuesDataProvider()
     {
@@ -387,7 +395,7 @@ final class ValidatorTest extends TestCase
     /**
      * @dataProvider invalidIntegerValuesDataProvider
      */
-    public function testCanInvalidateNonIntegers($integer)
+    public function testCanInvalidateNonIntegers(string $integer)
     {
         $dotenv = Dotenv::createImmutable(self::$folder, 'integers.env');
         $dotenv->load();
@@ -401,7 +409,7 @@ final class ValidatorTest extends TestCase
     /**
      * @dataProvider invalidIntegerValuesDataProvider
      */
-    public function testCanInvalidateNonIntegersIfExist($integer)
+    public function testCanInvalidateNonIntegersIfExist(string $integer)
     {
         $dotenv = Dotenv::createImmutable(self::$folder, 'integers.env');
         $dotenv->load();
@@ -423,21 +431,24 @@ final class ValidatorTest extends TestCase
         $dotenv->required(['VAR_DOES_NOT_EXIST_234782462764'])->isInteger();
     }
 
+    /**
+     * @doesNotPerformAssertions
+     */
     public function testIfPresentIntegerNonExist()
     {
         $dotenv = Dotenv::createImmutable(self::$folder, 'integers.env');
         $dotenv->load();
-
         $dotenv->ifPresent(['VAR_DOES_NOT_EXIST_234782462764'])->isInteger();
-        $this->assertTrue(true);
     }
 
+    /**
+     * @doesNotPerformAssertions
+     */
     public function testDotenvRegexMatchPass()
     {
         $dotenv = Dotenv::createImmutable(self::$folder);
         $dotenv->load();
         $dotenv->required('FOO')->allowedRegexValues('([[:lower:]]{3})');
-        $this->assertTrue(true);
     }
 
     public function testDotenvRegexMatchFail()
@@ -462,11 +473,13 @@ final class ValidatorTest extends TestCase
         $dotenv->required('FOO')->allowedRegexValues('/([[:lower:]{1{');
     }
 
+    /**
+     * @doesNotPerformAssertions
+     */
     public function testDotenvRegexMatchNotPresent()
     {
         $dotenv = Dotenv::createImmutable(self::$folder);
         $dotenv->load();
         $dotenv->ifPresent('FOOOOOOOOOOO')->allowedRegexValues('([[:lower:]]{3})');
-        $this->assertTrue(true);
     }
 }

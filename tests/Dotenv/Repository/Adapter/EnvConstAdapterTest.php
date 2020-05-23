@@ -13,42 +13,45 @@ final class EnvConstAdapterTest extends TestCase
     {
         $_ENV['CONST_TEST'] = 'foo bar baz';
         $value = self::createAdapter()->read('CONST_TEST');
-        $this->assertTrue($value->isDefined());
-        $this->assertSame('foo bar baz', $value->get());
+        self::assertTrue($value->isDefined());
+        self::assertSame('foo bar baz', $value->get());
     }
 
     public function testBadTypeRead()
     {
         $_ENV['CONST_TEST'] = 123;
         $value = self::createAdapter()->read('CONST_TEST');
-        $this->assertFalse($value->isDefined());
+        self::assertFalse($value->isDefined());
     }
 
     public function testUndefinedRead()
     {
         unset($_ENV['CONST_TEST']);
         $value = self::createAdapter()->read('CONST_TEST');
-        $this->assertFalse($value->isDefined());
+        self::assertFalse($value->isDefined());
     }
 
     public function testGoodWrite()
     {
-        $this->assertTrue(self::createAdapter()->write('CONST_TEST', 'foo'));
-        $this->assertSame('foo', $_ENV['CONST_TEST']);
+        self::assertTrue(self::createAdapter()->write('CONST_TEST', 'foo'));
+        self::assertSame('foo', $_ENV['CONST_TEST']);
     }
 
     public function testEmptyWrite()
     {
-        $this->assertTrue(self::createAdapter()->write('CONST_TEST', ''));
-        $this->assertSame('', $_ENV['CONST_TEST']);
+        self::assertTrue(self::createAdapter()->write('CONST_TEST', ''));
+        self::assertSame('', $_ENV['CONST_TEST']);
     }
 
     public function testGoodDelete()
     {
-        $this->assertTrue(self::createAdapter()->delete('CONST_TEST'));
-        $this->assertFalse(isset($_ENV['CONST_TEST']));
+        self::assertTrue(self::createAdapter()->delete('CONST_TEST'));
+        self::assertFalse(isset($_ENV['CONST_TEST']));
     }
 
+    /**
+     * @return \Dotenv\Repository\Adapter\AdapterInterface
+     */
     private static function createAdapter()
     {
         return EnvConstAdapter::create()->get();

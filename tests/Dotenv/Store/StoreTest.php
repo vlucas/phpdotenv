@@ -19,6 +19,8 @@ final class StoreTest extends TestCase
 
     /**
      * @beforeClass
+     *
+     * @return void
      */
     public static function setFolder()
     {
@@ -27,7 +29,7 @@ final class StoreTest extends TestCase
 
     public function testBasicReadDirect()
     {
-        $this->assertSame(
+        self::assertSame(
             [
                 self::$folder.DIRECTORY_SEPARATOR.'.env' => "FOO=bar\nBAR=baz\nSPACED=\"with spaces\"\n\nNULL=\n",
             ],
@@ -42,7 +44,7 @@ final class StoreTest extends TestCase
         $builder = StoreBuilder::createWithDefaultName()
             ->addPath(self::$folder);
 
-        $this->assertSame(
+        self::assertSame(
             "FOO=bar\nBAR=baz\nSPACED=\"with spaces\"\n\nNULL=\n",
             $builder->make()->read()
         );
@@ -55,7 +57,7 @@ final class StoreTest extends TestCase
             ->addName('windows.env')
             ->fileEncoding('Windows-1252');
 
-        $this->assertSame(
+        self::assertSame(
             "MBW=\"ñá\"\n",
             $builder->make()->read()
         );
@@ -76,7 +78,7 @@ final class StoreTest extends TestCase
 
     public function testFileReadMultipleShortCircuitModeDirect()
     {
-        $this->assertSame(
+        self::assertSame(
             [
                 self::$folder.DIRECTORY_SEPARATOR.'.env' => "FOO=bar\nBAR=baz\nSPACED=\"with spaces\"\n\nNULL=\n",
             ],
@@ -94,7 +96,7 @@ final class StoreTest extends TestCase
             ->addName('example.env')
             ->shortCircuit();
 
-        $this->assertSame(
+        self::assertSame(
             "FOO=bar\nBAR=baz\nSPACED=\"with spaces\"\n\nNULL=\n",
             $builder->make()->read()
         );
@@ -102,7 +104,7 @@ final class StoreTest extends TestCase
 
     public function testFileReadMultipleWithoutShortCircuitModeDirect()
     {
-        $this->assertSame(
+        self::assertSame(
             [
                 self::$folder.DIRECTORY_SEPARATOR.'.env'        => "FOO=bar\nBAR=baz\nSPACED=\"with spaces\"\n\nNULL=\n",
                 self::$folder.DIRECTORY_SEPARATOR.'example.env' => "EG=\"example\"\n",
@@ -120,7 +122,7 @@ final class StoreTest extends TestCase
             ->addPath(self::$folder)
             ->addName('example.env');
 
-        $this->assertSame(
+        self::assertSame(
             "FOO=bar\nBAR=baz\nSPACED=\"with spaces\"\n\nNULL=\n\nEG=\"example\"\n",
             $builder->make()->read()
         );

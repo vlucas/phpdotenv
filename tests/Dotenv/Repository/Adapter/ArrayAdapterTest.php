@@ -14,8 +14,8 @@ final class ArrayAdapterTest extends TestCase
         $adapter = self::createAdapter();
         $adapter->write('CONST_TEST', 'foo bar baz');
         $value = $adapter->read('CONST_TEST');
-        $this->assertTrue($value->isDefined());
-        $this->assertSame('foo bar baz', $value->get());
+        self::assertTrue($value->isDefined());
+        self::assertSame('foo bar baz', $value->get());
     }
 
     public function testUndefinedRead()
@@ -23,30 +23,33 @@ final class ArrayAdapterTest extends TestCase
         $adapter = self::createAdapter();
         unset($_ENV['CONST_TEST']);
         $value = $adapter->read('CONST_TEST');
-        $this->assertFalse($value->isDefined());
+        self::assertFalse($value->isDefined());
     }
 
     public function testGoodWrite()
     {
         $adapter = self::createAdapter();
-        $this->assertTrue($adapter->write('CONST_TEST', 'foo'));
-        $this->assertSame('foo', $adapter->read('CONST_TEST')->get());
+        self::assertTrue($adapter->write('CONST_TEST', 'foo'));
+        self::assertSame('foo', $adapter->read('CONST_TEST')->get());
     }
 
     public function testEmptyWrite()
     {
         $adapter = self::createAdapter();
-        $this->assertTrue($adapter->write('CONST_TEST', ''));
-        $this->assertSame('', $adapter->read('CONST_TEST')->get());
+        self::assertTrue($adapter->write('CONST_TEST', ''));
+        self::assertSame('', $adapter->read('CONST_TEST')->get());
     }
 
     public function testGoodDelete()
     {
         $adapter = self::createAdapter();
-        $this->assertTrue($adapter->delete('CONST_TEST'));
-        $this->assertFalse($adapter->read('CONST_TEST')->isDefined());
+        self::assertTrue($adapter->delete('CONST_TEST'));
+        self::assertFalse($adapter->read('CONST_TEST')->isDefined());
     }
 
+    /**
+     * @return \Dotenv\Repository\Adapter\AdapterInterface
+     */
     private static function createAdapter()
     {
         return ArrayAdapter::create()->get();

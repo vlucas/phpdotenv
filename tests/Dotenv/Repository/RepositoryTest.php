@@ -15,18 +15,23 @@ use TypeError;
 final class RepositoryTest extends TestCase
 {
     /**
-     * @var string[]|null
+     * @var array<string,string>|null
      */
     private $keyVal;
 
     /**
      * @before
+     *
+     * @return void
      */
     public function refreshKeyVal()
     {
         $this->keyVal(true);
     }
 
+    /**
+     * @return void
+     */
     private function load()
     {
         Dotenv::createImmutable(dirname(dirname(__DIR__)).'/fixtures/env')->load();
@@ -41,7 +46,7 @@ final class RepositoryTest extends TestCase
      *
      * @param bool $reset
      *
-     * @return array
+     * @return array<string,string>
      */
     private function keyVal(bool $reset = false)
     {
@@ -61,6 +66,7 @@ final class RepositoryTest extends TestCase
     {
         $keyVal = $this->keyVal();
 
+        /** @var string */
         return key($keyVal);
     }
 
@@ -73,13 +79,14 @@ final class RepositoryTest extends TestCase
     {
         $keyVal = $this->keyVal();
 
+        /** @var string */
         return reset($keyVal);
     }
 
     public function testRepositoryInstanceOf()
     {
-        $this->assertInstanceOf(RepositoryInterface::class, RepositoryBuilder::createWithNoAdapters()->make());
-        $this->assertInstanceOf(RepositoryInterface::class, RepositoryBuilder::createWithDefaultAdapters()->make());
+        self::assertInstanceOf(RepositoryInterface::class, RepositoryBuilder::createWithNoAdapters()->make());
+        self::assertInstanceOf(RepositoryInterface::class, RepositoryBuilder::createWithDefaultAdapters()->make());
     }
 
     public function testMutableLoaderClearsEnvironmentVars()
@@ -91,10 +98,10 @@ final class RepositoryTest extends TestCase
 
         // Clear the set environment variable.
         $repository->clear($this->key());
-        $this->assertSame(null, $repository->get($this->key()));
-        $this->assertSame(false, getenv($this->key()));
-        $this->assertSame(false, isset($_ENV[$this->key()]));
-        $this->assertSame(false, isset($_SERVER[$this->key()]));
+        self::assertNull($repository->get($this->key()));
+        self::assertFalse(getenv($this->key()));
+        self::assertFalse(isset($_ENV[$this->key()]));
+        self::assertFalse(isset($_SERVER[$this->key()]));
     }
 
     public function testImmutableLoaderCannotClearExistingEnvironmentVars()
@@ -108,9 +115,9 @@ final class RepositoryTest extends TestCase
 
         // Attempt to clear the environment variable, check that it fails.
         $repository->clear($this->key());
-        $this->assertSame($this->value(), $repository->get($this->key()));
-        $this->assertSame(true, isset($_ENV[$this->key()]));
-        $this->assertSame(true, isset($_SERVER[$this->key()]));
+        self::assertSame($this->value(), $repository->get($this->key()));
+        self::assertTrue(isset($_ENV[$this->key()]));
+        self::assertTrue(isset($_SERVER[$this->key()]));
     }
 
     public function testImmutableLoaderCanClearSetEnvironmentVars()
@@ -124,10 +131,10 @@ final class RepositoryTest extends TestCase
 
         // Attempt to clear the environment variable, check that it works.
         $repository->clear($this->key());
-        $this->assertSame(null, $repository->get($this->key()));
-        $this->assertSame(false, getenv($this->key()));
-        $this->assertSame(false, isset($_ENV[$this->key()]));
-        $this->assertSame(false, isset($_SERVER[$this->key()]));
+        self::assertNull($repository->get($this->key()));
+        self::assertFalse(getenv($this->key()));
+        self::assertFalse(isset($_ENV[$this->key()]));
+        self::assertFalse(isset($_SERVER[$this->key()]));
     }
 
     public function testCheckingWhetherVariableExists()
@@ -136,8 +143,8 @@ final class RepositoryTest extends TestCase
 
         $repo = RepositoryBuilder::createWithDefaultAdapters()->make();
 
-        $this->assertTrue($repo->has('FOO'));
-        $this->assertFalse($repo->has('NON_EXISTING_VARIABLE'));
+        self::assertTrue($repo->has('FOO'));
+        self::assertFalse($repo->has('NON_EXISTING_VARIABLE'));
     }
 
     public function testHasWithBadVariable()
@@ -155,7 +162,7 @@ final class RepositoryTest extends TestCase
 
         $repo = RepositoryBuilder::createWithDefaultAdapters()->make();
 
-        $this->assertSame('bar', $repo->get('FOO'));
+        self::assertSame('bar', $repo->get('FOO'));
     }
 
     public function testGettingBadVariable()
@@ -173,9 +180,9 @@ final class RepositoryTest extends TestCase
 
         $repo = RepositoryBuilder::createWithDefaultAdapters()->make();
 
-        $this->assertSame('bar', $repo->get('FOO'));
+        self::assertSame('bar', $repo->get('FOO'));
         $repo->set('FOO', 'new');
-        $this->assertSame('new', $repo->get('FOO'));
+        self::assertSame('new', $repo->get('FOO'));
     }
 
     public function testSettingBadVariable()
@@ -193,9 +200,9 @@ final class RepositoryTest extends TestCase
 
         $repo = RepositoryBuilder::createWithDefaultAdapters()->make();
 
-        $this->assertTrue($repo->has('FOO'));
+        self::assertTrue($repo->has('FOO'));
         $repo->clear('FOO');
-        $this->assertFalse($repo->has('FOO'));
+        self::assertFalse($repo->has('FOO'));
     }
 
     public function testClearingVariableWithArrayAdapter()
@@ -203,11 +210,11 @@ final class RepositoryTest extends TestCase
         $adapter = ArrayAdapter::create()->get();
         $repo = RepositoryBuilder::createWithNoAdapters()->addReader($adapter)->addWriter($adapter)->make();
 
-        $this->assertFalse($repo->has('FOO'));
+        self::assertFalse($repo->has('FOO'));
         $repo->set('FOO', 'BAR');
-        $this->assertTrue($repo->has('FOO'));
+        self::assertTrue($repo->has('FOO'));
         $repo->clear('FOO');
-        $this->assertFalse($repo->has('FOO'));
+        self::assertFalse($repo->has('FOO'));
     }
 
     public function testClearingBadVariable()
@@ -225,11 +232,11 @@ final class RepositoryTest extends TestCase
 
         $repo = RepositoryBuilder::createWithDefaultAdapters()->immutable()->make();
 
-        $this->assertSame('bar', $repo->get('FOO'));
+        self::assertSame('bar', $repo->get('FOO'));
 
         $repo->set('FOO', 'new');
 
-        $this->assertSame('bar', $repo->get('FOO'));
+        self::assertSame('bar', $repo->get('FOO'));
     }
 
     public function testCannotClearVariableOnImmutableInstance()
@@ -240,7 +247,7 @@ final class RepositoryTest extends TestCase
 
         $repo->clear('FOO');
 
-        $this->assertTrue($repo->has('FOO'));
+        self::assertTrue($repo->has('FOO'));
     }
 
     public function testBuildWithBadReader()
