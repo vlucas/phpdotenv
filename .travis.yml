@@ -4,12 +4,14 @@ jobs:
       dist: trusty
       language: php
       php: hhvm-3.18
+      before_install: composer self-update --2
       install: travis_retry composer update -n -o
       script: vendor/bin/phpunit
     - name: HHVM 3.30
       dist: trusty
       language: php
       php: hhvm-3.30
+      before_install: composer self-update --2
       install: travis_retry composer update -n -o
       script: vendor/bin/phpunit
     - name: PHP 5.3
