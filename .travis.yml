@@ -1,4 +1,4 @@
-matrix:
+jobs:
   include:
     - name: HHVM 3.18
       dist: trusty
