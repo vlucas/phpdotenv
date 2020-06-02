@@ -26,7 +26,7 @@
     },
     "require-dev": {
         "ext-filter": "*",
-        "bamarni/composer-bin-plugin": "^1.4",
+        "bamarni/composer-bin-plugin": "^1.4.1",
         "phpunit/phpunit": "^7.5.20 || ^8.5.2 || ^9.0"
     },
     "autoload": {
