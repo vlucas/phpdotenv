@@ -18,18 +18,21 @@ jobs:
       dist: trusty
       language: php
       php: 5.4
+      before_install: composer self-update --2
       install: travis_retry composer update -n -o
       script: vendor/bin/phpunit
     - name: PHP 5.5.9
       dist: trusty
       language: php
       php: 5.5.9
+      before_install: composer self-update --2
       install: travis_retry composer update -n -o
       script: vendor/bin/phpunit
     - name: PHP 5.5
       dist: trusty
       language: php
       php: 5.5
+      before_install: composer self-update --2
       install: travis_retry composer update -n -o
       script: vendor/bin/phpunit
     - name: PHP 5.6
