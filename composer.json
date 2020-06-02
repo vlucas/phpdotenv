@@ -17,12 +17,12 @@
     ],
     "require": {
         "php": "^5.3.9 || ^7.0 || ^8.0",
-        "symfony/polyfill-ctype": "^1.9"
+        "symfony/polyfill-ctype": "^1.16"
     },
     "require-dev": {
         "ext-filter": "*",
         "ext-pcre": "*",
-        "phpunit/phpunit": "^4.8.35 || ^5.0"
+        "phpunit/phpunit": "^4.8.35 || ^5.7.27"
     },
     "autoload": {
         "psr-4": {
