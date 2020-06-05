@@ -103,6 +103,18 @@ final class EntryParserTest extends TestCase
         $this->checkPositiveResult($result, 'FOO', 'bar baz');
     }
 
+    public function testExportParseTab()
+    {
+        $result = EntryParser::parse("export\t\"FOO\"='bar baz'");
+        $this->checkPositiveResult($result, 'FOO', 'bar baz');
+    }
+
+    public function testExportParseFail()
+    {
+        $result = EntryParser::parse('export "FOO="bar baz"');
+        $this->checkErrorResult($result, 'Encountered an invalid name at ["FOO].');
+    }
+
     public function testClosingSlashParse()
     {
         $result = EntryParser::parse('SPVAR5="test some escaped characters like a quote \\" or maybe a backslash \\\\" # not escaped');

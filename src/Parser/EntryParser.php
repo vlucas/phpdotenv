@@ -83,7 +83,7 @@ final class EntryParser
     /**
      * Parse the given variable name.
      *
-     * That is, strip the optional quotes and leading "export " from the
+     * That is, strip the optional quotes and leading "export" from the
      * variable name. We wrap the answer in a result type.
      *
      * @param string $name
@@ -92,13 +92,38 @@ final class EntryParser
      */
     private static function parseName(string $name)
     {
-        $name = \trim(\str_replace(['export ', '\'', '"'], '', $name));
+        if (Str::len($name) > 8 && Str::substr($name, 0, 6) === 'export' && ctype_space(Str::substr($name, 6, 1))) {
+            $name = ltrim(Str::substr($name, 6));
+        }
+
+        if (self::isQuotedName($name)) {
+            $name = Str::substr($name, 1, -1);
+        }
 
         if (!self::isValidName($name)) {
             return Error::create(self::getErrorMessage('an invalid name', $name));
         }
 
         return Success::create($name);
+    }
+
+    /**
+     * Is the given variable name quoted?
+     *
+     * @param string $name
+     *
+     * @return bool
+     */
+    private static function isQuotedName(string $name)
+    {
+        if (Str::len($name) < 3) {
+            return false;
+        }
+
+        $first = Str::substr($name, 0, 1);
+        $last = Str::substr($name, -1, 1);
+
+        return ($first === '"' && $last === '"') || ($first === '\'' && $last === '\'');
     }
 
     /**
