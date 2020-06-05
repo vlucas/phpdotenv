@@ -2,13 +2,22 @@
 
 ## V4 to V5
 
-1. The `Dotenv\Dotenv` constructor has been modified to expect exactly 4 parameters: a store, a parser, a loader, and a repository. This likely only affect many people, since it is more common to construct this class via the public static create methods. Those methods have not changed.
-2. Scalar typehints have been added to the public interface.
-3. The parser now returns a result type instead of raising an exception. This change is strictly internal, and most users won't notice a differnce. The responsibility for rasising an exception has simply been shifted up to the caller.
-4. Adapters have been refactored again, with changes to the repositories. In particular, the repository builder has been tweaked. It now expects to be explicitly told if you want to use the default adapters or not, and expects individual readers and writers to be added, one by one. Similar changes have been applied to the store factory. Moreover, the `ApacheAdapter` has been changed so that it behaves much like the other adapters. The old behaviour can be simulated by composing it with the new `ReplacingWriter` (see below). We will no longer include this adapter in our default setup, so that people can enable exactly what they need. Finally, by default, we will no longer be using the `PutenvAdapter`. It can be added, as required.
-5. Variable whitelisting has moved from the loader to be a responsibility of the repository, implemented via a special adapter.
-6. The parser has been moved to its own namespace and parses entire files now. This change is expected to have little impact when upgrading. The `Lines` class has also moved to the parser namespace.
-7. The loader now only returns the variables that were actually loaded into the repository, and not all the variables from the file. Moreover, it now expects as input the result of running the new parser (an array of entries), rather than raw file content.
+### Introduction
+
+Version 5 bumps to PHP 7.1+, and adds some additional parameter typing. There have been some internal changes and refactorings too, but nothing that changes the overall feel and usage of the package. The Dotenv class itself is largely unchanged from V4.
+
+Release notes for 5.0.0 are available [here](https://github.com/vlucas/phpdotenv/releases/tag/v5.0.0).
+
+### Details
+
+1. The `Dotenv\Dotenv::createImmutable` and `Dotenv\Dotenv::createMutable` methods no longer call will result in `getenv` and `putenv` being called. One should instead use `Dotenv\Dotenv::createUnsafeImmutable` and `Dotenv\Dotenv::createUnsafeMutable` methods if one really needs these functions.
+2. The `Dotenv\Dotenv` constructor has been modified to expect exactly 4 parameters: a store, a parser, a loader, and a repository. This likely only affect many people, since it is more common to construct this class via the public static create methods. Those methods have not changed.
+3. Scalar typehints have been added to the public interface.
+4. The parser now returns a result type instead of raising an exception. This change is strictly internal, and most users won't notice a differnce. The responsibility for rasising an exception has simply been shifted up to the caller.
+5. Adapters have been refactored again, with changes to the repositories. In particular, the repository builder has been tweaked. It now expects to be explicitly told if you want to use the default adapters or not, and expects individual readers and writers to be added, one by one. Similar changes have been applied to the store factory. Moreover, the `ApacheAdapter` has been changed so that it behaves much like the other adapters. The old behaviour can be simulated by composing it with the new `ReplacingWriter` (see below). We will no longer include this adapter in our default setup, so that people can enable exactly what they need. Finally, by default, we will no longer be using the `PutenvAdapter`. It can be added, as required.
+6. Variable whitelisting has moved from the loader to be a responsibility of the repository, implemented via a special adapter.
+7. The parser has been moved to its own namespace and parses entire files now. This change is expected to have little impact when upgrading. The `Lines` class has also moved to the parser namespace.
+8. The loader now only returns the variables that were actually loaded into the repository, and not all the variables from the file. Moreover, it now expects as input the result of running the new parser (an array of entries), rather than raw file content.
 
 The changes listed in (4) mean that instead of:
 
@@ -51,9 +60,21 @@ The use of optionals handles the case where the apache environment functions are
 
 ## V4.0 to V4.1
 
-There are no breaking changes in this release, but the `Dotenv\Dotenv` constructor now expects either an array of file paths as the third parameter, or an instance of `Dotenv\Store\StoreInterface`. Passing an array is deprecated, and will be removed in V5.
+Version 4.1 is a minor release, and as such, there are no breaking changes. There is, however a deprecation to be noted.
+
+### Details
+
+The `Dotenv\Dotenv` constructor now expects either an array of file paths as the third parameter, or an instance of `Dotenv\Store\StoreInterface`. Passing an array is deprecated, and will be removed in V5.
 
 ## V3 to V4
+
+### Introduction
+
+Version 4 sees some refactoring, and support for escaping dollars in values (https://github.com/vlucas/phpdotenv/pull/380). It is no longer possible to change immutability on the fly, and the `Loader` no longer is responsible for tracking immutability. It is now the responsibility of "repositories" to track this. One must explicitly decide if they want (im)mutability when constructing an instance of `Dotenv\Dotenv`.
+
+Release notes for 4.0.0 are available [here](https://github.com/vlucas/phpdotenv/releases/tag/v4.0.0).
+
+### Details
 
 V4 has again changed the way you initialize the `Dotenv` class. If you want immutable loading of environment variables, then replace `Dotenv::create` with `Dotenv::createImmutable`, and if you want mutable loading, replace `Dotenv::create` with `Dotenv::createMutable` and `->overload()` with `->load()`. The `overload` method has been removed in faviour of specifying mutability at object construction.
 
@@ -118,6 +139,14 @@ Notice, that compared to v3, the loader no longer expects file paths in the cons
 Finally, we note that the minimum supported version of PHP has increased to 5.5.9, up from 5.4.0 in V3 and 5.3.9 in V2.
 
 ## V2 to V3
+
+### Introduction
+
+New in Version 3 is first-class support for multiline variables ([#301](https://github.com/vlucas/phpdotenv/pull/301)) and much more flexibility in terms of which parts of the environment we try to read and modify ([#300](https://github.com/vlucas/phpdotenv/pull/300)). Consequently, you will need to replace any occurrences of `new Dotenv(...)` with `Dotenv::create(...)`, since our new native constructor takes a `Loader` instance now, so that it can be truly customized if required. Finally, one should note that the loader will no longer be trimming values ([#302](https://github.com/vlucas/phpdotenv/pull/302)), moreover `Loader::load()` and its callers now return an associative array of the variables loaded with their values, rather than an array of raw lines from the environment file ([#306](https://github.com/vlucas/phpdotenv/pull/306)).
+
+Release notes for 3.0.0 are available [here](https://github.com/vlucas/phpdotenv/releases/tag/v3.0.0).
+
+### Details
 
 V3 has changed the way you initialize the `Dotenv` class. Consequently, you will need to replace any occurrences of new Dotenv(...) with Dotenv::create(...), since our new native constructor takes a `Loader` instance now.
 
