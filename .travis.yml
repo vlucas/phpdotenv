@@ -1,6 +1,6 @@
 dist: bionic
 
-matrix:
+jobs:
   include:
     - name: PHP 7.1 Lowest
       install: travis_retry docker run -it -w /data -v ${PWD}:/data:delegated --entrypoint composer registry.gitlab.com/grahamcampbell/php:7.1-base update --prefer-lowest -n -o
