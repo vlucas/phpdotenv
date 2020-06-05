@@ -52,8 +52,9 @@ or add it by hand to your `composer.json` file.
 
 ## Upgrading
 
-We follow [semantic versioning](https://semver.org/). Upgrading guidelines
-between each major release are available [here](UPGRADING.md).
+We follow [semantic versioning](https://semver.org/), which means breaking
+changes may occur between major releases. We have upgrading guides available
+for V2 to V3, V3 to V4 and V4 to V5 available [here](UPGRADING.md).
 
 
 ## Usage
