@@ -60,6 +60,8 @@ The use of optionals handles the case where the apache environment functions are
 
 ## V4.0 to V4.1
 
+### Introduction
+
 Version 4.1 is a minor release, and as such, there are no breaking changes. There is, however a deprecation to be noted.
 
 ### Details
