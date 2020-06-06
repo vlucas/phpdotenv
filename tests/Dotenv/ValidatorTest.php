@@ -27,6 +27,11 @@ final class ValidatorTest extends TestCase
         self::$folder = \dirname(__DIR__).'/fixtures/env';
     }
 
+    /**
+     * @param string $name
+     *
+     * @return array{\Dotenv\Repository\RepositoryInterface,\Dotenv\Dotenv}
+     */
     public function createArrayDotenv(string $name = '.env')
     {
         $repository = RepositoryBuilder::createWithNoAdapters()->addAdapter(ArrayAdapter::class)->make();
@@ -102,8 +107,8 @@ final class ValidatorTest extends TestCase
 
         $dotenv->load();
 
-        $this->assertFalse($repo->has('FOOX'));
-        $this->assertFalse($repo->has('NOPE'));
+        self::assertFalse($repo->has('FOOX'));
+        self::assertFalse($repo->has('NOPE'));
 
         $this->expectException(ValidationException::class);
         $this->expectExceptionMessage('One or more environment variables failed assertions: FOOX is missing, NOPE is missing.');
