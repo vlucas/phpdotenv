@@ -34,7 +34,7 @@ final class RepositoryTest extends TestCase
      */
     private function load()
     {
-        Dotenv::createImmutable(\dirname(\dirname(__DIR__)).'/fixtures/env')->load();
+        Dotenv::createMutable(\dirname(\dirname(__DIR__)).'/fixtures/env')->load();
     }
 
     /**

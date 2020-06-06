@@ -6,6 +6,8 @@ namespace Dotenv\Tests;
 
 use Dotenv\Dotenv;
 use Dotenv\Exception\ValidationException;
+use Dotenv\Repository\Adapter\ArrayAdapter;
+use Dotenv\Repository\RepositoryBuilder;
 use PHPUnit\Framework\TestCase;
 
 final class ValidatorTest extends TestCase
@@ -25,12 +27,19 @@ final class ValidatorTest extends TestCase
         self::$folder = \dirname(__DIR__).'/fixtures/env';
     }
 
+    public function createArrayDotenv(string $name = '.env')
+    {
+        $repository = RepositoryBuilder::createWithNoAdapters()->addAdapter(ArrayAdapter::class)->make();
+
+        return [$repository, Dotenv::create($repository, self::$folder, $name)];
+    }
+
     /**
      * @doesNotPerformAssertions
      */
     public function testDotenvRequiredStringEnvironmentVars()
     {
-        $dotenv = Dotenv::createImmutable(self::$folder);
+        $dotenv = self::createArrayDotenv()[1];
         $dotenv->load();
         $dotenv->required('FOO');
     }
@@ -40,7 +49,7 @@ final class ValidatorTest extends TestCase
      */
     public function testDotenvAllowedValues()
     {
-        $dotenv = Dotenv::createImmutable(self::$folder);
+        $dotenv = self::createArrayDotenv()[1];
         $dotenv->load();
         $dotenv->required('FOO')->allowedValues(['bar', 'baz']);
     }
@@ -50,7 +59,7 @@ final class ValidatorTest extends TestCase
      */
     public function testDotenvAllowedValuesIfPresent()
     {
-        $dotenv = Dotenv::createImmutable(self::$folder);
+        $dotenv = self::createArrayDotenv()[1];
         $dotenv->load();
         $dotenv->ifPresent('FOO')->allowedValues(['bar', 'baz']);
     }
@@ -60,14 +69,14 @@ final class ValidatorTest extends TestCase
      */
     public function testDotenvAllowedValuesIfNotPresent()
     {
-        $dotenv = Dotenv::createImmutable(self::$folder);
+        $dotenv = self::createArrayDotenv()[1];
         $dotenv->load();
         $dotenv->ifPresent('FOOQWERTYOOOOOO')->allowedValues(['bar', 'baz']);
     }
 
     public function testDotenvProhibitedValues()
     {
-        $dotenv = Dotenv::createImmutable(self::$folder);
+        $dotenv = self::createArrayDotenv()[1];
         $dotenv->load();
 
         $this->expectException(ValidationException::class);
@@ -78,7 +87,7 @@ final class ValidatorTest extends TestCase
 
     public function testDotenvProhibitedValuesIfPresent()
     {
-        $dotenv = Dotenv::createImmutable(self::$folder);
+        $dotenv = self::createArrayDotenv()[1];
         $dotenv->load();
 
         $this->expectException(ValidationException::class);
@@ -89,11 +98,12 @@ final class ValidatorTest extends TestCase
 
     public function testDotenvRequiredThrowsRuntimeException()
     {
-        $dotenv = Dotenv::createImmutable(self::$folder);
+        [$repo, $dotenv] = self::createArrayDotenv();
+
         $dotenv->load();
 
-        self::assertFalse(\getenv('FOOX'));
-        self::assertFalse(\getenv('NOPE'));
+        $this->assertFalse($repo->has('FOOX'));
+        $this->assertFalse($repo->has('NOPE'));
 
         $this->expectException(ValidationException::class);
         $this->expectExceptionMessage('One or more environment variables failed assertions: FOOX is missing, NOPE is missing.');
@@ -106,24 +116,25 @@ final class ValidatorTest extends TestCase
      */
     public function testDotenvRequiredArrayEnvironmentVars()
     {
-        $dotenv = Dotenv::createImmutable(self::$folder);
+        $dotenv = self::createArrayDotenv()[1];
         $dotenv->load();
         $dotenv->required(['FOO', 'BAR']);
     }
 
     public function testDotenvAssertions()
     {
-        $dotenv = Dotenv::createUnsafeImmutable(self::$folder, 'assertions.env');
+        [$repo, $dotenv] = self::createArrayDotenv('assertions.env');
+
         $dotenv->load();
 
-        self::assertSame('val1', \getenv('ASSERTVAR1'));
-        self::assertEmpty(\getenv('ASSERTVAR2'));
-        self::assertSame('val3   ', \getenv('ASSERTVAR3'));
-        self::assertSame('0', \getenv('ASSERTVAR4'));
-        self::assertSame('#foo', \getenv('ASSERTVAR5'));
-        self::assertSame("val1\nval2", \getenv('ASSERTVAR6'));
-        self::assertSame("\nval3", \getenv('ASSERTVAR7'));
-        self::assertSame("val3\n", \getenv('ASSERTVAR8'));
+        self::assertSame('val1', $repo->get('ASSERTVAR1'));
+        self::assertSame('', $repo->get('ASSERTVAR2'));
+        self::assertSame('val3   ', $repo->get('ASSERTVAR3'));
+        self::assertSame('0', $repo->get('ASSERTVAR4'));
+        self::assertSame('#foo', $repo->get('ASSERTVAR5'));
+        self::assertSame("val1\nval2", $repo->get('ASSERTVAR6'));
+        self::assertSame("\nval3", $repo->get('ASSERTVAR7'));
+        self::assertSame("val3\n", $repo->get('ASSERTVAR8'));
 
         $dotenv->required([
             'ASSERTVAR1',
@@ -156,10 +167,8 @@ final class ValidatorTest extends TestCase
 
     public function testDotenvEmptyThrowsRuntimeException()
     {
-        $dotenv = Dotenv::createImmutable(self::$folder, 'assertions.env');
+        $dotenv = self::createArrayDotenv('assertions.env')[1];
         $dotenv->load();
-
-        self::assertEmpty(\getenv('ASSERTVAR2'));
 
         $this->expectException(ValidationException::class);
         $this->expectExceptionMessage('One or more environment variables failed assertions: ASSERTVAR2 is empty.');
@@ -172,40 +181,20 @@ final class ValidatorTest extends TestCase
      */
     public function testDotenvEmptyWhenNotPresent()
     {
-        $dotenv = Dotenv::createImmutable(self::$folder, 'assertions.env');
+        $dotenv = self::createArrayDotenv('assertions.env')[1];
         $dotenv->load();
         $dotenv->ifPresent('ASSERTVAR2_NO_SUCH_VARIABLE')->notEmpty();
     }
 
     public function testDotenvStringOfSpacesConsideredEmpty()
     {
-        $dotenv = Dotenv::createImmutable(self::$folder, 'assertions.env');
+        $dotenv = self::createArrayDotenv('assertions.env')[1];
         $dotenv->load();
 
         $this->expectException(ValidationException::class);
         $this->expectExceptionMessage('One or more environment variables failed assertions: ASSERTVAR9 is empty.');
 
         $dotenv->required('ASSERTVAR9')->notEmpty();
-    }
-
-    public function testDotenvValidateRequiredWithoutLoading()
-    {
-        $dotenv = Dotenv::createImmutable(self::$folder, 'assertions.env');
-
-        $this->expectException(ValidationException::class);
-        $this->expectExceptionMessage('One or more environment variables failed assertions: foo is missing.');
-
-        $dotenv->required('foo');
-    }
-
-    /**
-     * @doesNotPerformAssertions
-     */
-    public function testDotenvRequiredCanBeUsedWithoutLoadingFile()
-    {
-        $_SERVER['REQUIRED_VAR'] = '1';
-        $dotenv = Dotenv::createImmutable(self::$folder);
-        $dotenv->required('REQUIRED_VAR')->notEmpty();
     }
 
     /**
