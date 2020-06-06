@@ -47,17 +47,17 @@ final class Value
     }
 
     /**
-     * Create a new value instance, appending the character.
+     * Create a new value instance, appending the characters.
      *
-     * @param string $char
+     * @param string $chars
      * @param bool   $var
      *
      * @return \Dotenv\Parser\Value
      */
-    public function append(string $char, bool $var)
+    public function append(string $chars, bool $var)
     {
         return new self(
-            $this->chars.$char,
+            $this->chars.$chars,
             $var ? \array_merge($this->vars, [Str::len($this->chars)]) : $this->vars
         );
     }

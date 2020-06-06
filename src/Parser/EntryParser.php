@@ -156,18 +156,16 @@ final class EntryParser
             return Success::create(Value::blank());
         }
 
-        return Str::split($value)->flatMap(function (array $chars) use ($value) {
-            return \array_reduce($chars, function (Result $data, string $char) use ($value) {
-                return $data->flatMap(function (array $data) use ($char, $value) {
-                    return self::processChar($data[1], $char)->mapError(function (string $err) use ($value) {
-                        return self::getErrorMessage($err, $value);
-                    })->map(function (array $val) use ($data) {
-                        return [$data[0]->append($val[0], $val[1]), $val[2]];
-                    });
+        return \array_reduce(Lexer::lex($value), function (Result $data, string $token) use ($value) {
+            return $data->flatMap(function (array $data) use ($token, $value) {
+                return self::processChar($data[1], $token)->mapError(function (string $err) use ($value) {
+                    return self::getErrorMessage($err, $value);
+                })->map(function (array $val) use ($data) {
+                    return [$data[0]->append($val[0], $val[1]), $val[2]];
                 });
-            }, Success::create([Value::blank(), self::INITIAL_STATE]))->map(function (array $data) {
-                return $data[0];
             });
+        }, Success::create([Value::blank(), self::INITIAL_STATE]))->map(function (array $data) {
+            return $data[0];
         });
     }
 
@@ -175,65 +173,68 @@ final class EntryParser
      * Process the given character.
      *
      * @param int    $state
-     * @param string $char
+     * @param string $token
      *
      * @return \GrahamCampbell\ResultType\Result<array{string,bool,int},string>
      */
-    private static function processChar(int $state, string $char)
+    private static function processChar(int $state, string $token)
     {
         switch ($state) {
             case self::INITIAL_STATE:
-                if ($char === '\'') {
+                if ($token === '\'') {
                     return Success::create(['', false, self::SINGLE_QUOTED_STATE]);
-                } elseif ($char === '"') {
+                } elseif ($token === '"') {
                     return Success::create(['', false, self::DOUBLE_QUOTED_STATE]);
-                } elseif ($char === '#') {
+                } elseif ($token === '#') {
                     return Success::create(['', false, self::COMMENT_STATE]);
-                } elseif ($char === '$') {
-                    return Success::create([$char, true, self::UNQUOTED_STATE]);
+                } elseif ($token === '$') {
+                    return Success::create([$token, true, self::UNQUOTED_STATE]);
                 } else {
-                    return Success::create([$char, false, self::UNQUOTED_STATE]);
+                    return Success::create([$token, false, self::UNQUOTED_STATE]);
                 }
             case self::UNQUOTED_STATE:
-                if ($char === '#') {
+                if ($token === '#') {
                     return Success::create(['', false, self::COMMENT_STATE]);
-                } elseif (\ctype_space($char)) {
+                } elseif (\ctype_space($token)) {
                     return Success::create(['', false, self::WHITESPACE_STATE]);
-                } elseif ($char === '$') {
-                    return Success::create([$char, true, self::UNQUOTED_STATE]);
+                } elseif ($token === '$') {
+                    return Success::create([$token, true, self::UNQUOTED_STATE]);
                 } else {
-                    return Success::create([$char, false, self::UNQUOTED_STATE]);
+                    return Success::create([$token, false, self::UNQUOTED_STATE]);
                 }
             case self::SINGLE_QUOTED_STATE:
-                if ($char === '\'') {
+                if ($token === '\'') {
                     return Success::create(['', false, self::WHITESPACE_STATE]);
                 } else {
-                    return Success::create([$char, false, self::SINGLE_QUOTED_STATE]);
+                    return Success::create([$token, false, self::SINGLE_QUOTED_STATE]);
                 }
             case self::DOUBLE_QUOTED_STATE:
-                if ($char === '"') {
+                if ($token === '"') {
                     return Success::create(['', false, self::WHITESPACE_STATE]);
-                } elseif ($char === '\\') {
+                } elseif ($token === '\\') {
                     return Success::create(['', false, self::ESCAPE_SEQUENCE_STATE]);
-                } elseif ($char === '$') {
-                    return Success::create([$char, true, self::DOUBLE_QUOTED_STATE]);
+                } elseif ($token === '$') {
+                    return Success::create([$token, true, self::DOUBLE_QUOTED_STATE]);
                 } else {
-                    return Success::create([$char, false, self::DOUBLE_QUOTED_STATE]);
+                    return Success::create([$token, false, self::DOUBLE_QUOTED_STATE]);
                 }
             case self::ESCAPE_SEQUENCE_STATE:
-                if ($char === '"' || $char === '\\') {
-                    return Success::create([$char, false, self::DOUBLE_QUOTED_STATE]);
-                } elseif ($char === '$') {
-                    return Success::create([$char, false, self::DOUBLE_QUOTED_STATE]);
-                } elseif (\in_array($char, ['f', 'n', 'r', 't', 'v'], true)) {
-                    return Success::create([\stripcslashes('\\'.$char), false, self::DOUBLE_QUOTED_STATE]);
+                if ($token === '"' || $token === '\\') {
+                    return Success::create([$token, false, self::DOUBLE_QUOTED_STATE]);
+                } elseif ($token === '$') {
+                    return Success::create([$token, false, self::DOUBLE_QUOTED_STATE]);
                 } else {
-                    return Error::create('an unexpected escape sequence');
+                    $first = Str::substr($token, 0, 1);
+                    if (\in_array($first, ['f', 'n', 'r', 't', 'v'], true)) {
+                        return Success::create([\stripcslashes('\\'.$first).Str::substr($token, 1), false, self::DOUBLE_QUOTED_STATE]);
+                    } else {
+                        return Error::create('an unexpected escape sequence');
+                    }
                 }
             case self::WHITESPACE_STATE:
-                if ($char === '#') {
+                if ($token === '#') {
                     return Success::create(['', false, self::COMMENT_STATE]);
-                } elseif (!\ctype_space($char)) {
+                } elseif (!\ctype_space($token)) {
                     return Error::create('unexpected whitespace');
                 } else {
                     return Success::create(['', false, self::WHITESPACE_STATE]);
