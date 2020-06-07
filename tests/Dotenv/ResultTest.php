@@ -10,9 +10,9 @@ class ResultTest extends TestCase
 {
     public function testSuccessValue()
     {
-        $this->assertTrue(Success::create('foo')->error()->isEmpty());
-        $this->assertTrue(Success::create('foo')->success()->isDefined());
-        $this->assertEquals('foo', Success::create('foo')->getSuccess());
+        self::assertTrue(Success::create('foo')->error()->isEmpty());
+        self::assertTrue(Success::create('foo')->success()->isDefined());
+        self::assertEquals('foo', Success::create('foo')->getSuccess());
     }
 
     public function testSuccessMapping()
@@ -21,7 +21,7 @@ class ResultTest extends TestCase
             ->mapSuccess('strtoupper')
             ->mapError('ucfirst');
 
-        $this->assertEquals('FOO', $r->getSuccess());
+        self::assertEquals('FOO', $r->getSuccess());
     }
 
     /**
@@ -35,9 +35,9 @@ class ResultTest extends TestCase
 
     public function testErrorValue()
     {
-        $this->assertTrue(Error::create('foo')->error()->isDefined());
-        $this->assertTrue(Error::create('foo')->success()->isEmpty());
-        $this->assertEquals('foo', Error::create('foo')->getError());
+        self::assertTrue(Error::create('foo')->error()->isDefined());
+        self::assertTrue(Error::create('foo')->success()->isEmpty());
+        self::assertEquals('foo', Error::create('foo')->getError());
     }
 
     public function testErrorMapping()
@@ -46,7 +46,7 @@ class ResultTest extends TestCase
             ->mapSuccess('strtoupper')
             ->mapError('ucfirst');
 
-        $this->assertEquals('Foo', $r->getError());
+        self::assertEquals('Foo', $r->getError());
     }
 
     /**

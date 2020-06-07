@@ -84,10 +84,10 @@ class RepositoryTest extends TestCase
 
         // Clear the set environment variable.
         $repository->clear($this->key());
-        $this->assertSame(null, $repository->get($this->key()));
-        $this->assertSame(false, getenv($this->key()));
-        $this->assertSame(false, isset($_ENV[$this->key()]));
-        $this->assertSame(false, isset($_SERVER[$this->key()]));
+        self::assertSame(null, $repository->get($this->key()));
+        self::assertSame(false, getenv($this->key()));
+        self::assertSame(false, isset($_ENV[$this->key()]));
+        self::assertSame(false, isset($_SERVER[$this->key()]));
     }
 
     public function testImmutableLoaderCannotClearEnvironmentVars()
@@ -101,10 +101,10 @@ class RepositoryTest extends TestCase
 
         // Attempt to clear the environment variable, check that it fails.
         $repository->clear($this->key());
-        $this->assertSame($this->value(), $repository->get($this->key()));
-        $this->assertSame($this->value(), getenv($this->key()));
-        $this->assertSame(true, isset($_ENV[$this->key()]));
-        $this->assertSame(true, isset($_SERVER[$this->key()]));
+        self::assertSame($this->value(), $repository->get($this->key()));
+        self::assertSame($this->value(), getenv($this->key()));
+        self::assertSame(true, isset($_ENV[$this->key()]));
+        self::assertSame(true, isset($_SERVER[$this->key()]));
     }
 
     public function testCheckingWhetherVariableExists()
@@ -113,8 +113,8 @@ class RepositoryTest extends TestCase
 
         $repo = RepositoryBuilder::create()->make();
 
-        $this->assertTrue($repo->has('FOO'));
-        $this->assertFalse($repo->has('NON_EXISTING_VARIABLE'));
+        self::assertTrue($repo->has('FOO'));
+        self::assertFalse($repo->has('NON_EXISTING_VARIABLE'));
     }
 
     public function testCheckingHasWithBadType()
@@ -123,8 +123,8 @@ class RepositoryTest extends TestCase
 
         $repo = RepositoryBuilder::create()->make();
 
-        $this->assertFalse($repo->has(123));
-        $this->assertFalse($repo->has(null));
+        self::assertFalse($repo->has(123));
+        self::assertFalse($repo->has(null));
     }
 
     public function testGettingVariableByName()
@@ -133,7 +133,7 @@ class RepositoryTest extends TestCase
 
         $repo = RepositoryBuilder::create()->make();
 
-        $this->assertSame('bar', $repo->get('FOO'));
+        self::assertSame('bar', $repo->get('FOO'));
     }
 
     /**
@@ -153,9 +153,9 @@ class RepositoryTest extends TestCase
 
         $repo = RepositoryBuilder::create()->make();
 
-        $this->assertSame('bar', $repo->get('FOO'));
+        self::assertSame('bar', $repo->get('FOO'));
         $repo->set('FOO', 'new');
-        $this->assertSame('new', $repo->get('FOO'));
+        self::assertSame('new', $repo->get('FOO'));
     }
 
     /**
@@ -175,9 +175,9 @@ class RepositoryTest extends TestCase
 
         $repo = RepositoryBuilder::create()->make();
 
-        $this->assertTrue($repo->has('FOO'));
+        self::assertTrue($repo->has('FOO'));
         $repo->clear('FOO');
-        $this->assertFalse($repo->has('FOO'));
+        self::assertFalse($repo->has('FOO'));
     }
 
     public function testClearingVariableWithArrayAdapter()
@@ -185,11 +185,11 @@ class RepositoryTest extends TestCase
         $adapters = [new ArrayAdapter()];
         $repo = RepositoryBuilder::create()->withReaders($adapters)->withWriters($adapters)->make();
 
-        $this->assertFalse($repo->has('FOO'));
+        self::assertFalse($repo->has('FOO'));
         $repo->set('FOO', 'BAR');
-        $this->assertTrue($repo->has('FOO'));
+        self::assertTrue($repo->has('FOO'));
         $repo->clear('FOO');
-        $this->assertFalse($repo->has('FOO'));
+        self::assertFalse($repo->has('FOO'));
     }
 
     /**
@@ -209,11 +209,11 @@ class RepositoryTest extends TestCase
 
         $repo = RepositoryBuilder::create()->immutable()->make();
 
-        $this->assertSame('bar', $repo->get('FOO'));
+        self::assertSame('bar', $repo->get('FOO'));
 
         $repo->set('FOO', 'new');
 
-        $this->assertSame('bar', $repo->get('FOO'));
+        self::assertSame('bar', $repo->get('FOO'));
     }
 
     public function testCannotClearVariableOnImmutableInstance()
@@ -224,7 +224,7 @@ class RepositoryTest extends TestCase
 
         $repo->clear('FOO');
 
-        $this->assertTrue($repo->has('FOO'));
+        self::assertTrue($repo->has('FOO'));
     }
 
     public function testCheckingWhetherVariableExistsUsingArrayNotation()
@@ -233,8 +233,8 @@ class RepositoryTest extends TestCase
 
         $repo = RepositoryBuilder::create()->make();
 
-        $this->assertTrue(isset($repo['FOO']));
-        $this->assertFalse(isset($repo['NON_EXISTING_VARIABLE']));
+        self::assertTrue(isset($repo['FOO']));
+        self::assertFalse(isset($repo['NON_EXISTING_VARIABLE']));
     }
 
     public function testGettingVariableByNameUsingArrayNotation()
@@ -243,7 +243,7 @@ class RepositoryTest extends TestCase
 
         $repo = RepositoryBuilder::create()->make();
 
-        $this->assertSame('bar', $repo['FOO']);
+        self::assertSame('bar', $repo['FOO']);
     }
 
     public function testSettingVariableUsingArrayNotation()
@@ -252,11 +252,11 @@ class RepositoryTest extends TestCase
 
         $repo = RepositoryBuilder::create()->make();
 
-        $this->assertSame('bar', $repo['FOO']);
+        self::assertSame('bar', $repo['FOO']);
 
         $repo['FOO'] = 'new';
 
-        $this->assertSame('new', $repo['FOO']);
+        self::assertSame('new', $repo['FOO']);
     }
 
     public function testClearingVariableUsingArrayNotation()
@@ -267,6 +267,6 @@ class RepositoryTest extends TestCase
 
         unset($repo['FOO']);
 
-        $this->assertFalse(isset($repo['FOO']));
+        self::assertFalse(isset($repo['FOO']));
     }
 }

@@ -23,7 +23,7 @@ class LinesTest extends TestCase
             "ASSERTVAR9=\"\n\n\"",
         ];
 
-        $this->assertSame($expected, Lines::process(preg_split("/(\r\n|\n|\r)/", $content)));
+        self::assertSame($expected, Lines::process(preg_split("/(\r\n|\n|\r)/", $content)));
     }
 
     public function testProcessQuotes()
@@ -38,7 +38,7 @@ class LinesTest extends TestCase
             'TEST_EQS=\'https://vision.googleapis.com/v1/images:annotate?key=\'',
         ];
 
-        $this->assertSame($expected, Lines::process(preg_split("/(\r\n|\n|\r)/", $content)));
+        self::assertSame($expected, Lines::process(preg_split("/(\r\n|\n|\r)/", $content)));
     }
 
     public function testProcessClosingSlash()
@@ -51,6 +51,6 @@ class LinesTest extends TestCase
             'SPVAR5="test some escaped characters like a quote \" or maybe a backslash \\" # not escaped',
         ];
 
-        $this->assertSame($expected, $lines);
+        self::assertSame($expected, $lines);
     }
 }

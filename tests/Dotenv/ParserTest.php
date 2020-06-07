@@ -11,87 +11,87 @@ class ParserTest extends TestCase
     {
         $output = Parser::parse('FOO=BAR');
 
-        $this->assertInternalType('array', $output);
-        $this->assertCount(2, $output);
-        $this->assertSame('FOO', $output[0]);
-        $this->assertSame('BAR', $output[1]->getChars());
-        $this->assertSame([], $output[1]->getVars());
+        self::assertInternalType('array', $output);
+        self::assertCount(2, $output);
+        self::assertSame('FOO', $output[0]);
+        self::assertSame('BAR', $output[1]->getChars());
+        self::assertSame([], $output[1]->getVars());
     }
 
     public function testNullParse()
     {
         $output = Parser::parse('FOO');
 
-        $this->assertInternalType('array', $output);
-        $this->assertCount(2, $output);
-        $this->assertSame('FOO', $output[0]);
-        $this->assertNull($output[1]);
+        self::assertInternalType('array', $output);
+        self::assertCount(2, $output);
+        self::assertSame('FOO', $output[0]);
+        self::assertNull($output[1]);
     }
 
     public function testQuotesParse()
     {
         $output = Parser::parse("FOO=\"BAR  \n\"");
 
-        $this->assertInternalType('array', $output);
-        $this->assertCount(2, $output);
-        $this->assertSame('FOO', $output[0]);
-        $this->assertSame("BAR  \n", $output[1]->getChars());
-        $this->assertSame([], $output[1]->getVars());
+        self::assertInternalType('array', $output);
+        self::assertCount(2, $output);
+        self::assertSame('FOO', $output[0]);
+        self::assertSame("BAR  \n", $output[1]->getChars());
+        self::assertSame([], $output[1]->getVars());
     }
 
     public function testNewlineParse()
     {
         $output = Parser::parse('FOO="\n"');
 
-        $this->assertInternalType('array', $output);
-        $this->assertCount(2, $output);
-        $this->assertSame('FOO', $output[0]);
-        $this->assertSame("\n", $output[1]->getChars());
-        $this->assertSame([], $output[1]->getVars());
+        self::assertInternalType('array', $output);
+        self::assertCount(2, $output);
+        self::assertSame('FOO', $output[0]);
+        self::assertSame("\n", $output[1]->getChars());
+        self::assertSame([], $output[1]->getVars());
     }
 
     public function testTabParseDouble()
     {
         $output = Parser::parse('FOO="\t"');
 
-        $this->assertInternalType('array', $output);
-        $this->assertCount(2, $output);
-        $this->assertSame('FOO', $output[0]);
-        $this->assertSame("\t", $output[1]->getChars());
-        $this->assertSame([], $output[1]->getVars());
+        self::assertInternalType('array', $output);
+        self::assertCount(2, $output);
+        self::assertSame('FOO', $output[0]);
+        self::assertSame("\t", $output[1]->getChars());
+        self::assertSame([], $output[1]->getVars());
     }
 
     public function testTabParseSingle()
     {
         $output = Parser::parse('FOO=\'\t\'');
 
-        $this->assertInternalType('array', $output);
-        $this->assertCount(2, $output);
-        $this->assertSame('FOO', $output[0]);
-        $this->assertSame('\t', $output[1]->getChars());
-        $this->assertSame([], $output[1]->getVars());
+        self::assertInternalType('array', $output);
+        self::assertCount(2, $output);
+        self::assertSame('FOO', $output[0]);
+        self::assertSame('\t', $output[1]->getChars());
+        self::assertSame([], $output[1]->getVars());
     }
 
     public function testNonEscapeParse1()
     {
         $output = Parser::parse('FOO=\n\v');
 
-        $this->assertInternalType('array', $output);
-        $this->assertCount(2, $output);
-        $this->assertSame('FOO', $output[0]);
-        $this->assertSame('\n\v', $output[1]->getChars());
-        $this->assertSame([], $output[1]->getVars());
+        self::assertInternalType('array', $output);
+        self::assertCount(2, $output);
+        self::assertSame('FOO', $output[0]);
+        self::assertSame('\n\v', $output[1]->getChars());
+        self::assertSame([], $output[1]->getVars());
     }
 
     public function testNonEscapeParse2()
     {
         $output = Parser::parse('FOO=\q');
 
-        $this->assertInternalType('array', $output);
-        $this->assertCount(2, $output);
-        $this->assertSame('FOO', $output[0]);
-        $this->assertSame('\q', $output[1]->getChars());
-        $this->assertSame([], $output[1]->getVars());
+        self::assertInternalType('array', $output);
+        self::assertCount(2, $output);
+        self::assertSame('FOO', $output[0]);
+        self::assertSame('\q', $output[1]->getChars());
+        self::assertSame([], $output[1]->getVars());
     }
 
     /**
@@ -107,77 +107,77 @@ class ParserTest extends TestCase
     {
         $output = Parser::parse('FOO=$BAR');
 
-        $this->assertInternalType('array', $output);
-        $this->assertCount(2, $output);
-        $this->assertSame('FOO', $output[0]);
-        $this->assertSame('$BAR', $output[1]->getChars());
-        $this->assertSame([0], $output[1]->getVars());
+        self::assertInternalType('array', $output);
+        self::assertCount(2, $output);
+        self::assertSame('FOO', $output[0]);
+        self::assertSame('$BAR', $output[1]->getChars());
+        self::assertSame([0], $output[1]->getVars());
     }
 
     public function testInlineVariableOffset()
     {
         $output = Parser::parse('FOO=AAA$BAR');
 
-        $this->assertInternalType('array', $output);
-        $this->assertCount(2, $output);
-        $this->assertSame('FOO', $output[0]);
-        $this->assertSame('AAA$BAR', $output[1]->getChars());
-        $this->assertSame([3], $output[1]->getVars());
+        self::assertInternalType('array', $output);
+        self::assertCount(2, $output);
+        self::assertSame('FOO', $output[0]);
+        self::assertSame('AAA$BAR', $output[1]->getChars());
+        self::assertSame([3], $output[1]->getVars());
     }
 
     public function testInlineVariables()
     {
         $output = Parser::parse('FOO="TEST $BAR $$BAZ"');
 
-        $this->assertInternalType('array', $output);
-        $this->assertCount(2, $output);
-        $this->assertSame('FOO', $output[0]);
-        $this->assertSame('TEST $BAR $$BAZ', $output[1]->getChars());
-        $this->assertSame([11, 10, 5], $output[1]->getVars());
+        self::assertInternalType('array', $output);
+        self::assertCount(2, $output);
+        self::assertSame('FOO', $output[0]);
+        self::assertSame('TEST $BAR $$BAZ', $output[1]->getChars());
+        self::assertSame([11, 10, 5], $output[1]->getVars());
     }
 
     public function testNonInlineVariable()
     {
         $output = Parser::parse('FOO=\'TEST $BAR $$BAZ\'');
 
-        $this->assertInternalType('array', $output);
-        $this->assertCount(2, $output);
-        $this->assertSame('FOO', $output[0]);
-        $this->assertSame('TEST $BAR $$BAZ', $output[1]->getChars());
-        $this->assertSame([], $output[1]->getVars());
+        self::assertInternalType('array', $output);
+        self::assertCount(2, $output);
+        self::assertSame('FOO', $output[0]);
+        self::assertSame('TEST $BAR $$BAZ', $output[1]->getChars());
+        self::assertSame([], $output[1]->getVars());
     }
 
     public function testWhitespaceParse()
     {
         $output = Parser::parse("FOO=\"\n\"");
 
-        $this->assertInternalType('array', $output);
-        $this->assertCount(2, $output);
-        $this->assertSame('FOO', $output[0]);
-        $this->assertSame("\n", $output[1]->getChars());
-        $this->assertSame([], $output[1]->getVars());
+        self::assertInternalType('array', $output);
+        self::assertCount(2, $output);
+        self::assertSame('FOO', $output[0]);
+        self::assertSame("\n", $output[1]->getChars());
+        self::assertSame([], $output[1]->getVars());
     }
 
     public function testExportParse()
     {
         $output = Parser::parse('export FOO="bar baz"');
 
-        $this->assertInternalType('array', $output);
-        $this->assertCount(2, $output);
-        $this->assertSame('FOO', $output[0]);
-        $this->assertSame('bar baz', $output[1]->getChars());
-        $this->assertSame([], $output[1]->getVars());
+        self::assertInternalType('array', $output);
+        self::assertCount(2, $output);
+        self::assertSame('FOO', $output[0]);
+        self::assertSame('bar baz', $output[1]->getChars());
+        self::assertSame([], $output[1]->getVars());
     }
 
     public function testClosingSlashParse()
     {
         $output = Parser::parse('SPVAR5="test some escaped characters like a quote \\" or maybe a backslash \\\\" # not escaped');
 
-        $this->assertInternalType('array', $output);
-        $this->assertCount(2, $output);
-        $this->assertSame('SPVAR5', $output[0]);
-        $this->assertSame('test some escaped characters like a quote " or maybe a backslash \\', $output[1]->getChars());
-        $this->assertSame([], $output[1]->getVars());
+        self::assertInternalType('array', $output);
+        self::assertCount(2, $output);
+        self::assertSame('SPVAR5', $output[0]);
+        self::assertSame('test some escaped characters like a quote " or maybe a backslash \\', $output[1]->getChars());
+        self::assertSame([], $output[1]->getVars());
     }
 
     /**
@@ -220,10 +220,10 @@ class ParserTest extends TestCase
     {
         $output = Parser::parse('FOO_BAD=\'iiiiviiiixiiiiviiii\\a\'');
 
-        $this->assertInternalType('array', $output);
-        $this->assertCount(2, $output);
-        $this->assertSame('FOO_BAD', $output[0]);
-        $this->assertSame('iiiiviiiixiiiiviiii\\a', $output[1]->getChars());
-        $this->assertSame([], $output[1]->getVars());
+        self::assertInternalType('array', $output);
+        self::assertCount(2, $output);
+        self::assertSame('FOO_BAD', $output[0]);
+        self::assertSame('iiiiviiiixiiiiviiii\\a', $output[1]->getChars());
+        self::assertSame([], $output[1]->getVars());
     }
 }

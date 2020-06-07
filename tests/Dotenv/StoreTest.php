@@ -21,7 +21,7 @@ class StoreTest extends TestCase
 
     public function testBasicReadDirect()
     {
-        $this->assertSame(
+        self::assertSame(
             [
                 $this->folder.DIRECTORY_SEPARATOR.'.env' => "FOO=bar\nBAR=baz\nSPACED=\"with spaces\"\n\nNULL=\n",
             ],
@@ -37,7 +37,7 @@ class StoreTest extends TestCase
             ->withPaths([$this->folder])
             ->withNames(['.env']);
 
-        $this->assertSame(
+        self::assertSame(
             "FOO=bar\nBAR=baz\nSPACED=\"with spaces\"\n\nNULL=\n",
             $builder->make()->read()
         );
@@ -45,7 +45,7 @@ class StoreTest extends TestCase
 
     public function testFileReadMultipleShortCircuitModeDirect()
     {
-        $this->assertSame(
+        self::assertSame(
             [
                 $this->folder.DIRECTORY_SEPARATOR.'.env' => "FOO=bar\nBAR=baz\nSPACED=\"with spaces\"\n\nNULL=\n",
             ],
@@ -62,7 +62,7 @@ class StoreTest extends TestCase
             ->withNames(['.env', 'example.env'])
             ->shortCircuit();
 
-        $this->assertSame(
+        self::assertSame(
             "FOO=bar\nBAR=baz\nSPACED=\"with spaces\"\n\nNULL=\n",
             $builder->make()->read()
         );
@@ -70,7 +70,7 @@ class StoreTest extends TestCase
 
     public function testFileReadMultipleWithoutShortCircuitModeDirect()
     {
-        $this->assertSame(
+        self::assertSame(
             [
                 $this->folder.DIRECTORY_SEPARATOR.'.env'        => "FOO=bar\nBAR=baz\nSPACED=\"with spaces\"\n\nNULL=\n",
                 $this->folder.DIRECTORY_SEPARATOR.'example.env' => "EG=\"example\"\n",
@@ -88,7 +88,7 @@ class StoreTest extends TestCase
             ->withPaths([$this->folder])
             ->withNames(['.env', 'example.env']);
 
-        $this->assertSame(
+        self::assertSame(
             "FOO=bar\nBAR=baz\nSPACED=\"with spaces\"\n\nNULL=\n\nEG=\"example\"\n",
             $builder->make()->read()
         );

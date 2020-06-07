@@ -5,3 +5,4 @@ parameters:
     - '#Parameter \#1 \$name of method Dotenv\\Repository\\RepositoryInterface::[a-z]+\(\) expects string, [a-z]+ given.#'
     - '#no return typehint specified#'
     - '#with no typehint#'
+    - '#Call to deprecated method assertInternalType.+#'
