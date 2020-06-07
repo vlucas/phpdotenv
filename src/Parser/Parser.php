@@ -38,7 +38,7 @@ final class Parser implements ParserInterface
      *
      * @return \GrahamCampbell\ResultType\Result<\Dotenv\Parser\Entry[],string>
      */
-    private function process(array $entries)
+    private static function process(array $entries)
     {
         return \array_reduce($entries, static function (Result $result, string $raw) {
             return $result->flatMap(static function (array $entries) use ($raw) {
