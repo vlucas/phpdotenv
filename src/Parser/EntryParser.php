@@ -9,7 +9,6 @@ use Dotenv\Util\Str;
 use GrahamCampbell\ResultType\Error;
 use GrahamCampbell\ResultType\Result;
 use GrahamCampbell\ResultType\Success;
-use RuntimeException;
 
 final class EntryParser
 {
@@ -135,7 +134,7 @@ final class EntryParser
      */
     private static function isValidName(string $name)
     {
-        return Regex::match('~\A[a-zA-Z0-9_.]+\z~', $name)->success()->getOrElse(0) === 1;
+        return Regex::matches('~\A[a-zA-Z0-9_.]+\z~', $name)->success()->getOrElse(false);
     }
 
     /**
@@ -156,7 +155,7 @@ final class EntryParser
             return Success::create(Value::blank());
         }
 
-        return \array_reduce(Lexer::lex($value), static function (Result $data, string $token) use ($value) {
+        return \array_reduce(\iterator_to_array(Lexer::lex($value)), static function (Result $data, string $token) use ($value) {
             return $data->flatMap(static function (array $data) use ($token, $value) {
                 return self::processToken($data[1], $token)->mapError(static function (string $err) use ($value) {
                     return self::getErrorMessage($err, $value);
@@ -170,7 +169,7 @@ final class EntryParser
     }
 
     /**
-     * Process the given character.
+     * Process the given token.
      *
      * @param int    $state
      * @param string $token
@@ -242,7 +241,7 @@ final class EntryParser
             case self::COMMENT_STATE:
                 return Success::create(['', false, self::COMMENT_STATE]);
             default:
-                throw new RuntimeException('Parser entered invalid state.');
+                throw new \Error('Parser entered invalid state.');
         }
     }
 

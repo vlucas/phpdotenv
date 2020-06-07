@@ -20,7 +20,7 @@ final class LexerTest extends TestCase
             ['FOO bar', ['FOO', ' ', 'bar']],
             ['FOO\\n()ab', ['FOO', '\\', 'n()ab']],
             ["FOO\n\n   A", ['FOO', "\n\n", '   ', 'A']],
-            ['"VAL"', ['"', 'VAL', '"']],
+            ['"VA=L"', ['"', 'VA=L', '"']],
             ['\' \'', ['\'', ' ', '\'']],
         ];
     }
@@ -35,6 +35,6 @@ final class LexerTest extends TestCase
      */
     public function testLex(string $input, array $output)
     {
-        self::assertSame($output, Lexer::lex($input));
+        self::assertSame($output, \iterator_to_array(Lexer::lex($input)));
     }
 }

@@ -145,7 +145,7 @@ class Validator
     {
         return $this->assertNullable(
             static function (string $value) use ($regex) {
-                return Regex::match($regex, $value)->success()->getOrElse(0) === 1;
+                return Regex::matches($regex, $value)->success()->getOrElse(false);
             },
             \sprintf('does not match "%s"', $regex)
         );

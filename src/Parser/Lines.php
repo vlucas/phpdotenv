@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Dotenv\Parser;
 
+use Dotenv\Util\Regex;
 use Dotenv\Util\Str;
 
 final class Lines
@@ -103,32 +104,9 @@ final class Lines
             return true;
         }
 
-        return self::getCharPairs(\str_replace('\\\\', '', $line))->map(static function (array $pairs) use ($started) {
-            $seen = $started ? 0 : 1;
-
-            foreach ($pairs as $pair) {
-                if ($pair[0] !== '\\' && $pair[1] === '"') {
-                    $seen++;
-                }
-            }
-
-            return $seen > 1;
+        return Regex::occurences('/(?=([^\\\\]"))/', \str_replace('\\\\', '', $line))->map(static function (int $count) use ($started) {
+            return $started ? $count > 1 : $count >= 1;
         })->success()->getOrElse(false);
-    }
-
-    /**
-     * Get all pairs of adjacent characters within the line.
-     *
-     * @param string $line
-     *
-     * @return \GrahamCampbell\ResultType\Result<array{array{string,string|null}},string>
-     */
-    private static function getCharPairs(string $line)
-    {
-        return Str::split($line)->map(static function (array $chars) {
-            /** @var array{array{string,string|null}} */
-            return \array_map(null, $chars, \array_slice($chars, 1));
-        });
     }
 
     /**
@@ -140,12 +118,8 @@ final class Lines
      */
     private static function isCommentOrWhitespace(string $line)
     {
-        if (\trim($line) === '') {
-            return true;
-        }
+        $line = \trim($line);
 
-        $line = \ltrim($line);
-
-        return isset($line[0]) && $line[0] === '#';
+        return $line === '' || (isset($line[0]) && $line[0] === '#');
     }
 }

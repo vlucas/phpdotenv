@@ -30,12 +30,27 @@ final class Regex
      * @param string $pattern
      * @param string $subject
      *
-     * @return \GrahamCampbell\ResultType\Result<int,string>
+     * @return \GrahamCampbell\ResultType\Result<bool,string>
      */
-    public static function match(string $pattern, string $subject)
+    public static function matches(string $pattern, string $subject)
     {
         return self::pregAndWrap(static function (string $subject) use ($pattern) {
-            return (int) @\preg_match($pattern, $subject);
+            return @\preg_match($pattern, $subject) === 1;
+        }, $subject);
+    }
+
+    /**
+     * Perform a preg match all, wrapping up the result.
+     *
+     * @param string $pattern
+     * @param string $subject
+     *
+     * @return \GrahamCampbell\ResultType\Result<int,string>
+     */
+    public static function occurences(string $pattern, string $subject)
+    {
+        return self::pregAndWrap(static function (string $subject) use ($pattern) {
+            return (int) @\preg_match_all($pattern, $subject);
         }, $subject);
     }
 
