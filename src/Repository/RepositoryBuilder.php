@@ -152,7 +152,7 @@ final class RepositoryBuilder
             );
         }
 
-        $optional = Some::create($reader)->flatMap(function ($reader) {
+        $optional = Some::create($reader)->flatMap(static function ($reader) {
             return \is_string($reader) ? $reader::create() : Some::create($reader);
         });
 
@@ -185,7 +185,7 @@ final class RepositoryBuilder
             );
         }
 
-        $optional = Some::create($writer)->flatMap(function ($writer) {
+        $optional = Some::create($writer)->flatMap(static function ($writer) {
             return \is_string($writer) ? $writer::create() : Some::create($writer);
         });
 
@@ -219,7 +219,7 @@ final class RepositoryBuilder
             );
         }
 
-        $optional = Some::create($adapter)->flatMap(function ($adapter) {
+        $optional = Some::create($adapter)->flatMap(static function ($adapter) {
             return \is_string($adapter) ? $adapter::create() : Some::create($adapter);
         });
 

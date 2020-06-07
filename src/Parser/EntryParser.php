@@ -45,13 +45,13 @@ final class EntryParser
      */
     public static function parse(string $entry)
     {
-        return self::splitStringIntoParts($entry)->flatMap(function (array $parts) {
+        return self::splitStringIntoParts($entry)->flatMap(static function (array $parts) {
             [$name, $value] = $parts;
 
-            return self::parseName($name)->flatMap(function (string $name) use ($value) {
+            return self::parseName($name)->flatMap(static function (string $name) use ($value) {
                 $parsedValue = $value === null ? Success::create(null) : self::parseValue($value);
 
-                return $parsedValue->map(function (?Value $value) use ($name) {
+                return $parsedValue->map(static function (?Value $value) use ($name) {
                     return new Entry($name, $value);
                 });
             });
@@ -68,7 +68,7 @@ final class EntryParser
     private static function splitStringIntoParts(string $line)
     {
         /** @var array{string,string|null} */
-        $result = Str::pos($line, '=')->map(function () use ($line) {
+        $result = Str::pos($line, '=')->map(static function () use ($line) {
             return \array_map('trim', \explode('=', $line, 2));
         })->getOrElse([$line, null]);
 
@@ -156,15 +156,15 @@ final class EntryParser
             return Success::create(Value::blank());
         }
 
-        return \array_reduce(Lexer::lex($value), function (Result $data, string $token) use ($value) {
-            return $data->flatMap(function (array $data) use ($token, $value) {
-                return self::processToken($data[1], $token)->mapError(function (string $err) use ($value) {
+        return \array_reduce(Lexer::lex($value), static function (Result $data, string $token) use ($value) {
+            return $data->flatMap(static function (array $data) use ($token, $value) {
+                return self::processToken($data[1], $token)->mapError(static function (string $err) use ($value) {
                     return self::getErrorMessage($err, $value);
-                })->map(function (array $val) use ($data) {
+                })->map(static function (array $val) use ($data) {
                     return [$data[0]->append($val[0], $val[1]), $val[2]];
                 });
             });
-        }, Success::create([Value::blank(), self::INITIAL_STATE]))->map(function (array $data) {
+        }, Success::create([Value::blank(), self::INITIAL_STATE]))->map(static function (array $data) {
             return $data[0];
         });
     }

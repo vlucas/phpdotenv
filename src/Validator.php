@@ -51,7 +51,7 @@ class Validator
     public function required()
     {
         return $this->assert(
-            function (?string $value) {
+            static function (?string $value) {
                 return $value !== null;
             },
             'is missing'
@@ -68,7 +68,7 @@ class Validator
     public function notEmpty()
     {
         return $this->assertNullable(
-            function (string $value) {
+            static function (string $value) {
                 return Str::len(\trim($value)) > 0;
             },
             'is empty'
@@ -85,7 +85,7 @@ class Validator
     public function isInteger()
     {
         return $this->assertNullable(
-            function (string $value) {
+            static function (string $value) {
                 return \ctype_digit($value);
             },
             'is not an integer'
@@ -102,7 +102,7 @@ class Validator
     public function isBoolean()
     {
         return $this->assertNullable(
-            function (string $value) {
+            static function (string $value) {
                 if ($value === '') {
                     return false;
                 }
@@ -125,7 +125,7 @@ class Validator
     public function allowedValues(array $choices)
     {
         return $this->assertNullable(
-            function (string $value) use ($choices) {
+            static function (string $value) use ($choices) {
                 return \in_array($value, $choices, true);
             },
             \sprintf('is not one of [%s]', \implode(', ', $choices))
@@ -144,7 +144,7 @@ class Validator
     public function allowedRegexValues(string $regex)
     {
         return $this->assertNullable(
-            function (string $value) use ($regex) {
+            static function (string $value) use ($regex) {
                 return Regex::match($regex, $value)->success()->getOrElse(0) === 1;
             },
             \sprintf('does not match "%s"', $regex)
@@ -196,7 +196,7 @@ class Validator
     private function assertNullable(callable $callback, string $message)
     {
         return $this->assert(
-            function (?string $value) use ($callback) {
+            static function (?string $value) use ($callback) {
                 if ($value === null) {
                     return true;
                 }

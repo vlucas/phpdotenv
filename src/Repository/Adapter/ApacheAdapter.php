@@ -57,7 +57,7 @@ final class ApacheAdapter implements AdapterInterface
     public function read(string $name)
     {
         /** @var \PhpOption\Option<string> */
-        return Option::fromValue(apache_getenv($name))->filter(function ($value) {
+        return Option::fromValue(apache_getenv($name))->filter(static function ($value) {
             return \is_string($value) && $value !== '';
         });
     }

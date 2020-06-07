@@ -84,7 +84,7 @@ final class Lines
      */
     private static function looksLikeMultilineStart(string $line)
     {
-        return Str::pos($line, '="')->map(function () use ($line) {
+        return Str::pos($line, '="')->map(static function () use ($line) {
             return self::looksLikeMultilineStop($line, true) === false;
         })->getOrElse(false);
     }
@@ -103,7 +103,7 @@ final class Lines
             return true;
         }
 
-        return self::getCharPairs(\str_replace('\\\\', '', $line))->map(function (array $pairs) use ($started) {
+        return self::getCharPairs(\str_replace('\\\\', '', $line))->map(static function (array $pairs) use ($started) {
             $seen = $started ? 0 : 1;
 
             foreach ($pairs as $pair) {
@@ -125,7 +125,7 @@ final class Lines
      */
     private static function getCharPairs(string $line)
     {
-        return Str::split($line)->map(function (array $chars) {
+        return Str::split($line)->map(static function (array $chars) {
             /** @var array{array{string,string|null}} */
             return \array_map(null, $chars, \array_slice($chars, 1));
         });

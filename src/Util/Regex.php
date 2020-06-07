@@ -34,7 +34,7 @@ final class Regex
      */
     public static function match(string $pattern, string $subject)
     {
-        return self::pregAndWrap(function (string $subject) use ($pattern) {
+        return self::pregAndWrap(static function (string $subject) use ($pattern) {
             return (int) @\preg_match($pattern, $subject);
         }, $subject);
     }
@@ -51,7 +51,7 @@ final class Regex
      */
     public static function replaceCallback(string $pattern, callable $callback, string $subject, int $limit = null)
     {
-        return self::pregAndWrap(function (string $subject) use ($pattern, $callback, $limit) {
+        return self::pregAndWrap(static function (string $subject) use ($pattern, $callback, $limit) {
             return (string) @\preg_replace_callback($pattern, $callback, $subject, $limit ?? -1);
         }, $subject);
     }
@@ -66,7 +66,7 @@ final class Regex
      */
     public static function split(string $pattern, string $subject)
     {
-        return self::pregAndWrap(function (string $subject) use ($pattern) {
+        return self::pregAndWrap(static function (string $subject) use ($pattern) {
             return (array) @\preg_split($pattern, $subject);
         }, $subject);
     }

@@ -23,10 +23,10 @@ final class Loader implements LoaderInterface
      */
     public function load(RepositoryInterface $repository, array $entries)
     {
-        return \array_reduce($entries, function (array $vars, Entry $entry) use ($repository) {
+        return \array_reduce($entries, static function (array $vars, Entry $entry) use ($repository) {
             $name = $entry->getName();
 
-            $value = $entry->getValue()->map(function (Value $value) use ($repository) {
+            $value = $entry->getValue()->map(static function (Value $value) use ($repository) {
                 return Resolver::resolve($repository, $value);
             });
 

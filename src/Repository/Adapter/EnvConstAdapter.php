@@ -40,7 +40,7 @@ final class EnvConstAdapter implements AdapterInterface
     public function read(string $name)
     {
         /** @var \PhpOption\Option<string> */
-        return Option::fromArraysValue($_ENV, $name)->filter(function ($value) {
+        return Option::fromArraysValue($_ENV, $name)->filter(static function ($value) {
             return \is_string($value);
         });
     }

@@ -69,8 +69,8 @@ final class Reader
      */
     private static function readFromFile(string $path, string $encoding = null)
     {
-        return Option::fromValue(@\file_get_contents($path), false)->flatMap(function (string $content) use ($encoding) {
-            return Str::utf8($content, $encoding)->mapError(function (string $error) {
+        return Option::fromValue(@\file_get_contents($path), false)->flatMap(static function (string $content) use ($encoding) {
+            return Str::utf8($content, $encoding)->mapError(static function (string $error) {
                 throw new InvalidEncodingException($error);
             })->success();
         });

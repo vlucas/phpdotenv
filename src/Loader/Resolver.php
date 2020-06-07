@@ -37,7 +37,7 @@ final class Resolver
      */
     public static function resolve(RepositoryInterface $repository, Value $value)
     {
-        return \array_reduce($value->getVars(), function (string $s, int $i) use ($repository) {
+        return \array_reduce($value->getVars(), static function (string $s, int $i) use ($repository) {
             return Str::substr($s, 0, $i).self::resolveVariable($repository, Str::substr($s, $i));
         }, $value->getChars());
     }
@@ -54,7 +54,7 @@ final class Resolver
     {
         return Regex::replaceCallback(
             '/\A\${([a-zA-Z0-9_.]+)}/',
-            function (array $matches) use ($repository) {
+            static function (array $matches) use ($repository) {
                 return Option::fromValue($repository->get($matches[1]))
                     ->getOrElse($matches[0]);
             },

@@ -22,11 +22,11 @@ final class Parser implements ParserInterface
      */
     public function parse(string $content)
     {
-        return Regex::split("/(\r\n|\n|\r)/", $content)->mapError(function () {
+        return Regex::split("/(\r\n|\n|\r)/", $content)->mapError(static function () {
             return 'Could not split into separate lines.';
-        })->flatMap(function (array $lines) {
+        })->flatMap(static function (array $lines) {
             return self::process(Lines::process($lines));
-        })->mapError(function (string $error) {
+        })->mapError(static function (string $error) {
             throw new InvalidFileException(\sprintf('Failed to parse dotenv file. %s', $error));
         })->success()->get();
     }
@@ -40,9 +40,9 @@ final class Parser implements ParserInterface
      */
     private function process(array $entries)
     {
-        return \array_reduce($entries, function (Result $result, string $raw) {
-            return $result->flatMap(function (array $entries) use ($raw) {
-                return EntryParser::parse($raw)->map(function (Entry $entry) use ($entries) {
+        return \array_reduce($entries, static function (Result $result, string $raw) {
+            return $result->flatMap(static function (array $entries) use ($raw) {
+                return EntryParser::parse($raw)->map(static function (Entry $entry) use ($entries) {
                     return \array_merge($entries, [$entry]);
                 });
             });
