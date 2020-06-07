@@ -158,7 +158,7 @@ final class EntryParser
 
         return \array_reduce(Lexer::lex($value), function (Result $data, string $token) use ($value) {
             return $data->flatMap(function (array $data) use ($token, $value) {
-                return self::processChar($data[1], $token)->mapError(function (string $err) use ($value) {
+                return self::processToken($data[1], $token)->mapError(function (string $err) use ($value) {
                     return self::getErrorMessage($err, $value);
                 })->map(function (array $val) use ($data) {
                     return [$data[0]->append($val[0], $val[1]), $val[2]];
@@ -177,7 +177,7 @@ final class EntryParser
      *
      * @return \GrahamCampbell\ResultType\Result<array{string,bool,int},string>
      */
-    private static function processChar(int $state, string $token)
+    private static function processToken(int $state, string $token)
     {
         switch ($state) {
             case self::INITIAL_STATE:
