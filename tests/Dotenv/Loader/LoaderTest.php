@@ -32,10 +32,10 @@ final class LoaderTest extends TestCase
         self::assertSame($expected, $loader->load($repository, (new Parser())->parse($content)));
     }
 
-    public function testLoaderWithWhitelist()
+    public function testLoaderWithAllowList()
     {
         $adapter = ArrayAdapter::create()->get();
-        $repository = RepositoryBuilder::createWithNoAdapters()->addReader($adapter)->addWriter($adapter)->whitelist(['FOO'])->make();
+        $repository = RepositoryBuilder::createWithNoAdapters()->addReader($adapter)->addWriter($adapter)->allowList(['FOO'])->make();
         $loader = new Loader();
 
         self::assertSame(['FOO' => 'Hello'], $loader->load($repository, (new Parser())->parse("FOO=\"Hello\"\nBAR=\"World!\"\n")));

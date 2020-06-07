@@ -11,7 +11,7 @@ use Dotenv\Repository\Adapter\MultiReader;
 use Dotenv\Repository\Adapter\MultiWriter;
 use Dotenv\Repository\Adapter\ReaderInterface;
 use Dotenv\Repository\Adapter\ServerConstAdapter;
-use Dotenv\Repository\Adapter\WhitelistWriter;
+use Dotenv\Repository\Adapter\GuardedWriter;
 use Dotenv\Repository\Adapter\WriterInterface;
 use InvalidArgumentException;
 use PhpOption\Some;
@@ -51,11 +51,11 @@ final class RepositoryBuilder
     private $immutable;
 
     /**
-     * The variable name whitelist.
+     * The variable name allow list.
      *
      * @var string[]|null
      */
-    private $whitelist;
+    private $allowList;
 
     /**
      * Create a new repository builder instance.
@@ -63,16 +63,16 @@ final class RepositoryBuilder
      * @param \Dotenv\Repository\Adapter\ReaderInterface[] $readers
      * @param \Dotenv\Repository\Adapter\WriterInterface[] $writers
      * @param bool                                         $immutable
-     * @param string[]|null                                $whitelist
+     * @param string[]|null                                $allowList
      *
      * @return void
      */
-    private function __construct(array $readers = [], array $writers = [], bool $immutable = false, array $whitelist = null)
+    private function __construct(array $readers = [], array $writers = [], bool $immutable = false, array $allowList = null)
     {
         $this->readers = $readers;
         $this->writers = $writers;
         $this->immutable = $immutable;
-        $this->whitelist = $whitelist;
+        $this->allowList = $allowList;
     }
 
     /**
@@ -158,7 +158,7 @@ final class RepositoryBuilder
 
         $readers = \array_merge($this->readers, \iterator_to_array($optional));
 
-        return new self($readers, $this->writers, $this->immutable, $this->whitelist);
+        return new self($readers, $this->writers, $this->immutable, $this->allowList);
     }
 
     /**
@@ -191,7 +191,7 @@ final class RepositoryBuilder
 
         $writers = \array_merge($this->writers, \iterator_to_array($optional));
 
-        return new self($this->readers, $writers, $this->immutable, $this->whitelist);
+        return new self($this->readers, $writers, $this->immutable, $this->allowList);
     }
 
     /**
@@ -226,7 +226,7 @@ final class RepositoryBuilder
         $readers = \array_merge($this->readers, \iterator_to_array($optional));
         $writers = \array_merge($this->writers, \iterator_to_array($optional));
 
-        return new self($readers, $writers, $this->immutable, $this->whitelist);
+        return new self($readers, $writers, $this->immutable, $this->allowList);
     }
 
     /**
@@ -236,19 +236,19 @@ final class RepositoryBuilder
      */
     public function immutable()
     {
-        return new self($this->readers, $this->writers, true, $this->whitelist);
+        return new self($this->readers, $this->writers, true, $this->allowList);
     }
 
     /**
-     * Creates a repository builder with the given whitelist.
+     * Creates a repository builder with the given allow list.
      *
-     * @param string[]|null $whitelist
+     * @param string[]|null $allowList
      *
      * @return \Dotenv\Repository\RepositoryBuilder
      */
-    public function whitelist(array $whitelist = null)
+    public function allowList(array $allowList = null)
     {
-        return new self($this->readers, $this->writers, $this->immutable, $whitelist);
+        return new self($this->readers, $this->writers, $this->immutable, $allowList);
     }
 
     /**
@@ -265,8 +265,8 @@ final class RepositoryBuilder
             $writer = new ImmutableWriter($writer, $reader);
         }
 
-        if ($this->whitelist !== null) {
-            $writer = new WhitelistWriter($writer, $this->whitelist);
+        if ($this->allowList !== null) {
+            $writer = new GuardedWriter($writer, $this->allowList);
         }
 
         return new AdapterRepository($reader, $writer);

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Dotenv\Repository\Adapter;
 
-final class WhitelistWriter implements WriterInterface
+final class GuardedWriter implements WriterInterface
 {
     /**
      * The inner writer to use.
@@ -14,24 +14,24 @@ final class WhitelistWriter implements WriterInterface
     private $writer;
 
     /**
-     * The variable name whitelist.
+     * The variable name allow list.
      *
      * @var string[]
      */
-    private $whitelist;
+    private $allowList;
 
     /**
-     * Create a new whitelist writer instance.
+     * Create a new guarded writer instance.
      *
      * @param \Dotenv\Repository\Adapter\WriterInterface $writer
-     * @param string[]                                   $whitelist
+     * @param string[]                                   $allowList
      *
      * @return void
      */
-    public function __construct(WriterInterface $writer, array $whitelist)
+    public function __construct(WriterInterface $writer, array $allowList)
     {
         $this->writer = $writer;
-        $this->whitelist = $whitelist;
+        $this->allowList = $allowList;
     }
 
     /**
@@ -44,8 +44,8 @@ final class WhitelistWriter implements WriterInterface
      */
     public function write(string $name, string $value)
     {
-        // Don't set non-whitelisted variables
-        if (!$this->isWhitelisted($name)) {
+        // Don't set non-allowed variables
+        if (!$this->isAllowed($name)) {
             return false;
         }
 
@@ -62,8 +62,8 @@ final class WhitelistWriter implements WriterInterface
      */
     public function delete(string $name)
     {
-        // Don't clear non-whitelisted variables
-        if (!$this->isWhitelisted($name)) {
+        // Don't clear non-allowed variables
+        if (!$this->isAllowed($name)) {
             return false;
         }
 
@@ -72,14 +72,14 @@ final class WhitelistWriter implements WriterInterface
     }
 
     /**
-     * Determine if the given variable is whitelisted.
+     * Determine if the given variable is allowed.
      *
      * @param string $name
      *
      * @return bool
      */
-    private function isWhitelisted(string $name)
+    private function isAllowed(string $name)
     {
-        return \in_array($name, $this->whitelist, true);
+        return \in_array($name, $this->allowList, true);
     }
 }

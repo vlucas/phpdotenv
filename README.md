@@ -178,11 +178,11 @@ interpolating environment variables, we'll only read from `$_ENV`. Moreover, it
 will never replace any variables already set before loading the file.
 
 By means of another example, one can also specify a set of variables to be
-whitelisted. That is, only the variables in the whitelist will be loaded:
+allow listed. That is, only the variables in the allow list will be loaded:
 
 ```php
 $repository = Dotenv\Repository\RepositoryBuilder::createWithDefaultAdapters()
-    ->whitelist(['FOO', 'BAR'])
+    ->allowList(['FOO', 'BAR'])
     ->make();
 
 $dotenv = Dotenv\Dotenv::create($repository, __DIR__);
