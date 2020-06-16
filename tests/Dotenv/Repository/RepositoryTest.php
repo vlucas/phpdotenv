@@ -273,4 +273,26 @@ final class RepositoryTest extends TestCase
 
         RepositoryBuilder::createWithNoAdapters()->addAdapter('');
     }
+
+    public function testBuildWithPrefix()
+    {
+        $name = 'BAR';
+        $prefix = 'FOO';
+        $expected = 'FOOBAR';
+        $value = "VAL";
+
+        /** @var ArrayAdapter $adapter */
+        $adapter = ArrayAdapter::create()->get();
+        $repository = RepositoryBuilder::createWithNoAdapters()
+            ->addAdapter($adapter)
+            ->prefix($prefix)
+            ->make();
+
+        $repository->set($name, $value);
+        $this->assertEquals($value,$adapter->read($expected)->get());
+        $this->assertEquals($value, $repository->get($name));
+        $repository->clear($name);
+        $this->assertFalse($adapter->read($expected)->isDefined());
+        $this->assertFalse($repository->has($name));
+    }
 }

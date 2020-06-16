@@ -9,6 +9,8 @@ use Dotenv\Repository\Adapter\EnvConstAdapter;
 use Dotenv\Repository\Adapter\ImmutableWriter;
 use Dotenv\Repository\Adapter\MultiReader;
 use Dotenv\Repository\Adapter\MultiWriter;
+use Dotenv\Repository\Adapter\PrefixReader;
+use Dotenv\Repository\Adapter\PrefixWriter;
 use Dotenv\Repository\Adapter\ReaderInterface;
 use Dotenv\Repository\Adapter\ServerConstAdapter;
 use Dotenv\Repository\Adapter\GuardedWriter;
@@ -58,21 +60,30 @@ final class RepositoryBuilder
     private $allowList;
 
     /**
+     * The variable name prefix to add before write and read.
+     *
+     * @var string|null
+     */
+    private $prefix;
+
+    /**
      * Create a new repository builder instance.
      *
      * @param \Dotenv\Repository\Adapter\ReaderInterface[] $readers
      * @param \Dotenv\Repository\Adapter\WriterInterface[] $writers
      * @param bool                                         $immutable
      * @param string[]|null                                $allowList
+     * @param string|null                                  $prefix
      *
      * @return void
      */
-    private function __construct(array $readers = [], array $writers = [], bool $immutable = false, array $allowList = null)
+    private function __construct(array $readers = [], array $writers = [], bool $immutable = false, array $allowList = null, string $prefix = null)
     {
         $this->readers = $readers;
         $this->writers = $writers;
         $this->immutable = $immutable;
         $this->allowList = $allowList;
+        $this->prefix = $prefix;
     }
 
     /**
@@ -158,7 +169,10 @@ final class RepositoryBuilder
 
         $readers = \array_merge($this->readers, \iterator_to_array($optional));
 
-        return new self($readers, $this->writers, $this->immutable, $this->allowList);
+        return new self(
+            $readers, $this->writers, $this->immutable,
+            $this->allowList, $this->prefix
+        );
     }
 
     /**
@@ -191,7 +205,10 @@ final class RepositoryBuilder
 
         $writers = \array_merge($this->writers, \iterator_to_array($optional));
 
-        return new self($this->readers, $writers, $this->immutable, $this->allowList);
+        return new self(
+            $this->readers, $writers, $this->immutable,
+            $this->allowList, $this->prefix
+        );
     }
 
     /**
@@ -226,7 +243,10 @@ final class RepositoryBuilder
         $readers = \array_merge($this->readers, \iterator_to_array($optional));
         $writers = \array_merge($this->writers, \iterator_to_array($optional));
 
-        return new self($readers, $writers, $this->immutable, $this->allowList);
+        return new self(
+            $readers, $writers, $this->immutable,
+            $this->allowList, $this->prefix
+        );
     }
 
     /**
@@ -236,7 +256,10 @@ final class RepositoryBuilder
      */
     public function immutable()
     {
-        return new self($this->readers, $this->writers, true, $this->allowList);
+        return new self(
+            $this->readers, $this->writers, true,
+            $this->allowList, $this->prefix
+        );
     }
 
     /**
@@ -248,7 +271,25 @@ final class RepositoryBuilder
      */
     public function allowList(array $allowList = null)
     {
-        return new self($this->readers, $this->writers, $this->immutable, $allowList);
+        return new self(
+            $this->readers, $this->writers, $this->immutable,
+            $allowList, $this->prefix
+        );
+    }
+
+    /**
+     * Creates a repository builder with the given prefix.
+     *
+     * @param string|null $prefix
+     *
+     * @return \Dotenv\Repository\RepositoryBuilder
+     */
+    public function prefix(string $prefix = null)
+    {
+        return new self(
+            $this->readers, $this->writers, $this->immutable,
+            $this->allowList, $prefix
+        );
     }
 
     /**
@@ -267,6 +308,11 @@ final class RepositoryBuilder
 
         if ($this->allowList !== null) {
             $writer = new GuardedWriter($writer, $this->allowList);
+        }
+
+        if ($this->prefix !== null) {
+            $writer = new PrefixWriter($writer, $this->prefix);
+            $reader = new PrefixReader($reader, $this->prefix);
         }
 
         return new AdapterRepository($reader, $writer);
