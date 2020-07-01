@@ -32,7 +32,7 @@ final class ValidatorTest extends TestCase
      *
      * @return array{\Dotenv\Repository\RepositoryInterface,\Dotenv\Dotenv}
      */
-    public function createArrayDotenv(string $name = '.env')
+    public static function createArrayDotenv(string $name = '.env')
     {
         $repository = RepositoryBuilder::createWithNoAdapters()->addAdapter(ArrayAdapter::class)->make();
 
