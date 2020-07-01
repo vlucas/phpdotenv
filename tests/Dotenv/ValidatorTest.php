@@ -44,7 +44,7 @@ final class ValidatorTest extends TestCase
      */
     public function testDotenvRequiredStringEnvironmentVars()
     {
-        $dotenv = self::createArrayDotenv()[1];
+        $dotenv = $this->createArrayDotenv()[1];
         $dotenv->load();
         $dotenv->required('FOO');
     }
@@ -54,7 +54,7 @@ final class ValidatorTest extends TestCase
      */
     public function testDotenvAllowedValues()
     {
-        $dotenv = self::createArrayDotenv()[1];
+        $dotenv = $this->createArrayDotenv()[1];
         $dotenv->load();
         $dotenv->required('FOO')->allowedValues(['bar', 'baz']);
     }
@@ -64,7 +64,7 @@ final class ValidatorTest extends TestCase
      */
     public function testDotenvAllowedValuesIfPresent()
     {
-        $dotenv = self::createArrayDotenv()[1];
+        $dotenv = $this->createArrayDotenv()[1];
         $dotenv->load();
         $dotenv->ifPresent('FOO')->allowedValues(['bar', 'baz']);
     }
@@ -74,14 +74,14 @@ final class ValidatorTest extends TestCase
      */
     public function testDotenvAllowedValuesIfNotPresent()
     {
-        $dotenv = self::createArrayDotenv()[1];
+        $dotenv = $this->createArrayDotenv()[1];
         $dotenv->load();
         $dotenv->ifPresent('FOOQWERTYOOOOOO')->allowedValues(['bar', 'baz']);
     }
 
     public function testDotenvProhibitedValues()
     {
-        $dotenv = self::createArrayDotenv()[1];
+        $dotenv = $this->createArrayDotenv()[1];
         $dotenv->load();
 
         $this->expectException(ValidationException::class);
@@ -92,7 +92,7 @@ final class ValidatorTest extends TestCase
 
     public function testDotenvProhibitedValuesIfPresent()
     {
-        $dotenv = self::createArrayDotenv()[1];
+        $dotenv = $this->createArrayDotenv()[1];
         $dotenv->load();
 
         $this->expectException(ValidationException::class);
@@ -103,7 +103,7 @@ final class ValidatorTest extends TestCase
 
     public function testDotenvRequiredThrowsRuntimeException()
     {
-        [$repo, $dotenv] = self::createArrayDotenv();
+        [$repo, $dotenv] = $this->createArrayDotenv();
 
         $dotenv->load();
 
@@ -121,14 +121,14 @@ final class ValidatorTest extends TestCase
      */
     public function testDotenvRequiredArrayEnvironmentVars()
     {
-        $dotenv = self::createArrayDotenv()[1];
+        $dotenv = $this->createArrayDotenv()[1];
         $dotenv->load();
         $dotenv->required(['FOO', 'BAR']);
     }
 
     public function testDotenvAssertions()
     {
-        [$repo, $dotenv] = self::createArrayDotenv('assertions.env');
+        [$repo, $dotenv] = $this->createArrayDotenv('assertions.env');
 
         $dotenv->load();
 
@@ -172,7 +172,7 @@ final class ValidatorTest extends TestCase
 
     public function testDotenvEmptyThrowsRuntimeException()
     {
-        $dotenv = self::createArrayDotenv('assertions.env')[1];
+        $dotenv = $this->createArrayDotenv('assertions.env')[1];
         $dotenv->load();
 
         $this->expectException(ValidationException::class);
@@ -186,14 +186,14 @@ final class ValidatorTest extends TestCase
      */
     public function testDotenvEmptyWhenNotPresent()
     {
-        $dotenv = self::createArrayDotenv('assertions.env')[1];
+        $dotenv = $this->createArrayDotenv('assertions.env')[1];
         $dotenv->load();
         $dotenv->ifPresent('ASSERTVAR2_NO_SUCH_VARIABLE')->notEmpty();
     }
 
     public function testDotenvStringOfSpacesConsideredEmpty()
     {
-        $dotenv = self::createArrayDotenv('assertions.env')[1];
+        $dotenv = $this->createArrayDotenv('assertions.env')[1];
         $dotenv->load();
 
         $this->expectException(ValidationException::class);
