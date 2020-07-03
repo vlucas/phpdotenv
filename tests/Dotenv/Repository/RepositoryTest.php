@@ -289,10 +289,10 @@ final class RepositoryTest extends TestCase
             ->make();
 
         $repository->set($name, $value);
-        $this->assertEquals($value,$adapter->read($expected)->get());
-        $this->assertEquals($value, $repository->get($name));
+        self::assertEquals($value,$adapter->read($expected)->get());
+        self::assertEquals($value, $repository->get($name));
         $repository->clear($name);
-        $this->assertFalse($adapter->read($expected)->isDefined());
-        $this->assertFalse($repository->has($name));
+        self::assertFalse($adapter->read($expected)->isDefined());
+        self::assertFalse($repository->has($name));
     }
 }
