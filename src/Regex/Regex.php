@@ -68,6 +68,7 @@ class Regex
     public static function split($pattern, $subject)
     {
         return self::pregAndWrap(function ($subject) use ($pattern) {
+            /** @var string[] */
             return (array) @preg_split($pattern, $subject);
         }, $subject);
     }
