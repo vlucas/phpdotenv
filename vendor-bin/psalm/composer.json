@@ -1,0 +1,8 @@
+{
+    "require": {
+        "vimeo/psalm": "~3.12.2"
+    },
+    "config": {
+        "preferred-install": "dist"
+    }
+}

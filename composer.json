@@ -43,8 +43,7 @@
         "ext-filter": "Required to use the boolean validator."
     },
     "config": {
-        "preferred-install": "dist",
-        "platform-check": false
+        "preferred-install": "dist"
     },
     "extra": {
         "branch-alias": {

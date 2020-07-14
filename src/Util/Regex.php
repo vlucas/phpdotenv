@@ -82,6 +82,7 @@ final class Regex
     public static function split(string $pattern, string $subject)
     {
         return self::pregAndWrap(static function (string $subject) use ($pattern) {
+            /** @var string[] */
             return (array) @\preg_split($pattern, $subject);
         }, $subject);
     }
@@ -101,7 +102,7 @@ final class Regex
         $result = $operation($subject);
 
         if (\preg_last_error() !== \PREG_NO_ERROR) {
-            return Error::create(preg_last_error_msg());
+            return Error::create(\preg_last_error_msg());
         }
 
         return Success::create($result);
