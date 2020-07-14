@@ -155,8 +155,8 @@ final class DotenvTest extends TestCase
     {
         $dotenv = Dotenv::createMutable(self::$folder, 'large.env');
         $dotenv->load();
-        self::assertSame(2730, strlen($_SERVER['LARGE']));
-        self::assertSame(8192, strlen($_SERVER['HUGE']));
+        self::assertSame(2730, \strlen($_SERVER['LARGE']));
+        self::assertSame(8192, \strlen($_SERVER['HUGE']));
     }
 
     public function testDotenvLoadsMultibyteVars()

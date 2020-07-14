@@ -57,7 +57,7 @@ final class Str
      */
     public static function split(string $input)
     {
-        $result = mb_str_split($input, 1, 'UTF-8');
+        $result = \mb_str_split($input, 1, 'UTF-8');
 
         if ($result === false) {
             /** @var \GrahamCampbell\ResultType\Result<string[],string> */
