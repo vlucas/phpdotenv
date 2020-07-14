@@ -215,7 +215,7 @@ class Parser
                     return Success::create(['', false, self::WHITESPACE_STATE]);
                 }
             case self::COMMENT_STATE:
-                    /** @var \Dotenv\Result\Result<array{string,bool,int},string> */
+                /** @var \Dotenv\Result\Result<array{string,bool,int},string> */
                 return Success::create(['', false, self::COMMENT_STATE]);
             default:
                 throw new RuntimeException('Parser entered invalid state.');
