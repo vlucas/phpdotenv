@@ -3,5 +3,4 @@ parameters:
   ignoreErrors:
     - '#Unable to resolve the template type#'
     - '#Anonymous function should have native return typehint ".+".#'
-    - '#Parameter \#1 \$callable of method PhpOption\\Option<bool\|string>::flatMap\(\) expects callable\(bool\|string\): PhpOption\\Option<mixed>, Closure\(string\): mixed given.#'
     - '#Only booleans are allowed in a negated boolean, int\|false given.#'

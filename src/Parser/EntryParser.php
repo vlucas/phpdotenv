@@ -48,6 +48,7 @@ final class EntryParser
             [$name, $value] = $parts;
 
             return self::parseName($name)->flatMap(static function (string $name) use ($value) {
+                /** @var Result<Value|null,string> */
                 $parsedValue = $value === null ? Success::create(null) : self::parseValue($value);
 
                 return $parsedValue->map(static function (?Value $value) use ($name) {
