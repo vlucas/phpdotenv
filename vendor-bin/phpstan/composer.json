@@ -3,6 +3,7 @@
         "phpstan/phpstan": "~0.12.32",
         "phpstan/extension-installer": "~1.0.4",
         "phpstan/phpstan-deprecation-rules": "~0.12.4",
+        "phpstan/phpstan-phpunit": "~0.12.11",
         "phpstan/phpstan-strict-rules": "~0.12.2",
         "thecodingmachine/phpstan-strict-rules": "~0.12.0"
     },
