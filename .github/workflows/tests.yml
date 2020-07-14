@@ -46,7 +46,6 @@ jobs:
       - name: Execute PHPUnit
         run: vendor/bin/phpunit
 
-jobs:
   tests_lowest:
     name: PHP ${{ matrix.php }} Lowest
     runs-on: ubuntu-20.04
