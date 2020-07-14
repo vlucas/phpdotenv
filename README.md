@@ -311,6 +311,24 @@ VAR=value # comment
 ```
 
 
+### Parsing Without Loading
+
+Sometimes you just wanna parse the file and resolve the nested environment variables, by giving us a string, and have an array returned back to you. While this is already possible, it is a little fiddly, so we have provided a direct way to do this:
+
+```php
+// ['FOO' => 'Bar', 'BAZ' => 'Hello Bar']
+Dotenv\Dotenv::parse("FOO=Bar\nBAZ=\"Hello \${FOO}\"");
+```
+
+This is exactly the same as:
+
+```php
+Dotenv\Dotenv::createArrayBacked(__DIR__)->load();
+```
+
+only, instead of providing the directory to find the file, you have directly provided the file contents.
+
+
 ### Usage Notes
 
 When a new developer clones your codebase, they will have an additional

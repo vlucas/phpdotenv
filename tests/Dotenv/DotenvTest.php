@@ -349,4 +349,31 @@ final class DotenvTest extends TestCase
             'NULL'   => '',
         ], $dotenv->load());
     }
+
+    public function testDotenvParseExample1()
+    {
+        $output = Dotenv::parse(
+            "BASE_DIR=\"/var/webroot/project-root\"\nCACHE_DIR=\"\${BASE_DIR}/cache\"\nTMP_DIR=\"\${BASE_DIR}/tmp\"\n"
+        );
+
+        self::assertSame($output, [
+            'BASE_DIR'  => '/var/webroot/project-root',
+            'CACHE_DIR' => '/var/webroot/project-root/cache',
+            'TMP_DIR'   => '/var/webroot/project-root/tmp',
+        ]);
+    }
+
+    public function testDotenvParseExample2()
+    {
+        $output = Dotenv::parse("FOO=Bar\nBAZ=\"Hello \${FOO}\"");
+
+        self::assertSame($output, ['FOO' => 'Bar', 'BAZ' => 'Hello Bar']);
+    }
+
+    public function testDotenvParseEmptyCase()
+    {
+        $output = Dotenv::parse('');
+
+        self::assertSame($output, []);
+    }
 }
