@@ -51,7 +51,7 @@ final class Lexer
 
         while (isset($content[$offset])) {
             if (!\preg_match($regex, $content, $matches, 0, $offset)) {
-                throw new \Error(sprintf('Lexer encountered unexpected character [%s].', $content[$offset]));
+                throw new \Error(\sprintf('Lexer encountered unexpected character [%s].', $content[$offset]));
             }
 
             $offset += \strlen($matches[0]);
