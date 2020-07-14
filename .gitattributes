@@ -10,6 +10,7 @@
 /phpstan.neon.dist export-ignore
 /phpstan.tests.neon.dist export-ignore
 /phpunit.xml.dist export-ignore
+/psalm.xml export-ignore
 /README.md export-ignore
 /UPGRADING.md export-ignore
 /vendor-bin export-ignore

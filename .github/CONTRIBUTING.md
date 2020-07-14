@@ -18,13 +18,13 @@ We accept contributions via pull requests on Github. Please review these guideli
 First, install the dependencies using [Composer](https://getcomposer.org/):
 
 ```bash
-$ composer install
+$ make install
 ```
 
-Then run [PHPUnit](https://phpunit.de/):
+Then run [PHPUnit](https://phpunit.de/) and the static analyzers:
 
 ```bash
-$ vendor/bin/phpunit
+$ make test
 ```
 
-The tests will be automatically run by [Travis CI](https://travis-ci.org/) and [GitHub Actions](https://github.com/features/actions) against pull requests.
+These will also be automatically run by [Travis CI](https://travis-ci.org/) and [GitHub Actions](https://github.com/features/actions) against pull requests.
