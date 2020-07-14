@@ -4,13 +4,13 @@ jobs:
       dist: trusty
       language: php
       php: 5.5.9
-      before_install: composer self-update --2
-      install: travis_retry composer update -n -o
+      before_install: travis_retry composer self-update --2
+      install: travis_retry composer update --no-interaction --no-progress
       script: vendor/bin/phpunit
     - name: PHP 5.5
       dist: trusty
       language: php
       php: 5.5
-      before_install: composer self-update --2
-      install: travis_retry composer update -n -o
+      before_install: travis_retry composer self-update --2
+      install: travis_retry composer update --no-interaction --no-progress
       script: vendor/bin/phpunit

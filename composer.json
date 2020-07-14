@@ -18,7 +18,7 @@
     "require": {
         "php": "^5.5.9 || ^7.0 || ^8.0",
         "phpoption/phpoption": "^1.7.3",
-        "symfony/polyfill-ctype": "^1.16"
+        "symfony/polyfill-ctype": "^1.17"
     },
     "require-dev": {
         "ext-filter": "*",
@@ -41,8 +41,7 @@
         "ext-pcre": "Required to use most of the library."
     },
     "config": {
-        "preferred-install": "dist",
-        "platform-check": false
+        "preferred-install": "dist"
     },
     "extra": {
         "branch-alias": {
