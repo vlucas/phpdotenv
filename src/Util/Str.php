@@ -36,11 +36,13 @@ final class Str
     public static function utf8(string $input, string $encoding = null)
     {
         if ($encoding !== null && !\in_array($encoding, \mb_list_encodings(), true)) {
+            /** @var \GrahamCampbell\ResultType\Result<string,string> */
             return Error::create(
                 \sprintf('Illegal character encoding [%s] specified.', $encoding)
             );
         }
 
+        /** @var \GrahamCampbell\ResultType\Result<string,string> */
         return Success::create(
             $encoding === null ? @\mb_convert_encoding($input, 'UTF-8') : @\mb_convert_encoding($input, 'UTF-8', $encoding)
         );
@@ -58,6 +60,7 @@ final class Str
         $result = mb_str_split($input, 1, 'UTF-8');
 
         if ($result === false) {
+            /** @var \GrahamCampbell\ResultType\Result<string[],string> */
             return Error::create('Multibyte split failed.');
         }
 
