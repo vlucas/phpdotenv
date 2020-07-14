@@ -167,7 +167,7 @@ class Validator
 
         foreach ($this->variables as $variable) {
             if ($callback($this->repository->get($variable)) === false) {
-                $failing[] = \sprintf('%s %s', $variable, $message ?? 'failed callback assertion');
+                $failing[] = \sprintf('%s %s', $variable, $message);
             }
         }
 
