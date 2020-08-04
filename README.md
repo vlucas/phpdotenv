@@ -117,7 +117,7 @@ $s3_bucket = $_SERVER['S3_BUCKET'];
 
 ### Putenv and Getenv
 
-Using `getenv()` and `putenv()` is strongly discurraged due to the fact that
+Using `getenv()` and `putenv()` is strongly discouraged due to the fact that
 these functions are not thread safe, however it is still possible to instruct
 PHP dotenv to use these functions. Instead of calling
 `Dotenv::createImmutable`, one can call `Dotenv::createUnsafeImmutable`, which
