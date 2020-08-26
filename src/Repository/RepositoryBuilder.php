@@ -156,9 +156,9 @@ final class RepositoryBuilder
             return \is_string($reader) ? $reader::create() : Some::create($reader);
         });
 
-        $readers = \array_merge($this->readers, \iterator_to_array($optional));
+        $this->readers = \array_merge($this->readers, \iterator_to_array($optional));
 
-        return new self($readers, $this->writers, $this->immutable, $this->allowList);
+        return $this;
     }
 
     /**
@@ -189,9 +189,9 @@ final class RepositoryBuilder
             return \is_string($writer) ? $writer::create() : Some::create($writer);
         });
 
-        $writers = \array_merge($this->writers, \iterator_to_array($optional));
+        $this->writers = \array_merge($this->writers, \iterator_to_array($optional));
 
-        return new self($this->readers, $writers, $this->immutable, $this->allowList);
+        return $this;
     }
 
     /**
@@ -223,10 +223,10 @@ final class RepositoryBuilder
             return \is_string($adapter) ? $adapter::create() : Some::create($adapter);
         });
 
-        $readers = \array_merge($this->readers, \iterator_to_array($optional));
-        $writers = \array_merge($this->writers, \iterator_to_array($optional));
+        $this->readers = \array_merge($this->readers, \iterator_to_array($optional));
+        $this->writers = \array_merge($this->writers, \iterator_to_array($optional));
 
-        return new self($readers, $writers, $this->immutable, $this->allowList);
+        return $this;
     }
 
     /**
@@ -236,7 +236,9 @@ final class RepositoryBuilder
      */
     public function immutable()
     {
-        return new self($this->readers, $this->writers, true, $this->allowList);
+        $this->immutable = true;
+
+        return $this;
     }
 
     /**
@@ -248,7 +250,9 @@ final class RepositoryBuilder
      */
     public function allowList(array $allowList = null)
     {
-        return new self($this->readers, $this->writers, $this->immutable, $allowList);
+        $this->allowList = $allowList;
+
+        return $this;
     }
 
     /**
