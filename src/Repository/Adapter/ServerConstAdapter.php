@@ -40,9 +40,20 @@ final class ServerConstAdapter implements AdapterInterface
     public function read(string $name)
     {
         /** @var \PhpOption\Option<string> */
-        return Option::fromArraysValue($_SERVER, $name)->filter(static function ($value) {
-            return \is_string($value);
-        });
+        return Option::fromArraysValue($_SERVER, $name)
+            ->map(static function ($value) {
+                if ($value === false) {
+                    return 'false';
+                }
+
+                if ($value === true) {
+                    return 'true';
+                }
+
+                return $value;
+            })->filter(static function ($value) {
+                return \is_string($value);
+            });
     }
 
     /**

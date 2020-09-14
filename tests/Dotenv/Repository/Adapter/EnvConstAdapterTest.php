@@ -17,6 +17,22 @@ final class EnvConstAdapterTest extends TestCase
         self::assertSame('foo bar baz', $value->get());
     }
 
+    public function testFalseRead()
+    {
+        $_ENV['CONST_TEST'] = false;
+        $value = self::createAdapter()->read('CONST_TEST');
+        self::assertTrue($value->isDefined());
+        self::assertSame('false', $value->get());
+    }
+
+    public function testTrueRead()
+    {
+        $_ENV['CONST_TEST'] = true;
+        $value = self::createAdapter()->read('CONST_TEST');
+        self::assertTrue($value->isDefined());
+        self::assertSame('true', $value->get());
+    }
+
     public function testBadTypeRead()
     {
         $_ENV['CONST_TEST'] = 123;
