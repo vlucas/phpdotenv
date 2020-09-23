@@ -77,7 +77,7 @@ final class Regex
      * @param string $pattern
      * @param string $subject
      *
-     * @return \GrahamCampbell\ResultType\Result<string[],string>
+     * @return \GrahamCampbell\ResultType\Result
      */
     public static function split(string $pattern, string $subject)
     {
