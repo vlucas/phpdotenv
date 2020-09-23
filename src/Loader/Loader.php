@@ -32,7 +32,7 @@ final class Loader implements LoaderInterface
 
             if ($value->isDefined()) {
                 $inner = $value->get();
-                if ($repository->set($name, $inner)) {
+                if ($repository->set($name, (string)$inner)) {
                     return \array_merge($vars, [$name => $inner]);
                 }
             } else {
