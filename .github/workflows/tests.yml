@@ -5,7 +5,7 @@ on:
   pull_request:
 
 jobs:
-  tests_latest:
+  latest:
     name: PHP ${{ matrix.php }} Latest
     runs-on: ubuntu-20.04
 
@@ -27,26 +27,17 @@ jobs:
       - name: Setup Problem Matchers
         run: echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
 
-      - name: Install PHP 5/7 Dependencies
+      - name: Install Latest Dependencies
         uses: nick-invision/retry@v1
         with:
           timeout_minutes: 5
           max_attempts: 5
           command: composer update --no-interaction --no-progress
-        if: "matrix.php < 8"
-
-      - name: Install PHP 8 Dependencies
-        uses: nick-invision/retry@v1
-        with:
-          timeout_minutes: 5
-          max_attempts: 5
-          command: composer update --no-interaction --no-progress --ignore-platform-reqs
-        if: "matrix.php >= 8"
 
       - name: Execute PHPUnit
         run: vendor/bin/phpunit
 
-  tests_lowest:
+  lowest:
     name: PHP ${{ matrix.php }} Lowest
     runs-on: ubuntu-20.04
 
