@@ -5,13 +5,13 @@ on:
   pull_request:
 
 jobs:
-  tests:
+  php:
     name: PHP ${{ matrix.php }}
     runs-on: ubuntu-20.04
 
     strategy:
       matrix:
-        php: ['5.6', '7.0', '7.1', '7.2', '7.3', '7.4', '8.0']
+        php: ['5.4', '5.5', '5.6', '7.0', '7.1', '7.2', '7.3', '7.4', '8.0']
 
     steps:
       - name: Checkout Code
@@ -40,8 +40,38 @@ jobs:
         with:
           timeout_minutes: 5
           max_attempts: 5
-          command: composer update --no-interaction --no-progress --ignore-platform-reqs
+          command: composer update --no-interaction --no-progress --ignore-platform-req=php
         if: "matrix.php >= 8"
 
       - name: Execute PHPUnit
         run: vendor/bin/phpunit
+
+  hhvm:
+    name: HHVM ${{ matrix.hhvm }}
+    runs-on: ubuntu-16.04
+
+    strategy:
+      matrix:
+        hhvm: ["3.15", "3.18", "3.21", "3.24", "3.27", "3.30"]
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+
+      - name: Install HHVM
+        shell: bash
+        run: sudo .github/bin/hhvm.sh ${{ matrix.hhvm }}
+
+      - name: Install Composer
+        shell: bash
+        run: sudo .github/bin/composer.sh
+
+      - name: Install Dependencies
+        uses: nick-invision/retry@v1
+        with:
+          timeout_minutes: 5
+          max_attempts: 5
+          command: composer update --no-interaction --no-progress
+
+      - name: Execute PHPUnit
+        run: hhvm vendor/bin/phpunit
