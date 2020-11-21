@@ -11,7 +11,7 @@ jobs:
 
     strategy:
       matrix:
-        php: ['5.6', '7.0', '7.1', '7.2', '7.3', '7.4', '8.0']
+        php: ['5.5', '5.6', '7.0', '7.1', '7.2', '7.3', '7.4', '8.0']
 
     steps:
       - name: Checkout Code
@@ -40,7 +40,7 @@ jobs:
         with:
           timeout_minutes: 5
           max_attempts: 5
-          command: composer update --no-interaction --no-progress --ignore-platform-reqs
+          command: composer update --no-interaction --no-progress --ignore-platform-req=php
         if: "matrix.php >= 8"
 
       - name: Execute PHPUnit
