@@ -121,11 +121,6 @@ class DotenvTest extends TestCase
         $this->assertEmpty($_ENV['NULL']);
     }
 
-    /**
-     * @depends testDotenvLoadsEnvironmentVars
-     * @depends testDotenvLoadsEnvGlobals
-     * @depends testDotenvLoadsServerGlobals
-     */
     public function testDotenvRequiredStringEnvironmentVars()
     {
         $dotenv = new Dotenv($this->fixturesFolder);
@@ -134,11 +129,6 @@ class DotenvTest extends TestCase
         $this->assertTrue(true); // anything wrong an exception will be thrown
     }
 
-    /**
-     * @depends testDotenvLoadsEnvironmentVars
-     * @depends testDotenvLoadsEnvGlobals
-     * @depends testDotenvLoadsServerGlobals
-     */
     public function testDotenvRequiredArrayEnvironmentVars()
     {
         $dotenv = new Dotenv($this->fixturesFolder);
@@ -158,11 +148,6 @@ class DotenvTest extends TestCase
         $this->assertSame('Special Value', $_ENV['NVAR7']);  // nested '.' (dot) variable
     }
 
-    /**
-     * @depends testDotenvLoadsEnvironmentVars
-     * @depends testDotenvLoadsEnvGlobals
-     * @depends testDotenvLoadsServerGlobals
-     */
     public function testDotenvAllowedValues()
     {
         $dotenv = new Dotenv($this->fixturesFolder);
@@ -172,10 +157,6 @@ class DotenvTest extends TestCase
     }
 
     /**
-     * @depends testDotenvLoadsEnvironmentVars
-     * @depends testDotenvLoadsEnvGlobals
-     * @depends testDotenvLoadsServerGlobals
-     *
      * @expectedException \Dotenv\Exception\ValidationException
      * @expectedExceptionMessage One or more environment variables failed assertions: FOO is not an allowed value.
      */
