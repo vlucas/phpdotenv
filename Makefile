@@ -14,6 +14,9 @@ phpstan-analyze-tests:
 psalm-analyze:
 	@docker run -it -w /data -v ${PWD}:/data:delegated --entrypoint vendor/bin/psalm.phar --rm registry.gitlab.com/grahamcampbell/php:7.4-cli
 
+psalm-baseline:
+	@docker run -it -w /data -v ${PWD}:/data:delegated --entrypoint vendor/bin/psalm.phar --rm registry.gitlab.com/grahamcampbell/php:7.4-cli --set-baseline=psalm-baseline.xml
+
 psalm-show-info:
 	@docker run -it -w /data -v ${PWD}:/data:delegated --entrypoint vendor/bin/psalm.phar --rm registry.gitlab.com/grahamcampbell/php:7.4-cli --show-info=true
 
