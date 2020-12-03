@@ -49,26 +49,6 @@ final class Str
     }
 
     /**
-     * Split the given string into an array of characters.
-     *
-     * @param string $input
-     *
-     * @return \GrahamCampbell\ResultType\Result<string[],string>
-     */
-    public static function split(string $input)
-    {
-        $result = \mb_str_split($input, 1, 'UTF-8');
-
-        if ($result === false) {
-            /** @var \GrahamCampbell\ResultType\Result<string[],string> */
-            return Error::create('Multibyte split failed.');
-        }
-
-        /** @var \GrahamCampbell\ResultType\Result<string[],string> */
-        return Success::create($result);
-    }
-
-    /**
      * Search for a given substring of the input.
      *
      * @param string $haystack
