@@ -5,10 +5,12 @@ namespace Dotenv;
 use Dotenv\Exception\InvalidPathException;
 use Dotenv\Loader\Loader;
 use Dotenv\Loader\LoaderInterface;
+use Dotenv\Repository\Adapter\ArrayAdapter;
 use Dotenv\Repository\RepositoryBuilder;
 use Dotenv\Repository\RepositoryInterface;
 use Dotenv\Store\FileStore;
 use Dotenv\Store\StoreBuilder;
+use Dotenv\Store\StringStore;
 
 class Dotenv
 {
@@ -100,6 +102,47 @@ class Dotenv
         $repository = RepositoryBuilder::create()->immutable()->make();
 
         return self::create($repository, $paths, $names, $shortCircuit);
+    }
+
+    /**
+     * Create a new dotenv instance with an array backed repository.
+     *
+     * @param string|string[]      $paths
+     * @param string|string[]|null $names
+     * @param bool                 $shortCircuit
+     *
+     * @return \Dotenv\Dotenv
+     */
+    public static function createArrayBacked($paths, $names = null, $shortCircuit = true)
+    {
+        $adapter = new ArrayAdapter();
+
+        $repository = RepositoryBuilder::create()->withReaders([$adapter])->withWriters([$adapter])->make();
+
+        return self::create($repository, $paths, $names, $shortCircuit);
+    }
+
+    /**
+     * Parse the given content and resolve nested variables.
+     *
+     * This method behaves just like load(), only without mutating your actual
+     * environment. We do this by using an array backed repository.
+     *
+     * @param string $content
+     *
+     * @throws \Dotenv\Exception\InvalidFileException
+     *
+     * @return array<string,string|null>
+     */
+    public static function parse($content)
+    {
+        $adapter = new ArrayAdapter();
+
+        $repository = RepositoryBuilder::create()->withReaders([$adapter])->withWriters([$adapter])->make();
+
+        $phpdotenv = new self(new Loader(), $repository, new StringStore($content));
+
+        return $phpdotenv->load();
     }
 
     /**
