@@ -114,7 +114,7 @@ class Parser
             return Value::blank();
         }
 
-        return array_reduce(str_split($value), function ($data, $char) use ($value) {
+        $result = array_reduce(str_split($value), function ($data, $char) use ($value) {
             return self::processChar($data[1], $char)->mapError(function ($err) use ($value) {
                 throw new InvalidFileException(
                     self::getErrorMessage($err, $value)
@@ -122,7 +122,15 @@ class Parser
             })->mapSuccess(function ($val) use ($data) {
                 return [$data[0]->append($val[0], $val[1]), $val[2]];
             })->getSuccess();
-        }, [Value::blank(), self::INITIAL_STATE])[0];
+        }, [Value::blank(), self::INITIAL_STATE]);
+
+        if (in_array($result[1], [self::SINGLE_QUOTED_STATE, self::DOUBLE_QUOTED_STATE, self::ESCAPE_SEQUENCE_STATE], true)) {
+            throw new InvalidFileException(
+                self::getErrorMessage('a missing closing quote', $value)
+            );
+        }
+
+        return $result[0];
     }
 
     /**

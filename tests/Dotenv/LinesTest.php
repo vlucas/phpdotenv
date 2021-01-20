@@ -53,4 +53,17 @@ class LinesTest extends TestCase
 
         self::assertSame($expected, $lines);
     }
+
+    public function testProcessBadQuotes()
+    {
+        $lines = [
+            "TEST=\"erert\nTEST='erert\n",
+        ];
+
+        $expected = [
+            "TEST=\"erert\nTEST='erert\n",
+        ];
+
+        self::assertSame($expected, $lines);
+    }
 }

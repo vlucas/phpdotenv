@@ -226,4 +226,40 @@ class ParserTest extends TestCase
         self::assertSame('iiiiviiiixiiiiviiii\\a', $output[1]->getChars());
         self::assertSame([], $output[1]->getVars());
     }
+
+    /**
+     * @expectedException \Dotenv\Exception\InvalidFileException
+     * @expectedExceptionMessage Failed to parse dotenv file due to a missing closing quote. Failed at ['erert].
+     */
+    public function testMissingClosingSingleQuote()
+    {
+        Parser::parse('TEST=\'erert');
+    }
+
+    /**
+     * @expectedException \Dotenv\Exception\InvalidFileException
+     * @expectedExceptionMessage Failed to parse dotenv file due to a missing closing quote. Failed at ["erert].
+     */
+    public function testMissingClosingDoubleQuote()
+    {
+        Parser::parse('TEST="erert');
+    }
+
+    /**
+     * @expectedException \Dotenv\Exception\InvalidFileException
+     * @expectedExceptionMessage Failed to parse dotenv file due to a missing closing quote. Failed at ["erert].
+     */
+    public function testMissingClosingQuotes()
+    {
+        Parser::parse("TEST=\"erert\nTEST='erert\n");
+    }
+
+    /**
+     * @expectedException \Dotenv\Exception\InvalidFileException
+     * @expectedExceptionMessage Failed to parse dotenv file due to a missing closing quote. Failed at ["\].
+     */
+    public function testMissingClosingQuoteWithEscape()
+    {
+        Parser::parse('TEST="\\');
+    }
 }
