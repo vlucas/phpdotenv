@@ -55,7 +55,7 @@ class Parser
      */
     public static function parseQuotedValue($value)
     {
-        $data = array_reduce(str_split($value), function ($data, $char) use ($value) {
+        $result = array_reduce(str_split($value), function ($data, $char) use ($value) {
             switch ($data[1]) {
                 case Parser::INITIAL_STATE:
                     if ($char === '"' || $char === '\'') {
@@ -94,7 +94,13 @@ class Parser
             }
         }, array('', Parser::INITIAL_STATE));
 
-        return trim($data[0]);
+        if ($result[1] === Parser::QUOTED_STATE || $result[1] === Parser::ESCAPE_STATE) {
+            throw new InvalidFileException(
+                'Dotenv values starting with a quote must finish with a closing quote.'
+            );
+        }
+
+        return trim($result[0]);
     }
 
     /**

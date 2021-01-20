@@ -87,7 +87,47 @@ class DotenvTest extends TestCase
      */
     public function testSpacedValuesWithoutQuotesThrowsException()
     {
-        $dotenv = new Dotenv(dirname(__DIR__).'/fixtures/env-wrong', 'spaced-wrong.env');
+        $dotenv = new Dotenv(dirname(__DIR__).'/fixtures/env', 'spaced-wrong.env');
+        $dotenv->load();
+    }
+
+    /**
+     * @expectedException \Dotenv\Exception\InvalidFileException
+     * @expectedExceptionMessage Dotenv values starting with a quote must finish with a closing quote.
+     */
+    public function testMissingClosingSingleQuoteThrowsException()
+    {
+        $dotenv = new Dotenv(dirname(__DIR__).'/fixtures/env', 'squote-wrong.env');
+        $dotenv->load();
+    }
+
+    /**
+     * @expectedException \Dotenv\Exception\InvalidFileException
+     * @expectedExceptionMessage Dotenv values starting with a quote must finish with a closing quote.
+     */
+    public function testMissingClosingDoubleQuoteThrowsException()
+    {
+        $dotenv = new Dotenv(dirname(__DIR__).'/fixtures/env', 'dquote-wrong.env');
+        $dotenv->load();
+    }
+
+    /**
+     * @expectedException \Dotenv\Exception\InvalidFileException
+     * @expectedExceptionMessage Dotenv values starting with a quote must finish with a closing quote.
+     */
+    public function testMissingClosingQuotesThrowsException()
+    {
+        $dotenv = new Dotenv(dirname(__DIR__).'/fixtures/env', 'quotes-wrong.env');
+        $dotenv->load();
+    }
+
+    /**
+     * @expectedException \Dotenv\Exception\InvalidFileException
+     * @expectedExceptionMessage Dotenv values starting with a quote must finish with a closing quote.
+     */
+    public function testMissingClosingQuoteWithEscapeThrowsException()
+    {
+        $dotenv = new Dotenv(dirname(__DIR__).'/fixtures/env', 'escape-wrong.env');
         $dotenv->load();
     }
 
