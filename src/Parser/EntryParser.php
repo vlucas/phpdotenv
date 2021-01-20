@@ -19,6 +19,7 @@ final class EntryParser
     private const ESCAPE_SEQUENCE_STATE = 4;
     private const WHITESPACE_STATE = 5;
     private const COMMENT_STATE = 6;
+    private const REJECT_STATES = [self::SINGLE_QUOTED_STATE, self::DOUBLE_QUOTED_STATE, self::ESCAPE_SEQUENCE_STATE];
 
     /**
      * This class is a singleton.
@@ -156,16 +157,20 @@ final class EntryParser
             return Success::create(Value::blank());
         }
 
-        return \array_reduce(\iterator_to_array(Lexer::lex($value)), static function (Result $data, string $token) use ($value) {
-            return $data->flatMap(static function (array $data) use ($token, $value) {
-                return self::processToken($data[1], $token)->mapError(static function (string $err) use ($value) {
-                    return self::getErrorMessage($err, $value);
-                })->map(static function (array $val) use ($data) {
+        return \array_reduce(\iterator_to_array(Lexer::lex($value)), static function (Result $data, string $token) {
+            return $data->flatMap(static function (array $data) use ($token) {
+                return self::processToken($data[1], $token)->map(static function (array $val) use ($data) {
                     return [$data[0]->append($val[0], $val[1]), $val[2]];
                 });
             });
-        }, Success::create([Value::blank(), self::INITIAL_STATE]))->map(static function (array $data) {
-            return $data[0];
+        }, Success::create([Value::blank(), self::INITIAL_STATE]))->flatMap(static function (array $result) {
+            if (in_array($result[1], self::REJECT_STATES, true)) {
+                return Error::create('a missing closing quote');
+            }
+
+            return Success::create($result[0]);
+        })->mapError(static function (string $err) use ($value) {
+            return self::getErrorMessage($err, $value);
         });
     }
 

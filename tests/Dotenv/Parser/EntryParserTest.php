@@ -157,6 +157,30 @@ final class EntryParserTest extends TestCase
         $this->checkPositiveResult($result, 'FOO_BAD', 'iiiiviiiixiiiiviiii\\a');
     }
 
+    public function testParserMissingClosingSingleQuote()
+    {
+        $result = EntryParser::parse('TEST=\'erert');
+        $this->checkErrorResult($result, 'Encountered a missing closing quote at [\'erert].');
+    }
+
+    public function testParserMissingClosingDoubleQuote()
+    {
+        $result = EntryParser::parse('TEST="erert');
+        $this->checkErrorResult($result, 'Encountered a missing closing quote at ["erert].');
+    }
+
+    public function testParserMissingClosingQuotes()
+    {
+        $result = EntryParser::parse("TEST=\"erert\nTEST='erert\n");
+        $this->checkErrorResult($result, 'Encountered a missing closing quote at ["erert].');
+    }
+
+    public function testParserClosingQuoteWithEscape()
+    {
+        $result = EntryParser::parse('TEST="\\');
+        $this->checkErrorResult($result, 'Encountered a missing closing quote at ["\\].');
+    }
+
     /**
      * @param \GrahamCampbell\ResultType\Result<\Dotenv\Parser\Entry,string> $result
      * @param string                                                         $name
