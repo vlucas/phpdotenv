@@ -1,6 +1,6 @@
 parameters:
   level: max
   ignoreErrors:
-    - '#Unable to resolve the template type#'
     - '#Anonymous function should have native return typehint ".+".#'
     - '#Only booleans are allowed in a negated boolean, int\|false given.#'
+    - '#Method Dotenv\\Util\\Regex::split\(\) should return GrahamCampbell\\ResultType\\Result\<array\<string\>, string\> but returns GrahamCampbell\\ResultType\\Result\<array\<int, bool\|string\>, string\>.#'
