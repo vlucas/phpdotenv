@@ -4,6 +4,7 @@ parameters:
     - '#Anonymous function should have native return typehint ".+".#'
     - '#Call to function is_string\(\) with string will always evaluate to true.#'
     - '#Variable \$defaults might not be defined.#'
+    - '#Method Dotenv\\Regex\\Regex::split\(\) should return Dotenv\\Result\\Result\<array\<string\>, string\> but returns Dotenv\\Result\\Result\<array\<int, bool\|string\>, string\>.#'
     - '/^Parameter \#1 \$readers of class Dotenv\\Repository\\[a-zA-Z]*Repository[a-zA-Z]* constructor expects/'
     - '/^Parameter \#2 \$writers of class Dotenv\\Repository\\[a-zA-Z]*Repository[a-zA-Z]* constructor expects/'
     - '#Parameter \#1 \$name of method Dotenv\\Repository\\AbstractRepository::set\(\) expects string, string\|null given.#'
