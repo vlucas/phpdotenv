@@ -105,7 +105,7 @@ $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
 $dotenv->safeLoad();
 ```
 
-Alternatively, you can pass in a filename as the second parameter if you would
+Optionally you can pass in a filename as the second parameter if you would
 like to use something other than `.env`:
 
 ```php
