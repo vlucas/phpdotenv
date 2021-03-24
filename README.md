@@ -98,6 +98,13 @@ $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
 $dotenv->load();
 ```
 
+To suppress the exception that is thrown when there is no `.env` file, you can:
+
+```php
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
+$dotenv->safeLoad();
+```
+
 Optionally you can pass in a filename as the second parameter, if you would
 like to use something other than `.env`:
 
