@@ -98,13 +98,22 @@ $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
 $dotenv->load();
 ```
 
-Optionally you can pass in a filename as the second parameter, if you would
+If you don't want any exceptions to be thrown if no `.env` file is found (useful when you want it to be optional), use `safeLoad()`:
+
+```php
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
+$dotenv->safeLoad();
+```
+
+Alternatively, you can pass in a filename as the second parameter if you would
 like to use something other than `.env`:
 
 ```php
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__, 'myconfig');
 $dotenv->load();
 ```
+
+
 
 All of the defined variables are now available in the `$_ENV` and `$_SERVER`
 super-globals.
