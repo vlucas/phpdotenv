@@ -100,7 +100,7 @@ final class DotenvTest extends TestCase
         self::assertEmpty($_SERVER['NULL']);
     }
 
-    public function testDotenvLoadsEnvironmentVarsMultipleNotShortCircuitMode()
+    public function testDotenvLoadsEnvironmentVarsMultipleWithShortCircuitMode()
     {
         $dotenv = Dotenv::createMutable(self::$folder, ['.env', 'example.env']);
 
@@ -110,7 +110,7 @@ final class DotenvTest extends TestCase
         );
     }
 
-    public function testDotenvLoadsEnvironmentVarsMultipleWithShortCircuitMode()
+    public function testDotenvLoadsEnvironmentVarsMultipleWithoutShortCircuitMode()
     {
         $dotenv = Dotenv::createMutable(self::$folder, ['.env', 'example.env'], false);
 
