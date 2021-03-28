@@ -74,7 +74,7 @@ all project collaborators.
 
 Add your application configuration to a `.env` file in the root of your
 project. **Make sure the `.env` file is added to your `.gitignore` so it is not
-checked-in the code**
+checked-in with the code**
 
 ```shell
 S3_BUCKET="dotenv"
