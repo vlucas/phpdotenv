@@ -88,6 +88,7 @@ class Success extends Result
      */
     public function mapError(callable $f)
     {
+        /** @var \Dotenv\Result\Result<T,F> */
         return self::create($this->value);
     }
 }
