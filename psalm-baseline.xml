@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<files psalm-version="4.3.1@2feba22a005a18bf31d4c7b9bdb9252c73897476">
-  <file src="src/Repository/RepositoryBuilder.php">
+<files psalm-version="4.x-dev@">
+  <file src="src/Parser/EntryParser.php">
     <InvalidArgument occurrences="1">
       <code>flatMap</code>
     </InvalidArgument>
+  </file>
+  <file src="src/Repository/RepositoryBuilder.php">
     <InvalidStringClass occurrences="3">
       <code>$adapter::create()</code>
       <code>$reader::create()</code>
