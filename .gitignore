@@ -4,3 +4,4 @@ phpstan.neon
 phpstan.tests.neon
 phpunit.xml
 vendor
+.devcontainer

@@ -24,28 +24,28 @@ class Dotenv
      *
      * @var \Dotenv\Store\StoreInterface
      */
-    private $store;
+    private StoreInterface $store;
 
     /**
      * The parser instance.
      *
      * @var \Dotenv\Parser\ParserInterface
      */
-    private $parser;
+    private ParserInterface $parser;
 
     /**
      * The loader instance.
      *
      * @var \Dotenv\Loader\LoaderInterface
      */
-    private $loader;
+    private LoaderInterface $loader;
 
     /**
      * The repository instance.
      *
      * @var \Dotenv\Repository\RepositoryInterface
      */
-    private $repository;
+    private RepositoryInterface $repository;
 
     /**
      * Create a new dotenv instance.
