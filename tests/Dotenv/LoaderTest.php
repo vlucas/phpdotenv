@@ -17,7 +17,10 @@ class LoaderTest extends TestCase
      */
     protected $keyVal;
 
-    public function setUp()
+    /**
+     * @before
+     */
+    public function setUpTest()
     {
         $this->folder = dirname(__DIR__).'/fixtures/env';
         $this->keyVal(true);

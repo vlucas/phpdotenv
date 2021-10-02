@@ -10,7 +10,10 @@ class ValidatorTest extends TestCase
      */
     private $fixturesFolder;
 
-    public function setUp()
+    /**
+     * @before
+     */
+    public function setUpTest()
     {
         $this->fixturesFolder = dirname(__DIR__).'/fixtures/env';
     }

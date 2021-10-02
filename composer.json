@@ -6,13 +6,11 @@
     "authors": [
         {
             "name": "Graham Campbell",
-            "email": "graham@alt-three.com",
-            "homepage": "https://gjcampbell.co.uk/"
+            "email": "hello@gjcampbell.co.uk"
         },
         {
             "name": "Vance Lucas",
-            "email": "vance@vancelucas.com",
-            "homepage": "https://vancelucas.com/"
+            "email": "vance@vancelucas.com"
         }
     ],
     "require": {
@@ -23,7 +21,7 @@
     "require-dev": {
         "ext-filter": "*",
         "ext-pcre": "*",
-        "phpunit/phpunit": "^4.8.36 || ^5.7.27 || ^6.5.14 || ^7.5.20"
+        "phpunit/phpunit": "^4.8.36 || ^5.7.27 || ^6.5.14 || ^7.5.20 || ^8.5.21"
     },
     "autoload": {
         "psr-4": {
