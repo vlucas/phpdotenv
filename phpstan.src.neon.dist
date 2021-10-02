@@ -8,4 +8,3 @@ parameters:
     - '/^Parameter \#1 \$readers of class Dotenv\\Repository\\[a-zA-Z]*Repository[a-zA-Z]* constructor expects/'
     - '/^Parameter \#2 \$writers of class Dotenv\\Repository\\[a-zA-Z]*Repository[a-zA-Z]* constructor expects/'
     - '#Parameter \#1 \$name of method Dotenv\\Repository\\AbstractRepository::set\(\) expects string, string\|null given.#'
-    - '#Parameter \#.+ of method Dotenv\\Repository\\AbstractRepository::offset.+ should be contravariant .+#'
