@@ -11,7 +11,10 @@ class EnvironmentVariablesTest extends TestCase
      */
     private $envFactory;
 
-    protected function setUp()
+    /**
+     * @before
+     */
+    public function setUpTest()
     {
         $this->envFactory = new DotenvFactory();
         (new Loader([dirname(__DIR__).'/fixtures/env/.env'], $this->envFactory))->load();
