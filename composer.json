@@ -6,7 +6,7 @@
     "authors": [
         {
             "name": "Graham Campbell",
-            "email": "hello@gjcampbell.co.uk",
+            "email": "hello@gjcampbell.co.uk"
         },
         {
             "name": "Vance Lucas",
@@ -45,7 +45,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "5.4-dev"
+            "dev-master": "5.3-dev"
         }
     }
 }
