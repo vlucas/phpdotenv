@@ -27,10 +27,6 @@ jobs:
       - name: Setup Problem Matchers
         run: echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
 
-      - name: Mimic PHP 8.0
-        run: composer config platform.php 8.0.999
-        if: matrix.php > 8
-
       - name: Install Latest Dependencies
         uses: nick-invision/retry@v1
         with:
@@ -62,10 +58,6 @@ jobs:
 
       - name: Setup Problem Matchers
         run: echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
-
-      - name: Mimic PHP 8.0
-        run: composer config platform.php 8.0.999
-        if: matrix.php > 8
 
       - name: Install Lowest Dependencies
         uses: nick-invision/retry@v1

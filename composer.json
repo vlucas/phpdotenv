@@ -7,12 +7,10 @@
         {
             "name": "Graham Campbell",
             "email": "hello@gjcampbell.co.uk",
-            "homepage": "https://gjcampbell.co.uk/"
         },
         {
             "name": "Vance Lucas",
-            "email": "vance@vancelucas.com",
-            "homepage": "https://vancelucas.com/"
+            "email": "vance@vancelucas.com"
         }
     ],
     "require": {
@@ -27,7 +25,7 @@
     "require-dev": {
         "ext-filter": "*",
         "bamarni/composer-bin-plugin": "^1.4.1",
-        "phpunit/phpunit": "^7.5.20 || ^8.5.20 || ^9.5.8"
+        "phpunit/phpunit": "^7.5.20 || ^8.5.21 || ^9.5.10"
     },
     "autoload": {
         "psr-4": {
