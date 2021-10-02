@@ -15,7 +15,10 @@ class LoaderTest extends TestCase
      */
     private $mutableLoader;
 
-    public function setUp()
+    /**
+     * @before
+     */
+    public function setUpTest()
     {
         $folder = dirname(__DIR__).'/fixtures/env';
 
