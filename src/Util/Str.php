@@ -41,11 +41,19 @@ final class Str
                 \sprintf('Illegal character encoding [%s] specified.', $encoding)
             );
         }
-
+        $converted = $encoding === null ?
+            @\mb_convert_encoding($input, 'UTF-8') :
+            @\mb_convert_encoding($input, 'UTF-8', $encoding);
+        /**
+         * this is for support UTF-8 with BOM encoding
+         * @see https://en.wikipedia.org/wiki/Byte_order_mark
+         * @see https://github.com/vlucas/phpdotenv/issues/500
+         */
+        if (\substr($converted, 0, 3) == "\xEF\xBB\xBF") {
+            $converted = \substr($converted, 3);
+        }
         /** @var \GrahamCampbell\ResultType\Result<string,string> */
-        return Success::create(
-            $encoding === null ? @\mb_convert_encoding($input, 'UTF-8') : @\mb_convert_encoding($input, 'UTF-8', $encoding)
-        );
+        return Success::create($converted);
     }
 
     /**

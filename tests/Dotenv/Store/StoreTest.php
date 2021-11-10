@@ -127,4 +127,15 @@ final class StoreTest extends TestCase
             $builder->make()->read()
         );
     }
+    public function testFileReadWithUtf8WithBomEncoding()
+    {
+        self::assertSame(
+            [
+                self::$folder.\DIRECTORY_SEPARATOR.'utf8-with-bom-encoding.env' => "FOO=bar\nBAR=baz\nSPACED=\"with spaces\"\n",
+            ],
+            Reader::read(
+                Paths::filePaths([self::$folder], ['utf8-with-bom-encoding.env'])
+            )
+        );
+    }
 }
