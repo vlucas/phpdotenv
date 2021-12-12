@@ -6,11 +6,13 @@
     "authors": [
         {
             "name": "Graham Campbell",
-            "email": "hello@gjcampbell.co.uk"
+            "email": "hello@gjcampbell.co.uk",
+            "homepage": "https://github.com/GrahamCampbell"
         },
         {
             "name": "Vance Lucas",
-            "email": "vance@vancelucas.com"
+            "email": "vance@vancelucas.com",
+            "homepage": "https://github.com/vlucas"
         }
     ],
     "require": {
