@@ -1,10 +1,10 @@
 {
     "require": {
-        "phpstan/phpstan": "0.12.99",
+        "phpstan/phpstan": "1.2.0",
         "phpstan/extension-installer": "1.1.0",
-        "phpstan/phpstan-deprecation-rules": "0.12.6",
-        "phpstan/phpstan-strict-rules": "0.12.11",
-        "thecodingmachine/phpstan-strict-rules": "0.12.1"
+        "phpstan/phpstan-deprecation-rules": "1.0.0",
+        "phpstan/phpstan-strict-rules": "1.1.0",
+        "thecodingmachine/phpstan-strict-rules": "1.0.0"
     },
     "config": {
         "preferred-install": "dist"

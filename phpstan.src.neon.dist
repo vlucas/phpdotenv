@@ -1,7 +1,6 @@
 parameters:
   level: max
   ignoreErrors:
-    - '#Anonymous function should have native return typehint ".+".#'
     - '#Call to function is_string\(\) with string will always evaluate to true.#'
     - '#Variable \$defaults might not be defined.#'
     - '#Method Dotenv\\Regex\\Regex::split\(\) should return Dotenv\\Result\\Result\<array\<string\>, string\> but returns Dotenv\\Result\\Result\<array\<int, bool\|string\>, string\>.#'
