@@ -43,6 +43,9 @@
         "ext-filter": "Required to use the boolean validator."
     },
     "config": {
+        "allow-plugins": {
+            "bamarni/composer-bin-plugin": true
+        },
         "preferred-install": "dist"
     },
     "extra": {
