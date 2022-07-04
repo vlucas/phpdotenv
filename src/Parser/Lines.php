@@ -64,7 +64,7 @@ final class Lines
         }
 
         if ($multiline) {
-            \array_push($buffer, $line);
+            $buffer[] = $line;
 
             if (self::looksLikeMultilineStop($line, $started)) {
                 $multiline = false;
