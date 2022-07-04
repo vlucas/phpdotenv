@@ -189,13 +189,16 @@ final class EntryParser
                 if ($token === '\'') {
                     /** @var \GrahamCampbell\ResultType\Result<array{string,bool,int},string> */
                     return Success::create(['', false, self::SINGLE_QUOTED_STATE]);
-                } elseif ($token === '"') {
+                }
+                if ($token === '"') {
                     /** @var \GrahamCampbell\ResultType\Result<array{string,bool,int},string> */
                     return Success::create(['', false, self::DOUBLE_QUOTED_STATE]);
-                } elseif ($token === '#') {
+                }
+                if ($token === '#') {
                     /** @var \GrahamCampbell\ResultType\Result<array{string,bool,int},string> */
                     return Success::create(['', false, self::COMMENT_STATE]);
-                } elseif ($token === '$') {
+                }
+                if ($token === '$') {
                     /** @var \GrahamCampbell\ResultType\Result<array{string,bool,int},string> */
                     return Success::create([$token, true, self::UNQUOTED_STATE]);
                 } else {
@@ -206,10 +209,12 @@ final class EntryParser
                 if ($token === '#') {
                     /** @var \GrahamCampbell\ResultType\Result<array{string,bool,int},string> */
                     return Success::create(['', false, self::COMMENT_STATE]);
-                } elseif (\ctype_space($token)) {
+                }
+                if (\ctype_space($token)) {
                     /** @var \GrahamCampbell\ResultType\Result<array{string,bool,int},string> */
                     return Success::create(['', false, self::WHITESPACE_STATE]);
-                } elseif ($token === '$') {
+                }
+                if ($token === '$') {
                     /** @var \GrahamCampbell\ResultType\Result<array{string,bool,int},string> */
                     return Success::create([$token, true, self::UNQUOTED_STATE]);
                 } else {
@@ -228,10 +233,12 @@ final class EntryParser
                 if ($token === '"') {
                     /** @var \GrahamCampbell\ResultType\Result<array{string,bool,int},string> */
                     return Success::create(['', false, self::WHITESPACE_STATE]);
-                } elseif ($token === '\\') {
+                }
+                if ($token === '\\') {
                     /** @var \GrahamCampbell\ResultType\Result<array{string,bool,int},string> */
                     return Success::create(['', false, self::ESCAPE_SEQUENCE_STATE]);
-                } elseif ($token === '$') {
+                }
+                if ($token === '$') {
                     /** @var \GrahamCampbell\ResultType\Result<array{string,bool,int},string> */
                     return Success::create([$token, true, self::DOUBLE_QUOTED_STATE]);
                 } else {
@@ -242,7 +249,8 @@ final class EntryParser
                 if ($token === '"' || $token === '\\') {
                     /** @var \GrahamCampbell\ResultType\Result<array{string,bool,int},string> */
                     return Success::create([$token, false, self::DOUBLE_QUOTED_STATE]);
-                } elseif ($token === '$') {
+                }
+                if ($token === '$') {
                     /** @var \GrahamCampbell\ResultType\Result<array{string,bool,int},string> */
                     return Success::create([$token, false, self::DOUBLE_QUOTED_STATE]);
                 } else {
@@ -259,7 +267,8 @@ final class EntryParser
                 if ($token === '#') {
                     /** @var \GrahamCampbell\ResultType\Result<array{string,bool,int},string> */
                     return Success::create(['', false, self::COMMENT_STATE]);
-                } elseif (!\ctype_space($token)) {
+                }
+                if (!\ctype_space($token)) {
                     /** @var \GrahamCampbell\ResultType\Result<array{string,bool,int},string> */
                     return Error::create('unexpected whitespace');
                 } else {
