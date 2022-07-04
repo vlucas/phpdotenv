@@ -26,7 +26,7 @@ final class Parser implements ParserInterface
             return 'Could not split into separate lines.';
         })->flatMap(static function (array $lines) {
             return self::process(Lines::process($lines));
-        })->mapError(static function (string $error) {
+        })->mapError(static function (string $error): void {
             throw new InvalidFileException(\sprintf('Failed to parse dotenv file. %s', $error));
         })->success()->get();
     }

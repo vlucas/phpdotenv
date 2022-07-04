@@ -73,7 +73,7 @@ final class Reader
         $content = Option::fromValue(@\file_get_contents($path), false);
 
         return $content->flatMap(static function (string $content) use ($encoding) {
-            return Str::utf8($content, $encoding)->mapError(static function (string $error) {
+            return Str::utf8($content, $encoding)->mapError(static function (string $error): void {
                 throw new InvalidEncodingException($error);
             })->success();
         });
