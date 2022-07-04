@@ -34,9 +34,7 @@ final class Regex
      */
     public static function matches(string $pattern, string $subject)
     {
-        return self::pregAndWrap(static function (string $subject) use ($pattern) {
-            return @\preg_match($pattern, $subject) === 1;
-        }, $subject);
+        return self::pregAndWrap(static fn (string $subject) => @\preg_match($pattern, $subject) === 1, $subject);
     }
 
     /**
@@ -49,9 +47,7 @@ final class Regex
      */
     public static function occurences(string $pattern, string $subject)
     {
-        return self::pregAndWrap(static function (string $subject) use ($pattern) {
-            return (int) @\preg_match_all($pattern, $subject);
-        }, $subject);
+        return self::pregAndWrap(static fn (string $subject) => (int) @\preg_match_all($pattern, $subject), $subject);
     }
 
     /**
@@ -66,9 +62,7 @@ final class Regex
      */
     public static function replaceCallback(string $pattern, callable $callback, string $subject, int $limit = null)
     {
-        return self::pregAndWrap(static function (string $subject) use ($pattern, $callback, $limit) {
-            return (string) @\preg_replace_callback($pattern, $callback, $subject, $limit ?? -1);
-        }, $subject);
+        return self::pregAndWrap(static fn (string $subject) => (string) @\preg_replace_callback($pattern, $callback, $subject, $limit ?? -1), $subject);
     }
 
     /**

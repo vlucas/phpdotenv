@@ -51,9 +51,7 @@ class Validator
     public function required()
     {
         return $this->assert(
-            static function (?string $value) {
-                return $value !== null;
-            },
+            static fn (?string $value) => $value !== null,
             'is missing'
         );
     }
@@ -68,9 +66,7 @@ class Validator
     public function notEmpty()
     {
         return $this->assertNullable(
-            static function (string $value) {
-                return Str::len(\trim($value)) > 0;
-            },
+            static fn (string $value) => Str::len(\trim($value)) > 0,
             'is empty'
         );
     }
@@ -85,9 +81,7 @@ class Validator
     public function isInteger()
     {
         return $this->assertNullable(
-            static function (string $value) {
-                return \ctype_digit($value);
-            },
+            static fn (string $value) => \ctype_digit($value),
             'is not an integer'
         );
     }
@@ -125,9 +119,7 @@ class Validator
     public function allowedValues(array $choices)
     {
         return $this->assertNullable(
-            static function (string $value) use ($choices) {
-                return \in_array($value, $choices, true);
-            },
+            static fn (string $value) => \in_array($value, $choices, true),
             \sprintf('is not one of [%s]', \implode(', ', $choices))
         );
     }
@@ -144,9 +136,7 @@ class Validator
     public function allowedRegexValues(string $regex)
     {
         return $this->assertNullable(
-            static function (string $value) use ($regex) {
-                return Regex::matches($regex, $value)->success()->getOrElse(false);
-            },
+            static fn (string $value) => Regex::matches($regex, $value)->success()->getOrElse(false),
             \sprintf('does not match "%s"', $regex)
         );
     }

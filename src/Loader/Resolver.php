@@ -37,9 +37,7 @@ final class Resolver
      */
     public static function resolve(RepositoryInterface $repository, Value $value)
     {
-        return \array_reduce($value->getVars(), static function (string $s, int $i) use ($repository) {
-            return Str::substr($s, 0, $i).self::resolveVariable($repository, Str::substr($s, $i));
-        }, $value->getChars());
+        return \array_reduce($value->getVars(), static fn (string $s, int $i) => Str::substr($s, 0, $i).self::resolveVariable($repository, Str::substr($s, $i)), $value->getChars());
     }
 
     /**

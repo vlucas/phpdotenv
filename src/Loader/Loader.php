@@ -26,9 +26,7 @@ final class Loader implements LoaderInterface
         return \array_reduce($entries, static function (array $vars, Entry $entry) use ($repository) {
             $name = $entry->getName();
 
-            $value = $entry->getValue()->map(static function (Value $value) use ($repository) {
-                return Resolver::resolve($repository, $value);
-            });
+            $value = $entry->getValue()->map(static fn (Value $value) => Resolver::resolve($repository, $value));
 
             if ($value->isDefined()) {
                 $inner = $value->get();

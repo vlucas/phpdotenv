@@ -52,9 +52,7 @@ final class EntryParser
                 /** @var Result<Value|null,string> */
                 $parsedValue = $value === null ? Success::create(null) : self::parseValue($value);
 
-                return $parsedValue->map(static function (?Value $value) use ($name) {
-                    return new Entry($name, $value);
-                });
+                return $parsedValue->map(static fn (?Value $value) => new Entry($name, $value));
             });
         });
     }
@@ -69,9 +67,7 @@ final class EntryParser
     private static function splitStringIntoParts(string $line)
     {
         /** @var array{string,string|null} */
-        $result = Str::pos($line, '=')->map(static function () use ($line) {
-            return \array_map('trim', \explode('=', $line, 2));
-        })->getOrElse([$line, null]);
+        $result = Str::pos($line, '=')->map(static fn () => \array_map('trim', \explode('=', $line, 2)))->getOrElse([$line, null]);
 
         if ($result[0] === '') {
             return Error::create(self::getErrorMessage('an unexpected equals', $line));
@@ -157,21 +153,13 @@ final class EntryParser
             return Success::create(Value::blank());
         }
 
-        return \array_reduce(\iterator_to_array(Lexer::lex($value)), static function (Result $data, string $token) {
-            return $data->flatMap(static function (array $data) use ($token) {
-                return self::processToken($data[1], $token)->map(static function (array $val) use ($data) {
-                    return [$data[0]->append($val[0], $val[1]), $val[2]];
-                });
-            });
-        }, Success::create([Value::blank(), self::INITIAL_STATE]))->flatMap(static function (array $result) {
+        return \array_reduce(\iterator_to_array(Lexer::lex($value)), static fn (Result $data, string $token) => $data->flatMap(static fn (array $data) => self::processToken($data[1], $token)->map(static fn (array $val) => [$data[0]->append($val[0], $val[1]), $val[2]])), Success::create([Value::blank(), self::INITIAL_STATE]))->flatMap(static function (array $result) {
             if (in_array($result[1], self::REJECT_STATES, true)) {
                 return Error::create('a missing closing quote');
             }
 
             return Success::create($result[0]);
-        })->mapError(static function (string $err) use ($value) {
-            return self::getErrorMessage($err, $value);
-        });
+        })->mapError(static fn (string $err) => self::getErrorMessage($err, $value));
     }
 
     /**

@@ -85,9 +85,7 @@ final class Lines
      */
     private static function looksLikeMultilineStart(string $line)
     {
-        return Str::pos($line, '="')->map(static function () use ($line) {
-            return self::looksLikeMultilineStop($line, true) === false;
-        })->getOrElse(false);
+        return Str::pos($line, '="')->map(static fn () => self::looksLikeMultilineStop($line, true) === false)->getOrElse(false);
     }
 
     /**
@@ -104,9 +102,7 @@ final class Lines
             return true;
         }
 
-        return Regex::occurences('/(?=([^\\\\]"))/', \str_replace('\\\\', '', $line))->map(static function (int $count) use ($started) {
-            return $started ? $count > 1 : $count >= 1;
-        })->success()->getOrElse(false);
+        return Regex::occurences('/(?=([^\\\\]"))/', \str_replace('\\\\', '', $line))->map(static fn (int $count) => $started ? $count > 1 : $count >= 1)->success()->getOrElse(false);
     }
 
     /**

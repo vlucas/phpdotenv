@@ -150,9 +150,7 @@ final class RepositoryBuilder
             );
         }
 
-        $optional = Some::create($reader)->flatMap(static function ($reader) {
-            return \is_string($reader) ? $reader::create() : Some::create($reader);
-        });
+        $optional = Some::create($reader)->flatMap(static fn ($reader) => \is_string($reader) ? $reader::create() : Some::create($reader));
 
         $readers = \array_merge($this->readers, \iterator_to_array($optional));
 
@@ -183,9 +181,7 @@ final class RepositoryBuilder
             );
         }
 
-        $optional = Some::create($writer)->flatMap(static function ($writer) {
-            return \is_string($writer) ? $writer::create() : Some::create($writer);
-        });
+        $optional = Some::create($writer)->flatMap(static fn ($writer) => \is_string($writer) ? $writer::create() : Some::create($writer));
 
         $writers = \array_merge($this->writers, \iterator_to_array($optional));
 
@@ -217,9 +213,7 @@ final class RepositoryBuilder
             );
         }
 
-        $optional = Some::create($adapter)->flatMap(static function ($adapter) {
-            return \is_string($adapter) ? $adapter::create() : Some::create($adapter);
-        });
+        $optional = Some::create($adapter)->flatMap(static fn ($adapter) => \is_string($adapter) ? $adapter::create() : Some::create($adapter));
 
         $readers = \array_merge($this->readers, \iterator_to_array($optional));
         $writers = \array_merge($this->writers, \iterator_to_array($optional));

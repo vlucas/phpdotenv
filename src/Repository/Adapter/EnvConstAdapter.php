@@ -51,9 +51,7 @@ final class EnvConstAdapter implements AdapterInterface
                 }
 
                 return $value;
-            })->filter(static function ($value) {
-                return \is_string($value);
-            });
+            })->filter(static fn ($value) => \is_string($value));
     }
 
     /**

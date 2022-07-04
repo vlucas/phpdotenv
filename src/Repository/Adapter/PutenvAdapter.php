@@ -55,9 +55,7 @@ final class PutenvAdapter implements AdapterInterface
     public function read(string $name)
     {
         /** @var \PhpOption\Option<string> */
-        return Option::fromValue(\getenv($name), false)->filter(static function ($value) {
-            return \is_string($value);
-        });
+        return Option::fromValue(\getenv($name), false)->filter(static fn ($value) => \is_string($value));
     }
 
     /**
