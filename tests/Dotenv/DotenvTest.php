@@ -317,7 +317,7 @@ final class DotenvTest extends TestCase
         self::assertSame('secret!@#', \getenv('SPVAR8'));
     }
 
-    public function testMutlilineLoading()
+    public function testMultilineLoading()
     {
         $dotenv = Dotenv::createUnsafeMutable(self::$folder, 'multiline.env');
         $dotenv->load();

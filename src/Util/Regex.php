@@ -47,7 +47,7 @@ final class Regex
      *
      * @return \GrahamCampbell\ResultType\Result<int,string>
      */
-    public static function occurences(string $pattern, string $subject)
+    public static function occurrences(string $pattern, string $subject)
     {
         return self::pregAndWrap(static function (string $subject) use ($pattern) {
             return (int) @\preg_match_all($pattern, $subject);
