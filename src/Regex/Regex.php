@@ -88,9 +88,11 @@ class Regex
         $result = $operation($subject);
 
         if (($e = preg_last_error()) !== PREG_NO_ERROR) {
+            /** @var Result<V,string> */
             return Error::create(self::lookupError($e));
         }
 
+        /** @var Result<V,string> */
         return Success::create($result);
     }
 
