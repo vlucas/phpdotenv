@@ -47,6 +47,10 @@
         "preferred-install": "dist"
     },
     "extra": {
+        "bamarni-bin": {
+            "bin-links": true,
+            "forward-command": true
+        },
         "branch-alias": {
             "dev-master": "4.2-dev"
         }

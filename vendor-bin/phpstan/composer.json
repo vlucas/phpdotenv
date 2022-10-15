@@ -7,6 +7,9 @@
         "thecodingmachine/phpstan-strict-rules": "1.0.0"
     },
     "config": {
-        "preferred-install": "dist"
+        "preferred-install": "dist",
+        "allow-plugins": {
+            "phpstan/extension-installer": true
+        }
     }
 }
