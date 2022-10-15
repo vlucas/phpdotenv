@@ -104,7 +104,7 @@ final class Lines
             return true;
         }
 
-        return Regex::occurences('/(?=([^\\\\]"))/', \str_replace('\\\\', '', $line))->map(static function (int $count) use ($started) {
+        return Regex::occurrences('/(?=([^\\\\]"))/', \str_replace('\\\\', '', $line))->map(static function (int $count) use ($started) {
             return $started ? $count > 1 : $count >= 1;
         })->success()->getOrElse(false);
     }
