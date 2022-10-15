@@ -53,6 +53,7 @@ final class ServerConstAdapter implements AdapterInterface
                     return 'true';
                 }
 
+                /** @psalm-suppress PossiblyInvalidCast */
                 return (string) $value;
             });
     }

@@ -102,9 +102,11 @@ final class Regex
         $result = $operation($subject);
 
         if (\preg_last_error() !== \PREG_NO_ERROR) {
+            /** @var \GrahamCampbell\ResultType\Result<V,string> */
             return Error::create(\preg_last_error_msg());
         }
 
+        /** @var \GrahamCampbell\ResultType\Result<V,string> */
         return Success::create($result);
     }
 }

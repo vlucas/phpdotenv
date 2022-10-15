@@ -2,8 +2,6 @@ parameters:
   level: max
   ignoreErrors:
     - '#Only booleans are allowed in a negated boolean, int\|false given.#'
-    - '#Method Dotenv\\Util\\Regex::split\(\) should return GrahamCampbell\\ResultType\\Result\<array\<string\>, string\> but returns GrahamCampbell\\ResultType\\Result\<array\<int, bool\|string\>, string\>.#'
     - '#Anonymous function should return GrahamCampbell\\ResultType\\Result\<array\{mixed, mixed\}, string\> but returns GrahamCampbell\\ResultType\\Result\<array\{Dotenv\\Parser\\Value, mixed\}, string\>.#'
-    - '#Anonymous function should return GrahamCampbell\\ResultType\\Result\<non\-empty\-array, string\> but returns GrahamCampbell\\ResultType\\Result\<non\-empty\-array\<int, Dotenv\\Parser\\Entry\>, string\>.#'
     - '#Parameter \#1 \$readers of class Dotenv\\Repository\\RepositoryBuilder constructor expects array\<Dotenv\\Repository\\Adapter\\ReaderInterface\>, array\<Dotenv\\Repository\\Adapter\\ReaderInterface\|S\> given\.#'
     - '#Parameter \#2 \$writers of class Dotenv\\Repository\\RepositoryBuilder constructor expects array\<Dotenv\\Repository\\Adapter\\WriterInterface\>, array\<Dotenv\\Repository\\Adapter\\WriterInterface\|S\> given\.#'

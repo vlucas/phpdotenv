@@ -74,6 +74,7 @@ final class EntryParser
         })->getOrElse([$line, null]);
 
         if ($result[0] === '') {
+            /** @var \GrahamCampbell\ResultType\Result<array{string,string|null},string> */
             return Error::create(self::getErrorMessage('an unexpected equals', $line));
         }
 
@@ -102,9 +103,11 @@ final class EntryParser
         }
 
         if (!self::isValidName($name)) {
+            /** @var \GrahamCampbell\ResultType\Result<string,string> */
             return Error::create(self::getErrorMessage('an invalid name', $name));
         }
 
+        /** @var \GrahamCampbell\ResultType\Result<string,string> */
         return Success::create($name);
     }
 
@@ -154,6 +157,7 @@ final class EntryParser
     private static function parseValue(string $value)
     {
         if (\trim($value) === '') {
+            /** @var \GrahamCampbell\ResultType\Result<\Dotenv\Parser\Value,string> */
             return Success::create(Value::blank());
         }
 
@@ -166,9 +170,11 @@ final class EntryParser
         }, Success::create([Value::blank(), self::INITIAL_STATE]))->flatMap(static function (array $result) {
             /** @psalm-suppress DocblockTypeContradiction */
             if (in_array($result[1], self::REJECT_STATES, true)) {
+                /** @var \GrahamCampbell\ResultType\Result<\Dotenv\Parser\Value,string> */
                 return Error::create('a missing closing quote');
             }
 
+            /** @var \GrahamCampbell\ResultType\Result<\Dotenv\Parser\Value,string> */
             return Success::create($result[0]);
         })->mapError(static function (string $err) use ($value) {
             return self::getErrorMessage($err, $value);
