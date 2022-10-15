@@ -40,30 +40,4 @@ class LinesTest extends TestCase
 
         self::assertSame($expected, Lines::process(preg_split("/(\r\n|\n|\r)/", $content)));
     }
-
-    public function testProcessClosingSlash()
-    {
-        $lines = [
-            'SPVAR5="test some escaped characters like a quote \" or maybe a backslash \\" # not escaped',
-        ];
-
-        $expected = [
-            'SPVAR5="test some escaped characters like a quote \" or maybe a backslash \\" # not escaped',
-        ];
-
-        self::assertSame($expected, $lines);
-    }
-
-    public function testProcessBadQuotes()
-    {
-        $lines = [
-            "TEST=\"erert\nTEST='erert\n",
-        ];
-
-        $expected = [
-            "TEST=\"erert\nTEST='erert\n",
-        ];
-
-        self::assertSame($expected, $lines);
-    }
 }
