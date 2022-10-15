@@ -46,8 +46,8 @@ abstract class AbstractRepository implements RepositoryInterface
      */
     public function get($name)
     {
-        if (!is_string($name)) {
-            throw new InvalidArgumentException('Expected name to be a string.');
+        if (!is_string($name) || '' === $name) {
+            throw new InvalidArgumentException('Expected name to be a non-empty string.');
         }
 
         return $this->getInternal($name);
@@ -56,7 +56,7 @@ abstract class AbstractRepository implements RepositoryInterface
     /**
      * Get an environment variable.
      *
-     * @param string $name
+     * @param non-empty-string $name
      *
      * @return string|null
      */
@@ -74,8 +74,8 @@ abstract class AbstractRepository implements RepositoryInterface
      */
     public function set($name, $value = null)
     {
-        if (!is_string($name)) {
-            throw new InvalidArgumentException('Expected name to be a string.');
+        if (!is_string($name) || '' === $name) {
+            throw new InvalidArgumentException('Expected name to be a non-empty string.');
         }
 
         // Don't overwrite existing environment variables if we're immutable
@@ -91,8 +91,8 @@ abstract class AbstractRepository implements RepositoryInterface
     /**
      * Set an environment variable.
      *
-     * @param string      $name
-     * @param string|null $value
+     * @param non-empty-string $name
+     * @param string|null      $value
      *
      * @return void
      */
@@ -109,8 +109,8 @@ abstract class AbstractRepository implements RepositoryInterface
      */
     public function clear($name)
     {
-        if (!is_string($name)) {
-            throw new InvalidArgumentException('Expected name to be a string.');
+        if (!is_string($name) || '' === $name) {
+            throw new InvalidArgumentException('Expected name to be a non-empty string.');
         }
 
         // Don't clear anything if we're immutable.
@@ -124,7 +124,7 @@ abstract class AbstractRepository implements RepositoryInterface
     /**
      * Clear an environment variable.
      *
-     * @param string $name
+     * @param non-empty-string $name
      *
      * @return void
      */
@@ -139,7 +139,7 @@ abstract class AbstractRepository implements RepositoryInterface
      */
     public function has($name)
     {
-        return is_string($name) && $this->get($name) !== null;
+        return is_string($name) && $name !== '' && $this->get($name) !== null;
     }
 
     /**

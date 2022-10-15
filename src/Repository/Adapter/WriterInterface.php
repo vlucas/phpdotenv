@@ -7,8 +7,8 @@ interface WriterInterface extends AvailabilityInterface
     /**
      * Set an environment variable.
      *
-     * @param string      $name
-     * @param string|null $value
+     * @param non-empty-string $name
+     * @param string|null      $value
      *
      * @return void
      */
@@ -17,7 +17,7 @@ interface WriterInterface extends AvailabilityInterface
     /**
      * Clear an environment variable.
      *
-     * @param string $name
+     * @param non-empty-string $name
      *
      * @return void
      */

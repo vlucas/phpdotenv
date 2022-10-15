@@ -141,13 +141,24 @@ class RepositoryTest extends TestCase
 
     /**
      * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Expected name to be a string.
+     * @expectedExceptionMessage Expected name to be a non-empty string.
      */
-    public function testGettingBadVariable()
+    public function testGettingNullVariable()
     {
         $repo = RepositoryBuilder::create()->make();
 
         $repo->get(null);
+    }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     * @expectedExceptionMessage Expected name to be a non-empty string.
+     */
+    public function testGettingEmptyVariable()
+    {
+        $repo = RepositoryBuilder::create()->make();
+
+        $repo->get('');
     }
 
     public function testSettingVariable()
@@ -163,13 +174,24 @@ class RepositoryTest extends TestCase
 
     /**
      * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Expected name to be a string.
+     * @expectedExceptionMessage Expected name to be a non-empty string.
      */
-    public function testSettingBadVariable()
+    public function testSettingNullVariable()
     {
         $repo = RepositoryBuilder::create()->make();
 
         $repo->set(null, 'foo');
+    }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     * @expectedExceptionMessage Expected name to be a non-empty string.
+     */
+    public function testSettingEmptyVariable()
+    {
+        $repo = RepositoryBuilder::create()->make();
+
+        $repo->set('', 'foo');
     }
 
     public function testClearingVariable()
@@ -197,13 +219,24 @@ class RepositoryTest extends TestCase
 
     /**
      * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Expected name to be a string.
+     * @expectedExceptionMessage Expected name to be a non-empty string.
      */
-    public function testClearingBadVariable()
+    public function testClearingNullVariable()
     {
         $repo = RepositoryBuilder::create()->make();
 
         $repo->clear(null);
+    }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     * @expectedExceptionMessage Expected name to be a non-empty string.
+     */
+    public function testClearingEmptyVariable()
+    {
+        $repo = RepositoryBuilder::create()->make();
+
+        $repo->clear('');
     }
 
     public function testCannotSetVariableOnImmutableInstance()
