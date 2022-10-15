@@ -45,8 +45,8 @@ final class ReplacingWriter implements WriterInterface
     /**
      * Write to an environment variable, if possible.
      *
-     * @param string $name
-     * @param string $value
+     * @param non-empty-string $name
+     * @param string           $value
      *
      * @return bool
      */
@@ -63,7 +63,7 @@ final class ReplacingWriter implements WriterInterface
     /**
      * Delete an environment variable, if possible.
      *
-     * @param string $name
+     * @param non-empty-string $name
      *
      * @return bool
      */
@@ -83,7 +83,7 @@ final class ReplacingWriter implements WriterInterface
      * Returns true if it currently exists, or existed at any point in the past
      * that we are aware of.
      *
-     * @param string $name
+     * @param non-empty-string $name
      *
      * @return bool
      */

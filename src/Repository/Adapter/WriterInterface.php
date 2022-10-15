@@ -9,8 +9,8 @@ interface WriterInterface
     /**
      * Write to an environment variable, if possible.
      *
-     * @param string $name
-     * @param string $value
+     * @param non-empty-string $name
+     * @param string           $value
      *
      * @return bool
      */
@@ -19,7 +19,7 @@ interface WriterInterface
     /**
      * Delete an environment variable, if possible.
      *
-     * @param string $name
+     * @param non-empty-string $name
      *
      * @return bool
      */

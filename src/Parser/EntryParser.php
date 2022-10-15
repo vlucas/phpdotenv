@@ -164,6 +164,7 @@ final class EntryParser
                 });
             });
         }, Success::create([Value::blank(), self::INITIAL_STATE]))->flatMap(static function (array $result) {
+            /** @psalm-suppress DocblockTypeContradiction */
             if (in_array($result[1], self::REJECT_STATES, true)) {
                 return Error::create('a missing closing quote');
             }

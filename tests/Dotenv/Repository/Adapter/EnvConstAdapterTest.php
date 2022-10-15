@@ -35,7 +35,7 @@ final class EnvConstAdapterTest extends TestCase
 
     public function testBadTypeRead()
     {
-        $_ENV['CONST_TEST'] = 123;
+        $_ENV['CONST_TEST'] = [123];
         $value = self::createAdapter()->read('CONST_TEST');
         self::assertFalse($value->isDefined());
     }

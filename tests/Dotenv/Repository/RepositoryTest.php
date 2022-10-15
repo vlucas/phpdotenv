@@ -165,13 +165,23 @@ final class RepositoryTest extends TestCase
         self::assertSame('bar', $repo->get('FOO'));
     }
 
-    public function testGettingBadVariable()
+    public function testGettingNullVariable()
     {
         $repo = RepositoryBuilder::createWithDefaultAdapters()->make();
 
         $this->expectException(TypeError::class);
 
         $repo->get(null);
+    }
+
+    public function testGettingEmptyVariable()
+    {
+        $repo = RepositoryBuilder::createWithDefaultAdapters()->make();
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Expected name to be a non-empty string.');
+
+        $repo->get('');
     }
 
     public function testSettingVariable()
@@ -185,13 +195,23 @@ final class RepositoryTest extends TestCase
         self::assertSame('new', $repo->get('FOO'));
     }
 
-    public function testSettingBadVariable()
+    public function testSettingNullVariable()
     {
         $repo = RepositoryBuilder::createWithDefaultAdapters()->make();
 
         $this->expectException(TypeError::class);
 
         $repo->set(null, 'foo');
+    }
+
+    public function testSettingEmptyVariable()
+    {
+        $repo = RepositoryBuilder::createWithDefaultAdapters()->make();
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Expected name to be a non-empty string.');
+
+        $repo->set('', 'foo');
     }
 
     public function testClearingVariable()
@@ -217,13 +237,23 @@ final class RepositoryTest extends TestCase
         self::assertFalse($repo->has('FOO'));
     }
 
-    public function testClearingBadVariable()
+    public function testClearingNullVariable()
     {
         $repo = RepositoryBuilder::createWithDefaultAdapters()->make();
 
         $this->expectException(TypeError::class);
 
         $repo->clear(null);
+    }
+
+    public function testClearingEmptyVariable()
+    {
+        $repo = RepositoryBuilder::createWithDefaultAdapters()->make();
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Expected name to be a non-empty string.');
+
+        $repo->clear('');
     }
 
     public function testCannotSetVariableOnImmutableInstance()

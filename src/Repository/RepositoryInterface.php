@@ -20,6 +20,8 @@ interface RepositoryInterface
      *
      * @param string $name
      *
+     * @throws \InvalidArgumentException
+     *
      * @return string|null
      */
     public function get(string $name);
@@ -30,6 +32,8 @@ interface RepositoryInterface
      * @param string $name
      * @param string $value
      *
+     * @throws \InvalidArgumentException
+     *
      * @return bool
      */
     public function set(string $name, string $value);
@@ -38,6 +42,8 @@ interface RepositoryInterface
      * Clear an environment variable.
      *
      * @param string $name
+     *
+     * @throws \InvalidArgumentException
      *
      * @return bool
      */

@@ -35,7 +35,7 @@ final class ServerConstAdapterTest extends TestCase
 
     public function testBadTypeRead()
     {
-        $_SERVER['CONST_TEST'] = 123;
+        $_SERVER['CONST_TEST'] = [123];
         $value = self::createAdapter()->read('CONST_TEST');
         self::assertFalse($value->isDefined());
     }
