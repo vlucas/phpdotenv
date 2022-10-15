@@ -39,7 +39,7 @@ class AdapterRepository extends AbstractRepository
      *
      * We do this by querying our readers sequentially.
      *
-     * @param string $name
+     * @param non-empty-string $name
      *
      * @return string|null
      */
@@ -58,8 +58,8 @@ class AdapterRepository extends AbstractRepository
     /**
      * Set an environment variable.
      *
-     * @param string      $name
-     * @param string|null $value
+     * @param non-empty-string $name
+     * @param string|null      $value
      *
      * @return void
      */
@@ -73,7 +73,7 @@ class AdapterRepository extends AbstractRepository
     /**
      * Clear an environment variable.
      *
-     * @param string $name
+     * @param non-empty-string $name
      *
      * @return void
      */
