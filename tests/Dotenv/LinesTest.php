@@ -36,6 +36,7 @@ class LinesTest extends TestCase
             'TEST_NS=\'test\\ntest\'',
             'TEST_EQD="https://vision.googleapis.com/v1/images:annotate?key="',
             'TEST_EQS=\'https://vision.googleapis.com/v1/images:annotate?key=\'',
+            "BASE64_ENCODED_MULTILINE=\"qS1zCzMVVUJWQShokv6YVYi+ruKSC/bHV7GmEiyVkLaBWJHNVHCHsgTksEBsy8wJ\nuwycAvR07ZyOJJed4XTRMKnKp1/v+6UATpWzkIjZXytK+pD+XlZimUHTx3uiDcmU\njhQX1wWSxHDqrSWxeIJiTD+BuUyId8FzmXQ3TcBydJ474tmOU2F492ubk3LAiZ18\nmhiRGoshXAOSbS/P3+RZi4bDeNE/No4=\"",
         ];
 
         self::assertSame($expected, Lines::process(preg_split("/(\r\n|\n|\r)/", $content)));
