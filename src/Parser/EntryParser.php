@@ -139,7 +139,7 @@ final class EntryParser
      */
     private static function isValidName(string $name)
     {
-        return Regex::matches('~\A[a-zA-Z0-9_.]+\z~', $name)->success()->getOrElse(false);
+        return Regex::matches('~(*UTF8)\A[\p{Ll}\p{Lu}\p{M}\p{N}_.]+\z~', $name)->success()->getOrElse(false);
     }
 
     /**

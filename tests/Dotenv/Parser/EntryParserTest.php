@@ -24,6 +24,12 @@ final class EntryParserTest extends TestCase
         $this->checkEmptyResult($result, 'FOO');
     }
 
+    public function testUnicodeNameParse()
+    {
+        $result = EntryParser::parse('FOOƱ=BAZ');
+        $this->checkPositiveResult($result, 'FOOƱ', 'BAZ');
+    }
+
     public function testQuotesParse()
     {
         $result = EntryParser::parse("FOO=\"BAR  \n\"");
@@ -137,12 +143,6 @@ final class EntryParserTest extends TestCase
     {
         $result = EntryParser::parse('FOO_ASD!=BAZ');
         $this->checkErrorResult($result, 'Encountered an invalid name at [FOO_ASD!].');
-    }
-
-    public function testParseUnicodeName()
-    {
-        $result = EntryParser::parse('FOOƱ=BAZ');
-        $this->checkErrorResult($result, 'Encountered an invalid name at [FOOƱ].');
     }
 
     public function testParserEscapingDouble()
