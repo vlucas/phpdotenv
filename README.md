@@ -342,6 +342,10 @@ one-time step to manually copy the `.env.example` file to `.env` and fill-in
 their own values (or get any sensitive values from a project co-worker).
 
 
+### Troubleshooting
+
+In certain server setups (most commonly found in shared hosting), PHP might deactivate superglobals like `$_ENV` or `$_SERVER`. If these variables are not set, review the `variables_order` in the `php.ini` file. See [php.net/manual/en/ini.core.php#ini.variables-order](https://www.php.net/manual/en/ini.core.php#ini.variables-order).
+
 ## Security
 
 If you discover a security vulnerability within this package, please send an email to security@tidelift.com. All security vulnerabilities will be promptly addressed. You may view our full security policy [here](https://github.com/vlucas/phpdotenv/security/policy).
