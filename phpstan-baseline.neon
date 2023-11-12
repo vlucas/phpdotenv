@@ -1,0 +1,21 @@
+parameters:
+	ignoreErrors:
+		-
+			message: "#^Anonymous function should return GrahamCampbell\\\\ResultType\\\\Result\\<array\\{mixed, mixed\\}, string\\> but returns GrahamCampbell\\\\ResultType\\\\Result\\<array\\{Dotenv\\\\Parser\\\\Value, mixed\\}, string\\>\\.$#"
+			count: 1
+			path: src/Parser/EntryParser.php
+
+		-
+			message: "#^Only booleans are allowed in a negated boolean, int\\|false given\\.$#"
+			count: 1
+			path: src/Parser/Lexer.php
+
+		-
+			message: "#^Parameter \\#1 \\$readers of class Dotenv\\\\Repository\\\\RepositoryBuilder constructor expects array\\<Dotenv\\\\Repository\\\\Adapter\\\\ReaderInterface\\>, array\\<Dotenv\\\\Repository\\\\Adapter\\\\ReaderInterface\\|S\\> given\\.$#"
+			count: 2
+			path: src/Repository/RepositoryBuilder.php
+
+		-
+			message: "#^Parameter \\#2 \\$writers of class Dotenv\\\\Repository\\\\RepositoryBuilder constructor expects array\\<Dotenv\\\\Repository\\\\Adapter\\\\WriterInterface\\>, array\\<Dotenv\\\\Repository\\\\Adapter\\\\WriterInterface\\|S\\> given\\.$#"
+			count: 2
+			path: src/Repository/RepositoryBuilder.php

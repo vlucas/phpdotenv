@@ -1,7 +1,0 @@
-parameters:
-  level: max
-  ignoreErrors:
-    - '#Only booleans are allowed in a negated boolean, int\|false given.#'
-    - '#Anonymous function should return GrahamCampbell\\ResultType\\Result\<array\{mixed, mixed\}, string\> but returns GrahamCampbell\\ResultType\\Result\<array\{Dotenv\\Parser\\Value, mixed\}, string\>.#'
-    - '#Parameter \#1 \$readers of class Dotenv\\Repository\\RepositoryBuilder constructor expects array\<Dotenv\\Repository\\Adapter\\ReaderInterface\>, array\<Dotenv\\Repository\\Adapter\\ReaderInterface\|S\> given\.#'
-    - '#Parameter \#2 \$writers of class Dotenv\\Repository\\RepositoryBuilder constructor expects array\<Dotenv\\Repository\\Adapter\\WriterInterface\>, array\<Dotenv\\Repository\\Adapter\\WriterInterface\|S\> given\.#'

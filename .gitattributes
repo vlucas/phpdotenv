@@ -7,8 +7,8 @@
 /.gitignore export-ignore
 /.github export-ignore
 /Makefile export-ignore
-/phpstan.src.neon.dist export-ignore
-/phpstan.tests.neon.dist export-ignore
+/phpstan-baseline.neon export-ignore
+/phpstan.neon.dist export-ignore
 /phpunit.xml.dist export-ignore
 /psalm-baseline.xml export-ignore
 /psalm.xml export-ignore

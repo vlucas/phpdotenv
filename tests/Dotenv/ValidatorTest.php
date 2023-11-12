@@ -207,7 +207,7 @@ final class ValidatorTest extends TestCase
      *
      * @return string[][]
      */
-    public function validBooleanValuesDataProvider()
+    public static function validBooleanValuesDataProvider()
     {
         return [
             ['VALID_EXPLICIT_LOWERCASE_TRUE'],
@@ -263,7 +263,7 @@ final class ValidatorTest extends TestCase
      *
      * @return string[][]
      */
-    public function invalidBooleanValuesDataProvider()
+    public static function invalidBooleanValuesDataProvider()
     {
         return [
             ['INVALID_SOMETHING'],
@@ -332,7 +332,7 @@ final class ValidatorTest extends TestCase
      *
      * @return string[][]
      */
-    public function validIntegerValuesDataProvider()
+    public static function validIntegerValuesDataProvider()
     {
         return [
             ['VALID_ZERO'],
@@ -370,7 +370,7 @@ final class ValidatorTest extends TestCase
      *
      * @return string[][]
      */
-    public function invalidIntegerValuesDataProvider()
+    public static function invalidIntegerValuesDataProvider()
     {
         return [
             ['INVALID_SOMETHING'],

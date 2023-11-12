@@ -59,7 +59,7 @@ final class LoaderTest extends TestCase
     /**
      * @return array<int,\Dotenv\Repository\Adapter\AdapterInterface|string>[]
      */
-    public function providesAdapters()
+    public static function providesAdapters()
     {
         return [
             [ArrayAdapter::create()->get()],

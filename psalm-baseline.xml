@@ -1,20 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<files psalm-version="4.x-dev@">
+<files psalm-version="5.15.0@5c774aca4746caf3d239d9c8cadb9f882ca29352">
+  <file src="src/Repository/Adapter/EnvConstAdapter.php">
+    <RedundantConditionGivenDocblockType>
+      <code>\is_scalar($value)</code>
+    </RedundantConditionGivenDocblockType>
+  </file>
   <file src="src/Repository/RepositoryBuilder.php">
-    <InvalidStringClass occurrences="3">
+    <InvalidStringClass>
       <code>$adapter::create()</code>
       <code>$reader::create()</code>
       <code>$writer::create()</code>
     </InvalidStringClass>
-    <MissingClosureReturnType occurrences="3">
+    <MissingClosureReturnType>
       <code>static function ($adapter) {</code>
       <code>static function ($reader) {</code>
       <code>static function ($writer) {</code>
     </MissingClosureReturnType>
   </file>
   <file src="src/Util/Regex.php">
-    <UndefinedFunction occurrences="1">
-      <code>\preg_last_error_msg()</code>
-    </UndefinedFunction>
+    <ArgumentTypeCoercion>
+      <code>$pattern</code>
+      <code>$pattern</code>
+      <code>$pattern</code>
+      <code>$pattern</code>
+    </ArgumentTypeCoercion>
   </file>
 </files>

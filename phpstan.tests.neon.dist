@@ -1,6 +1,0 @@
-parameters:
-  level: max
-  ignoreErrors:
-    - '#Parameter \#1 \$name of method Dotenv\\Repository\\RepositoryInterface::[a-z]+\(\) expects string, null given.#'
-    - '#Method Dotenv\\Tests\\[a-zA-Z\\]+Test::test[a-zA-Z0-9]+\(\) has no return type specified.#'
-    - '#Call to static method PHPUnit\\Framework\\Assert::assert(InstanceOf|IsArray)\(\) with .+ will always evaluate to true.#'

@@ -1,5 +1,11 @@
 # Upgrading Guide
 
+## V5.5 to V5.6
+
+Bumping the minimum required PHP version is not a breaking change, however it is notable. Since version 5.6.0, we now require PHP 7.2.5 or higher. Installation metrics show that for some time, PHP 7.1 has represented only around 0.1% of installs of V5.
+
+Release notes for 5.6.0 are available [here](https://github.com/vlucas/phpdotenv/releases/tag/v5.6.0).
+
 ## V4 to V5
 
 ### Introduction

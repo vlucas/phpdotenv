@@ -5,20 +5,22 @@ on:
   pull_request:
 
 jobs:
-  phpstan_src:
-    name: PHPStan Source
+  phpstan:
+    name: PHPStan
     runs-on: ubuntu-22.04
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: 8.2
+          php-version: '8.3'
           tools: composer:v2
           coverage: none
+        env:
+          update: true
 
       - name: Install Dependencies
         uses: nick-invision/retry@v2
@@ -35,39 +37,7 @@ jobs:
           command: composer bin phpstan update --no-interaction --no-progress
 
       - name: Execute PHPStan
-        run: vendor/bin/phpstan analyze src -c phpstan.src.neon.dist --no-progress
-
-  phpstan_tests:
-    name: PHPStan Tests
-    runs-on: ubuntu-22.04
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: 8.2
-          tools: composer:v2
-          coverage: none
-
-      - name: Install Dependencies
-        uses: nick-invision/retry@v2
-        with:
-          timeout_minutes: 5
-          max_attempts: 5
-          command: composer update --no-interaction --no-progress
-
-      - name: Install PHPStan
-        uses: nick-invision/retry@v2
-        with:
-          timeout_minutes: 5
-          max_attempts: 5
-          command: composer bin phpstan update --no-interaction --no-progress
-
-      - name: Execute PHPStan
-        run: vendor/bin/phpstan analyze tests -c phpstan.tests.neon.dist --no-progress
+        run: vendor/bin/phpstan analyze --no-progress
 
   psalm:
     name: Psalm
@@ -75,14 +45,16 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: 8.2
+          php-version: '8.3'
           tools: composer:v2
           coverage: none
+        env:
+          update: true
 
       - name: Install Dependencies
         uses: nick-invision/retry@v2

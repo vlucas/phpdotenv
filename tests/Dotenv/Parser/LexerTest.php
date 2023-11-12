@@ -12,7 +12,7 @@ final class LexerTest extends TestCase
     /**
      * @return array{string,string[]}[]
      */
-    public function provideLexCases()
+    public static function provideLexCases()
     {
         return [
             ['', []],
