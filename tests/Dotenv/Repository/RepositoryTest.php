@@ -66,8 +66,7 @@ final class RepositoryTest extends TestCase
     {
         $keyVal = $this->keyVal();
 
-        /** @var string */
-        return \key($keyVal);
+        return (string) \key($keyVal);
     }
 
     /**
