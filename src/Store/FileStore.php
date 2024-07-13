@@ -39,7 +39,7 @@ final class FileStore implements StoreInterface
      *
      * @return void
      */
-    public function __construct(array $filePaths, bool $shortCircuit, string $fileEncoding = null)
+    public function __construct(array $filePaths, bool $shortCircuit, ?string $fileEncoding = null)
     {
         $this->filePaths = $filePaths;
         $this->shortCircuit = $shortCircuit;

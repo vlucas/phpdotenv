@@ -33,7 +33,7 @@ final class Str
      *
      * @return \GrahamCampbell\ResultType\Result<string,string>
      */
-    public static function utf8(string $input, string $encoding = null)
+    public static function utf8(string $input, ?string $encoding = null)
     {
         if ($encoding !== null && !\in_array($encoding, \mb_list_encodings(), true)) {
             /** @var \GrahamCampbell\ResultType\Result<string,string> */
@@ -79,7 +79,7 @@ final class Str
      *
      * @return string
      */
-    public static function substr(string $input, int $start, int $length = null)
+    public static function substr(string $input, int $start, ?int $length = null)
     {
         return \mb_substr($input, $start, $length, 'UTF-8');
     }
