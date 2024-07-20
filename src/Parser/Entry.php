@@ -30,7 +30,7 @@ final class Entry
      *
      * @return void
      */
-    public function __construct(string $name, Value $value = null)
+    public function __construct(string $name, ?Value $value = null)
     {
         $this->name = $name;
         $this->value = $value;
