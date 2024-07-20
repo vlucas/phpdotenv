@@ -1,28 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<files psalm-version="5.15.0@5c774aca4746caf3d239d9c8cadb9f882ca29352">
+<files psalm-version="5.25.0@01a8eb06b9e9cc6cfb6a320bf9fb14331919d505">
   <file src="src/Repository/Adapter/EnvConstAdapter.php">
     <RedundantConditionGivenDocblockType>
-      <code>\is_scalar($value)</code>
+      <code><![CDATA[\is_scalar($value)]]></code>
     </RedundantConditionGivenDocblockType>
   </file>
   <file src="src/Repository/RepositoryBuilder.php">
     <InvalidStringClass>
-      <code>$adapter::create()</code>
-      <code>$reader::create()</code>
-      <code>$writer::create()</code>
+      <code><![CDATA[$adapter::create()]]></code>
+      <code><![CDATA[$reader::create()]]></code>
+      <code><![CDATA[$writer::create()]]></code>
     </InvalidStringClass>
     <MissingClosureReturnType>
-      <code>static function ($adapter) {</code>
-      <code>static function ($reader) {</code>
-      <code>static function ($writer) {</code>
+      <code><![CDATA[static function ($adapter) {]]></code>
+      <code><![CDATA[static function ($reader) {]]></code>
+      <code><![CDATA[static function ($writer) {]]></code>
     </MissingClosureReturnType>
   </file>
   <file src="src/Util/Regex.php">
     <ArgumentTypeCoercion>
-      <code>$pattern</code>
-      <code>$pattern</code>
-      <code>$pattern</code>
-      <code>$pattern</code>
+      <code><![CDATA[$pattern]]></code>
+      <code><![CDATA[$pattern]]></code>
+      <code><![CDATA[$pattern]]></code>
+      <code><![CDATA[$pattern]]></code>
     </ArgumentTypeCoercion>
+    <InvalidReturnStatement>
+      <code><![CDATA[self::pregAndWrap(static function (string $subject) use ($pattern) {
+            return (int) @\preg_match_all($pattern, $subject);
+        }, $subject)]]></code>
+    </InvalidReturnStatement>
+    <InvalidReturnType>
+      <code><![CDATA[\GrahamCampbell\ResultType\Result<int,string>]]></code>
+    </InvalidReturnType>
   </file>
 </files>

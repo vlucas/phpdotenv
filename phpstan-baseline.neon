@@ -1,7 +1,7 @@
 parameters:
 	ignoreErrors:
 		-
-			message: "#^Anonymous function should return GrahamCampbell\\\\ResultType\\\\Result\\<array\\{mixed, mixed\\}, string\\> but returns GrahamCampbell\\\\ResultType\\\\Result\\<array\\{Dotenv\\\\Parser\\\\Value, mixed\\}, string\\>\\.$#"
+			message: "#^Parameter \\#2 \\$callback of function array_reduce expects callable\\(GrahamCampbell\\\\ResultType\\\\Result\\<array\\{Dotenv\\\\Parser\\\\Value, int\\}, mixed\\>\\|GrahamCampbell\\\\ResultType\\\\Result\\<array\\{mixed, int\\}, string\\>, string\\)\\: \\(GrahamCampbell\\\\ResultType\\\\Result\\<array\\{Dotenv\\\\Parser\\\\Value, int\\}, mixed\\>\\|GrahamCampbell\\\\ResultType\\\\Result\\<array\\{mixed, int\\}, string\\>\\), Closure\\(GrahamCampbell\\\\ResultType\\\\Result, string\\)\\: GrahamCampbell\\\\ResultType\\\\Result\\<array\\{Dotenv\\\\Parser\\\\Value, int\\}, string\\> given\\.$#"
 			count: 1
 			path: src/Parser/EntryParser.php
 
