@@ -14,7 +14,7 @@ interface LoaderInterface
      * @param \Dotenv\Repository\RepositoryInterface $repository
      * @param \Dotenv\Parser\Entry[]                 $entries
      *
-     * @return array<string,string|null>
+     * @return array<string, string|null>
      */
     public function load(RepositoryInterface $repository, array $entries);
 }

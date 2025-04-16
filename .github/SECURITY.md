@@ -3,7 +3,7 @@
 ## Supported Versions
 
 After each new major release, the previous release will be supported for no
-less than 2 years, unless explictly stated otherwise. This may mean that there
+less than 2 years, unless explicitly stated otherwise. This may mean that there
 are multiple supported versions at any given time.
 
 ## Reporting a Vulnerability

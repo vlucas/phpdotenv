@@ -30,7 +30,7 @@ final class Regex
      * @param string $pattern
      * @param string $subject
      *
-     * @return \GrahamCampbell\ResultType\Result<bool,string>
+     * @return \GrahamCampbell\ResultType\Result<bool, string>
      */
     public static function matches(string $pattern, string $subject)
     {
@@ -45,7 +45,7 @@ final class Regex
      * @param string $pattern
      * @param string $subject
      *
-     * @return \GrahamCampbell\ResultType\Result<int,string>
+     * @return \GrahamCampbell\ResultType\Result<int, string>
      */
     public static function occurrences(string $pattern, string $subject)
     {
@@ -57,12 +57,12 @@ final class Regex
     /**
      * Perform a preg replace callback, wrapping up the result.
      *
-     * @param string   $pattern
-     * @param callable $callback
-     * @param string   $subject
-     * @param int|null $limit
+     * @param string                     $pattern
+     * @param callable(string[]): string $callback
+     * @param string                     $subject
+     * @param int|null                   $limit
      *
-     * @return \GrahamCampbell\ResultType\Result<string,string>
+     * @return \GrahamCampbell\ResultType\Result<string, string>
      */
     public static function replaceCallback(string $pattern, callable $callback, string $subject, ?int $limit = null)
     {
@@ -77,7 +77,7 @@ final class Regex
      * @param string $pattern
      * @param string $subject
      *
-     * @return \GrahamCampbell\ResultType\Result<string[],string>
+     * @return \GrahamCampbell\ResultType\Result<string[], string>
      */
     public static function split(string $pattern, string $subject)
     {
@@ -92,10 +92,10 @@ final class Regex
      *
      * @template V
      *
-     * @param callable(string):V $operation
-     * @param string             $subject
+     * @param callable(string): V $operation
+     * @param string              $subject
      *
-     * @return \GrahamCampbell\ResultType\Result<V,string>
+     * @return \GrahamCampbell\ResultType\Result<V, string>
      */
     private static function pregAndWrap(callable $operation, string $subject)
     {

@@ -54,7 +54,7 @@ final class Lines
      * @param string   $line
      * @param string[] $buffer
      *
-     * @return array{bool,string,string[]}
+     * @return array{bool,string, string[]}
      */
     private static function multilineProcess(bool $multiline, string $line, array $buffer)
     {

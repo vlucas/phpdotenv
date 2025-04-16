@@ -15,7 +15,7 @@ use TypeError;
 final class RepositoryTest extends TestCase
 {
     /**
-     * @var array<string,string>|null
+     * @var array<string, string>|null
      */
     private $keyVal;
 
@@ -46,7 +46,7 @@ final class RepositoryTest extends TestCase
      *
      * @param bool $reset
      *
-     * @return array<string,string>
+     * @return array<string, string>
      */
     private function keyVal(bool $reset = false)
     {

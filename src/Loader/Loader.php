@@ -19,10 +19,11 @@ final class Loader implements LoaderInterface
      * @param \Dotenv\Repository\RepositoryInterface $repository
      * @param \Dotenv\Parser\Entry[]                 $entries
      *
-     * @return array<string,string|null>
+     * @return array<string, string|null>
      */
     public function load(RepositoryInterface $repository, array $entries)
     {
+        /** @var array<string, string|null> */
         return \array_reduce($entries, static function (array $vars, Entry $entry) use ($repository) {
             $name = $entry->getName();
 

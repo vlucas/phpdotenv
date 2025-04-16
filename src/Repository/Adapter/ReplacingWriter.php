@@ -23,7 +23,7 @@ final class ReplacingWriter implements WriterInterface
     /**
      * The record of seen variables.
      *
-     * @var array<string,string>
+     * @var array<string, string>
      */
     private $seen;
 

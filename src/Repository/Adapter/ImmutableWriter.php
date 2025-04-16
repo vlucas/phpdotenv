@@ -23,7 +23,7 @@ final class ImmutableWriter implements WriterInterface
     /**
      * The record of loaded variables.
      *
-     * @var array<string,string>
+     * @var array<string, string>
      */
     private $loaded;
 

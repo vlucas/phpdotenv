@@ -38,7 +38,7 @@ final class Reader
      *
      * @throws \Dotenv\Exception\InvalidEncodingException
      *
-     * @return array<string,string>
+     * @return array<string, string>
      */
     public static function read(array $filePaths, bool $shortCircuit = true, ?string $fileEncoding = null)
     {

@@ -1,21 +1,163 @@
 parameters:
 	ignoreErrors:
 		-
-			message: "#^Parameter \\#2 \\$callback of function array_reduce expects callable\\(GrahamCampbell\\\\ResultType\\\\Result\\<array\\{Dotenv\\\\Parser\\\\Value, int\\}, mixed\\>\\|GrahamCampbell\\\\ResultType\\\\Result\\<array\\{mixed, int\\}, string\\>, string\\)\\: \\(GrahamCampbell\\\\ResultType\\\\Result\\<array\\{Dotenv\\\\Parser\\\\Value, int\\}, mixed\\>\\|GrahamCampbell\\\\ResultType\\\\Result\\<array\\{mixed, int\\}, string\\>\\), Closure\\(GrahamCampbell\\\\ResultType\\\\Result, string\\)\\: GrahamCampbell\\\\ResultType\\\\Result\\<array\\{Dotenv\\\\Parser\\\\Value, int\\}, string\\> given\\.$#"
+			message: '#^PHPDoc tag @var with type PhpOption\\Option\<Dotenv\\Parser\\Value\> is not subtype of type PhpOption\\Option\<Dotenv\\Parser\\Value\|null\>\.$#'
+			identifier: varTag.type
+			count: 1
+			path: src/Parser/Entry.php
+
+		-
+			message: '#^Anonymous function should return GrahamCampbell\\ResultType\\Result\<mixed, string\> but returns GrahamCampbell\\ResultType\\Result\<Dotenv\\Parser\\Entry, string\>\.$#'
+			identifier: return.type
 			count: 1
 			path: src/Parser/EntryParser.php
 
 		-
-			message: "#^Only booleans are allowed in a negated boolean, int\\|false given\\.$#"
+			message: '#^Method Dotenv\\Parser\\EntryParser\:\:parse\(\) should return GrahamCampbell\\ResultType\\Result\<Dotenv\\Parser\\Entry, string\> but returns GrahamCampbell\\ResultType\\Result\<mixed, string\>\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Parser/EntryParser.php
+
+		-
+			message: '#^PHPDoc tag @var with type GrahamCampbell\\ResultType\\Result\<Dotenv\\Parser\\Value\|null, string\> is not subtype of type GrahamCampbell\\ResultType\\Result\<Dotenv\\Parser\\Value, string\>\|GrahamCampbell\\ResultType\\Result\<null, mixed\>\.$#'
+			identifier: varTag.type
+			count: 1
+			path: src/Parser/EntryParser.php
+
+		-
+			message: '#^Parameter \#2 \$callback of function array_reduce expects callable\(GrahamCampbell\\ResultType\\Result\<array\{Dotenv\\Parser\\Value, int\}, mixed\>\|GrahamCampbell\\ResultType\\Result\<array\{mixed, int\}, string\>, string\)\: \(GrahamCampbell\\ResultType\\Result\<array\{Dotenv\\Parser\\Value, int\}, mixed\>\|GrahamCampbell\\ResultType\\Result\<array\{mixed, int\}, string\>\), Closure\(GrahamCampbell\\ResultType\\Result, string\)\: GrahamCampbell\\ResultType\\Result\<array\{Dotenv\\Parser\\Value, int\}, string\> given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Parser/EntryParser.php
+
+		-
+			message: '#^Only booleans are allowed in a negated boolean, int\|false given\.$#'
+			identifier: booleanNot.exprNotBoolean
 			count: 1
 			path: src/Parser/Lexer.php
 
 		-
-			message: "#^Parameter \\#1 \\$readers of class Dotenv\\\\Repository\\\\RepositoryBuilder constructor expects array\\<Dotenv\\\\Repository\\\\Adapter\\\\ReaderInterface\\>, array\\<Dotenv\\\\Repository\\\\Adapter\\\\ReaderInterface\\|S\\> given\\.$#"
+			message: '#^Parameter \#1 \$pattern of function preg_match expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Parser/Lexer.php
+
+		-
+			message: '#^PHPDoc tag @var with type PhpOption\\Option\<Dotenv\\Repository\\Adapter\\AdapterInterface\> is not subtype of type PhpOption\\Some\<Dotenv\\Repository\\Adapter\\ApacheAdapter\>\.$#'
+			identifier: varTag.type
+			count: 1
+			path: src/Repository/Adapter/ApacheAdapter.php
+
+		-
+			message: '#^PHPDoc tag @var with type PhpOption\\Option\<string\> is not subtype of type PhpOption\\Option\<string\|false\|null\>\.$#'
+			identifier: varTag.type
+			count: 1
+			path: src/Repository/Adapter/ApacheAdapter.php
+
+		-
+			message: '#^PHPDoc tag @var with type PhpOption\\Option\<Dotenv\\Repository\\Adapter\\AdapterInterface\> is not subtype of type PhpOption\\Some\<Dotenv\\Repository\\Adapter\\ArrayAdapter\>\.$#'
+			identifier: varTag.type
+			count: 1
+			path: src/Repository/Adapter/ArrayAdapter.php
+
+		-
+			message: '#^Cannot cast mixed to string\.$#'
+			identifier: cast.string
+			count: 1
+			path: src/Repository/Adapter/EnvConstAdapter.php
+
+		-
+			message: '#^PHPDoc tag @var with type PhpOption\\Option\<Dotenv\\Repository\\Adapter\\AdapterInterface\> is not subtype of type PhpOption\\Some\<Dotenv\\Repository\\Adapter\\EnvConstAdapter\>\.$#'
+			identifier: varTag.type
+			count: 1
+			path: src/Repository/Adapter/EnvConstAdapter.php
+
+		-
+			message: '#^PHPDoc tag @var with type PhpOption\\Option\<Dotenv\\Repository\\Adapter\\AdapterInterface\> is not subtype of type PhpOption\\Some\<Dotenv\\Repository\\Adapter\\PutenvAdapter\>\.$#'
+			identifier: varTag.type
+			count: 1
+			path: src/Repository/Adapter/PutenvAdapter.php
+
+		-
+			message: '#^PHPDoc tag @var with type PhpOption\\Option\<string\> is not subtype of type PhpOption\\Option\<string\|false\>\.$#'
+			identifier: varTag.type
+			count: 1
+			path: src/Repository/Adapter/PutenvAdapter.php
+
+		-
+			message: '#^Cannot cast mixed to string\.$#'
+			identifier: cast.string
+			count: 1
+			path: src/Repository/Adapter/ServerConstAdapter.php
+
+		-
+			message: '#^PHPDoc tag @var with type PhpOption\\Option\<Dotenv\\Repository\\Adapter\\AdapterInterface\> is not subtype of type PhpOption\\Some\<Dotenv\\Repository\\Adapter\\ServerConstAdapter\>\.$#'
+			identifier: varTag.type
+			count: 1
+			path: src/Repository/Adapter/ServerConstAdapter.php
+
+		-
+			message: '#^Parameter \#1 \$callable of method PhpOption\\Some\<Dotenv\\Repository\\Adapter\\AdapterInterface\|string\>\:\:flatMap\(\) expects callable\(Dotenv\\Repository\\Adapter\\AdapterInterface\|string\)\: PhpOption\\Option\<S\>, Closure\(mixed\)\: mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Repository/RepositoryBuilder.php
+
+		-
+			message: '#^Parameter \#1 \$callable of method PhpOption\\Some\<Dotenv\\Repository\\Adapter\\ReaderInterface\|string\>\:\:flatMap\(\) expects callable\(Dotenv\\Repository\\Adapter\\ReaderInterface\|string\)\: PhpOption\\Option\<S\>, Closure\(mixed\)\: mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Repository/RepositoryBuilder.php
+
+		-
+			message: '#^Parameter \#1 \$callable of method PhpOption\\Some\<Dotenv\\Repository\\Adapter\\WriterInterface\|string\>\:\:flatMap\(\) expects callable\(Dotenv\\Repository\\Adapter\\WriterInterface\|string\)\: PhpOption\\Option\<S\>, Closure\(mixed\)\: mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Repository/RepositoryBuilder.php
+
+		-
+			message: '#^Parameter \#1 \$readers of class Dotenv\\Repository\\RepositoryBuilder constructor expects array\<Dotenv\\Repository\\Adapter\\ReaderInterface\>, array\<Dotenv\\Repository\\Adapter\\ReaderInterface\|S\> given\.$#'
+			identifier: argument.type
 			count: 2
 			path: src/Repository/RepositoryBuilder.php
 
 		-
-			message: "#^Parameter \\#2 \\$writers of class Dotenv\\\\Repository\\\\RepositoryBuilder constructor expects array\\<Dotenv\\\\Repository\\\\Adapter\\\\WriterInterface\\>, array\\<Dotenv\\\\Repository\\\\Adapter\\\\WriterInterface\\|S\\> given\\.$#"
+			message: '#^Parameter \#2 \$writers of class Dotenv\\Repository\\RepositoryBuilder constructor expects array\<Dotenv\\Repository\\Adapter\\WriterInterface\>, array\<Dotenv\\Repository\\Adapter\\WriterInterface\|S\> given\.$#'
+			identifier: argument.type
 			count: 2
 			path: src/Repository/RepositoryBuilder.php
+
+		-
+			message: '#^PHPDoc tag @var with type PhpOption\\Option\<string\> is not subtype of type PhpOption\\Option\<string\|false\>\.$#'
+			identifier: varTag.type
+			count: 1
+			path: src/Store/File/Reader.php
+
+		-
+			message: '#^Method Dotenv\\Util\\Regex\:\:occurrences\(\) should return GrahamCampbell\\ResultType\\Result\<int, string\> but returns GrahamCampbell\\ResultType\\Result\<int\<0, max\>, string\>\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Util/Regex.php
+
+		-
+			message: '#^Call to function is_string\(\) with string will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
+			count: 1
+			path: src/Util/Str.php
+
+		-
+			message: '#^Loose comparison via "\=\=" is not allowed\.$#'
+			identifier: equal.notAllowed
+			count: 1
+			path: src/Util/Str.php
+
+		-
+			message: '#^PHPDoc tag @var with type GrahamCampbell\\ResultType\\Result\<string, string\> is not subtype of type GrahamCampbell\\ResultType\\Result\<mixed, non\-falsy\-string\>\.$#'
+			identifier: varTag.type
+			count: 2
+			path: src/Util/Str.php
+
+		-
+			message: '#^PHPDoc tag @var with type PhpOption\\Option\<int\> is not subtype of type PhpOption\\Option\<int\<0, max\>\|false\>\.$#'
+			identifier: varTag.type
+			count: 1
+			path: src/Util/Str.php

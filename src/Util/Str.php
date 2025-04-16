@@ -31,19 +31,28 @@ final class Str
      * @param string      $input
      * @param string|null $encoding
      *
-     * @return \GrahamCampbell\ResultType\Result<string,string>
+     * @return \GrahamCampbell\ResultType\Result<string, string>
      */
     public static function utf8(string $input, ?string $encoding = null)
     {
         if ($encoding !== null && !\in_array($encoding, \mb_list_encodings(), true)) {
-            /** @var \GrahamCampbell\ResultType\Result<string,string> */
+            /** @var \GrahamCampbell\ResultType\Result<string, string> */
             return Error::create(
                 \sprintf('Illegal character encoding [%s] specified.', $encoding)
             );
         }
+
         $converted = $encoding === null ?
             @\mb_convert_encoding($input, 'UTF-8') :
             @\mb_convert_encoding($input, 'UTF-8', $encoding);
+
+        if (!is_string($converted)) {
+            /** @var \GrahamCampbell\ResultType\Result<string, string> */
+            return Error::create(
+                \sprintf('Conversion from encoding [%s] failed.', $encoding ?? 'NULL')
+            );
+        }
+
         /**
          * this is for support UTF-8 with BOM encoding
          * @see https://en.wikipedia.org/wiki/Byte_order_mark
@@ -52,7 +61,8 @@ final class Str
         if (\substr($converted, 0, 3) == "\xEF\xBB\xBF") {
             $converted = \substr($converted, 3);
         }
-        /** @var \GrahamCampbell\ResultType\Result<string,string> */
+
+        /** @var \GrahamCampbell\ResultType\Result<string, string> */
         return Success::create($converted);
     }
 

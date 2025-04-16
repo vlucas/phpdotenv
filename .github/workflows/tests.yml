@@ -7,7 +7,7 @@ on:
 jobs:
   latest:
     name: PHP ${{ matrix.php }} Latest
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
 
     strategy:
       matrix:
@@ -28,7 +28,7 @@ jobs:
         run: echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
 
       - name: Install Latest Dependencies
-        uses: nick-invision/retry@v2
+        uses: nick-invision/retry@v3
         with:
           timeout_minutes: 5
           max_attempts: 5
@@ -39,7 +39,7 @@ jobs:
 
   lowest:
     name: PHP ${{ matrix.php }} Lowest
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
 
     strategy:
       matrix:
@@ -60,7 +60,7 @@ jobs:
         run: echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
 
       - name: Install Lowest Dependencies
-        uses: nick-invision/retry@v2
+        uses: nick-invision/retry@v3
         with:
           timeout_minutes: 5
           max_attempts: 5
