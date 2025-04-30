@@ -11,6 +11,24 @@ Loads environment variables from `.env` to `getenv()`, `$_ENV` and `$_SERVER` au
 <a href="https://github.com/vlucas/phpdotenv/releases"><img src="https://img.shields.io/github/release/vlucas/phpdotenv.svg?style=flat-square" alt="Latest Version"></img></a>
 </p>
 
+<div align="center">
+ 
+**Special thanks to [our sponsors](https://github.com/sponsors/GrahamCampbell)**
+ 
+<br>
+<a href="https://www.dotenvx.com/?utm_source=github&utm_medium=referral&utm_campaign=phpdotenv">
+  <div>
+    <img src="https://dotenvx.com/logo.png" width="120" alt="Dotenvx">
+  </div>
+  <b>Need to sync .env files across teams and environments?</b>
+  <div>
+    <sup>Dotenvx builds on the simplicity of phpdotenv with support for encryption, multiple environments, and team workflows. Use it alongside phpdotenv to modernize your secrets management.</sup>
+  </div>
+</a>
+ 
+<hr>
+</div>
+
 
 ## Why .env?
 
