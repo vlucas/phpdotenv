@@ -8,6 +8,7 @@ use Dotenv\Exception\ValidationException;
 use Dotenv\Repository\RepositoryInterface;
 use Dotenv\Util\Regex;
 use Dotenv\Util\Str;
+use InvalidArgumentException;
 
 class Validator
 {
@@ -110,6 +111,44 @@ class Validator
             'is not a boolean'
         );
     }
+    /**
+ * Assert that each specified variable is a valid URL.
+ *
+ * @param int $flags Optional FILTER_VALIDATE_URL flags (e.g., FILTER_FLAG_PATH_REQUIRED)
+ * @throws ValidationException
+ * @return self
+ */
+public function isUrl(int $flags = 0): self
+{
+    return $this->assertNullable(
+        static function (string $value) use ($flags): bool {
+            if (filter_var($value, FILTER_VALIDATE_URL) === false) {
+                return false;
+            }
+            if ($flags !== 0 && filter_var($value, FILTER_VALIDATE_URL, $flags) === false) {
+                return false;
+            }
+            return true;
+        },
+        'is not a valid URL'
+    );
+}
+
+/**
+ * Assert that each specified variable is a valid email address.
+ *
+ * @throws ValidationException
+ * @return self
+ */
+public function isEmail(): self
+{
+    return $this->assertNullable(
+        static function (string $value): bool {
+            return filter_var($value, FILTER_VALIDATE_EMAIL) !== false;
+        },
+        'is not a valid email'
+    );
+}
 
     /**
      * Assert that each variable is amongst the given choices.
