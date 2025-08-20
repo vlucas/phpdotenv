@@ -16,6 +16,78 @@ final class ValidatorTest extends TestCase
      * @var string
      */
     private static $folder;
+    private string $dir;
+
+    protected function setUp(): void
+    {
+        $this->dir = sys_get_temp_dir() . '/phpdotenv-tests-' . uniqid();
+        mkdir($this->dir);
+    }
+
+    protected function tearDown(): void
+    {
+        array_map('unlink', glob($this->dir . '/*') ?: []);
+        @rmdir($this->dir);
+    }
+
+    private function writeEnv(string $contents): void
+    {
+        file_put_contents($this->dir . '/.env', $contents);
+    }
+
+    public function testIsUrlPasses(): void
+    {
+        $this->writeEnv("APP_URL=https://example.com/path?x=1\n");
+        $dotenv = Dotenv::createImmutable($this->dir);
+        $dotenv->load();
+
+        $dotenv->required('APP_URL')->isUrl(); // should not throw
+
+        $this->assertTrue(true);
+    }
+
+    public function testIsUrlFails(): void
+    {
+        $this->writeEnv("APP_URL=not-a-url\n");
+        $dotenv = Dotenv::createImmutable($this->dir);
+        $dotenv->load();
+
+        $this->expectException(RuntimeException::class);
+        $dotenv->required('APP_URL')->isUrl();
+    }
+
+    public function testIsEmailPasses(): void
+    {
+        $this->writeEnv("SUPPORT_EMAIL=helpdesk@example.org\n");
+        $dotenv = Dotenv::createImmutable($this->dir);
+        $dotenv->load();
+
+        $dotenv->required('SUPPORT_EMAIL')->isEmail(); // should not throw
+
+        $this->assertTrue(true);
+    }
+
+    public function testIsEmailFails(): void
+    {
+        $this->writeEnv("SUPPORT_EMAIL=foo@@bar\n");
+        $dotenv = Dotenv::createImmutable($this->dir);
+        $dotenv->load();
+
+        $this->expectException(RuntimeException::class);
+        $dotenv->required('SUPPORT_EMAIL')->isEmail();
+    }
+
+    public function testIfPresentWithIsUrl(): void
+    {
+        $this->writeEnv(""); // not set
+        $dotenv = Dotenv::createImmutable($this->dir);
+        $dotenv->load();
+
+        // Should not throw since var is absent and ifPresent() defers validation
+        $dotenv->ifPresent('OPTIONAL_WEBHOOK')->isUrl();
+
+        $this->assertTrue(true);
+    }
 
     /**
      * @beforeClass
