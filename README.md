@@ -12,7 +12,9 @@ Loads environment variables from `.env` to `getenv()`, `$_ENV` and `$_SERVER` au
 </p>
 
 <div align="center">
+
 **Special thanks to [our sponsors](https://github.com/sponsors/GrahamCampbell)**
+
 <hr>
 </div>
 
