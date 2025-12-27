@@ -18,11 +18,11 @@
     "require": {
         "php": "^7.2.5 || ^8.0",
         "ext-pcre": "*",
-        "graham-campbell/result-type": "^1.1.3",
-        "phpoption/phpoption": "^1.9.3",
-        "symfony/polyfill-ctype": "^1.24",
-        "symfony/polyfill-mbstring": "^1.24",
-        "symfony/polyfill-php80": "^1.24"
+        "graham-campbell/result-type": "^1.1.4",
+        "phpoption/phpoption": "^1.9.5",
+        "symfony/polyfill-ctype": "^1.26",
+        "symfony/polyfill-mbstring": "^1.26",
+        "symfony/polyfill-php80": "^1.26"
     },
     "require-dev": {
         "ext-filter": "*",
