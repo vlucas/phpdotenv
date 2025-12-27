@@ -1,9 +1,0 @@
-{
-    "require": {
-        "php": "^8.4",
-        "psalm/phar": "6.10.0"
-    },
-    "config": {
-        "preferred-install": "dist"
-    }
-}
