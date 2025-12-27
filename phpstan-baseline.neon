@@ -139,12 +139,6 @@ parameters:
 			path: src/Util/Regex.php
 
 		-
-			message: '#^Call to function is_string\(\) with string will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: src/Util/Str.php
-
-		-
 			message: '#^Loose comparison via "\=\=" is not allowed\.$#'
 			identifier: equal.notAllowed
 			count: 1

@@ -11,12 +11,12 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.4'
+          php-version: '8.5'
           tools: composer:v2
           coverage: none
         env:
@@ -38,37 +38,3 @@ jobs:
 
       - name: Execute PHPStan
         run: vendor/bin/phpstan analyze --no-progress
-
-  psalm:
-    name: Psalm
-    runs-on: ubuntu-24.04
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: '8.4'
-          tools: composer:v2
-          coverage: none
-        env:
-          update: true
-
-      - name: Install Dependencies
-        uses: nick-invision/retry@v3
-        with:
-          timeout_minutes: 5
-          max_attempts: 5
-          command: composer update --no-interaction --no-progress
-
-      - name: Install Psalm
-        uses: nick-invision/retry@v3
-        with:
-          timeout_minutes: 5
-          max_attempts: 5
-          command: composer bin psalm update --no-interaction --no-progress
-
-      - name: Execute Psalm
-        run: vendor/bin/psalm.phar --no-progress --output-format=github

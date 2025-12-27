@@ -53,7 +53,6 @@ final class EnvConstAdapter implements AdapterInterface
                     return 'true';
                 }
 
-                /** @psalm-suppress PossiblyInvalidCast */
                 return (string) $value;
             });
     }
