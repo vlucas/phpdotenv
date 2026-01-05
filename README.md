@@ -157,6 +157,13 @@ BASE_DIR="/var/webroot/project-root"
 CACHE_DIR="${BASE_DIR}/cache"
 TMP_DIR="${BASE_DIR}/tmp"
 ```
+### URL and Email Variables
+
+You can validate common types like URLs and email addresses:
+
+```php
+$dotenv->required('APP_URL')->isUrl();
+$dotenv->ifPresent('SUPPORT_EMAIL')->isEmail();
 
 
 ### Immutability and Repository Customization
