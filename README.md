@@ -101,14 +101,14 @@ SECRET_KEY="abc123"
 You can then load `.env` in your application with:
 
 ```php
-$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
+$dotenv = \Dotenv\Dotenv::createImmutable(__DIR__);
 $dotenv->load();
 ```
 
 To suppress the exception that is thrown when there is no `.env` file, you can:
 
 ```php
-$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
+$dotenv = \Dotenv\Dotenv::createImmutable(__DIR__);
 $dotenv->safeLoad();
 ```
 
@@ -116,7 +116,7 @@ Optionally you can pass in a filename as the second parameter, if you would
 like to use something other than `.env`:
 
 ```php
-$dotenv = Dotenv\Dotenv::createImmutable(__DIR__, 'myconfig');
+$dotenv = \Dotenv\Dotenv::createImmutable(__DIR__, 'myconfig');
 $dotenv->load();
 ```
 
@@ -166,7 +166,7 @@ variables. If you want Dotenv to overwrite existing environment variables,
 use `createMutable` instead of `createImmutable`:
 
 ```php
-$dotenv = Dotenv\Dotenv::createMutable(__DIR__);
+$dotenv = \Dotenv\Dotenv::createMutable(__DIR__);
 $dotenv->load();
 ```
 
@@ -176,13 +176,13 @@ values by default, which is relevant if one is calling the "create" method
 using the `RepositoryBuilder` to construct a more custom repository:
 
 ```php
-$repository = Dotenv\Repository\RepositoryBuilder::createWithNoAdapters()
-    ->addAdapter(Dotenv\Repository\Adapter\EnvConstAdapter::class)
-    ->addWriter(Dotenv\Repository\Adapter\PutenvAdapter::class)
+$repository = \Dotenv\Repository\RepositoryBuilder::createWithNoAdapters()
+    ->addAdapter(\Dotenv\Repository\Adapter\EnvConstAdapter::class)
+    ->addWriter(\Dotenv\Repository\Adapter\PutenvAdapter::class)
     ->immutable()
     ->make();
 
-$dotenv = Dotenv\Dotenv::create($repository, __DIR__);
+$dotenv = \Dotenv\Dotenv::create($repository, __DIR__);
 $dotenv->load();
 ```
 
@@ -194,11 +194,11 @@ By means of another example, one can also specify a set of variables to be
 allow listed. That is, only the variables in the allow list will be loaded:
 
 ```php
-$repository = Dotenv\Repository\RepositoryBuilder::createWithDefaultAdapters()
+$repository = \Dotenv\Repository\RepositoryBuilder::createWithDefaultAdapters()
     ->allowList(['FOO', 'BAR'])
     ->make();
 
-$dotenv = Dotenv\Dotenv::create($repository, __DIR__);
+$dotenv = \Dotenv\Dotenv::create($repository, __DIR__);
 $dotenv->load();
 ```
 
@@ -330,13 +330,13 @@ Sometimes you just wanna parse the file and resolve the nested environment varia
 
 ```php
 // ['FOO' => 'Bar', 'BAZ' => 'Hello Bar']
-Dotenv\Dotenv::parse("FOO=Bar\nBAZ=\"Hello \${FOO}\"");
+\Dotenv\Dotenv::parse("FOO=Bar\nBAZ=\"Hello \${FOO}\"");
 ```
 
 This is exactly the same as:
 
 ```php
-Dotenv\Dotenv::createArrayBacked(__DIR__)->load();
+\Dotenv\Dotenv::createArrayBacked(__DIR__)->load();
 ```
 
 only, instead of providing the directory to find the file, you have directly provided the file contents.
