@@ -96,7 +96,7 @@ final class EntryParser
      */
     private static function parseName(string $name)
     {
-        if (Str::len($name) > 8 && Str::substr($name, 0, 6) === 'export' && \ctype_space(Str::substr($name, 6, 1))) {
+        if (Str::len($name) >= 8 && Str::substr($name, 0, 6) === 'export' && \ctype_space(Str::substr($name, 6, 1))) {
             $name = \ltrim(Str::substr($name, 6), " \t\n\r\v\f");
         }
 
