@@ -115,6 +115,18 @@ final class EntryParserTest extends TestCase
         $this->checkPositiveResult($result, 'FOO', 'bar baz');
     }
 
+    public function testExportParseSingleCharName()
+    {
+        $result = EntryParser::parse('export A=1');
+        $this->checkPositiveResult($result, 'A', '1');
+    }
+
+    public function testExportParseNoWhitespace()
+    {
+        $result = EntryParser::parse('exportFOO=bar');
+        $this->checkPositiveResult($result, 'exportFOO', 'bar');
+    }
+
     public function testExportParseFail()
     {
         $result = EntryParser::parse('export "FOO="bar baz"');

@@ -211,6 +211,7 @@ final class DotenvTest extends TestCase
         self::assertSame('with spaces', $_SERVER['ESPACED']);
         self::assertSame('123', $_SERVER['EDQUOTED']);
         self::assertSame('456', $_SERVER['ESQUOTED']);
+        self::assertSame('789', $_SERVER['E']);
         self::assertEmpty($_SERVER['ENULL']);
     }
 
