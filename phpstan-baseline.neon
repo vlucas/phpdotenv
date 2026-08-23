@@ -1,24 +1,6 @@
 parameters:
 	ignoreErrors:
 		-
-			message: '#^PHPDoc tag @var with type PhpOption\\Option\<Dotenv\\Parser\\Value\> is not subtype of type PhpOption\\Option\<Dotenv\\Parser\\Value\|null\>\.$#'
-			identifier: varTag.type
-			count: 1
-			path: src/Parser/Entry.php
-
-		-
-			message: '#^Anonymous function should return GrahamCampbell\\ResultType\\Result\<mixed, string\> but returns GrahamCampbell\\ResultType\\Result\<Dotenv\\Parser\\Entry, string\>\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Parser/EntryParser.php
-
-		-
-			message: '#^Method Dotenv\\Parser\\EntryParser\:\:parse\(\) should return GrahamCampbell\\ResultType\\Result\<Dotenv\\Parser\\Entry, string\> but returns GrahamCampbell\\ResultType\\Result\<mixed, string\>\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Parser/EntryParser.php
-
-		-
 			message: '#^PHPDoc tag @var with type GrahamCampbell\\ResultType\\Result\<Dotenv\\Parser\\Value\|null, string\> is not subtype of type GrahamCampbell\\ResultType\\Result\<Dotenv\\Parser\\Value, string\>\|GrahamCampbell\\ResultType\\Result\<null, mixed\>\.$#'
 			identifier: varTag.type
 			count: 1
@@ -38,12 +20,6 @@ parameters:
 
 		-
 			message: '#^PHPDoc tag @var with type PhpOption\\Option\<Dotenv\\Repository\\Adapter\\AdapterInterface\> is not subtype of type PhpOption\\Some\<Dotenv\\Repository\\Adapter\\ApacheAdapter\>\.$#'
-			identifier: varTag.type
-			count: 1
-			path: src/Repository/Adapter/ApacheAdapter.php
-
-		-
-			message: '#^PHPDoc tag @var with type PhpOption\\Option\<string\> is not subtype of type PhpOption\\Option\<string\|false\|null\>\.$#'
 			identifier: varTag.type
 			count: 1
 			path: src/Repository/Adapter/ApacheAdapter.php
@@ -73,12 +49,6 @@ parameters:
 			path: src/Repository/Adapter/PutenvAdapter.php
 
 		-
-			message: '#^PHPDoc tag @var with type PhpOption\\Option\<string\> is not subtype of type PhpOption\\Option\<string\|false\>\.$#'
-			identifier: varTag.type
-			count: 1
-			path: src/Repository/Adapter/PutenvAdapter.php
-
-		-
 			message: '#^Cannot cast mixed to string\.$#'
 			identifier: cast.string
 			count: 1
@@ -91,19 +61,19 @@ parameters:
 			path: src/Repository/Adapter/ServerConstAdapter.php
 
 		-
-			message: '#^Parameter \#1 \$callable of method PhpOption\\Some\<Dotenv\\Repository\\Adapter\\AdapterInterface\|string\>\:\:flatMap\(\) expects callable\(Dotenv\\Repository\\Adapter\\AdapterInterface\|string\)\: PhpOption\\Option\<S\>, Closure\(mixed\)\: mixed given\.$#'
+			message: '#^Parameter \#1 \$callable of method PhpOption\\Some\<Dotenv\\Repository\\Adapter\\AdapterInterface\|string\>\:\:flatMap\(\) expects callable\(Dotenv\\Repository\\Adapter\\AdapterInterface\|string\)\: PhpOption\\Option\<S\>, static\-Closure\(mixed\)\: mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Repository/RepositoryBuilder.php
 
 		-
-			message: '#^Parameter \#1 \$callable of method PhpOption\\Some\<Dotenv\\Repository\\Adapter\\ReaderInterface\|string\>\:\:flatMap\(\) expects callable\(Dotenv\\Repository\\Adapter\\ReaderInterface\|string\)\: PhpOption\\Option\<S\>, Closure\(mixed\)\: mixed given\.$#'
+			message: '#^Parameter \#1 \$callable of method PhpOption\\Some\<Dotenv\\Repository\\Adapter\\ReaderInterface\|string\>\:\:flatMap\(\) expects callable\(Dotenv\\Repository\\Adapter\\ReaderInterface\|string\)\: PhpOption\\Option\<S\>, static\-Closure\(mixed\)\: mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Repository/RepositoryBuilder.php
 
 		-
-			message: '#^Parameter \#1 \$callable of method PhpOption\\Some\<Dotenv\\Repository\\Adapter\\WriterInterface\|string\>\:\:flatMap\(\) expects callable\(Dotenv\\Repository\\Adapter\\WriterInterface\|string\)\: PhpOption\\Option\<S\>, Closure\(mixed\)\: mixed given\.$#'
+			message: '#^Parameter \#1 \$callable of method PhpOption\\Some\<Dotenv\\Repository\\Adapter\\WriterInterface\|string\>\:\:flatMap\(\) expects callable\(Dotenv\\Repository\\Adapter\\WriterInterface\|string\)\: PhpOption\\Option\<S\>, static\-Closure\(mixed\)\: mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Repository/RepositoryBuilder.php
@@ -119,12 +89,6 @@ parameters:
 			identifier: argument.type
 			count: 2
 			path: src/Repository/RepositoryBuilder.php
-
-		-
-			message: '#^PHPDoc tag @var with type PhpOption\\Option\<string\> is not subtype of type PhpOption\\Option\<string\|false\>\.$#'
-			identifier: varTag.type
-			count: 1
-			path: src/Store/File/Reader.php
 
 		-
 			message: '#^Method Dotenv\\Util\\Regex\:\:occurrences\(\) should return GrahamCampbell\\ResultType\\Result\<int, string\> but returns GrahamCampbell\\ResultType\\Result\<int\<0, max\>, string\>\.$#'
