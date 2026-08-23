@@ -70,12 +70,13 @@ final class EntryParser
      */
     private static function splitStringIntoParts(string $line)
     {
-        /** @var array{string, string|null} */
-        $result = Str::pos($line, '=')->map(static function () use ($line) {
-            return \array_map(static function (string $part) {
-                return \trim($part, " \n\r\t\0\x0B");
-            }, \explode('=', $line, 2));
-        })->getOrElse([$line, null]);
+        $result = \explode('=', $line, 2);
+
+        if (isset($result[1])) {
+            $result = [\trim($result[0], " \n\r\t\0\x0B"), \trim($result[1], " \n\r\t\0\x0B")];
+        } else {
+            $result = [$line, null];
+        }
 
         if ($result[0] === '') {
             /** @var \GrahamCampbell\ResultType\Result<array{string, string|null},string> */
