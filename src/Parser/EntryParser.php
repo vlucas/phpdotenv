@@ -9,6 +9,8 @@ use Dotenv\Util\Str;
 use GrahamCampbell\ResultType\Error;
 use GrahamCampbell\ResultType\Result;
 use GrahamCampbell\ResultType\Success;
+use PhpOption\None;
+use PhpOption\Some;
 
 final class EntryParser
 {
@@ -68,12 +70,13 @@ final class EntryParser
      */
     private static function splitStringIntoParts(string $line)
     {
-        /** @var array{string, string|null} */
-        $result = Str::pos($line, '=')->map(static function () use ($line) {
-            return \array_map(static function (string $part) {
-                return \trim($part, " \n\r\t\0\x0B");
-            }, \explode('=', $line, 2));
-        })->getOrElse([$line, null]);
+        $result = \explode('=', $line, 2);
+
+        if (isset($result[1])) {
+            $result = [\trim($result[0], " \n\r\t\0\x0B"), \trim($result[1], " \n\r\t\0\x0B")];
+        } else {
+            $result = [$line, null];
+        }
 
         if ($result[0] === '') {
             /** @var \GrahamCampbell\ResultType\Result<array{string, string|null},string> */
@@ -141,6 +144,10 @@ final class EntryParser
      */
     private static function isValidName(string $name)
     {
+        if (\preg_match('~\A[a-zA-Z0-9_.]+\z~', $name) === 1) {
+            return true;
+        }
+
         return Regex::matches('~(*UTF8)\A[\p{Ll}\p{Lu}\p{M}\p{N}_.]+\z~', $name)->success()->getOrElse(false);
     }
 
@@ -163,13 +170,24 @@ final class EntryParser
             return Success::create(Value::blank());
         }
 
-        return \array_reduce(\iterator_to_array(Lexer::lex($value)), static function (Result $data, string $token) {
-            return $data->flatMap(static function (array $data) use ($token) {
+        $literal = self::parseLiteral($value);
+
+        if ($literal->isDefined()) {
+            /** @var \GrahamCampbell\ResultType\Result<\Dotenv\Parser\Value, string> */
+            return Success::create(Value::blank()->append($literal->get(), false));
+        }
+
+        $result = Success::create([Value::blank(), self::INITIAL_STATE]);
+
+        foreach (Lexer::lex($value) as $token) {
+            $result = $result->flatMap(static function (array $data) use ($token) {
                 return self::processToken($data[1], $token)->map(static function (array $val) use ($data) {
                     return [$data[0]->append($val[0], $val[1]), $val[2]];
                 });
             });
-        }, Success::create([Value::blank(), self::INITIAL_STATE]))->flatMap(static function (array $result) {
+        }
+
+        return $result->flatMap(static function (array $result) {
             if (in_array($result[1], self::REJECT_STATES, true)) {
                 /** @var \GrahamCampbell\ResultType\Result<\Dotenv\Parser\Value, string> */
                 return Error::create('a missing closing quote');
@@ -180,6 +198,26 @@ final class EntryParser
         })->mapError(static function (string $err) use ($value) {
             return self::getErrorMessage($err, $value);
         });
+    }
+
+    /**
+     * Parse the given variable value, if it is a literal.
+     *
+     * That is, a value which can be used verbatim, save stripping quotes.
+     * Unquoted literals are capped at the lexer's chunk size, so that the
+     * fast path agrees with the transducer under any libc locale.
+     *
+     * @param string $value
+     *
+     * @return \PhpOption\Option<string>
+     */
+    private static function parseLiteral(string $value)
+    {
+        if (\preg_match('~\A(?|([^\s\\\\\'"#$]{1,1000})|\'([^\']*)\'|"([^"\\\\$]*)")\z~', $value, $matches) === 1) {
+            return Some::create($matches[1]);
+        }
+
+        return None::create();
     }
 
     /**
