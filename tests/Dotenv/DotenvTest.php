@@ -378,6 +378,13 @@ final class DotenvTest extends TestCase
         self::assertSame($output, ['FOO' => 'Bar', 'BAZ' => 'Hello Bar']);
     }
 
+    public function testDotenvParseNumericNames()
+    {
+        $output = Dotenv::parse("7=1\nFOO=b\n123=x");
+
+        self::assertSame($output, [7 => '1', 'FOO' => 'b', 123 => 'x']);
+    }
+
     public function testDotenvParseEmptyCase()
     {
         $output = Dotenv::parse('');
