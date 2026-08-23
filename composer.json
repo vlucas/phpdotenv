@@ -18,8 +18,8 @@
     "require": {
         "php": "^7.2.5 || ^8.0",
         "ext-pcre": "*",
-        "graham-campbell/result-type": "^1.1.4",
-        "phpoption/phpoption": "^1.9.5",
+        "graham-campbell/result-type": "^1.1.5",
+        "phpoption/phpoption": "^1.9.6",
         "symfony/polyfill-ctype": "^1.26",
         "symfony/polyfill-mbstring": "^1.26",
         "symfony/polyfill-php80": "^1.26"
