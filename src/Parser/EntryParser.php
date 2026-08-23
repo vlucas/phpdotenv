@@ -138,12 +138,19 @@ final class EntryParser
     /**
      * Is the given variable name valid?
      *
+     * ASCII names are accepted without consulting the more general unicode
+     * pattern, for performance reasons.
+     *
      * @param string $name
      *
      * @return bool
      */
     private static function isValidName(string $name)
     {
+        if (\preg_match('~\A[a-zA-Z0-9_.]+\z~', $name) === 1) {
+            return true;
+        }
+
         return Regex::matches('~(*UTF8)\A[\p{Ll}\p{Lu}\p{M}\p{N}_.]+\z~', $name)->success()->getOrElse(false);
     }
 
