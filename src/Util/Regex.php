@@ -82,7 +82,7 @@ final class Regex
     }
 
     /**
-     * Wrap up the result of the preg operation that was just performed.
+     * Wrap the result of a preg operation.
      *
      * @template V
      *

@@ -138,9 +138,6 @@ final class EntryParser
     /**
      * Is the given variable name valid?
      *
-     * ASCII names are accepted without consulting the more general unicode
-     * pattern, for performance reasons.
-     *
      * @param string $name
      *
      * @return bool
@@ -206,14 +203,9 @@ final class EntryParser
     /**
      * Parse the given variable value, if it is a literal.
      *
-     * Literal values are unquoted values containing no special characters,
-     * and quoted values containing no nested quotes, escape sequences, or
-     * nested variables. Such values need not be run through the transducer,
-     * for performance reasons. Unquoted literals are capped at 1000
-     * characters, the lexer's chunk size, so that a matched value is a
-     * single lexer token, and the fast path agrees with the transducer
-     * under any libc locale. The branch reset group captures the literal
-     * part of the value as the first group, in each case.
+     * That is, a value which can be used verbatim, save stripping quotes.
+     * Unquoted literals are capped at the lexer's chunk size, so that the
+     * fast path agrees with the transducer under any libc locale.
      *
      * @param string $value
      *
