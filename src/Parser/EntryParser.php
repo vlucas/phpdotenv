@@ -9,6 +9,8 @@ use Dotenv\Util\Str;
 use GrahamCampbell\ResultType\Error;
 use GrahamCampbell\ResultType\Result;
 use GrahamCampbell\ResultType\Success;
+use PhpOption\None;
+use PhpOption\Some;
 
 final class EntryParser
 {
@@ -163,6 +165,13 @@ final class EntryParser
             return Success::create(Value::blank());
         }
 
+        $literal = self::parseLiteral($value);
+
+        if ($literal->isDefined()) {
+            /** @var \GrahamCampbell\ResultType\Result<\Dotenv\Parser\Value, string> */
+            return Success::create(Value::blank()->append($literal->get(), false));
+        }
+
         return \array_reduce(\iterator_to_array(Lexer::lex($value)), static function (Result $data, string $token) {
             return $data->flatMap(static function (array $data) use ($token) {
                 return self::processToken($data[1], $token)->map(static function (array $val) use ($data) {
@@ -180,6 +189,31 @@ final class EntryParser
         })->mapError(static function (string $err) use ($value) {
             return self::getErrorMessage($err, $value);
         });
+    }
+
+    /**
+     * Parse the given variable value, if it is a literal.
+     *
+     * Literal values are unquoted values containing no special characters,
+     * and quoted values containing no nested quotes, escape sequences, or
+     * nested variables. Such values need not be run through the transducer,
+     * for performance reasons. Unquoted literals are capped at 1000
+     * characters, the lexer's chunk size, so that a matched value is a
+     * single lexer token, and the fast path agrees with the transducer
+     * under any libc locale. The branch reset group captures the literal
+     * part of the value as the first group, in each case.
+     *
+     * @param string $value
+     *
+     * @return \PhpOption\Option<string>
+     */
+    private static function parseLiteral(string $value)
+    {
+        if (\preg_match('~\A(?|([^\s\\\\\'"#$]{1,1000})|\'([^\']*)\'|"([^"\\\\$]*)")\z~', $value, $matches) === 1) {
+            return Some::create($matches[1]);
+        }
+
+        return None::create();
     }
 
     /**
