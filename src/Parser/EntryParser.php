@@ -172,13 +172,17 @@ final class EntryParser
             return Success::create(Value::blank()->append($literal->get(), false));
         }
 
-        return \array_reduce(\iterator_to_array(Lexer::lex($value)), static function (Result $data, string $token) {
-            return $data->flatMap(static function (array $data) use ($token) {
+        $result = Success::create([Value::blank(), self::INITIAL_STATE]);
+
+        foreach (Lexer::lex($value) as $token) {
+            $result = $result->flatMap(static function (array $data) use ($token) {
                 return self::processToken($data[1], $token)->map(static function (array $val) use ($data) {
                     return [$data[0]->append($val[0], $val[1]), $val[2]];
                 });
             });
-        }, Success::create([Value::blank(), self::INITIAL_STATE]))->flatMap(static function (array $result) {
+        }
+
+        return $result->flatMap(static function (array $result) {
             if (in_array($result[1], self::REJECT_STATES, true)) {
                 /** @var \GrahamCampbell\ResultType\Result<\Dotenv\Parser\Value, string> */
                 return Error::create('a missing closing quote');
