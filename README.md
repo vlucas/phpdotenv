@@ -158,6 +158,19 @@ CACHE_DIR="${BASE_DIR}/cache"
 TMP_DIR="${BASE_DIR}/tmp"
 ```
 
+Nested references must use the `${…}` syntax: a bare `$BASE_DIR` is never
+interpolated. Interpolation happens in unquoted and double-quoted values, but
+never inside single-quoted ones, and inside double quotes a reference can be
+escaped by writing `\${BASE_DIR}`. If a referenced variable is not defined,
+the reference is left in place verbatim rather than being replaced by an
+empty string. References are
+resolved from right to left, so a resolved inner reference can itself form part
+of an outer one. Resolution reads from the repository being loaded into, so
+when using `createImmutable`, a variable already present in `$_SERVER` or
+`$_ENV` takes precedence over the value defined in your file, and when using
+`createUnsafeImmutable`, values visible through `getenv()` and `putenv()` are
+read and protected as well.
+
 
 ### Immutability and Repository Customization
 
