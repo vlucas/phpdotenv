@@ -132,7 +132,7 @@ final class RepositoryBuilder
      * Accepts either a reader instance, or a class-string for an adapter. If
      * the adapter is not supported, then we silently skip adding it.
      *
-     * @param \Dotenv\Repository\Adapter\ReaderInterface|string $reader
+     * @param \Dotenv\Repository\Adapter\ReaderInterface|class-string<\Dotenv\Repository\Adapter\AdapterInterface> $reader
      *
      * @throws \InvalidArgumentException
      *
@@ -165,7 +165,7 @@ final class RepositoryBuilder
      * Accepts either a writer instance, or a class-string for an adapter. If
      * the adapter is not supported, then we silently skip adding it.
      *
-     * @param \Dotenv\Repository\Adapter\WriterInterface|string $writer
+     * @param \Dotenv\Repository\Adapter\WriterInterface|class-string<\Dotenv\Repository\Adapter\AdapterInterface> $writer
      *
      * @throws \InvalidArgumentException
      *
@@ -199,7 +199,7 @@ final class RepositoryBuilder
      * the adapter is not supported, then we silently skip adding it. We will
      * add the adapter as both a reader and a writer.
      *
-     * @param \Dotenv\Repository\Adapter\WriterInterface|string $adapter
+     * @param \Dotenv\Repository\Adapter\AdapterInterface|class-string<\Dotenv\Repository\Adapter\AdapterInterface> $adapter
      *
      * @throws \InvalidArgumentException
      *
