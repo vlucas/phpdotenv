@@ -42,6 +42,33 @@ final class PutenvAdapterTest extends TestCase
         self::assertFalse(\getenv('CONST_TEST'));
     }
 
+    public function testNullByteNameWrite()
+    {
+        \putenv('CONST_NUL_A=orig');
+        self::assertFalse(self::createAdapter()->write("CONST_NUL_A\0X", 'value'));
+        self::assertSame('orig', \getenv('CONST_NUL_A'));
+    }
+
+    public function testNullByteValueWrite()
+    {
+        \putenv('CONST_NUL_D=orig');
+        self::assertFalse(self::createAdapter()->write('CONST_NUL_D', "a\0b"));
+        self::assertSame('orig', \getenv('CONST_NUL_D'));
+    }
+
+    public function testNullByteNameRead()
+    {
+        \putenv('CONST_NUL_C=orig');
+        self::assertFalse(self::createAdapter()->read("CONST_NUL_C\0X")->isDefined());
+    }
+
+    public function testNullByteNameDelete()
+    {
+        \putenv('CONST_NUL_B=orig');
+        self::assertFalse(self::createAdapter()->delete("CONST_NUL_B\0X"));
+        self::assertSame('orig', \getenv('CONST_NUL_B'));
+    }
+
     /**
      * @return \Dotenv\Repository\Adapter\AdapterInterface
      */
