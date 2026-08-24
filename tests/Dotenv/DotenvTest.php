@@ -56,7 +56,7 @@ final class DotenvTest extends TestCase
         $dotenv = Dotenv::createMutable([]);
 
         $this->expectException(InvalidPathException::class);
-        $this->expectExceptionMessage('At least one environment file path must be provided.');
+        $this->expectExceptionMessage('At least one environment file path and file name must be provided.');
 
         $dotenv->load();
     }

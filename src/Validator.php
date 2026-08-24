@@ -141,6 +141,15 @@ class Validator
      */
     public function allowedRegexValues(string $regex)
     {
+        if (@\preg_match($regex, '') === false && \preg_last_error() === \PREG_INTERNAL_ERROR) {
+            return $this->assertNullable(
+                static function (string $value) {
+                    return false;
+                },
+                \sprintf('could not be validated against the invalid regular expression "%s"', $regex)
+            );
+        }
+
         return $this->assertNullable(
             static function (string $value) use ($regex) {
                 return Regex::matches($regex, $value)->success()->getOrElse(false);

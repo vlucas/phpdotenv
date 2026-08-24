@@ -68,3 +68,32 @@ jobs:
 
       - name: Execute PHPUnit
         run: vendor/bin/phpunit
+
+  polyfill:
+    name: PHP 8.4 Polyfill Parity
+    runs-on: ubuntu-24.04
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v6
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          tools: composer:v2
+          coverage: none
+          ini-values: disable_functions=mb_strcut,mb_strimwidth,mb_convert_kana,mb_split,mb_parse_str,mb_send_mail,mb_regex_encoding,mb_regex_set_options,mb_preferred_mime_name
+
+      - name: Setup Problem Matchers
+        run: echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
+
+      - name: Install Latest Dependencies
+        uses: nick-fields/retry@v3
+        with:
+          timeout_minutes: 5
+          max_attempts: 5
+          command: composer update --no-interaction --no-progress
+
+      - name: Execute PHPUnit
+        run: vendor/bin/phpunit

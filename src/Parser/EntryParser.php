@@ -309,10 +309,55 @@ final class EntryParser
      */
     private static function getErrorMessage(string $cause, string $subject)
     {
+        $line = \strtok($subject, "\n");
+
+        if ($line === false) {
+            $line = '';
+        }
+
+        if (\strlen($line) > 80) {
+            $line = self::cutBytes($line, 80).'...';
+        }
+
+        $line = \addcslashes($line, "\0..\37\177");
+
         return \sprintf(
             'Encountered %s at [%s].',
             $cause,
-            \strtok($subject, "\n")
+            $line
         );
+    }
+
+    /**
+     * Cut the string to at most the given number of bytes.
+     *
+     * The cut never splits a multibyte UTF-8 character: an incomplete
+     * trailing sequence is dropped entirely.
+     *
+     * @param string $input
+     * @param int    $limit
+     *
+     * @return string
+     */
+    private static function cutBytes(string $input, int $limit)
+    {
+        $prefix = \substr($input, 0, $limit);
+        $length = \strlen($prefix);
+
+        for ($i = $length - 1; $i >= 0 && $i >= $length - 4; $i--) {
+            $byte = \ord($prefix[$i]);
+
+            if (($byte & 0xC0) !== 0x80) {
+                $need = $byte < 0x80 ? 1 : ($byte >= 0xF0 ? 4 : ($byte >= 0xE0 ? 3 : ($byte >= 0xC0 ? 2 : 1)));
+
+                if ($i + $need > $length) {
+                    $prefix = \substr($prefix, 0, $i);
+                }
+
+                break;
+            }
+        }
+
+        return $prefix;
     }
 }

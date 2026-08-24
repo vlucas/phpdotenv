@@ -76,6 +76,32 @@ final class StoreTest extends TestCase
         $builder->make()->read();
     }
 
+    public function testBasicReadLowercaseEncoding()
+    {
+        $builder = StoreBuilder::createWithNoNames()
+            ->addPath(self::$folder)
+            ->addName('windows.env')
+            ->fileEncoding('windows-1252');
+
+        self::assertSame(
+            "MBW=\"ñá\"\n",
+            $builder->make()->read()
+        );
+    }
+
+    public function testBasicReadAliasEncoding()
+    {
+        $builder = StoreBuilder::createWithNoNames()
+            ->addPath(self::$folder)
+            ->addName('utf8-with-bom-encoding.env')
+            ->fileEncoding('utf8');
+
+        self::assertSame(
+            "FOO=bar\nBAR=baz\nSPACED=\"with spaces\"\n",
+            $builder->make()->read()
+        );
+    }
+
     public function testFileReadMultipleShortCircuitModeDirect()
     {
         self::assertSame(

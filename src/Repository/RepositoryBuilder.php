@@ -211,7 +211,7 @@ final class RepositoryBuilder
             throw new InvalidArgumentException(
                 \sprintf(
                     'Expected either an instance of %s or a class-string implementing %s',
-                    WriterInterface::class,
+                    AdapterInterface::class,
                     AdapterInterface::class
                 )
             );
@@ -228,7 +228,7 @@ final class RepositoryBuilder
     }
 
     /**
-     * Creates a repository builder with mutability enabled.
+     * Creates a repository builder with immutability enabled.
      *
      * @return \Dotenv\Repository\RepositoryBuilder
      */

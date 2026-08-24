@@ -236,6 +236,24 @@ final class EntryParserTest extends TestCase
         $this->checkErrorResult($result, 'Encountered a missing closing quote at ["\\].');
     }
 
+    public function testParserErrorMessageIsCapped()
+    {
+        $result = EntryParser::parse('FOO="'.\str_repeat('a', 100).'\q"');
+        $this->checkErrorResult($result, 'Encountered an unexpected escape sequence at ["'.\str_repeat('a', 79).'...].');
+    }
+
+    public function testParserErrorMessageCapDoesNotSplitCharacters()
+    {
+        $result = EntryParser::parse('FOO="'.\str_repeat('a', 77).'🚀'.\str_repeat('b', 20).'\q"');
+        $this->checkErrorResult($result, 'Encountered an unexpected escape sequence at ["'.\str_repeat('a', 77).'...].');
+    }
+
+    public function testParserErrorMessageEscapesControlBytes()
+    {
+        $result = EntryParser::parse("FOO=\"a\x01b\q\"");
+        $this->checkErrorResult($result, 'Encountered an unexpected escape sequence at ["a\001b\q"].');
+    }
+
     /**
      * @param \GrahamCampbell\ResultType\Result<\Dotenv\Parser\Entry,string> $result
      * @param string                                                         $name

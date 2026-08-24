@@ -56,7 +56,7 @@ final class FileStore implements StoreInterface
     public function read()
     {
         if ($this->filePaths === []) {
-            throw new InvalidPathException('At least one environment file path must be provided.');
+            throw new InvalidPathException('At least one environment file path and file name must be provided.');
         }
 
         $contents = Reader::read($this->filePaths, $this->shortCircuit, $this->fileEncoding);
