@@ -24,6 +24,12 @@ final class EntryParserTest extends TestCase
         $this->checkEmptyResult($result, 'FOO');
     }
 
+    public function testNullParseOtherName()
+    {
+        $result = EntryParser::parse('BAR');
+        $this->checkEmptyResult($result, 'BAR');
+    }
+
     public function testUnicodeNameParse()
     {
         $result = EntryParser::parse('FOOƱ=BAZ');
@@ -289,7 +295,7 @@ final class EntryParserTest extends TestCase
 
         $entry = $result->success()->get();
         self::assertInstanceOf(Entry::class, $entry);
-        self::assertSame('FOO', $entry->getName());
+        self::assertSame($name, $entry->getName());
         self::assertFalse($entry->getValue()->isDefined());
     }
 
