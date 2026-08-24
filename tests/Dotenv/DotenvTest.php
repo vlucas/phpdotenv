@@ -274,11 +274,13 @@ final class DotenvTest extends TestCase
         self::assertSame('no space', $_SERVER['QWHITESPACE']);
     }
 
-    public function testDotenvLoadDoesNotOverwriteEnv()
+    public function testDotenvImmutableLoadIgnoresPutenv()
     {
         \putenv('IMMUTABLE=true');
         $dotenv = Dotenv::createImmutable(self::$folder, 'immutable.env');
-        $dotenv->load();
+        self::assertSame(['IMMUTABLE' => 'false'], $dotenv->load());
+        self::assertSame('false', $_ENV['IMMUTABLE']);
+        self::assertSame('false', $_SERVER['IMMUTABLE']);
         self::assertSame('true', \getenv('IMMUTABLE'));
     }
 
