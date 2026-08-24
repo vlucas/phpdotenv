@@ -120,6 +120,17 @@ $dotenv = Dotenv\Dotenv::createImmutable(__DIR__, 'myconfig');
 $dotenv->load();
 ```
 
+Both the directory and the file name may also be given as arrays, in which
+case only the first readable file found is loaded. To merge every readable
+file instead, with later files overriding earlier ones, pass `false` as the
+third parameter. The file encoding may be specified using the fourth
+parameter:
+
+```php
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__, ['.env', '.env.local'], false, 'UTF-8');
+$dotenv->load();
+```
+
 All of the defined variables are now available in the `$_ENV` and `$_SERVER`
 super-globals.
 
@@ -134,8 +145,9 @@ $s3_bucket = $_SERVER['S3_BUCKET'];
 Using `getenv()` and `putenv()` is strongly discouraged due to the fact that
 these functions are not thread safe, however it is still possible to instruct
 PHP dotenv to use these functions. Instead of calling
-`Dotenv::createImmutable`, one can call `Dotenv::createUnsafeImmutable`, which
-will add the `PutenvAdapter` behind the scenes. Your environment variables will
+`Dotenv::createImmutable`, one can call `Dotenv::createUnsafeImmutable` (or
+`Dotenv::createUnsafeMutable` instead of `Dotenv::createMutable`), which will
+add the `PutenvAdapter` behind the scenes. Your environment variables will
 now be available using the `getenv` method, as well as the super-globals:
 
 ```php
@@ -187,6 +199,18 @@ backslashes (or be single-quoted instead):
 WIN1='C:\Users\vlucas'
 WIN2="C:\\Users\\vlucas"
 ```
+
+Only double-quoted values may span multiple lines:
+
+```shell
+MESSAGE="Hello
+World"
+```
+
+A double-quoted value left unterminated at the end of the file is currently
+discarded silently, along with any lines that follow it. A line consisting of
+just a variable name with no equals sign will clear that variable from the
+environment when loading in mutable mode.
 
 
 ### Immutability and Repository Customization
@@ -389,13 +413,16 @@ Sometimes you just wanna parse the file and resolve the nested environment varia
 Dotenv\Dotenv::parse("FOO=Bar\nBAZ=\"Hello \${FOO}\"");
 ```
 
-This is exactly the same as:
+This is much the same as:
 
 ```php
 Dotenv\Dotenv::createArrayBacked(__DIR__)->load();
 ```
 
-only, instead of providing the directory to find the file, you have directly provided the file contents.
+only, instead of providing the directory to find the file, you have directly
+provided the file contents. Note that nested variables are resolved against
+only the variables already defined earlier in the given string, so `parse`
+cannot read values from your real environment.
 
 
 ### Usage Notes
