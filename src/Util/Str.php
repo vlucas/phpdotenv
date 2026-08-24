@@ -69,11 +69,11 @@ final class Str
      * @param string $haystack
      * @param string $needle
      *
-     * @return \PhpOption\Option<int>
+     * @return \PhpOption\Option<int<0, max>>
      */
     public static function pos(string $haystack, string $needle)
     {
-        /** @var \PhpOption\Option<int> */
+        /** @var \PhpOption\Option<int<0, max>> */
         return Option::fromValue(\mb_strpos($haystack, $needle, 0, 'UTF-8'), false);
     }
 

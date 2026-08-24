@@ -43,7 +43,7 @@ final class Regex
      * @param string $pattern
      * @param string $subject
      *
-     * @return \GrahamCampbell\ResultType\Result<int, string>
+     * @return \GrahamCampbell\ResultType\Result<int<0, max>, string>
      */
     public static function occurrences(string $pattern, string $subject)
     {
