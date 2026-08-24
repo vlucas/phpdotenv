@@ -274,11 +274,13 @@ final class DotenvTest extends TestCase
         self::assertSame('no space', $_SERVER['QWHITESPACE']);
     }
 
-    public function testDotenvLoadDoesNotOverwriteEnv()
+    public function testDotenvImmutableLoadIgnoresPutenv()
     {
         \putenv('IMMUTABLE=true');
         $dotenv = Dotenv::createImmutable(self::$folder, 'immutable.env');
-        $dotenv->load();
+        self::assertSame(['IMMUTABLE' => 'false'], $dotenv->load());
+        self::assertSame('false', $_ENV['IMMUTABLE']);
+        self::assertSame('false', $_SERVER['IMMUTABLE']);
         self::assertSame('true', \getenv('IMMUTABLE'));
     }
 
@@ -409,6 +411,27 @@ final class DotenvTest extends TestCase
         self::assertSame(['KEY' => '1'], Dotenv::parse("\xEF\xBB\xBFKEY=1"));
         self::assertSame(['A' => '2'], Dotenv::parse("\xEF\xBB\xBF# c\nA=2"));
         self::assertSame(['B' => '3'], Dotenv::parse("\xEF\xBB\xBF\nB=3"));
+    }
+
+    public function testDotenvParseInterpolationAfterMultibyteText()
+    {
+        self::assertSame(
+            ['X' => 'Y', 'FOO' => 'ĀĀĀY'],
+            Dotenv::parse("X=Y\nFOO=\"ĀĀĀ\${X}\"")
+        );
+    }
+
+    public function testDotenvParseKeepsEscapedNestedVariableLiteral()
+    {
+        self::assertSame(
+            ['B' => 'hi', 'FOO' => '$A ${B}'],
+            Dotenv::parse("B=hi\nFOO=\"\$A \\\${B}\"")
+        );
+    }
+
+    public function testDotenvParseIndentedComment()
+    {
+        self::assertSame(['A' => '1'], Dotenv::parse("   # c\nA=1"));
     }
 
     public function testDotenvParseEmptyCase()
