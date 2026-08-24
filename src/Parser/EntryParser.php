@@ -143,7 +143,7 @@ final class EntryParser
             return true;
         }
 
-        return Regex::matches('~(*UTF8)\A[\p{Ll}\p{Lu}\p{M}\p{N}_.]+\z~', $name)->success()->getOrElse(false);
+        return Regex::matches('~\A[\p{Ll}\p{Lu}\p{M}\p{N}_.]+\z~u', $name)->success()->getOrElse(false);
     }
 
     /**
