@@ -434,6 +434,22 @@ final class DotenvTest extends TestCase
         self::assertSame(['A' => '1'], Dotenv::parse("   # c\nA=1"));
     }
 
+    public function testDotenvParseCommentContainingQuoteStart()
+    {
+        self::assertSame(
+            ['A' => '1', 'B' => '2'],
+            Dotenv::parse("A=1 # example=\"unterminated\nB=2")
+        );
+    }
+
+    public function testDotenvParseMultilineContainingHash()
+    {
+        self::assertSame(
+            ['A' => "one # data\ntwo", 'B' => '2'],
+            Dotenv::parse("A=\"one # data\ntwo\"\nB=2")
+        );
+    }
+
     public function testDotenvParseEmptyCase()
     {
         $output = Dotenv::parse('');
