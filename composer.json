@@ -1,6 +1,6 @@
 {
     "name": "vlucas/phpdotenv",
-    "description": "Loads environment variables from `.env` to `getenv()`, `$_ENV` and `$_SERVER` automagically.",
+    "description": "Loads environment variables from `.env` to `$_ENV` and `$_SERVER` automagically, and optionally to `getenv()`.",
     "keywords": ["env", "dotenv", "environment"],
     "license": "BSD-3-Clause",
     "authors": [

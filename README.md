@@ -1,7 +1,7 @@
 PHP dotenv
 ==========
 
-Loads environment variables from `.env` to `getenv()`, `$_ENV` and `$_SERVER` automagically.
+Loads environment variables from `.env` to `$_ENV` and `$_SERVER` automagically, and optionally to `getenv()`.
 
 ![Banner](https://user-images.githubusercontent.com/2829600/71564012-31105580-2a91-11ea-9ad7-ef1278411b35.png)
 
@@ -59,8 +59,8 @@ or add it by hand to your `composer.json` file.
 ## Upgrading
 
 We follow [semantic versioning](https://semver.org/), which means breaking
-changes may occur between major releases. We have upgrading guides available
-for V2 to V3, V3 to V4 and V4 to V5 available [here](UPGRADING.md).
+changes may occur between major releases. We have upgrading guides for V2 to
+V3, V3 to V4 and V4 to V5 available [here](UPGRADING.md).
 
 
 ## Usage
@@ -120,6 +120,17 @@ $dotenv = Dotenv\Dotenv::createImmutable(__DIR__, 'myconfig');
 $dotenv->load();
 ```
 
+Both the directory and the file name may also be given as arrays, in which
+case only the first readable file found is loaded. To merge every readable
+file instead, with later files overriding earlier ones, pass `false` as the
+third parameter. The file encoding may be specified using the fourth
+parameter:
+
+```php
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__, ['.env', '.env.local'], false, 'UTF-8');
+$dotenv->load();
+```
+
 All of the defined variables are now available in the `$_ENV` and `$_SERVER`
 super-globals.
 
@@ -134,8 +145,9 @@ $s3_bucket = $_SERVER['S3_BUCKET'];
 Using `getenv()` and `putenv()` is strongly discouraged due to the fact that
 these functions are not thread safe, however it is still possible to instruct
 PHP dotenv to use these functions. Instead of calling
-`Dotenv::createImmutable`, one can call `Dotenv::createUnsafeImmutable`, which
-will add the `PutenvAdapter` behind the scenes. Your environment variables will
+`Dotenv::createImmutable`, one can call `Dotenv::createUnsafeImmutable` (or
+`Dotenv::createUnsafeMutable` instead of `Dotenv::createMutable`), which will
+add the `PutenvAdapter` behind the scenes. Your environment variables will
 now be available using the `getenv` method, as well as the super-globals:
 
 ```php
@@ -158,6 +170,48 @@ CACHE_DIR="${BASE_DIR}/cache"
 TMP_DIR="${BASE_DIR}/tmp"
 ```
 
+Nested references must use the `${…}` syntax: a bare `$BASE_DIR` is never
+interpolated. Interpolation happens in unquoted and double-quoted values, but
+never inside single-quoted ones, and inside double quotes a reference can be
+escaped by writing `\${BASE_DIR}`. If a referenced variable is not defined,
+the reference is left in place verbatim rather than being replaced by an
+empty string. References are
+resolved from right to left, so a resolved inner reference can itself form part
+of an outer one. Resolution reads from the repository being loaded into, so
+when using `createImmutable`, a variable already present in `$_SERVER` or
+`$_ENV` takes precedence over the value defined in your file, and when using
+`createUnsafeImmutable`, values visible through `getenv()` and `putenv()` are
+read and protected as well.
+
+
+### Quoting and Escaping
+
+Values may be unquoted, single-quoted or double-quoted. Single-quoted values
+are treated completely literally: no escape sequences are recognised, and no
+variables are interpolated. Backslashes in unquoted values are also treated
+literally. Inside double quotes, exactly the escape sequences `\"`, `\\`,
+`\$`, `\f`, `\n`, `\r`, `\t` and `\v` are recognised, with the character
+escapes producing their real control characters, and any other backslash
+sequence is a parse error, so a double-quoted Windows path must use doubled
+backslashes (or be single-quoted instead):
+
+```shell
+WIN1='C:\Users\vlucas'
+WIN2="C:\\Users\\vlucas"
+```
+
+Only double-quoted values may span multiple lines:
+
+```shell
+MESSAGE="Hello
+World"
+```
+
+A double-quoted value left unterminated at the end of the file is currently
+discarded silently, along with any lines that follow it. A line consisting of
+just a variable name with no equals sign will clear that variable from the
+environment when loading in mutable mode.
+
 
 ### Immutability and Repository Customization
 
@@ -169,6 +223,16 @@ use `createMutable` instead of `createImmutable`:
 $dotenv = Dotenv\Dotenv::createMutable(__DIR__);
 $dotenv->load();
 ```
+
+A variable counts as existing if it is set in any of the repository's
+adapters, including values only present in `$_SERVER`, and once one immutable
+instance has loaded a variable, a second instance will treat it as existing
+too. Within a single load, however, an instance may overwrite a variable it
+wrote itself, which is how later files in a merge override earlier ones. The
+array returned by `load()` contains only the variables that were
+actually written, so variables skipped due to immutability are omitted. For
+validation or testing without touching the real environment, use
+`createArrayBacked`.
 
 Behind the scenes, this is instructing the "repository" to allow immutability
 or not. By default, the repository is configured to allow overwriting existing
@@ -221,10 +285,11 @@ Or an array of strings:
 $dotenv->required(['DB_HOST', 'DB_NAME', 'DB_USER', 'DB_PASS']);
 ```
 
-If any ENV vars are missing, Dotenv will throw a `RuntimeException` like this:
+If any ENV vars are missing, Dotenv will throw a
+`Dotenv\Exception\ValidationException` like this:
 
 ```
-One or more environment variables failed assertions: DATABASE_DSN is missing
+One or more environment variables failed assertions: DATABASE_DSN is missing.
 ```
 
 
@@ -240,7 +305,7 @@ $dotenv->required('DATABASE_DSN')->notEmpty();
 If the environment variable is empty, you'd get an Exception:
 
 ```
-One or more environment variables failed assertions: DATABASE_DSN is empty
+One or more environment variables failed assertions: DATABASE_DSN is empty.
 ```
 
 
@@ -253,7 +318,9 @@ do the following:
 $dotenv->required('FOO')->isInteger();
 ```
 
-If the environment variable is not an integer, you'd get an Exception:
+Note that only unsigned digit strings pass this check: signed values such as
+`-5` or `+5` are rejected. If the environment variable is not an integer,
+you'd get an Exception:
 
 ```
 One or more environment variables failed assertions: FOO is not an integer.
@@ -270,8 +337,9 @@ $dotenv->ifPresent('FOO')->isInteger();
 ### Boolean Variables
 
 You may need to ensure a variable is in the form of a boolean, accepting
-"true", "false", "On", "1", "Yes", "Off", "0" and "No". You may do the
-following:
+"true", "false", "On", "1", "Yes", "Off", "0" and "No", case-insensitively and
+ignoring surrounding whitespace. This check requires the `filter` extension.
+You may do the following:
 
 ```php
 $dotenv->required('FOO')->isBoolean();
@@ -304,10 +372,13 @@ If the environment variable wasn't in this list of allowed values, you'd get a
 similar Exception:
 
 ```
-One or more environment variables failed assertions: SESSION_STORE is not an allowed value.
+One or more environment variables failed assertions: SESSION_STORE is not one of [Filesystem, Memcached].
 ```
 
 It is also possible to define a regex that your environment variable should be.
+The regex is applied as an unanchored match, so it succeeds if any part of the
+value matches; anchor the pattern to match the whole value.
+
 ```php
 $dotenv->required('FOO')->allowedRegexValues('([[:lower:]]{3})');
 ```
@@ -323,6 +394,15 @@ VAR="value" # comment
 VAR=value # comment
 ```
 
+A `#` begins a comment anywhere outside of quotes, even when it directly
+follows an unquoted value, so any value that should contain a `#` must be
+quoted:
+
+```shell
+VAR=foo#bar   # VAR is "foo"
+VAR="foo#bar" # VAR is "foo#bar"
+```
+
 
 ### Parsing Without Loading
 
@@ -333,13 +413,16 @@ Sometimes you just wanna parse the file and resolve the nested environment varia
 Dotenv\Dotenv::parse("FOO=Bar\nBAZ=\"Hello \${FOO}\"");
 ```
 
-This is exactly the same as:
+This is much the same as:
 
 ```php
 Dotenv\Dotenv::createArrayBacked(__DIR__)->load();
 ```
 
-only, instead of providing the directory to find the file, you have directly provided the file contents.
+only, instead of providing the directory to find the file, you have directly
+provided the file contents. Note that nested variables are resolved against
+only the variables already defined earlier in the given string, so `parse`
+cannot read values from your real environment.
 
 
 ### Usage Notes
