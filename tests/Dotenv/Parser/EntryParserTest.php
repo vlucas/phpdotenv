@@ -90,6 +90,13 @@ final class EntryParserTest extends TestCase
         $this->checkPositiveResult($result, 'FOO', 'TEST $BAR $$BAZ', [11, 10, 5]);
     }
 
+    public function testInlineVariableOffsetAtChunkBoundary()
+    {
+        $prefix = \str_repeat('a', 999).'€';
+        $result = EntryParser::parse('FOO="'.$prefix.'$BAR"');
+        $this->checkPositiveResult($result, 'FOO', $prefix.'$BAR', [1000]);
+    }
+
     public function testNonInlineVariable()
     {
         $result = EntryParser::parse('FOO=\'TEST $BAR $$BAZ\'');

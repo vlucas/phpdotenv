@@ -170,25 +170,36 @@ final class EntryParser
             return Success::create(Value::blank()->append($literal->get(), false));
         }
 
-        $result = Success::create([Value::blank(), self::INITIAL_STATE]);
+        $chars = '';
+        $pending = '';
+        $length = 0;
+        $vars = [];
+        $state = self::INITIAL_STATE;
 
         foreach (Lexer::lex($value) as $token) {
-            $result = $result->flatMap(static function (array $data) use ($token) {
-                return self::processToken($data[1], $token)->map(static function (array $val) use ($data) {
-                    return [$data[0]->append($val[0], $val[1]), $val[2]];
-                });
-            });
-        }
+            $result = self::processToken($state, $token);
 
-        return $result->flatMap(static function (array $result) {
-            if (in_array($result[1], self::REJECT_STATES, true)) {
-                return Error::create('a missing closing quote');
+            if ($result->error()->isDefined()) {
+                return Error::create(self::getErrorMessage($result->error()->get(), $value));
             }
 
-            return Success::create($result[0]);
-        })->mapError(static function (string $err) use ($value) {
-            return self::getErrorMessage($err, $value);
-        });
+            [$chunk, $var, $state] = $result->success()->get();
+
+            if ($var) {
+                $chars .= $pending;
+                $length += Str::len($pending);
+                $pending = '';
+                $vars[] = $length;
+            }
+
+            $pending .= $chunk;
+        }
+
+        if (\in_array($state, self::REJECT_STATES, true)) {
+            return Error::create(self::getErrorMessage('a missing closing quote', $value));
+        }
+
+        return Success::create(Value::create($chars.$pending, $vars));
     }
 
     /**
