@@ -157,6 +157,24 @@ final class EntryParserTest extends TestCase
         $this->checkErrorResult($result, 'Encountered an invalid name at [FOO_ASD!].');
     }
 
+    public function testParseInvalidUtf8Name()
+    {
+        $result = EntryParser::parse("\xC3=1");
+        $this->checkErrorResult($result, "Encountered an invalid name at [\xC3].");
+    }
+
+    public function testParseTruncatedUtf8Name()
+    {
+        $result = EntryParser::parse("A\xE2\x82=1");
+        $this->checkErrorResult($result, "Encountered an invalid name at [A\xE2\x82].");
+    }
+
+    public function testParseUtf16ByteOrderMarkName()
+    {
+        $result = EntryParser::parse("\xFF\xFE=1");
+        $this->checkErrorResult($result, "Encountered an invalid name at [\xFF\xFE].");
+    }
+
     public function testParserEscapingDouble()
     {
         $result = EntryParser::parse('FOO_BAD="iiiiviiiixiiiiviiii\\a"');
