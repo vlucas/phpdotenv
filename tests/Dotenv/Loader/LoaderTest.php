@@ -56,6 +56,18 @@ final class LoaderTest extends TestCase
         $loader->load($repository, (new Parser())->parse('FOO="""'));
     }
 
+    public function testLoaderPreservesInvalidUtf8BytesFromRepositoryValues()
+    {
+        $adapter = ArrayAdapter::create()->get();
+        $repository = RepositoryBuilder::createWithNoAdapters()->addReader($adapter)->addWriter($adapter)->make();
+        $loader = new Loader();
+
+        $content = "LEFT=left\nBAD=\xC3\nRESULT=\"\${LEFT}\${BAD}\"";
+        $expected = ['LEFT' => 'left', 'BAD' => "\xC3", 'RESULT' => "left\xC3"];
+
+        self::assertSame($expected, $loader->load($repository, (new Parser())->parse($content)));
+    }
+
     /**
      * @return array<int,\Dotenv\Repository\Adapter\AdapterInterface|string>[]
      */
