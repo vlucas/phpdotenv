@@ -172,6 +172,23 @@ when using `createImmutable`, a variable already present in `$_SERVER` or
 read and protected as well.
 
 
+### Quoting and Escaping
+
+Values may be unquoted, single-quoted or double-quoted. Single-quoted values
+are treated completely literally: no escape sequences are recognised, and no
+variables are interpolated. Backslashes in unquoted values are also treated
+literally. Inside double quotes, exactly the escape sequences `\"`, `\\`,
+`\$`, `\f`, `\n`, `\r`, `\t` and `\v` are recognised, with the character
+escapes producing their real control characters, and any other backslash
+sequence is a parse error, so a double-quoted Windows path must use doubled
+backslashes (or be single-quoted instead):
+
+```shell
+WIN1='C:\Users\vlucas'
+WIN2="C:\\Users\\vlucas"
+```
+
+
 ### Immutability and Repository Customization
 
 Immutability refers to if Dotenv is allowed to overwrite existing environment
