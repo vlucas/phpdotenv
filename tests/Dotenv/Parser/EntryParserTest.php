@@ -175,6 +175,24 @@ final class EntryParserTest extends TestCase
         $this->checkErrorResult($result, "Encountered an invalid name at [\xFF\xFE].");
     }
 
+    public function testParseNameWithSubstituteCharacterConfigured()
+    {
+        if (\PHP_VERSION_ID < 80302 || !\extension_loaded('mbstring')) {
+            self::markTestSkipped('Requires the native mbstring substitution behaviour of PHP 8.3.2.');
+        }
+
+        $previous = \mb_substitute_character();
+        \mb_substitute_character(0x41);
+
+        $quoted = EntryParser::parse("\"\xC3\"=evil");
+        $exported = EntryParser::parse("export \xC3=evil");
+
+        \mb_substitute_character($previous);
+
+        $this->checkErrorResult($quoted, "Encountered an invalid name at [\xC3].");
+        $this->checkErrorResult($exported, "Encountered an invalid name at [\xC3].");
+    }
+
     public function testParserEscapingDouble()
     {
         $result = EntryParser::parse('FOO_BAD="iiiiviiiixiiiiviiii\\a"');
