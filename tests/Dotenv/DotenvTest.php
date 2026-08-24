@@ -419,6 +419,14 @@ final class DotenvTest extends TestCase
         );
     }
 
+    public function testDotenvParseKeepsEscapedNestedVariableLiteral()
+    {
+        self::assertSame(
+            ['B' => 'hi', 'FOO' => '$A ${B}'],
+            Dotenv::parse("B=hi\nFOO=\"\$A \\\${B}\"")
+        );
+    }
+
     public function testDotenvParseEmptyCase()
     {
         $output = Dotenv::parse('');
