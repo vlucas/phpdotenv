@@ -404,6 +404,13 @@ final class DotenvTest extends TestCase
         self::assertSame($output, [7 => '1', 'FOO' => 'b', 123 => 'x']);
     }
 
+    public function testDotenvParseStripsUtf8ByteOrderMark()
+    {
+        self::assertSame(['KEY' => '1'], Dotenv::parse("\xEF\xBB\xBFKEY=1"));
+        self::assertSame(['A' => '2'], Dotenv::parse("\xEF\xBB\xBF# c\nA=2"));
+        self::assertSame(['B' => '3'], Dotenv::parse("\xEF\xBB\xBF\nB=3"));
+    }
+
     public function testDotenvParseEmptyCase()
     {
         $output = Dotenv::parse('');
