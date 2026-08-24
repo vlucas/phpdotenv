@@ -427,6 +427,11 @@ final class DotenvTest extends TestCase
         );
     }
 
+    public function testDotenvParseIndentedComment()
+    {
+        self::assertSame(['A' => '1'], Dotenv::parse("   # c\nA=1"));
+    }
+
     public function testDotenvParseEmptyCase()
     {
         $output = Dotenv::parse('');
