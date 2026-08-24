@@ -1,31 +1,7 @@
 parameters:
 	ignoreErrors:
 		-
-			message: '#^Only booleans are allowed in a negated boolean, int\|false given\.$#'
-			identifier: booleanNot.exprNotBoolean
-			count: 1
-			path: src/Parser/Lexer.php
-
-		-
 			message: '#^Parameter \#1 \$pattern of function preg_match expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Parser/Lexer.php
-
-		-
-			message: '#^Cannot cast mixed to string\.$#'
-			identifier: cast.string
-			count: 1
-			path: src/Repository/Adapter/EnvConstAdapter.php
-
-		-
-			message: '#^Cannot cast mixed to string\.$#'
-			identifier: cast.string
-			count: 1
-			path: src/Repository/Adapter/ServerConstAdapter.php
-
-		-
-			message: '#^Loose comparison via "\=\=" is not allowed\.$#'
-			identifier: equal.notAllowed
-			count: 1
-			path: src/Util/Str.php
