@@ -1,12 +1,6 @@
 parameters:
 	ignoreErrors:
 		-
-			message: '#^PHPDoc tag @var with type GrahamCampbell\\ResultType\\Result\<Dotenv\\Parser\\Value\|null, string\> is not subtype of type GrahamCampbell\\ResultType\\Result\<Dotenv\\Parser\\Value, string\>\|GrahamCampbell\\ResultType\\Result\<null, mixed\>\.$#'
-			identifier: varTag.type
-			count: 1
-			path: src/Parser/EntryParser.php
-
-		-
 			message: '#^Only booleans are allowed in a negated boolean, int\|false given\.$#'
 			identifier: booleanNot.exprNotBoolean
 			count: 1
@@ -61,19 +55,19 @@ parameters:
 			path: src/Repository/Adapter/ServerConstAdapter.php
 
 		-
-			message: '#^Parameter \#1 \$callable of method PhpOption\\Some\<Dotenv\\Repository\\Adapter\\AdapterInterface\|string\>\:\:flatMap\(\) expects callable\(Dotenv\\Repository\\Adapter\\AdapterInterface\|string\)\: PhpOption\\Option\<S\>, static\-Closure\(mixed\)\: mixed given\.$#'
+			message: '#^Parameter \#1 \$callable of method PhpOption\\Some\<Dotenv\\Repository\\Adapter\\AdapterInterface\|string\>\:\:flatMap\(\) expects callable\(Dotenv\\Repository\\Adapter\\AdapterInterface\|string\)\: PhpOption\\Option\<S\>, Closure\(mixed\)\: mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Repository/RepositoryBuilder.php
 
 		-
-			message: '#^Parameter \#1 \$callable of method PhpOption\\Some\<Dotenv\\Repository\\Adapter\\ReaderInterface\|string\>\:\:flatMap\(\) expects callable\(Dotenv\\Repository\\Adapter\\ReaderInterface\|string\)\: PhpOption\\Option\<S\>, static\-Closure\(mixed\)\: mixed given\.$#'
+			message: '#^Parameter \#1 \$callable of method PhpOption\\Some\<Dotenv\\Repository\\Adapter\\ReaderInterface\|string\>\:\:flatMap\(\) expects callable\(Dotenv\\Repository\\Adapter\\ReaderInterface\|string\)\: PhpOption\\Option\<S\>, Closure\(mixed\)\: mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Repository/RepositoryBuilder.php
 
 		-
-			message: '#^Parameter \#1 \$callable of method PhpOption\\Some\<Dotenv\\Repository\\Adapter\\WriterInterface\|string\>\:\:flatMap\(\) expects callable\(Dotenv\\Repository\\Adapter\\WriterInterface\|string\)\: PhpOption\\Option\<S\>, static\-Closure\(mixed\)\: mixed given\.$#'
+			message: '#^Parameter \#1 \$callable of method PhpOption\\Some\<Dotenv\\Repository\\Adapter\\WriterInterface\|string\>\:\:flatMap\(\) expects callable\(Dotenv\\Repository\\Adapter\\WriterInterface\|string\)\: PhpOption\\Option\<S\>, Closure\(mixed\)\: mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Repository/RepositoryBuilder.php
@@ -91,21 +85,9 @@ parameters:
 			path: src/Repository/RepositoryBuilder.php
 
 		-
-			message: '#^Method Dotenv\\Util\\Regex\:\:occurrences\(\) should return GrahamCampbell\\ResultType\\Result\<int, string\> but returns GrahamCampbell\\ResultType\\Result\<int\<0, max\>, string\>\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Util/Regex.php
-
-		-
 			message: '#^Loose comparison via "\=\=" is not allowed\.$#'
 			identifier: equal.notAllowed
 			count: 1
-			path: src/Util/Str.php
-
-		-
-			message: '#^PHPDoc tag @var with type GrahamCampbell\\ResultType\\Result\<string, string\> is not subtype of type GrahamCampbell\\ResultType\\Result\<mixed, non\-falsy\-string\>\.$#'
-			identifier: varTag.type
-			count: 2
 			path: src/Util/Str.php
 
 		-

@@ -47,14 +47,12 @@ final class Parser implements ParserInterface
             $entry = EntryParser::parse($raw);
 
             if ($entry->error()->isDefined()) {
-                /** @var \GrahamCampbell\ResultType\Result<\Dotenv\Parser\Entry[], string> */
                 return Error::create($entry->error()->get());
             }
 
             $output[] = $entry->success()->get();
         }
 
-        /** @var \GrahamCampbell\ResultType\Result<\Dotenv\Parser\Entry[], string> */
         return Success::create($output);
     }
 }
