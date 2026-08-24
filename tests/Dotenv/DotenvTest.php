@@ -9,6 +9,7 @@ use Dotenv\Exception\InvalidEncodingException;
 use Dotenv\Exception\InvalidPathException;
 use Dotenv\Loader\Loader;
 use Dotenv\Parser\Parser;
+use Dotenv\Repository\Adapter\PutenvAdapter;
 use Dotenv\Repository\RepositoryBuilder;
 use Dotenv\Store\StoreBuilder;
 use PHPUnit\Framework\TestCase;
@@ -295,6 +296,23 @@ final class DotenvTest extends TestCase
         $dotenv = Dotenv::createUnsafeImmutable(self::$folder, 'immutable.env');
         $dotenv->load();
         self::assertSame('true', \getenv('IMMUTABLE'));
+    }
+
+    public function testDotenvUnsafeLoadWithNullByteValueDoesNotThrow()
+    {
+        $dotenv = Dotenv::createUnsafeImmutable(self::$folder, 'nul.env');
+
+        self::assertSame([], $dotenv->safeLoad());
+        self::assertFalse(\getenv('NULVAL'));
+    }
+
+    public function testPutenvRepositoryIgnoresNullByteName()
+    {
+        $repository = RepositoryBuilder::createWithNoAdapters()->addAdapter(PutenvAdapter::class)->make();
+
+        self::assertFalse($repository->set("NUL\0NAME", 'value'));
+        self::assertNull($repository->get("NUL\0NAME"));
+        self::assertFalse($repository->clear("NUL\0NAME"));
     }
 
     public function testDotenvOverloadDoesOverwriteEnv()
