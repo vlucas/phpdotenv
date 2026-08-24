@@ -336,6 +336,15 @@ VAR="value" # comment
 VAR=value # comment
 ```
 
+A `#` begins a comment anywhere outside of quotes, even when it directly
+follows an unquoted value, so any value that should contain a `#` must be
+quoted:
+
+```shell
+VAR=foo#bar   # VAR is "foo"
+VAR="foo#bar" # VAR is "foo#bar"
+```
+
 
 ### Parsing Without Loading
 
