@@ -46,7 +46,7 @@ final class Lexer
         $offset = 0;
 
         while (isset($content[$offset])) {
-            if (!\preg_match($regex, $content, $matches, 0, $offset)) {
+            if (\preg_match($regex, $content, $matches, 0, $offset) !== 1) {
                 throw new \Error(\sprintf('Lexer encountered unexpected character [%s].', $content[$offset]));
             }
 

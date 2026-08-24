@@ -56,7 +56,7 @@ final class Str
          * @see https://en.wikipedia.org/wiki/Byte_order_mark
          * @see https://github.com/vlucas/phpdotenv/issues/500
          */
-        if (\substr($converted, 0, 3) == "\xEF\xBB\xBF") {
+        if (\substr($converted, 0, 3) === "\xEF\xBB\xBF") {
             $converted = \substr($converted, 3);
         }
 
