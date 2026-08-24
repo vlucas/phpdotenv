@@ -411,6 +411,14 @@ final class DotenvTest extends TestCase
         self::assertSame(['B' => '3'], Dotenv::parse("\xEF\xBB\xBF\nB=3"));
     }
 
+    public function testDotenvParseInterpolationAfterMultibyteText()
+    {
+        self::assertSame(
+            ['X' => 'Y', 'FOO' => 'ĀĀĀY'],
+            Dotenv::parse("X=Y\nFOO=\"ĀĀĀ\${X}\"")
+        );
+    }
+
     public function testDotenvParseEmptyCase()
     {
         $output = Dotenv::parse('');
