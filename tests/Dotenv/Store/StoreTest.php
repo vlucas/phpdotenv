@@ -164,4 +164,30 @@ final class StoreTest extends TestCase
             )
         );
     }
+
+    public function testFileReadWithUtf16LeWithBomEncoding()
+    {
+        $builder = StoreBuilder::createWithNoNames()
+            ->addPath(self::$folder)
+            ->addName('utf16le-with-bom-encoding.env')
+            ->fileEncoding('UTF-16LE');
+
+        self::assertSame(
+            "FOO=bar\nBAR=baz\n",
+            $builder->make()->read()
+        );
+    }
+
+    public function testFileReadWithUtf32LeWithBomEncoding()
+    {
+        $builder = StoreBuilder::createWithNoNames()
+            ->addPath(self::$folder)
+            ->addName('utf32le-with-bom-encoding.env')
+            ->fileEncoding('UTF-32LE');
+
+        self::assertSame(
+            "FOO=bar\nBAR=baz\n",
+            $builder->make()->read()
+        );
+    }
 }
