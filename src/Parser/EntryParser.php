@@ -319,6 +319,8 @@ final class EntryParser
             $line = self::cutBytes($line, 80).'...';
         }
 
+        $line = \addcslashes($line, "\0..\37\177");
+
         return \sprintf(
             'Encountered %s at [%s].',
             $cause,

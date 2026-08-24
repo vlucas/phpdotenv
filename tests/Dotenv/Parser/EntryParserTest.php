@@ -248,6 +248,12 @@ final class EntryParserTest extends TestCase
         $this->checkErrorResult($result, 'Encountered an unexpected escape sequence at ["'.\str_repeat('a', 77).'...].');
     }
 
+    public function testParserErrorMessageEscapesControlBytes()
+    {
+        $result = EntryParser::parse("FOO=\"a\x01b\q\"");
+        $this->checkErrorResult($result, 'Encountered an unexpected escape sequence at ["a\001b\q"].');
+    }
+
     /**
      * @param \GrahamCampbell\ResultType\Result<\Dotenv\Parser\Entry,string> $result
      * @param string                                                         $name
