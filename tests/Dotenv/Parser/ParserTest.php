@@ -63,6 +63,14 @@ final class ParserTest extends TestCase
         (new Parser())->parse('FOO_ASD!=BAZ');
     }
 
+    public function testParseInvalidUtf8Name()
+    {
+        $this->expectException(InvalidFileException::class);
+        $this->expectExceptionMessage("Failed to parse dotenv file. Encountered an invalid name at [\xC3].");
+
+        (new Parser())->parse("\xC3=1");
+    }
+
     /**
      * @param \Dotenv\Parser\Entry $entry
      * @param string               $name

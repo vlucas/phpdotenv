@@ -96,12 +96,12 @@ final class EntryParser
      */
     private static function parseName(string $name)
     {
-        if (Str::substr($name, 0, 6) === 'export' && \ctype_space(Str::substr($name, 6, 1))) {
-            $name = \ltrim(Str::substr($name, 6), " \t\n\r\v\f");
+        if (\strlen($name) > 6 && \substr($name, 0, 6) === 'export' && \ctype_space($name[6])) {
+            $name = \ltrim(\substr($name, 6), " \t\n\r\v\f");
         }
 
         if (self::isQuotedName($name)) {
-            $name = Str::substr($name, 1, -1);
+            $name = \substr($name, 1, -1);
         }
 
         if (!self::isValidName($name)) {
@@ -120,12 +120,12 @@ final class EntryParser
      */
     private static function isQuotedName(string $name)
     {
-        if (Str::len($name) < 3) {
+        if (\strlen($name) < 3) {
             return false;
         }
 
-        $first = Str::substr($name, 0, 1);
-        $last = Str::substr($name, -1, 1);
+        $first = $name[0];
+        $last = $name[\strlen($name) - 1];
 
         return ($first === '"' && $last === '"') || ($first === '\'' && $last === '\'');
     }
@@ -143,7 +143,7 @@ final class EntryParser
             return true;
         }
 
-        return Regex::matches('~(*UTF8)\A[\p{Ll}\p{Lu}\p{M}\p{N}_.]+\z~', $name)->success()->getOrElse(false);
+        return Regex::matches('~\A[\p{Ll}\p{Lu}\p{M}\p{N}_.]+\z~u', $name)->success()->getOrElse(false);
     }
 
     /**
