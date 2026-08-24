@@ -16,7 +16,7 @@ Release notes for 5.0.0 are available [here](https://github.com/vlucas/phpdotenv
 
 ### Details
 
-1. The `Dotenv\Dotenv::createImmutable` and `Dotenv\Dotenv::createMutable` methods no longer call will result in `getenv` and `putenv` being called. One should instead use `Dotenv\Dotenv::createUnsafeImmutable` and `Dotenv\Dotenv::createUnsafeMutable` methods, if one really needs these functions.
+1. The `Dotenv\Dotenv::createImmutable` and `Dotenv\Dotenv::createMutable` methods no longer result in `getenv` and `putenv` being called. One should instead use `Dotenv\Dotenv::createUnsafeImmutable` and `Dotenv\Dotenv::createUnsafeMutable` methods, if one really needs these functions.
 2. The `Dotenv\Dotenv` constructor has been modified to expect exactly 4 parameters: a store, a parser, a loader, and a repository. This likely won't affect many people, since it is more common to construct this class via the public static create methods. Those methods have not changed.
 3. Scalar typehints have been added to the public interface.
 4. The parser now returns a result type instead of raising an exception. This change is strictly internal, and most users won't notice a difference. The responsibility for raising an exception has simply been shifted up to the caller.

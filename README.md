@@ -1,7 +1,7 @@
 PHP dotenv
 ==========
 
-Loads environment variables from `.env` to `getenv()`, `$_ENV` and `$_SERVER` automagically.
+Loads environment variables from `.env` to `$_ENV` and `$_SERVER` automagically, and optionally to `getenv()`.
 
 ![Banner](https://user-images.githubusercontent.com/2829600/71564012-31105580-2a91-11ea-9ad7-ef1278411b35.png)
 
@@ -59,8 +59,8 @@ or add it by hand to your `composer.json` file.
 ## Upgrading
 
 We follow [semantic versioning](https://semver.org/), which means breaking
-changes may occur between major releases. We have upgrading guides available
-for V2 to V3, V3 to V4 and V4 to V5 available [here](UPGRADING.md).
+changes may occur between major releases. We have upgrading guides for V2 to
+V3, V3 to V4 and V4 to V5 available [here](UPGRADING.md).
 
 
 ## Usage
@@ -200,6 +200,16 @@ $dotenv = Dotenv\Dotenv::createMutable(__DIR__);
 $dotenv->load();
 ```
 
+A variable counts as existing if it is set in any of the repository's
+adapters, including values only present in `$_SERVER`, and once one immutable
+instance has loaded a variable, a second instance will treat it as existing
+too. Within a single load, however, an instance may overwrite a variable it
+wrote itself, which is how later files in a merge override earlier ones. The
+array returned by `load()` contains only the variables that were
+actually written, so variables skipped due to immutability are omitted. For
+validation or testing without touching the real environment, use
+`createArrayBacked`.
+
 Behind the scenes, this is instructing the "repository" to allow immutability
 or not. By default, the repository is configured to allow overwriting existing
 values by default, which is relevant if one is calling the "create" method
@@ -251,10 +261,11 @@ Or an array of strings:
 $dotenv->required(['DB_HOST', 'DB_NAME', 'DB_USER', 'DB_PASS']);
 ```
 
-If any ENV vars are missing, Dotenv will throw a `RuntimeException` like this:
+If any ENV vars are missing, Dotenv will throw a
+`Dotenv\Exception\ValidationException` like this:
 
 ```
-One or more environment variables failed assertions: DATABASE_DSN is missing
+One or more environment variables failed assertions: DATABASE_DSN is missing.
 ```
 
 
@@ -270,7 +281,7 @@ $dotenv->required('DATABASE_DSN')->notEmpty();
 If the environment variable is empty, you'd get an Exception:
 
 ```
-One or more environment variables failed assertions: DATABASE_DSN is empty
+One or more environment variables failed assertions: DATABASE_DSN is empty.
 ```
 
 
@@ -283,7 +294,9 @@ do the following:
 $dotenv->required('FOO')->isInteger();
 ```
 
-If the environment variable is not an integer, you'd get an Exception:
+Note that only unsigned digit strings pass this check: signed values such as
+`-5` or `+5` are rejected. If the environment variable is not an integer,
+you'd get an Exception:
 
 ```
 One or more environment variables failed assertions: FOO is not an integer.
@@ -300,8 +313,9 @@ $dotenv->ifPresent('FOO')->isInteger();
 ### Boolean Variables
 
 You may need to ensure a variable is in the form of a boolean, accepting
-"true", "false", "On", "1", "Yes", "Off", "0" and "No". You may do the
-following:
+"true", "false", "On", "1", "Yes", "Off", "0" and "No", case-insensitively and
+ignoring surrounding whitespace. This check requires the `filter` extension.
+You may do the following:
 
 ```php
 $dotenv->required('FOO')->isBoolean();
@@ -334,10 +348,13 @@ If the environment variable wasn't in this list of allowed values, you'd get a
 similar Exception:
 
 ```
-One or more environment variables failed assertions: SESSION_STORE is not an allowed value.
+One or more environment variables failed assertions: SESSION_STORE is not one of [Filesystem, Memcached].
 ```
 
 It is also possible to define a regex that your environment variable should be.
+The regex is applied as an unanchored match, so it succeeds if any part of the
+value matches; anchor the pattern to match the whole value.
+
 ```php
 $dotenv->required('FOO')->allowedRegexValues('([[:lower:]]{3})');
 ```
