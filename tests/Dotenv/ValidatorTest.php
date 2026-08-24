@@ -462,7 +462,7 @@ final class ValidatorTest extends TestCase
         $dotenv->load();
 
         $this->expectException(ValidationException::class);
-        $this->expectExceptionMessage('One or more environment variables failed assertions: FOO does not match "/([[:lower:]{1{".');
+        $this->expectExceptionMessage('One or more environment variables failed assertions: FOO could not be validated against the invalid regular expression "/([[:lower:]{1{".');
 
         $dotenv->required('FOO')->allowedRegexValues('/([[:lower:]{1{');
     }
