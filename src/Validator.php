@@ -101,7 +101,10 @@ class Validator
     {
         return $this->assertNullable(
             static function (string $value) {
-                if ($value === '') {
+                // filter_var() trims its input before matching, so a value that
+                // is empty only after trimming (eg. whitespace-only) would
+                // otherwise be treated as the valid boolean false.
+                if (\trim($value, " \n\r\t\0\x0B") === '') {
                     return false;
                 }
 

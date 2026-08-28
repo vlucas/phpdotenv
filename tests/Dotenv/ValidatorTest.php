@@ -269,6 +269,7 @@ final class ValidatorTest extends TestCase
             ['INVALID_SOMETHING'],
             ['INVALID_EMPTY'],
             ['INVALID_EMPTY_STRING'],
+            ['INVALID_WHITESPACE'],
             ['INVALID_NULL'],
             ['INVALID_NUMBER_POSITIVE'],
             ['INVALID_NUMBER_NEGATIVE'],
