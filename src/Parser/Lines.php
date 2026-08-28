@@ -43,6 +43,14 @@ final class Lines
             }
         }
 
+        // If the input ends while still inside a multiline value, the value
+        // was never closed. Emit the buffered content as a final entry
+        // instead of silently discarding it, so the parser reports the same
+        // missing-closing-quote error the single-quoted case already does.
+        if ($multiline && $multilineBuffer !== []) {
+            $output[] = \implode("\n", $multilineBuffer);
+        }
+
         return $output;
     }
 

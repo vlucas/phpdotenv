@@ -50,4 +50,20 @@ final class LinesTest extends TestCase
 
         self::assertSame($expected, Lines::process($result->success()->get()));
     }
+
+    public function testProcessUnterminatedMultilineIsEmittedNotDropped()
+    {
+        $result = Regex::split("/(\r\n|\n|\r)/", "FOO=\"bar");
+        self::assertTrue($result->success()->isDefined());
+
+        self::assertSame(['FOO="bar'], Lines::process($result->success()->get()));
+    }
+
+    public function testProcessUnterminatedMultilineDoesNotSwallowFollowingLines()
+    {
+        $result = Regex::split("/(\r\n|\n|\r)/", "A=\"oops\nB=keep");
+        self::assertTrue($result->success()->isDefined());
+
+        self::assertSame(["A=\"oops\nB=keep"], Lines::process($result->success()->get()));
+    }
 }
